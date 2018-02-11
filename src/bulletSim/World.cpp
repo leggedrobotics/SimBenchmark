@@ -2,7 +2,7 @@
 // Created by kangd on 10.02.18.
 //
 
-#include "World.hpp"
+#include "bulletSim/World.hpp"
 
 bullet_sim::World::World() {
 
@@ -34,6 +34,7 @@ bullet_sim::World::~World() {
 
   // TODO object remove
 }
+
 bullet_sim::object::Box *bullet_sim::World::addBox(double xLength,
                                                    double yLength,
                                                    double zLength,
@@ -41,17 +42,22 @@ bullet_sim::object::Box *bullet_sim::World::addBox(double xLength,
                                                    CollisionGroupType collisionGroup,
                                                    CollisionGroupType collisionMask) {
 
-  btCollisionShape* shape = new btBoxShape(btVector3(xLength * 0.5,
-                                                        yLength * 0.5,
-                                                        zLength * 0.5));
-  btTransform transform;
-  transform.setIdentity();
-  transform.setOrigin(btVector3(0, 0, 0));
-  btDefaultMotionState* motionState = new btDefaultMotionState(transform);
-  btRigidBody* rigidBody = new btRigidBody(mass, motionState, shape);
-  dynamicsWorld_->addRigidBody(rigidBody);
+  return new bullet_sim::object::Box(xLength, yLength, zLength, mass);
+}
 
-  return nullptr;
+bullet_sim::object::CheckerBoard *bullet_sim::World::addCheckerboard(double gridSize,
+                                                                     double xLength,
+                                                                     double yLength,
+                                                                     double reflectanceI,
+                                                                     CollisionGroupType collisionGroup,
+                                                                     CollisionGroupType collisionMask) {
+
+  return new bullet_sim::object::CheckerBoard();
+}
+
+void bullet_sim::World::integrate(double dt) {
+  // TODO substep
+  dynamicsWorld_->stepSimulation(dt, 1);
 }
 
 

@@ -7,7 +7,7 @@
 #include "World.hpp"
 #include "raiGraphics/RAI_graphics.hpp"
 
-namespace rai_sim {
+namespace bullet_sim {
 
 template<typename S>
 class UserHandle {
@@ -63,7 +63,7 @@ class UserWireHandle : public UserHandle<S> {
   }
 };
 
-//typedef UserObjectHandle<bullet_sim::object::SingleBodyObject> SingleBodyHandle;
+typedef UserObjectHandle<bullet_sim::object::SingleBodyObject> SingleBodyHandle;
 //typedef UserObjectHandle<bullet_sim::object::ArticulatedSystem> ArticulatedSystemHandle;
 //typedef UserObjectHandle<bullet_sim::object::Compound> CompoundHandle;
 //typedef UserWireHandle<bullet_sim::Wire> WireHandle;

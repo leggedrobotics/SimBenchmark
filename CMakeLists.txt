@@ -1,17 +1,38 @@
 cmake_minimum_required(VERSION 3.9)
 project(benchmark)
 
+## --------------------------- compiler ---------------------------
 set(CMAKE_C_COMPILER "/usr/bin/gcc-7")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 set(CMAKE_CXX_STANDARD 17)
-#set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed -O3 -funroll-loops")
+set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed -O3 -mtune=native -march=native")
 
+## --------------------------- link directories ---------------------------
 link_directories(/usr/local/lib)
 link_directories(/usr/lib)
 link_directories(/usr/lib/x86_64-linux-gnu/)
 
 ## --------------------------- local files ---------------------------
 include_directories(include)
+
+# BulletSim
+set(BulletSim_SRCS
+        src/bulletSim/World.cpp
+        src/bulletSim/World_RG.cpp
+        src/bulletSim/SingleBodyObject.cpp
+        src/bulletSim/Box.cpp
+        src/bulletSim/CheckerBoard.cpp
+        )
+
+set(BulletSim_HDRS
+        include/bulletSim/World.hpp
+        include/bulletSim/World_RG.hpp
+        include/bulletSim/object/SingleBodyObject.hpp
+        include/bulletSim/object/Box.hpp
+        include/bulletSim/object/CheckerBoard.hpp
+        )
+
+add_library(BulletSim ${BulletSim_SRCS} ${BulletSim_HDRS})
 
 ## --------------------------- dependencies ---------------------------
 # raiCommons
@@ -35,16 +56,31 @@ link_directories(${BULLET_ROOT_DIR}/${BULLET_LIBRARY_DIRS})
 find_package(ode CONFIG REQUIRED)
 include_directories(${ODE_INCLUDE_DIRS})
 
+# eigen
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
+## --------------------------- links ---------------------------
+# BulletSim
+set(BulletSimLink BulletCollision BulletDynamics LinearMath BulletSim ${RAI_GRAPHICS_OPENGL_LINK})
+
+# ODESim
+set(ODESimLink ode ${RAI_GRAPHICS_OPENGL_LINK})
+
 ## --------------------------- executable ---------------------------
-# demo basic
+# framework tests
 add_executable(raisimTest test/raisimTest.cpp)
 target_link_libraries(raisimTest ${RAI_SIM_LINK})
 
 add_executable(bulletTest test/bulletTest.cpp)
 target_link_libraries(bulletTest BulletCollision BulletDynamics LinearMath)
 
-add_executable(benchmark main.cpp)
-target_link_libraries(benchmark BulletCollision BulletDynamics LinearMath)
+add_executable(odeTest test/odeTest.cpp)
+target_link_libraries(odeTest ode)
 
+# benchmark tests
 add_executable(boxStackRaiSim benchmark/boxStackRaiSim.cpp)
 target_link_libraries(boxStackRaiSim ${RAI_SIM_LINK})
+
+add_executable(boxStackBulletSim benchmark/boxStackBulletSim.cpp)
+target_link_libraries(boxStackBulletSim ${BulletSimLink})
