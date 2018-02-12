@@ -1,25 +1,23 @@
 //
-// Created by kangd on 10.02.18.
+// Created by kangd on 11.02.18.
 //
 
-#ifndef BULLETSIM_OBJECT_HPP
-#define BULLETSIM_OBJECT_HPP
+#ifndef ODESIM_SINGLEBODYOBJECT_HPP
+#define ODESIM_SINGLEBODYOBJECT_HPP
 
-#include <btBulletCollisionCommon.h>
-#include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <ode/common.h>
+#include <ode/ode.h>
 #include <Eigen/Geometry>
 #include <raiSim/math.hpp>
 
-namespace bullet_sim {
+namespace ode_sim {
 namespace object {
 
 class SingleBodyObject {
 
  public:
-  SingleBodyObject(double mass);
+  SingleBodyObject(const dWorldID worldID);
   virtual ~SingleBodyObject();
-
-  btRigidBody *getRigidBody_() const;
 
   virtual const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion();
   virtual void getQuaternion(rai_sim::Vec<4>& quat);
@@ -45,11 +43,10 @@ class SingleBodyObject {
   virtual bool isVisualizeFramesAndCom() const;
 
  protected:
-  double mass_;
-
-  btCollisionShape *collisionShape_;
-  btRigidBody *rigidBody_;
-  btMotionState *motionState_;
+  dWorldID worldID_;
+  dGeomID geometry_;
+  dBodyID body_;
+  dMass mass_;
 
   // from object
   bool visualizeFramesAndCom_ = true;
@@ -57,6 +54,6 @@ class SingleBodyObject {
 };
 
 } // object
-} // bullet_sim
+} // ode_sim
 
-#endif // BULLETSIM_OBJECT_HPP
+#endif //ODESIM_SINGLEBODYOBJECT_HPP

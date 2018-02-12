@@ -2,9 +2,9 @@
 // Created by kangd on 10.02.18.
 //
 
-#include "bulletSim/World_RG.hpp"
+#include "odeSim/World_RG.hpp"
 
-namespace bullet_sim {
+namespace ode_sim {
 
 World_RG::World_RG(int windowWidth, int windowHeight, float cms, int flags) :
     windowWidth_(windowWidth),
@@ -424,7 +424,7 @@ void World_RG::updateFrame() {
 //  }
 }
 
-void World_RG::processSingleBody(bullet_sim::SingleBodyHandle handle) {
+void World_RG::processSingleBody(SingleBodyHandle handle) {
   sbHandles_.push_back(handle);
 
   for (auto *go: handle.visual())
@@ -455,4 +455,4 @@ void World_RG::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
 }
 
-} // bullet_sim
+} // ode_sim

@@ -2,19 +2,19 @@
 // Created by kangd on 10.02.18.
 //
 
-#ifndef BULLETSIM_WORLD_RG_HPP
-#define BULLETSIM_WORLD_RG_HPP
+#ifndef ODESIM_WORLD_RG_HPP
+#define ODESIM_WORLD_RG_HPP
 
 #define RAI_COLLISION(x) (1<<(x))
 
 #include <raiGraphics/RAI_graphics.hpp>
 #include <raiSim/math.hpp>
 
-#include "bulletSim/UserHandle.hpp"
+#include "odeSim/UserHandle.hpp"
 #include "Configure.hpp"
 #include "World.hpp"
 
-namespace bullet_sim {
+namespace ode_sim {
 
 enum VisualizerOption {
   NO_BACKGROUND = 1<<(1),
@@ -97,6 +97,6 @@ class World_RG {
 
 };
 
-} // bullet_sim
+} // odesim_sim
 
-#endif //BULLETSIM_WORLD_RG_HPP
+#endif //ODESIM_WORLD_RG_HPP

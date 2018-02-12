@@ -2,8 +2,8 @@
 // Created by kangd on 10.02.18.
 //
 
-#ifndef BENCHMARK_WORLD_HPP
-#define BENCHMARK_WORLD_HPP
+#ifndef BULLETSIM_WORLD_HPP
+#define BULLETSIM_WORLD_HPP
 
 #include <btBulletDynamicsCommon.h>
 
@@ -14,8 +14,6 @@
 namespace bullet_sim {
 
 class World {
-
-//  friend class World_RG;
 
  public:
   explicit World();
@@ -28,7 +26,9 @@ class World {
 
   void integrate(double dt);
 
- protected:
+  void setGravity(const btVector3 &gravity);
+
+ private:
 
   // dynamics world
   btDiscreteDynamicsWorld* dynamicsWorld_;
@@ -44,14 +44,10 @@ class World {
   btSequentialImpulseConstraintSolver* solver_;
 
   // list
-//  std::vector<object::Object*> objectList_;
-//  std::vector<contact::Single3DContactProblem> contactProblemList_;
+  std::vector<object::SingleBodyObject*> objectList_;
+
 //  std::vector<int> colIdxToObjIdx_;
 //  std::vector<int> colIdxToLocalObjIdx_;
-
-  // constraints
-//  std::vector<StiffWire*> stiffWire_;
-//  std::vector<CompliantWire*> compliantWire_;
 
 //  MaterialManager mat_;
 //  MaterialPairProperties defaultMaterialProperty_;
@@ -62,4 +58,4 @@ class World {
 }
 
 
-#endif //BENCHMARK_WORLD_HPP
+#endif //BULLETSIM_WORLD_HPP

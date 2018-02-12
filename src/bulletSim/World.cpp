@@ -26,13 +26,17 @@ bullet_sim::World::World() {
 
 bullet_sim::World::~World() {
   // clean up
+
+  // remove objects
+  for (auto *ob: objectList_)
+    delete ob;
+
+  // remove world
   delete dynamicsWorld_;
   delete solver_;
   delete collisionDispatcher_;
   delete collisionConfiguration_;
   delete broadphase_;
-
-  // TODO object remove
 }
 
 bullet_sim::object::Box *bullet_sim::World::addBox(double xLength,
@@ -42,7 +46,10 @@ bullet_sim::object::Box *bullet_sim::World::addBox(double xLength,
                                                    CollisionGroupType collisionGroup,
                                                    CollisionGroupType collisionMask) {
 
-  return new bullet_sim::object::Box(xLength, yLength, zLength, mass);
+  object::Box *box = new bullet_sim::object::Box(xLength, yLength, zLength, mass);
+  dynamicsWorld_->addRigidBody(box->getRigidBody_());
+  objectList_.push_back(box);
+  return box;
 }
 
 bullet_sim::object::CheckerBoard *bullet_sim::World::addCheckerboard(double gridSize,
@@ -52,12 +59,20 @@ bullet_sim::object::CheckerBoard *bullet_sim::World::addCheckerboard(double grid
                                                                      CollisionGroupType collisionGroup,
                                                                      CollisionGroupType collisionMask) {
 
-  return new bullet_sim::object::CheckerBoard();
+  object::CheckerBoard *checkerBoard = new bullet_sim::object::CheckerBoard();
+  dynamicsWorld_->addRigidBody(checkerBoard->getRigidBody_());
+  objectList_.push_back(checkerBoard);
+  return checkerBoard;
 }
 
 void bullet_sim::World::integrate(double dt) {
   // TODO substep
   dynamicsWorld_->stepSimulation(dt, 1);
+}
+
+void bullet_sim::World::setGravity(const btVector3 &gravity_) {
+  World::gravity_ = gravity_;
+  dynamicsWorld_->setGravity(gravity_);
 }
 
 

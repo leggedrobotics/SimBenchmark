@@ -4,7 +4,7 @@
 
 #include <bulletSim/object/Box.hpp>
 
-bullet_sim::object::Box::Box(double xlength, double ylength, double zlength, double mass) {
+bullet_sim::object::Box::Box(double xlength, double ylength, double zlength, double mass) : SingleBodyObject(mass) {
 
   // collision shape
   collisionShape_ = new btBoxShape(btVector3(.5 * xlength,

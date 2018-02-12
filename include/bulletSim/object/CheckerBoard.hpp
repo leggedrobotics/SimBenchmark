@@ -2,8 +2,8 @@
 // Created by kangd on 10.02.18.
 //
 
-#ifndef BENCHMARK_CHECKERBOARD_HPP
-#define BENCHMARK_CHECKERBOARD_HPP
+#ifndef BULLETSIM_CHECKERBOARD_HPP
+#define BULLETSIM_CHECKERBOARD_HPP
 
 #include "SingleBodyObject.hpp"
 
@@ -20,4 +20,4 @@ class CheckerBoard: public SingleBodyObject {
 } // object
 } // bullet_sim
 
-#endif //BENCHMARK_CHECKERBOARD_HPP
+#endif //BULLETSIM_CHECKERBOARD_HPP

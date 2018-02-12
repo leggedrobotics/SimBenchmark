@@ -2,26 +2,26 @@
 // Created by kangd on 11.02.18.
 //
 
-#include <iostream>
-#include <btBulletDynamicsCommon.h>
 #include "bulletSim/World_RG.hpp"
 
 int main() {
-  std::cout << "Hello, World!" << std::endl;
-
-  const btScalar gravity = -9.81;
 
   bullet_sim::World_RG bulletSim(800, 600, 0.5);
+  bulletSim.setGravity({0, 0, -9.8});
 
-  // objects
+  // add objects
+  auto checkerboard = bulletSim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
+
   auto box1 = bulletSim.addBox(1, 1, 1, 100);
+  box1->setPosition(0, 0, 10.0);
 
   double dt = 0.01;  // (sec)
 
   // camera relative position
-  bulletSim.cameraFollowObject(box1, {50, 10, 5});
+  bulletSim.cameraFollowObject(box1, {10, 0, 5});
 
   // simulation loop
+  // press 'q' key to quit
   bulletSim.loop(dt, 1.0);
 
   return 0;

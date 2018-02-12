@@ -11,6 +11,8 @@ int main() {
   raiSim.setLightPosition(30, 0, 10);
 
   // add objects
+  auto checkerboard = raiSim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
+
   auto box1 = raiSim.addBox(1, 1, 1, 100);
   box1->setPosition(0, 0, 0.5);
   auto box2 = raiSim.addBox(1, 1, 1, 100);
@@ -24,7 +26,7 @@ int main() {
   double dt = 0.01;
 
   // camera relative position
-  raiSim.cameraFollowObject(box1, {50, 10, 5});
+  raiSim.cameraFollowObject(box1, {10, 0, 5});
 
   // simulation loop
   // press 'q' key to quit

@@ -4,7 +4,7 @@
 
 #include "bulletSim/object/CheckerBoard.hpp"
 
-bullet_sim::object::CheckerBoard::CheckerBoard() {
+bullet_sim::object::CheckerBoard::CheckerBoard() : SingleBodyObject(0) {
 
   // collision shape
   collisionShape_ = new btStaticPlaneShape(btVector3(0, 0, 1), 0);

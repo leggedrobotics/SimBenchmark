@@ -2,8 +2,8 @@
 // Created by kangd on 09.02.18.
 //
 
-#ifndef BENCHMARK_BULLETBOX_HPP
-#define BENCHMARK_BULLETBOX_HPP
+#ifndef BULLETSIM_BOX_HPP
+#define BULLETSIM_BOX_HPP
 
 #include "SingleBodyObject.hpp"
 
@@ -20,4 +20,4 @@ class Box: public SingleBodyObject {
 } // object
 } // bullet_sim
 
-#endif //BENCHMARK_BULLETBOX_HPP
+#endif //BULLETSIM_BOX_HPP

@@ -6,11 +6,11 @@
 #define BULLETSIM_USERHANDLE_HPP
 
 #include "base/UserHandle.hpp"
-#include "bulletSim/object/SingleBodyObject.hpp"
+#include "odeSim/object/SingleBodyObject.hpp"
 
-namespace bullet_sim {
+namespace ode_sim {
 
-typedef benchmark::UserObjectHandle<bullet_sim::object::SingleBodyObject> SingleBodyHandle;
+typedef benchmark::UserObjectHandle<ode_sim::object::SingleBodyObject> SingleBodyHandle;
 //typedef UserObjectHandle<bullet_sim::object::ArticulatedSystem> ArticulatedSystemHandle;
 //typedef UserObjectHandle<bullet_sim::object::Compound> CompoundHandle;
 //typedef UserWireHandle<bullet_sim::Wire> WireHandle;

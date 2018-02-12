@@ -7,6 +7,20 @@ set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed -O3 -mtune=native -march=native")
 
+## --------------------------- mode ---------------------------
+# bullet debug
+# TODO bullet debug check (in release mode)
+SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
+
+# raiCommons debug
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DRAIDEBUG)
+    set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed -O0 -mtune=native -march=native")
+else ()
+    remove_definitions(-DRAIDEBUG)
+    set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed -O3 -mtune=native -march=native")
+endif()
+
 ## --------------------------- link directories ---------------------------
 link_directories(/usr/local/lib)
 link_directories(/usr/lib)
@@ -33,6 +47,25 @@ set(BulletSim_HDRS
         )
 
 add_library(BulletSim ${BulletSim_SRCS} ${BulletSim_HDRS})
+
+# ODESim
+set(ODESim_SRCS
+        src/odeSim/World.cpp
+        src/odeSim/World_RG.cpp
+        src/odeSim/SingleBodyObject.cpp
+        src/odeSim/Box.cpp
+        src/odeSim/CheckerBoard.cpp
+        )
+
+set(ODESim_HDRS
+        include/odeSim/World.hpp
+        include/odeSim/World_RG.hpp
+        include/odeSim/object/SingleBodyObject.hpp
+        include/odeSim/object/Box.hpp
+        include/bulletSim/object/CheckerBoard.hpp
+        )
+
+add_library(ODESim ${ODESim_SRCS} ${ODESim_HDRS})
 
 ## --------------------------- dependencies ---------------------------
 # raiCommons
@@ -65,7 +98,7 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 set(BulletSimLink BulletCollision BulletDynamics LinearMath BulletSim ${RAI_GRAPHICS_OPENGL_LINK})
 
 # ODESim
-set(ODESimLink ode ${RAI_GRAPHICS_OPENGL_LINK})
+set(ODESimLink ode ODESim ${RAI_GRAPHICS_OPENGL_LINK})
 
 ## --------------------------- executable ---------------------------
 # framework tests
@@ -84,3 +117,6 @@ target_link_libraries(boxStackRaiSim ${RAI_SIM_LINK})
 
 add_executable(boxStackBulletSim benchmark/boxStackBulletSim.cpp)
 target_link_libraries(boxStackBulletSim ${BulletSimLink})
+
+add_executable(boxStackODESim benchmark/boxStackODESim.cpp)
+target_link_libraries(boxStackODESim ${ODESimLink})
