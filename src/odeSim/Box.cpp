@@ -8,15 +8,16 @@ ode_sim::object::Box::Box(double xlength,
                           double ylength,
                           double zlength,
                           double mass,
-                          dWorldID worldId)
-    : SingleBodyObject(worldId)
+                          dWorldID worldID,
+                          dSpaceID spaceID)
+    : SingleBodyObject(worldID, spaceID)
 {
 
   // body
-  body_ = dBodyCreate(worldId);
+  body_ = dBodyCreate(worldID);
 
   // geometry
-  geometry_ = dCreateBox(0, xlength, ylength, zlength);
+  geometry_ = dCreateBox(spaceID, xlength, ylength, zlength);
   dGeomSetBody(geometry_, body_);
 
   // position and orientation
@@ -33,5 +34,6 @@ ode_sim::object::Box::Box(double xlength,
 }
 
 ode_sim::object::Box::~Box() {
+  dBodyDestroy(body_);
+  dGeomDestroy(geometry_);
 }
-

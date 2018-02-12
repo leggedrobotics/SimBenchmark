@@ -6,7 +6,8 @@
 
 namespace ode_sim {
 
-object::SingleBodyObject::SingleBodyObject(const dWorldID worldID) : worldID_(worldID) {}
+object::SingleBodyObject::SingleBodyObject(const dWorldID worldID, const dSpaceID spaceID)
+    : worldID_(worldID), spaceID_ (spaceID) {}
 
 object::SingleBodyObject::~SingleBodyObject() {
   dBodyDestroy(body_);
@@ -76,7 +77,7 @@ void ode_sim::object::SingleBodyObject::setOrientation(Eigen::Matrix3d rotationM
     }
     drotation[4*i + 3] = 0;
   }
-  dBodySetRotation(body_, drotation);
+  dGeomSetRotation(geometry_, drotation);
 }
 
 void ode_sim::object::SingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Quaterniond quaternion) {

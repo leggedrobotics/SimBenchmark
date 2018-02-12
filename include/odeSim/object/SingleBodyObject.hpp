@@ -16,7 +16,7 @@ namespace object {
 class SingleBodyObject {
 
  public:
-  SingleBodyObject(const dWorldID worldID);
+  SingleBodyObject(const dWorldID worldID, const dSpaceID spaceID);
   virtual ~SingleBodyObject();
 
   virtual const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion();
@@ -43,9 +43,11 @@ class SingleBodyObject {
   virtual bool isVisualizeFramesAndCom() const;
 
  protected:
-  dWorldID worldID_;
-  dGeomID geometry_;
-  dBodyID body_;
+  dWorldID worldID_ = 0;
+  dSpaceID spaceID_ = 0;
+
+  dGeomID geometry_ = 0;
+  dBodyID body_ = 0;
   dMass mass_;
 
   // from object

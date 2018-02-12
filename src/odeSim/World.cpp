@@ -16,7 +16,7 @@ static void nearCallback(void *contact, dGeomID o1, dGeomID o2) {
 ode_sim::World::World() {
 
   // world
-  dInitODE2(0);
+  dInitODE();
   dynamicsWorld_ = dWorldCreate();
 
   dVector3 Center = {0, 0, 0, 0};
@@ -42,6 +42,12 @@ ode_sim::World::World() {
 }
 
 ode_sim::World::~World() {
+
+  // remove objects
+  for (auto *ob: objectList_)
+    delete ob;
+
+  // remove world
   dJointGroupDestroy(jointGroup_);
   dSpaceDestroy(space_);
   dWorldDestroy(dynamicsWorld_);
@@ -59,12 +65,12 @@ void ode_sim::World::integrate(double dt) {
   dSpaceCollide(space_, 0, &nearCallback);
 
   // collision solving
-  if (!pause) {
+//  if (!pause) {
 //    if (solver == 0)
 //      dWorldQuickStep(dynamicsWorld_, dt);
 //    else
       dWorldStep(dynamicsWorld_, dt);
-  }
+//  }
 }
 
 ode_sim::object::Box *ode_sim::World::addBox(double xLength,
@@ -73,7 +79,8 @@ ode_sim::object::Box *ode_sim::World::addBox(double xLength,
                                              double mass,
                                              CollisionGroupType collisionGroup,
                                              CollisionGroupType collisionMask) {
-  object::Box *box = new ode_sim::object::Box(xLength, yLength, zLength, mass, dynamicsWorld_);
+  object::Box *box = new ode_sim::object::Box(xLength, yLength, zLength, mass, dynamicsWorld_, space_);
+  objectList_.push_back(box);
   return box;
 }
 
@@ -83,6 +90,7 @@ ode_sim::object::CheckerBoard *ode_sim::World::addCheckerboard(double gridSize,
                                                                double reflectanceI,
                                                                CollisionGroupType collisionGroup,
                                                                CollisionGroupType collisionMask) {
-  object::CheckerBoard *checkerBoard = new ode_sim::object::CheckerBoard(dynamicsWorld_);
+  object::CheckerBoard *checkerBoard = new ode_sim::object::CheckerBoard(dynamicsWorld_, space_);
+  objectList_.push_back(checkerBoard);
   return checkerBoard;
 }

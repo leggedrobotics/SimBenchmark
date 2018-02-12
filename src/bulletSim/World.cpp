@@ -25,7 +25,6 @@ bullet_sim::World::World() {
 }
 
 bullet_sim::World::~World() {
-  // clean up
 
   // remove objects
   for (auto *ob: objectList_)

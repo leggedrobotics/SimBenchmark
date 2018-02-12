@@ -5,6 +5,7 @@
 #include "odeSim/World_RG.hpp"
 
 int main() {
+
   ode_sim::World_RG odeSim(800, 600, 0.5);
   odeSim.setGravity({0, 0, -9.8});
 
