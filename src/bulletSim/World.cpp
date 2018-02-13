@@ -38,6 +38,16 @@ bullet_sim::World::~World() {
   delete broadphase_;
 }
 
+bullet_sim::object::Sphere *bullet_sim::World::addSphere(double radius,
+                                                         double mass,
+                                                         CollisionGroupType collisionGroup,
+                                                         CollisionGroupType collisionMask) {
+  object::Sphere *sphere = new bullet_sim::object::Sphere(radius, mass);
+  dynamicsWorld_->addRigidBody(sphere->getRigidBody_());
+  objectList_.push_back(sphere);
+  return sphere;
+}
+
 bullet_sim::object::Box *bullet_sim::World::addBox(double xLength,
                                                    double yLength,
                                                    double zLength,
@@ -73,5 +83,6 @@ void bullet_sim::World::setGravity(const btVector3 &gravity_) {
   World::gravity_ = gravity_;
   dynamicsWorld_->setGravity(gravity_);
 }
+
 
 

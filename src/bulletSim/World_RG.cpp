@@ -72,6 +72,16 @@ SingleBodyHandle World_RG::addBox(double xLength,
   return handle;
 }
 
+SingleBodyHandle World_RG::addSphere(double radius,
+                                     double mass,
+                                     CollisionGroupType collisionGroup,
+                                     CollisionGroupType collisionMask) {
+  SingleBodyHandle handle(world_.addSphere(radius, mass, collisionGroup, collisionMask), {}, {});
+  if(gui_) handle.visual().push_back(new rai_graphics::object::Sphere(radius, true));
+  processSingleBody(handle);
+  return handle;
+}
+
 SingleBodyHandle World_RG::addCheckerboard(double gridSize,
                                            double xLength,
                                            double yLength,
@@ -450,7 +460,6 @@ void World_RG::adjustTransparency(rai_graphics::object::SingleBodyObject *ob, bo
   else
     ob->setTransparency(1.0);
 }
-
 void World_RG::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
 }

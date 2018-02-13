@@ -54,6 +54,8 @@ class World_RG {
   //////////////////////////////////
   /// adding or removing objects ///
   //////////World////////////////////////
+  SingleBodyHandle addSphere(double radius, double mass,
+                             CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask=-1);
   SingleBodyHandle addBox(double xLength, double yLength, double zLength, double mass,
                           CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask = -1);
   SingleBodyHandle addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,

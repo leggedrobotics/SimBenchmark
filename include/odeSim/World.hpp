@@ -8,6 +8,7 @@
 #include <ode/ode.h>
 
 #include "Configure.hpp"
+#include "odeSim/object/Sphere.hpp"
 #include "odeSim/object/Box.hpp"
 #include "odeSim/object/CheckerBoard.hpp"
 
@@ -19,21 +20,30 @@ class World {
   explicit World();
   virtual ~World();
 
+  object::Sphere *addSphere(double radius, double mass,
+                            CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
   object::Box *addBox(double xLength, double yLength, double zLength, double mass,
                       CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
   object::CheckerBoard *addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
                                         CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
 
   void integrate(double dt);
-
   void setGravity(const dVector3 &gravity);
+
+  // dynamics world
+  static dWorldID dynamicsWorld_;
+  static dJointGroupID contactGroup_;
+
+  // constants
+  static const int maxContactsPerBody = 10;
 
  private:
 
-  // dynamics world
-  dWorldID dynamicsWorld_;
+  // call back
+  static void nearCallback(void *data, dGeomID o1, dGeomID o2);
+
+  // space
   dSpaceID space_;
-  dJointGroupID jointGroup_;
 
   // simulation properties
   dVector3 gravity_ = {0, 0, -9.81};
@@ -44,10 +54,8 @@ class World {
   // list
   std::vector<object::SingleBodyObject*> objectList_;
 
-
 };
 
 }
-
 
 #endif //ODESIM_WORLD_HPP

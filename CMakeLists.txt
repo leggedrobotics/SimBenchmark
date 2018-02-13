@@ -36,6 +36,7 @@ set(BulletSim_SRCS
         src/bulletSim/SingleBodyObject.cpp
         src/bulletSim/Box.cpp
         src/bulletSim/CheckerBoard.cpp
+        src/bulletSim/Sphere.cpp
         )
 
 set(BulletSim_HDRS
@@ -44,6 +45,7 @@ set(BulletSim_HDRS
         include/bulletSim/object/SingleBodyObject.hpp
         include/bulletSim/object/Box.hpp
         include/bulletSim/object/CheckerBoard.hpp
+        include/bulletSim/object/Sphere.hpp
         )
 
 add_library(BulletSim ${BulletSim_SRCS} ${BulletSim_HDRS})
@@ -55,6 +57,7 @@ set(ODESim_SRCS
         src/odeSim/SingleBodyObject.cpp
         src/odeSim/Box.cpp
         src/odeSim/CheckerBoard.cpp
+        include/odeSim/object/Sphere.cpp
         )
 
 set(ODESim_HDRS
@@ -63,6 +66,7 @@ set(ODESim_HDRS
         include/odeSim/object/SingleBodyObject.hpp
         include/odeSim/object/Box.hpp
         include/bulletSim/object/CheckerBoard.hpp
+        include/odeSim/object/Sphere.hpp
         )
 
 add_library(ODESim ${ODESim_SRCS} ${ODESim_HDRS})

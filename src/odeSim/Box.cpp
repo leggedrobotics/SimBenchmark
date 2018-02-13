@@ -10,8 +10,7 @@ ode_sim::object::Box::Box(double xlength,
                           double mass,
                           dWorldID worldID,
                           dSpaceID spaceID)
-    : SingleBodyObject(worldID, spaceID)
-{
+    : SingleBodyObject(worldID, spaceID) {
 
   // body
   body_ = dBodyCreate(worldID);

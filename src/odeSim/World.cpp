@@ -4,14 +4,9 @@
 
 #include "odeSim/World.hpp"
 
-// collision detecting callback
-static void nearCallback(void *contact, dGeomID o1, dGeomID o2) {
-  auto *contacts = static_cast<std::pair<std::vector<dContactGeom>, int> *>(contact);
-  if (contacts->first.size() < contacts->second + 500)
-    contacts->first.resize(contacts->first.size() * 3);
-
-  contacts->second += dCollide(o1, o2, 500, &contacts->first[contacts->second], sizeof(dContactGeom));
-}
+// static members
+dWorldID ode_sim::World::dynamicsWorld_;
+dJointGroupID ode_sim::World::contactGroup_;
 
 ode_sim::World::World() {
 
@@ -22,7 +17,7 @@ ode_sim::World::World() {
   dVector3 Center = {0, 0, 0, 0};
   dVector3 Extents = {10, 0, 10, 0};
   space_ = dQuadTreeSpaceCreate(0, Center, Extents, 7);
-  jointGroup_ = dJointGroupCreate(0);
+  contactGroup_ = dJointGroupCreate(0);
 
   dWorldSetGravity(dynamicsWorld_, gravity_[0], gravity_[1], gravity_[2]);
 
@@ -48,7 +43,7 @@ ode_sim::World::~World() {
     delete ob;
 
   // remove world
-  dJointGroupDestroy(jointGroup_);
+  dJointGroupDestroy(contactGroup_);
   dSpaceDestroy(space_);
   dWorldDestroy(dynamicsWorld_);
   dCloseODE();
@@ -57,6 +52,46 @@ ode_sim::World::~World() {
 void ode_sim::World::setGravity(const dVector3 &gravity) {
   memcpy(gravity_, gravity, sizeof(dVector3));
   dWorldSetGravity(dynamicsWorld_, gravity_[0], gravity_[1], gravity_[2]);
+}
+
+
+// collision detecting callback
+void ode_sim::World::nearCallback(void *data, dGeomID o1, dGeomID o2) {
+  int i;
+  // if (o1->body && o2->body) return;
+
+  // exit without doing anything if the two bodies are connected by a joint
+  dBodyID b1 = dGeomGetBody(o1);
+  dBodyID b2 = dGeomGetBody(o2);
+
+  if (b1 && b2 && dAreConnectedExcluding(b1,b2,dJointTypeContact))
+    return;
+
+  dContact contact[maxContactsPerBody];   // up to MAX_CONTACTS contacts per box-box
+
+  for (i=0; i<maxContactsPerBody; i++) {
+    contact[i].surface.mode = dContactBounce;
+    contact[i].surface.mu = dInfinity;
+    contact[i].surface.mu2 = 0;
+    contact[i].surface.bounce = 0.0;
+    contact[i].surface.bounce_vel = 0.0;
+    contact[i].surface.soft_cfm = 0.0;
+  }
+  if (int numc = dCollide(o1,o2, maxContactsPerBody, &contact[0].geom,
+                          sizeof(dContact))) {
+    dMatrix3 RI;
+    dRSetIdentity (RI);
+    const dReal ss[3] = {0.02,0.02,0.02};
+    for (i=0; i<numc; i++) {
+      dJointID c = dJointCreateContact (dynamicsWorld_, contactGroup_, contact+i);
+      dJointAttach (c,b1,b2);
+
+//      if (show_contacts) {
+//        dsSetColor(0,0,1);
+//        dsDrawBox(contact[i].geom.pos,RI,ss);
+//      }
+    }
+  }
 }
 
 void ode_sim::World::integrate(double dt) {
@@ -69,8 +104,19 @@ void ode_sim::World::integrate(double dt) {
 //    if (solver == 0)
 //      dWorldQuickStep(dynamicsWorld_, dt);
 //    else
-      dWorldStep(dynamicsWorld_, dt);
+  dWorldStep(dynamicsWorld_, dt);
 //  }
+
+  dJointGroupEmpty(contactGroup_);
+}
+
+ode_sim::object::Sphere *ode_sim::World::addSphere(double radius,
+                                                   double mass,
+                                                   CollisionGroupType collisionGroup,
+                                                   CollisionGroupType collisionMask) {
+  object::Sphere *sphere = new ode_sim::object::Sphere(radius, mass, dynamicsWorld_, space_);
+  objectList_.push_back(sphere);
+  return sphere;
 }
 
 ode_sim::object::Box *ode_sim::World::addBox(double xLength,

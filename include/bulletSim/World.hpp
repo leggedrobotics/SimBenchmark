@@ -6,6 +6,7 @@
 #define BULLETSIM_WORLD_HPP
 
 #include <btBulletDynamicsCommon.h>
+#include <bulletSim/object/Sphere.hpp>
 
 #include "Configure.hpp"
 #include "bulletSim/object/Box.hpp"
@@ -19,6 +20,8 @@ class World {
   explicit World();
   virtual ~World();
 
+  object::Sphere *addSphere(double radius, double mass,
+                            CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
   object::Box *addBox(double xLength, double yLength, double zLength, double mass,
                       CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
   object::CheckerBoard *addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
