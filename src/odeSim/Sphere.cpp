@@ -2,7 +2,7 @@
 // Created by kangd on 13.02.18.
 //
 
-#include "Sphere.hpp"
+#include "odeSim/object/Sphere.hpp"
 
 ode_sim::object::Sphere::Sphere(double radius, double mass, dWorldID worldID, dSpaceID spaceID)
     : SingleBodyObject(worldID, spaceID) {

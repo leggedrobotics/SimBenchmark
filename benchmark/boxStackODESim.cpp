@@ -8,6 +8,7 @@ int main() {
 
   ode_sim::World_RG odeSim(800, 600, 0.5);
   odeSim.setGravity({0, 0, -9.8});
+  odeSim.setLightPosition(30, 0, 10);
 
   // add objects
   auto checkerboard = odeSim.addCheckerboard(5.0, 100.0, 100.0, 0.1);

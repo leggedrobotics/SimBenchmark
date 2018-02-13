@@ -57,7 +57,7 @@ set(ODESim_SRCS
         src/odeSim/SingleBodyObject.cpp
         src/odeSim/Box.cpp
         src/odeSim/CheckerBoard.cpp
-        include/odeSim/object/Sphere.cpp
+        src/odeSim/Sphere.cpp
         )
 
 set(ODESim_HDRS
@@ -65,7 +65,7 @@ set(ODESim_HDRS
         include/odeSim/World_RG.hpp
         include/odeSim/object/SingleBodyObject.hpp
         include/odeSim/object/Box.hpp
-        include/bulletSim/object/CheckerBoard.hpp
+        include/odeSim/object/CheckerBoard.hpp
         include/odeSim/object/Sphere.hpp
         )
 
@@ -124,3 +124,6 @@ target_link_libraries(boxStackBulletSim ${BulletSimLink})
 
 add_executable(boxStackODESim benchmark/boxStackODESim.cpp)
 target_link_libraries(boxStackODESim ${ODESimLink})
+
+add_executable(anymalRaiSim benchmark/anymalRaiSim.cpp)
+target_link_libraries(anymalRaiSim ${RAI_SIM_LINK})

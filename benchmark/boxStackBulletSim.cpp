@@ -8,6 +8,7 @@ int main() {
 
   bullet_sim::World_RG bulletSim(800, 600, 0.5);
   bulletSim.setGravity({0, 0, -9.8});
+  bulletSim.setLightPosition(30, 0, 10);
 
   // add objects
   auto checkerboard = bulletSim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
