@@ -53,20 +53,9 @@ set(BulletSim_HDRS
         include/bulletSim/object/Sphere.hpp
         include/bulletSim/object/Object.cpp
         include/bulletSim/object/Object.hpp
-        include/bulletSim/object/ArticulatedSystem.hpp
-        include/bulletSim/object/ArticulatedSystem.cpp
-        )
-
-file(GLOB_RECURSE
-        BulletURDF_SRCS
-        "include/bulletSim/urdf/*"
-        "include/bulletSim/Utils/*"
-        "include/bulletSim/OpenGLWindow/*"
-        "include/bulletSim/ThirdPartyLibs/*"
         )
 
 add_library(BulletSim ${BulletSim_SRCS} ${BulletSim_HDRS})
-#add_library(BulletSimURDF ${BulletURDF_SRCS})   # TODO. integrate to bullet sim after test
 
 # ODESim
 set(ODESim_SRCS
@@ -147,6 +136,3 @@ target_link_libraries(boxStackODESim ${ODESimLink})
 # anymal
 add_executable(anymalRaiSim benchmark/anymalRaiSim.cpp)
 target_link_libraries(anymalRaiSim ${RAI_SIM_LINK})
-
-add_executable(anymalBulletSim benchmark/anymalBulletSim.cpp ${BulletURDF_SRCS})
-target_link_libraries(anymalBulletSim ${BulletSimLink})

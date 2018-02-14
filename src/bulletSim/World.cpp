@@ -76,17 +76,6 @@ bullet_sim::object::CheckerBoard *bullet_sim::World::addCheckerboard(double grid
   return checkerBoard;
 }
 
-bullet_sim::object::ArticulatedSystem * bullet_sim::World::addArticulatedSystem(std::string urdfPath,
-                                                                                CollisionGroupType collisionGroup,
-                                                                                CollisionGroupType collisionMask) {
-  objectList_.emplace_back(new object::ArticulatedSystem(urdfPath));
-  auto *asPtr = static_cast<object::ArticulatedSystem *>(objectList_.back());
-//  objectList_.back()->setIndexInWorld(this->objectList_.size() - 1);
-//  for (auto &colBody: asPtr->getCollisionObj())
-//    addCollisionObject(std::get<3>(colBody), std::get<2>(colBody), collisionGroup, collisionMask);
-  return asPtr;
-}
-
 void bullet_sim::World::integrate(double dt) {
   // TODO substep
   dynamicsWorld_->stepSimulation(dt, 1);

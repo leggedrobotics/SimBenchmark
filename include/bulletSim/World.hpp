@@ -11,7 +11,6 @@
 #include <bulletSim/object/Sphere.hpp>
 #include "bulletSim/object/Box.hpp"
 #include "bulletSim/object/CheckerBoard.hpp"
-#include "bulletSim/object/ArticulatedSystem.hpp"
 
 namespace bullet_sim {
 
@@ -27,9 +26,6 @@ class World {
                       CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) ;
   object::CheckerBoard *addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
                                         CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
-  object::ArticulatedSystem *addArticulatedSystem(std::string urdfPath,
-                                                  CollisionGroupType collisionGroup,
-                                                  CollisionGroupType collisionMask);
 
   void integrate(double dt);
 

@@ -71,9 +71,6 @@ class World_RG {
                                    CollisionGroupType collisionGroup = 1,
                                    CollisionGroupType collisionMask = -1,
                                    int flags = 0);
-  ArticulatedSystemHandle addArticulatedSystem(std::string nm,
-                                               CollisionGroupType collisionGroup = 1,
-                                               CollisionGroupType collisionMask=-1);
 
   //////////////////////////
   /// simulation methods ///
@@ -105,7 +102,6 @@ class World_RG {
   const int windowHeight_ = 600;
 
   std::vector<SingleBodyHandle> sbHandles_;
-  std::vector<ArticulatedSystemHandle> asHandles_;
   std::vector<object::SingleBodyObject *> framesAndCOMobj_;
 
   bool isReady_=false;

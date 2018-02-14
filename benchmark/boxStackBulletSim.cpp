@@ -14,7 +14,7 @@ int main() {
   auto checkerboard = bulletSim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
 
   auto box1 = bulletSim.addBox(1, 1, 1, 100);
-  box1->setPosition(0, 0, 10.0);
+  box1->setPosition(0, 0, 0.5);
 
   double dt = 0.01;  // (sec)
 
