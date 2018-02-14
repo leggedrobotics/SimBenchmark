@@ -7,27 +7,28 @@
 
 #include <ode/ode.h>
 
-#include "Configure.hpp"
+#include "interface/WorldInterface.hpp"
 #include "odeSim/object/Sphere.hpp"
 #include "odeSim/object/Box.hpp"
 #include "odeSim/object/CheckerBoard.hpp"
 
 namespace ode_sim {
 
-class World {
+class World: benchmark::WorldInterface {
 
  public:
   explicit World();
   virtual ~World();
 
   object::Sphere *addSphere(double radius, double mass,
-                            CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
+                            CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) override ;
   object::Box *addBox(double xLength, double yLength, double zLength, double mass,
-                      CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
+                      CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) override ;
   object::CheckerBoard *addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
-                                        CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
+                                        CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) override ;
 
-  void integrate(double dt);
+  void integrate(double dt) override ;
+
   void setGravity(const dVector3 &gravity);
 
   // dynamics world

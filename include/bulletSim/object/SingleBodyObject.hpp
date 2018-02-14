@@ -7,13 +7,12 @@
 
 #include <btBulletCollisionCommon.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
-#include <Eigen/Geometry>
-#include <raiSim/math.hpp>
+#include "interface/ObjectInterface.hpp"
 
 namespace bullet_sim {
 namespace object {
 
-class SingleBodyObject {
+class SingleBodyObject: public benchmark::object::ObjectInterface {
 
  public:
   SingleBodyObject(double mass);

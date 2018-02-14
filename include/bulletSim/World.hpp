@@ -7,27 +7,27 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <bulletSim/object/Sphere.hpp>
+#include <interface/WorldInterface.hpp>
 
-#include "Configure.hpp"
 #include "bulletSim/object/Box.hpp"
 #include "bulletSim/object/CheckerBoard.hpp"
 
 namespace bullet_sim {
 
-class World {
+class World: public benchmark::WorldInterface {
 
  public:
   explicit World();
   virtual ~World();
 
   object::Sphere *addSphere(double radius, double mass,
-                            CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
+                            CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) override ;
   object::Box *addBox(double xLength, double yLength, double zLength, double mass,
-                      CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
+                      CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) override ;
   object::CheckerBoard *addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
-                                        CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
+                                        CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) override ;
 
-  void integrate(double dt);
+  void integrate(double dt) override ;
 
   void setGravity(const btVector3 &gravity);
 

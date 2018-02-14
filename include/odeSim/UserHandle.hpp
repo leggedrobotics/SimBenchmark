@@ -5,7 +5,7 @@
 #ifndef BULLETSIM_USERHANDLE_HPP
 #define BULLETSIM_USERHANDLE_HPP
 
-#include "base/UserHandle.hpp"
+#include "interface/UserHandle.hpp"
 #include "odeSim/object/SingleBodyObject.hpp"
 
 namespace ode_sim {

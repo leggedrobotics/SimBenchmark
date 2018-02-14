@@ -29,6 +29,13 @@ link_directories(/usr/lib/x86_64-linux-gnu/)
 ## --------------------------- local files ---------------------------
 include_directories(include)
 
+# Benchmark
+set(Benchmark_HDRS
+        include/interface/ObjectInterface.hpp
+        include/interface/WorldInterface.hpp
+        include/interface/UserHandle.hpp
+        )
+
 # BulletSim
 set(BulletSim_SRCS
         src/bulletSim/World.cpp
@@ -48,7 +55,33 @@ set(BulletSim_HDRS
         include/bulletSim/object/Sphere.hpp
         )
 
+set(BulletURDF_SRCS
+#        include/bulletSim/importURDF/BulletUrdfImporter.h
+#        include/bulletSim/importURDF/BulletUrdfImporter.cpp
+        include/bulletSim/importURDF/b3ResourcePath.h
+        include/bulletSim/importURDF/b3ResourcePath.cpp
+        include/bulletSim/importURDF/MultiBodyCreationInterface.h
+        include/bulletSim/importURDF/MyMultiBodyCreator.h
+        include/bulletSim/importURDF/MyMultiBodyCreator.cpp
+        include/bulletSim/importURDF/SDFAudioTypes.h
+        include/bulletSim/importURDF/URDFImporterInterface.h
+        include/bulletSim/importURDF/URDFJointTypes.h
+        include/bulletSim/importURDF/urdfLexicalCast.h
+        include/bulletSim/importURDF/UrdfParser.h
+        include/bulletSim/importURDF/UrdfParser.cpp
+        include/bulletSim/importURDF/UrdfRenderingInterface.h
+        include/bulletSim/importURDF/urdfStringSplit.h
+        include/bulletSim/importURDF/urdfStringSplit.cpp
+        include/bulletSim/ThirdPartyLibs/tinyxml/tinystr.h
+        include/bulletSim/ThirdPartyLibs/tinyxml/tinystr.cpp
+        include/bulletSim/ThirdPartyLibs/tinyxml/tinyxml.h
+        include/bulletSim/ThirdPartyLibs/tinyxml/tinyxml.cpp
+        include/bulletSim/ThirdPartyLibs/tinyxml/tinyxmlerror.cpp
+        include/bulletSim/ThirdPartyLibs/tinyxml/tinyxmlparser.cpp
+        )
+
 add_library(BulletSim ${BulletSim_SRCS} ${BulletSim_HDRS})
+#add_library(BulletSimURDF ${BulletURDF_SRCS})   # TODO. integrate to bullet sim after test
 
 # ODESim
 set(ODESim_SRCS
@@ -99,7 +132,7 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 ## --------------------------- links ---------------------------
 # BulletSim
-set(BulletSimLink BulletCollision BulletDynamics LinearMath BulletSim ${RAI_GRAPHICS_OPENGL_LINK})
+set(BulletSimLink Bullet3Common BulletCollision BulletDynamics LinearMath BulletSim ${RAI_GRAPHICS_OPENGL_LINK})
 
 # ODESim
 set(ODESimLink ode ODESim ${RAI_GRAPHICS_OPENGL_LINK})
@@ -116,6 +149,7 @@ add_executable(odeTest test/odeTest.cpp)
 target_link_libraries(odeTest ode)
 
 # benchmark tests
+# box stack
 add_executable(boxStackRaiSim benchmark/boxStackRaiSim.cpp)
 target_link_libraries(boxStackRaiSim ${RAI_SIM_LINK})
 
@@ -125,5 +159,9 @@ target_link_libraries(boxStackBulletSim ${BulletSimLink})
 add_executable(boxStackODESim benchmark/boxStackODESim.cpp)
 target_link_libraries(boxStackODESim ${ODESimLink})
 
+# anymal
 add_executable(anymalRaiSim benchmark/anymalRaiSim.cpp)
 target_link_libraries(anymalRaiSim ${RAI_SIM_LINK})
+
+add_executable(anymalBulletSim benchmark/anymalBulletSim.cpp ${BulletURDF_SRCS})
+target_link_libraries(anymalBulletSim ${BulletSimLink})

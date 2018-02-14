@@ -6,7 +6,7 @@
 
 int main() {
 
-  bullet_sim::World_RG bulletSim(800, 600, 0.5);
+  bullet_sim::World_RG bulletSim(800, 600, 0.5, bullet_sim::NO_BACKGROUND);
   bulletSim.setGravity({0, 0, -9.8});
   bulletSim.setLightPosition(30, 0, 10);
 

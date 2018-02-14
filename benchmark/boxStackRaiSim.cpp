@@ -6,7 +6,7 @@
 
 int main() {
 
-  rai_sim::World_RG raiSim(800, 600, 0.5);
+  rai_sim::World_RG raiSim(800, 600, 0.5, rai_sim::NO_BACKGROUND);
   raiSim.setGravity({0, 0, -9.8});
   raiSim.setLightPosition(30, 0, 10);
 
