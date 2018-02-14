@@ -6,28 +6,32 @@
 #define BULLETSIM_WORLD_HPP
 
 #include <btBulletDynamicsCommon.h>
-#include <bulletSim/object/Sphere.hpp>
-#include <interface/WorldInterface.hpp>
+#include <Configure.hpp>
 
+#include <bulletSim/object/Sphere.hpp>
 #include "bulletSim/object/Box.hpp"
 #include "bulletSim/object/CheckerBoard.hpp"
+#include "bulletSim/object/ArticulatedSystem.hpp"
 
 namespace bullet_sim {
 
-class World: public benchmark::WorldInterface {
+class World {
 
  public:
   explicit World();
   virtual ~World();
 
   object::Sphere *addSphere(double radius, double mass,
-                            CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) override ;
+                            CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) ;
   object::Box *addBox(double xLength, double yLength, double zLength, double mass,
-                      CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) override ;
+                      CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) ;
   object::CheckerBoard *addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
-                                        CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) override ;
+                                        CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
+  object::ArticulatedSystem *addArticulatedSystem(std::string urdfPath,
+                                                  CollisionGroupType collisionGroup,
+                                                  CollisionGroupType collisionMask);
 
-  void integrate(double dt) override ;
+  void integrate(double dt);
 
   void setGravity(const btVector3 &gravity);
 
@@ -47,7 +51,7 @@ class World: public benchmark::WorldInterface {
   btSequentialImpulseConstraintSolver* solver_;
 
   // list
-  std::vector<object::SingleBodyObject*> objectList_;
+  std::vector<object::Object*> objectList_;
 
 //  std::vector<int> colIdxToObjIdx_;
 //  std::vector<int> colIdxToLocalObjIdx_;

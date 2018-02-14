@@ -4,7 +4,9 @@
 
 #include "bulletSim/World.hpp"
 
-bullet_sim::World::World() {
+namespace bullet_sim {
+
+World::World() {
 
   // broadphase
   broadphase_ = new btDbvtBroadphase();
@@ -24,7 +26,7 @@ bullet_sim::World::World() {
   dynamicsWorld_->setGravity(gravity_);
 }
 
-bullet_sim::World::~World() {
+World::~World() {
 
   // remove objects
   for (auto *ob: objectList_)
@@ -42,8 +44,8 @@ bullet_sim::object::Sphere *bullet_sim::World::addSphere(double radius,
                                                          double mass,
                                                          CollisionGroupType collisionGroup,
                                                          CollisionGroupType collisionMask) {
-  object::Sphere *sphere = new bullet_sim::object::Sphere(radius, mass);
-  dynamicsWorld_->addRigidBody(sphere->getRigidBody_());
+  bullet_sim::object::Sphere *sphere = new bullet_sim::object::Sphere(radius, mass);
+  dynamicsWorld_->addRigidBody(sphere->getRigidBody());
   objectList_.push_back(sphere);
   return sphere;
 }
@@ -55,8 +57,8 @@ bullet_sim::object::Box *bullet_sim::World::addBox(double xLength,
                                                    CollisionGroupType collisionGroup,
                                                    CollisionGroupType collisionMask) {
 
-  object::Box *box = new bullet_sim::object::Box(xLength, yLength, zLength, mass);
-  dynamicsWorld_->addRigidBody(box->getRigidBody_());
+  bullet_sim::object::Box *box = new bullet_sim::object::Box(xLength, yLength, zLength, mass);
+  dynamicsWorld_->addRigidBody(box->getRigidBody());
   objectList_.push_back(box);
   return box;
 }
@@ -69,9 +71,20 @@ bullet_sim::object::CheckerBoard *bullet_sim::World::addCheckerboard(double grid
                                                                      CollisionGroupType collisionMask) {
 
   object::CheckerBoard *checkerBoard = new bullet_sim::object::CheckerBoard();
-  dynamicsWorld_->addRigidBody(checkerBoard->getRigidBody_());
+  dynamicsWorld_->addRigidBody(checkerBoard->getRigidBody());
   objectList_.push_back(checkerBoard);
   return checkerBoard;
+}
+
+bullet_sim::object::ArticulatedSystem * bullet_sim::World::addArticulatedSystem(std::string urdfPath,
+                                                                                CollisionGroupType collisionGroup,
+                                                                                CollisionGroupType collisionMask) {
+  objectList_.emplace_back(new object::ArticulatedSystem(urdfPath));
+  auto *asPtr = static_cast<object::ArticulatedSystem *>(objectList_.back());
+//  objectList_.back()->setIndexInWorld(this->objectList_.size() - 1);
+//  for (auto &colBody: asPtr->getCollisionObj())
+//    addCollisionObject(std::get<3>(colBody), std::get<2>(colBody), collisionGroup, collisionMask);
+  return asPtr;
 }
 
 void bullet_sim::World::integrate(double dt) {
@@ -84,5 +97,4 @@ void bullet_sim::World::setGravity(const btVector3 &gravity_) {
   dynamicsWorld_->setGravity(gravity_);
 }
 
-
-
+} // bullet_sim

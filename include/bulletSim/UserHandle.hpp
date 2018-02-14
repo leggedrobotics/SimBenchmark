@@ -7,11 +7,12 @@
 
 #include "interface/UserHandle.hpp"
 #include "bulletSim/object/SingleBodyObject.hpp"
+#include "bulletSim/object/ArticulatedSystem.hpp"
 
 namespace bullet_sim {
 
 typedef benchmark::UserObjectHandle<bullet_sim::object::SingleBodyObject> SingleBodyHandle;
-//typedef UserObjectHandle<bullet_sim::object::ArticulatedSystem> ArticulatedSystemHandle;
+typedef benchmark::UserObjectHandle<bullet_sim::object::ArticulatedSystem> ArticulatedSystemHandle;
 //typedef UserObjectHandle<bullet_sim::object::Compound> CompoundHandle;
 //typedef UserWireHandle<bullet_sim::Wire> WireHandle;
 //typedef UserWireHandle<bullet_sim::StiffWire> StiffWireHandle;

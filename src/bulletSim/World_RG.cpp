@@ -100,6 +100,71 @@ SingleBodyHandle World_RG::addCheckerboard(double gridSize,
   return handle;
 }
 
+ArticulatedSystemHandle World_RG::addArticulatedSystem(std::string nm,
+                                                       CollisionGroupType collisionGroup,
+                                                       CollisionGroupType collisionMask) {
+  ArticulatedSystemHandle handle(world_.addArticulatedSystem(nm, collisionGroup, collisionMask), {}, {});
+  if(!gui_) {
+    asHandles_.push_back(handle);
+    return handle;
+  }
+//
+//  for (int i = 0; i < handle->visObj.size(); i++) {
+//    switch (std::get<3>(handle->visObj[i])) {
+//      case object::Shape::Box:
+//        handle.visual().push_back(new rai_graphics::object::Box(handle->visProps_[i].second.v[0],
+//                                                                handle->visProps_[i].second.v[1],
+//                                                                handle->visProps_[i].second.v[2], true));
+//        break;
+//      case object::Shape::Cylinder:
+//        handle.visual().push_back(new rai_graphics::object::Cylinder(handle->visProps_[i].second.v[0],
+//                                                                     handle->visProps_[i].second.v[1], true));
+//        break;
+//      case object::Shape::Sphere:
+//        handle.visual().push_back(new rai_graphics::object::Sphere(handle->visProps_[i].second.v[0], true));
+//        break;
+//      case object::Shape::Mesh:
+//        checkFileExistance(nm + handle->visProps_[i].first);
+//        handle.visual().push_back(new rai_graphics::object::Mesh(nm + handle->visProps_[i].first,
+//                                                                 handle->visProps_[i].second.v[0]));
+//        break;
+//    }
+//    handle.visual().back()->setColor({float(std::get<4>(handle->visObj[i]).v[0]),
+//                                      float(std::get<4>(handle->visObj[i]).v[1]),
+//                                      float(std::get<4>(handle->visObj[i]).v[2])});
+//    processGraphicalObject(handle.visual().back(), std::get<2>(handle->visObj[i]));
+//  }
+//
+//  for (int i = 0; i < handle->visColObj.size(); i++) {
+//    switch (std::get<3>(handle->visColObj[i])) {
+//      case object::Shape::Box:
+//        handle.alternateVisual().push_back(new rai_graphics::object::Box(handle->visColProps_[i].second.v[0],
+//                                                                         handle->visColProps_[i].second.v[1],
+//                                                                         handle->visColProps_[i].second.v[2],
+//                                                                         true));
+//        break;
+//      case object::Shape::Cylinder:
+//        handle.alternateVisual().push_back(new rai_graphics::object::Cylinder(handle->visColProps_[i].second.v[0],
+//                                                                              handle->visColProps_[i].second.v[1],
+//                                                                              true));
+//        break;
+//      case object::Shape::Sphere:
+//        handle.alternateVisual().push_back(new rai_graphics::object::Sphere(handle->visColProps_[i].second.v[0],
+//                                                                            true));
+//        break;
+//      case object::Shape::Mesh:
+//      RAIFATAL("mesh collision body is not supported yet");
+//        break;
+//      default: RAIFATAL("unsupported type: ");
+//        break;
+//    }
+//    processGraphicalObject(handle.alternateVisual().back(), std::get<2>(handle->visColObj[i]));
+//  }
+
+  asHandles_.push_back(handle);
+  return handle;
+}
+
 void World_RG::loop(double dt, double realTimeFactor) {
   while (visualizerLoop(dt, realTimeFactor))
     integrate(dt);
@@ -294,27 +359,6 @@ void World_RG::updateFrame() {
 //    }
 //  }
 
-  /// update wires
-//  for (auto sw: swHandles_) {
-//    Vec<3> p1 = sw->getP1();
-//    Vec<3> p2 = sw->getP2();
-//    sw.visual()[0]->mutexOn();
-//    sw.visual()[0]->clear();
-//    sw.visual()[0]->addSegment(float(p1.v[0]), float(p1.v[1]), float(p1.v[2]),
-//                               float(p2.v[0]), float(p2.v[1]), float(p2.v[2]));
-//    sw.visual()[0]->mutexOff();
-//  }
-//
-//  for (auto sw: cwHandles_) {
-//    Vec<3> p1 = sw->getP1();
-//    Vec<3> p2 = sw->getP2();
-//    sw.visual()[0]->mutexOn();
-//    sw.visual()[0]->clear();
-//    sw.visual()[0]->addSegment(float(p1.v[0]), float(p1.v[1]), float(p1.v[2]),
-//                               float(p2.v[0]), float(p2.v[1]), float(p2.v[2]));
-//    sw.visual()[0]->mutexOff();
-//  }
-
   /// contact points
 //  if (gui_->getCustomToggleState(1)) {
 //    contactPointMarker_->mutexLock();
@@ -432,6 +476,11 @@ void World_RG::updateFrame() {
 //      interactionIdx_.erase(gui_->getInteractingObjectID());
 //    }
 //  }
+}
+
+void World_RG::checkFileExistance(std::string nm) {
+  std::ifstream model_file(nm);
+  RAIFATAL_IF(!model_file, "Error opening file: " << nm);
 }
 
 void World_RG::processSingleBody(bullet_sim::SingleBodyHandle handle) {

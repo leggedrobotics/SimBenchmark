@@ -7,12 +7,13 @@
 
 #include <ode/common.h>
 #include <ode/ode.h>
-#include "interface/ObjectInterface.hpp"
+#include <Eigen/Geometry>
+#include <raiSim/math.hpp>
 
 namespace ode_sim {
 namespace object {
 
-class SingleBodyObject: public benchmark::object::ObjectInterface {
+class SingleBodyObject {
 
  public:
   SingleBodyObject(const dWorldID worldID, const dSpaceID spaceID);

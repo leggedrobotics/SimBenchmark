@@ -2,23 +2,25 @@
 // Created by kangd on 10.02.18.
 //
 
-#ifndef BULLETSIM_OBJECT_HPP
-#define BULLETSIM_OBJECT_HPP
+#ifndef BULLETSIM_SINGLEBODYOBJECT_HPP
+#define BULLETSIM_SINGLEBODYOBJECT_HPP
 
 #include <btBulletCollisionCommon.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
-#include "interface/ObjectInterface.hpp"
+#include <raiSim/math.hpp>
+#include <Eigen/Geometry>
+#include "Object.hpp"
 
 namespace bullet_sim {
 namespace object {
 
-class SingleBodyObject: public benchmark::object::ObjectInterface {
+class SingleBodyObject: public Object {
 
  public:
   SingleBodyObject(double mass);
   virtual ~SingleBodyObject();
 
-  btRigidBody *getRigidBody_() const;
+  btRigidBody *getRigidBody() const;
 
   virtual const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion();
   virtual void getQuaternion(rai_sim::Vec<4>& quat);
@@ -58,4 +60,4 @@ class SingleBodyObject: public benchmark::object::ObjectInterface {
 } // object
 } // bullet_sim
 
-#endif // BULLETSIM_OBJECT_HPP
+#endif //BULLETSIM_SINGLEBODYOBJECT_HPP

@@ -31,8 +31,6 @@ include_directories(include)
 
 # Benchmark
 set(Benchmark_HDRS
-        include/interface/ObjectInterface.hpp
-        include/interface/WorldInterface.hpp
         include/interface/UserHandle.hpp
         )
 
@@ -53,31 +51,18 @@ set(BulletSim_HDRS
         include/bulletSim/object/Box.hpp
         include/bulletSim/object/CheckerBoard.hpp
         include/bulletSim/object/Sphere.hpp
+        include/bulletSim/object/Object.cpp
+        include/bulletSim/object/Object.hpp
+        include/bulletSim/object/ArticulatedSystem.hpp
+        include/bulletSim/object/ArticulatedSystem.cpp
         )
 
-set(BulletURDF_SRCS
-#        include/bulletSim/importURDF/BulletUrdfImporter.h
-#        include/bulletSim/importURDF/BulletUrdfImporter.cpp
-        include/bulletSim/importURDF/b3ResourcePath.h
-        include/bulletSim/importURDF/b3ResourcePath.cpp
-        include/bulletSim/importURDF/MultiBodyCreationInterface.h
-        include/bulletSim/importURDF/MyMultiBodyCreator.h
-        include/bulletSim/importURDF/MyMultiBodyCreator.cpp
-        include/bulletSim/importURDF/SDFAudioTypes.h
-        include/bulletSim/importURDF/URDFImporterInterface.h
-        include/bulletSim/importURDF/URDFJointTypes.h
-        include/bulletSim/importURDF/urdfLexicalCast.h
-        include/bulletSim/importURDF/UrdfParser.h
-        include/bulletSim/importURDF/UrdfParser.cpp
-        include/bulletSim/importURDF/UrdfRenderingInterface.h
-        include/bulletSim/importURDF/urdfStringSplit.h
-        include/bulletSim/importURDF/urdfStringSplit.cpp
-        include/bulletSim/ThirdPartyLibs/tinyxml/tinystr.h
-        include/bulletSim/ThirdPartyLibs/tinyxml/tinystr.cpp
-        include/bulletSim/ThirdPartyLibs/tinyxml/tinyxml.h
-        include/bulletSim/ThirdPartyLibs/tinyxml/tinyxml.cpp
-        include/bulletSim/ThirdPartyLibs/tinyxml/tinyxmlerror.cpp
-        include/bulletSim/ThirdPartyLibs/tinyxml/tinyxmlparser.cpp
+file(GLOB_RECURSE
+        BulletURDF_SRCS
+        "include/bulletSim/urdf/*"
+        "include/bulletSim/Utils/*"
+        "include/bulletSim/OpenGLWindow/*"
+        "include/bulletSim/ThirdPartyLibs/*"
         )
 
 add_library(BulletSim ${BulletSim_SRCS} ${BulletSim_HDRS})

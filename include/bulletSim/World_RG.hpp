@@ -54,13 +54,26 @@ class World_RG {
   //////////////////////////////////
   /// adding or removing objects ///
   //////////World////////////////////////
-  SingleBodyHandle addSphere(double radius, double mass,
-                             CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask=-1);
-  SingleBodyHandle addBox(double xLength, double yLength, double zLength, double mass,
-                          CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask = -1);
-  SingleBodyHandle addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
-                                   CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask = -1,
+  SingleBodyHandle addSphere(double radius,
+                             double mass,
+                             CollisionGroupType collisionGroup = 1,
+                             CollisionGroupType collisionMask=-1);
+  SingleBodyHandle addBox(double xLength,
+                          double yLength,
+                          double zLength,
+                          double mass,
+                          CollisionGroupType collisionGroup = 1,
+                          CollisionGroupType collisionMask = -1);
+  SingleBodyHandle addCheckerboard(double gridSize,
+                                   double xLength,
+                                   double yLength,
+                                   double reflectanceI,
+                                   CollisionGroupType collisionGroup = 1,
+                                   CollisionGroupType collisionMask = -1,
                                    int flags = 0);
+  ArticulatedSystemHandle addArticulatedSystem(std::string nm,
+                                               CollisionGroupType collisionGroup = 1,
+                                               CollisionGroupType collisionMask=-1);
 
   //////////////////////////
   /// simulation methods ///
@@ -69,6 +82,7 @@ class World_RG {
   void setGravity(Eigen::Vector3d gravity);
 
  private:
+  void checkFileExistance(std::string nm);
   void processSingleBody(SingleBodyHandle handle);
   void processGraphicalObject(rai_graphics::object::SingleBodyObject* go, int li);
   void adjustTransparency(rai_graphics::object::SingleBodyObject* ob, bool hidable);
@@ -91,7 +105,7 @@ class World_RG {
   const int windowHeight_ = 600;
 
   std::vector<SingleBodyHandle> sbHandles_;
-//  std::vector<ArticulatedSystemHandle> asHandles_;
+  std::vector<ArticulatedSystemHandle> asHandles_;
   std::vector<object::SingleBodyObject *> framesAndCOMobj_;
 
   bool isReady_=false;

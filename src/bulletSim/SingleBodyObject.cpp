@@ -102,6 +102,6 @@ void bullet_sim::object::SingleBodyObject::setVelocity(double dx,
   assert('not implemented yet');
 }
 
-btRigidBody *bullet_sim::object::SingleBodyObject::getRigidBody_() const {
+btRigidBody *bullet_sim::object::SingleBodyObject::getRigidBody() const {
   return rigidBody_;
 }
