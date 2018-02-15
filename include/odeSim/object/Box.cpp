@@ -26,6 +26,9 @@ ode_sim::object::Box::Box(double xlength,
   dGeomSetCategoryBits(geometry_, collisionGroup);
   dGeomSetCollideBits(geometry_, collisionMask);
 
+  // material prop
+  dGeomSetData(geometry_, &matrialProp_);
+
   // position and orientation
   dMatrix3 R;
   dRSetIdentity(R);

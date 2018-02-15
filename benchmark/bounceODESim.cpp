@@ -1,12 +1,12 @@
 //
-// Created by kangd on 15.02.18.
+// Created by kangd on 16.02.18.
 //
 
-#include <bulletSim/World_RG.hpp>
+#include <odeSim/World_RG.hpp>
 
 int main() {
 
-  bullet_sim::World_RG sim(800, 600, 0.5, bullet_sim::NO_BACKGROUND);
+  ode_sim::World_RG sim(800, 600, 0.5, ode_sim::NO_BACKGROUND);
 
   sim.setGravity({0, 0, -9.8});
   sim.setLightPosition(30, 0, 10);

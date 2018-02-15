@@ -45,8 +45,8 @@ class SingleBodyObject: public Object {
   virtual void setExternalForce(Eigen::Vector3d force);
   virtual void setExternalTorque(Eigen::Vector3d torque);
 
-  virtual void setRestitution(double restitution);
-  virtual void setFriction(double friction);
+  virtual void setRestitutionCoefficient(double restitution);
+  virtual void setFrictionCoefficient(double friction);
 
   virtual bool isVisualizeFramesAndCom() const;
 

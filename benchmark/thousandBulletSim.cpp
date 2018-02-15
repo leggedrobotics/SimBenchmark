@@ -40,10 +40,10 @@ int main(int argc, char* argv[]) {
   bullet_sim::World_RG* sim;
 
   if (is_visualization_mode)
-    sim = new bullet_sim::World_RG(800, 600, 0.6);
+    sim = new bullet_sim::World_RG(800, 600, 0.5, bullet_sim::NO_BACKGROUND);
 
   // objects
-  auto checkerboard = sim->addCheckerboard(5.0, 200.0, 200.0, 0.1);
+  auto checkerboard = sim->addCheckerboard(5.0, 200.0, 200.0, 0.1,  1, -1, bullet_sim::GRID);
   std::vector<bullet_sim::SingleBodyHandle> objectPtrList;
 
   // random number generator

@@ -40,10 +40,10 @@ int main(int argc, char* argv[]) {
   ode_sim::World_RG* sim;
 
   if (is_visualization_mode)
-    sim = new ode_sim::World_RG(800, 600, 0.6, 0, ode_sim::SOLVER_QUICK);
+    sim = new ode_sim::World_RG(800, 600, 0.6, ode_sim::NO_BACKGROUND, ode_sim::SOLVER_QUICK);
 
   // objects
-  auto checkerboard = sim->addCheckerboard(5.0, 200.0, 200.0, 0.1);
+  auto checkerboard = sim->addCheckerboard(5.0, 200.0, 200.0, 0.1,  1, -1, ode_sim::GRID);
   std::vector<ode_sim::SingleBodyHandle> objectPtrList;
 
   // random number generator

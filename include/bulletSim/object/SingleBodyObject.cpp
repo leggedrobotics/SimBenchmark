@@ -4,7 +4,9 @@
 
 #include "SingleBodyObject.hpp"
 
-bullet_sim::object::SingleBodyObject::SingleBodyObject(double mass) : mass_(mass) {}
+bullet_sim::object::SingleBodyObject::SingleBodyObject(double mass) : mass_(mass) {
+
+}
 
 bullet_sim::object::SingleBodyObject::~SingleBodyObject() {
   delete rigidBody_;
@@ -125,11 +127,11 @@ void bullet_sim::object::SingleBodyObject::setVelocity(double dx,
 btRigidBody *bullet_sim::object::SingleBodyObject::getRigidBody() const {
   return rigidBody_;
 }
-void bullet_sim::object::SingleBodyObject::setRestitution(double restitution) {
+void bullet_sim::object::SingleBodyObject::setRestitutionCoefficient(double restitution) {
   rigidBody_->setRestitution(restitution);
 }
 
-void bullet_sim::object::SingleBodyObject::setFriction(double friction) {
+void bullet_sim::object::SingleBodyObject::setFrictionCoefficient(double friction) {
   rigidBody_->setFriction(friction);
 }
 

@@ -40,10 +40,10 @@ int main(int argc, char* argv[]) {
   rai_sim::World_RG* sim;
 
   if (is_visualization_mode)
-    sim = new rai_sim::World_RG(800,600,0.6);
+    sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
 
   // objects
-  auto checkerboard = sim->addCheckerboard(5.0, 200.0, 200.0, 0.1);
+  auto checkerboard = sim->addCheckerboard(5.0, 200.0, 200.0, 0.1, 1, -1, rai_sim::GRID);
   std::vector<rai_sim::SingleBodyHandle> objectPtrList;
 
   // random number generator

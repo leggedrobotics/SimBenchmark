@@ -158,6 +158,9 @@ target_link_libraries(bounceRaiSim ${RAI_SIM_LINK})
 add_executable(bounceBulletSim benchmark/bounceBulletSim.cpp)
 target_link_libraries(bounceBulletSim ${BulletSimLink})
 
+add_executable(bounceODESim benchmark/bounceODESim.cpp)
+target_link_libraries(bounceODESim ${ODESimLink})
+
 # thousand
 add_executable(thousandRaiSim benchmark/thousandRaiSim.cpp)
 target_link_libraries(thousandRaiSim ${RAI_SIM_LINK})

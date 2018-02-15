@@ -157,6 +157,16 @@ void object::SingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
     RAIFATAL('cannot set torque to static object');
   }
 }
+void object::SingleBodyObject::setRestitutionCoefficient(double restitution) {
+  matrialProp_.restitutionCoeff = restitution;
+  dGeomSetData(geometry_, &matrialProp_);
+}
+
+void object::SingleBodyObject::setFrictionCoefficient(double friction) {
+  matrialProp_.frictionalCoeff = friction;
+  dGeomSetData(geometry_, &matrialProp_);
+}
+
 bool ode_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {
   return visualizeFramesAndCom_;
 }

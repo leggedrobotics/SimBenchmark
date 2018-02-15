@@ -13,6 +13,11 @@
 namespace ode_sim {
 namespace object {
 
+struct MetrialProp {
+  double frictionalCoeff = 0.8;
+  double restitutionCoeff = 0.0;
+};
+
 class SingleBodyObject {
 
  public:
@@ -42,6 +47,9 @@ class SingleBodyObject {
   virtual void setExternalForce(Eigen::Vector3d force);
   virtual void setExternalTorque(Eigen::Vector3d torque);
 
+  virtual void setRestitutionCoefficient(double restitution);
+  virtual void setFrictionCoefficient(double friction);
+
   virtual bool isVisualizeFramesAndCom() const;
 
  protected:
@@ -51,6 +59,8 @@ class SingleBodyObject {
   dGeomID geometry_ = 0;
   dBodyID body_ = 0;
   dMass mass_;
+
+  MetrialProp matrialProp_;
 
   // from object
   bool visualizeFramesAndCom_ = true;

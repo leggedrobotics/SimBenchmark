@@ -70,12 +70,13 @@ void ode_sim::World::nearCallback(void *data, dGeomID o1, dGeomID o2) {
   dContact contact[maxContactsPerBody];   // up to MAX_CONTACTS contacts per box-box
 
   for (i=0; i<maxContactsPerBody; i++) {
+    object::MetrialProp *prop1 = (object::MetrialProp*)dGeomGetData(o1);
+    object::MetrialProp *prop2 = (object::MetrialProp*)dGeomGetData(o2);
+
     contact[i].surface.mode = dContactBounce;
     contact[i].surface.mu = dInfinity;
     contact[i].surface.mu2 = 0;
-    contact[i].surface.bounce = 0.0;
-    contact[i].surface.bounce_vel = 0.0;
-    contact[i].surface.soft_cfm = 0.0;
+    contact[i].surface.bounce = prop1->restitutionCoeff * prop2->restitutionCoeff;
   }
   if (int numc = dCollide(o1,o2, maxContactsPerBody, &contact[0].geom,
                           sizeof(dContact))) {

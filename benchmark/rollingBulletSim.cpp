@@ -12,18 +12,21 @@ int main() {
 
   // add objects
   auto checkerboard = bulletSim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
+  checkerboard->setFrictionCoefficient(0.5);
 
   auto box1 = bulletSim.addBox(20, 20, 1, 1);
   box1->setPosition(0, 0, 0.5);
-  box1->setVelocity(0, 10, 0, 0, 0, 0);
-  box1->setExternalForce({0, 0, 0});
+  box1->setFrictionCoefficient(0.8);
 
   auto ball1 = bulletSim.addSphere(0.5, 1);
   ball1->setPosition(0, -5, 1.5);
+  ball1->setFrictionCoefficient(1.0);
   auto ball2 = bulletSim.addSphere(0.5, 1);
   ball2->setPosition(0, 0, 1.5);
+  ball2->setFrictionCoefficient(1.0);
   auto ball3 = bulletSim.addSphere(0.5, 1);
   ball3->setPosition(0, 5, 1.5);
+  ball3->setFrictionCoefficient(1.0);
 
   // timestep
   double dt = 0.01;
