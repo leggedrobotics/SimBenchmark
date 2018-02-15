@@ -2,8 +2,8 @@
 // Created by kangd on 15.02.18.
 //
 
-#ifndef BENCHMARK_CAPSULE_HPP
-#define BENCHMARK_CAPSULE_HPP
+#ifndef BULLETSIM_CAPSULE_HPP
+#define BULLETSIM_CAPSULE_HPP
 
 #include "SingleBodyObject.hpp"
 
@@ -20,4 +20,4 @@ class Capsule: public SingleBodyObject {
 } // object
 } // bullet_sim
 
-#endif //BENCHMARK_CAPSULE_HPP
+#endif //BULLETSIM_CAPSULE_HPP

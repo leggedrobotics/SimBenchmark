@@ -109,6 +109,12 @@ void ode_sim::object::SingleBodyObject::setOrientation(Eigen::Matrix3d rotationM
   dGeomSetRotation(geometry_, drotation);
 }
 
+void object::SingleBodyObject::setOrientationRandom() {
+  Eigen::Vector4d quat(rn_.sampleUniform(), rn_.sampleUniform(), rn_.sampleUniform(), rn_.sampleUniform());
+  quat /= quat.norm();
+  setOrientation(quat(0), quat(1), quat(2), quat(3));
+}
+
 void ode_sim::object::SingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Quaterniond quaternion) {
   setPosition(originPosition);
   setOrientation(quaternion);
@@ -151,7 +157,6 @@ void object::SingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
     RAIFATAL('cannot set torque to static object');
   }
 }
-
 bool ode_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {
   return visualizeFramesAndCom_;
 }

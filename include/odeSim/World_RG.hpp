@@ -33,7 +33,7 @@ class World_RG {
   World_RG(int windowWidth,
            int windowHeight,
            float cms,
-           int flags,
+           int flags = 0,
            SolverOption solverOption = SOLVER_STANDARD);
 
   /* constructor for no visualization */
@@ -62,9 +62,9 @@ class World_RG {
   SingleBodyHandle addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
                                    CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask = -1,
                                    int flags = 0);
-  SingleBodyHandle addCapsule(double radius, double height, double mass, 
+  SingleBodyHandle addCapsule(double radius, double height, double mass,
                               CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask=-1);
-  
+
   //////////////////////////
   /// simulation methods ///
   //////////////////////////

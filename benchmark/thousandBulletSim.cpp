@@ -2,7 +2,7 @@
 // Created by kangd on 15.02.18.
 //
 
-#include <raiSim/World_RG.hpp>
+#include <bulletSim/World_RG.hpp>
 
 int main(int argc, char* argv[]) {
 
@@ -37,14 +37,14 @@ int main(int argc, char* argv[]) {
   rai::Utils::logger->setLogPath(path);
 
   // collision world
-  rai_sim::World_RG* sim;
+  bullet_sim::World_RG* sim;
 
   if (is_visualization_mode)
-    sim = new rai_sim::World_RG(800,600,0.6);
+    sim = new bullet_sim::World_RG(800, 600, 0.6);
 
   // objects
   auto checkerboard = sim->addCheckerboard(5.0, 200.0, 200.0, 0.1);
-  std::vector<rai_sim::SingleBodyHandle> objectPtrList;
+  std::vector<bullet_sim::SingleBodyHandle> objectPtrList;
 
   // random number generator
   rai::RandomNumberGenerator<double> rand;
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
   const double perturbation = 0.001;
   const double dropHeight = 5.0;
 
-  rai_sim::SingleBodyHandle obj(nullptr, {}, {});
+  bullet_sim::SingleBodyHandle obj(nullptr, {}, {});
 
   for(int i = 0; i < nPerDim; i++) {
     for(int j = 0; j < nPerDim; j++) {
@@ -76,8 +76,8 @@ int main(int argc, char* argv[]) {
 
         // set position
         obj->setPosition((double)i * 1.1 + rand.sampleUniform01() * perturbation,
-                         (double)j * 1.1  + rand.sampleUniform01() * perturbation,
-                         (double)k * 1.1  + rand.sampleUniform01() * perturbation + dropHeight);
+                         (double)j * 1.1 + rand.sampleUniform01() * perturbation,
+                         (double)k * 1.1 + rand.sampleUniform01() * perturbation + dropHeight);
 
         obj->setOrientationRandom();
 

@@ -2,8 +2,8 @@
 // Created by kangd on 15.02.18.
 //
 
-#ifndef BENCHMARK_CAPSULE_HPP
-#define BENCHMARK_CAPSULE_HPP
+#ifndef ODESIM_CAPSULE_HPP
+#define ODESIM_CAPSULE_HPP
 
 #include <Configure.hpp>
 #include "SingleBodyObject.hpp"
@@ -27,4 +27,4 @@ class Capsule: public SingleBodyObject {
 } // object
 } // ode_sim
 
-#endif //BENCHMARK_CAPSULE_HPP
+#endif //ODESIM_CAPSULE_HPP

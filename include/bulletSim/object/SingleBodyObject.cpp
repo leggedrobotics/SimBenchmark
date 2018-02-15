@@ -91,6 +91,12 @@ void bullet_sim::object::SingleBodyObject::setOrientation(double w, double x, do
   rigidBody_->getWorldTransform().setRotation(btQuaternion(x, y, z, w));
 }
 
+void bullet_sim::object::SingleBodyObject::setOrientationRandom() {
+  Eigen::Vector4d quat(rn_.sampleUniform(), rn_.sampleUniform(), rn_.sampleUniform(), rn_.sampleUniform());
+  quat /= quat.norm();
+  setOrientation(quat(0), quat(1), quat(2), quat(3));
+}
+
 void bullet_sim::object::SingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Quaterniond quaternion) {
   setPosition(originPosition);
   setOrientation(quaternion);
@@ -116,13 +122,13 @@ void bullet_sim::object::SingleBodyObject::setVelocity(double dx,
   rigidBody_->setLinearVelocity(btVector3(dx, dy, dz));
   rigidBody_->setAngularVelocity(btVector3(wx, wy, wz));
 }
-
 btRigidBody *bullet_sim::object::SingleBodyObject::getRigidBody() const {
   return rigidBody_;
 }
 void bullet_sim::object::SingleBodyObject::setRestitution(double restitution) {
   rigidBody_->setRestitution(restitution);
 }
+
 void bullet_sim::object::SingleBodyObject::setFriction(double friction) {
   rigidBody_->setFriction(friction);
 }
@@ -130,7 +136,6 @@ void bullet_sim::object::SingleBodyObject::setFriction(double friction) {
 void bullet_sim::object::SingleBodyObject::setExternalForce(Eigen::Vector3d force) {
   rigidBody_->applyCentralForce(btVector3(force[0], force[1], force[2]));
 }
-
 void bullet_sim::object::SingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
   rigidBody_->applyTorque(btVector3(torque[0], torque[1], torque[2]));
 }

@@ -34,7 +34,7 @@ class SingleBodyObject {
   virtual void setOrientation(Eigen::Quaterniond quaternion);
   virtual void setOrientation(double w, double x, double y, double z);
   virtual void setOrientation(Eigen::Matrix3d rotationMatrix);
-//  void setOrientationRandom();
+  virtual void setOrientationRandom();
   virtual void setPose(Eigen::Vector3d originPosition, Eigen::Quaterniond quaternion);
   virtual void setPose(Eigen::Vector3d originPosition, Eigen::Matrix3d rotationMatrix);
   virtual void setVelocity(Eigen::Vector3d linearVelocity, Eigen::Vector3d angularVelocity);
@@ -55,6 +55,7 @@ class SingleBodyObject {
   // from object
   bool visualizeFramesAndCom_ = true;
 
+  rai::RandomNumberGenerator<double> rn_;
 };
 
 } // object

@@ -33,7 +33,7 @@ class World_RG {
   World_RG(int windowWidth,
            int windowHeight,
            float cms,
-           int flags,
+           int flags = 0,
            SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
 
   /* constructor for no visualization */
