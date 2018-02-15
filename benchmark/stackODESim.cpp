@@ -6,7 +6,7 @@
 
 int main() {
 
-  ode_sim::World_RG odeSim(800, 600, 0.5, ode_sim::NO_BACKGROUND);
+  ode_sim::World_RG odeSim(800, 600, 0.5, ode_sim::NO_BACKGROUND, ode_sim::SOLVER_QUICK);
   odeSim.setGravity({0, 0, -9.8});
   odeSim.setLightPosition(30, 0, 10);
 

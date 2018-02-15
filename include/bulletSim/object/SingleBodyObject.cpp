@@ -120,3 +120,9 @@ void bullet_sim::object::SingleBodyObject::setVelocity(double dx,
 btRigidBody *bullet_sim::object::SingleBodyObject::getRigidBody() const {
   return rigidBody_;
 }
+void bullet_sim::object::SingleBodyObject::setRestitution(double restitution) {
+  rigidBody_->setRestitution(restitution);
+}
+void bullet_sim::object::SingleBodyObject::setFriction(double friction) {
+  rigidBody_->setFriction(friction);
+}

@@ -6,7 +6,7 @@
 
 namespace bullet_sim {
 
-World::World(SolverOption solverOption) {
+World::World(SolverOption solverOption) : solverOption_(solverOption) {
 
   // broadphase
   broadphase_ = new btDbvtBroadphase();

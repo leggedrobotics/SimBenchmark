@@ -43,6 +43,9 @@ class SingleBodyObject: public Object {
   virtual void setVelocity(Eigen::Vector3d linearVelocity, Eigen::Vector3d angularVelocity);
   virtual void setVelocity(double dx, double dy, double dz, double wx, double wy, double wz);
 
+  virtual void setRestitution(double restitution);
+  virtual void setFriction(double friction);
+
   virtual bool isVisualizeFramesAndCom() const;
 
  protected:

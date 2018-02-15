@@ -8,7 +8,7 @@
 dWorldID ode_sim::World::dynamicsWorld_;
 dJointGroupID ode_sim::World::contactGroup_;
 
-ode_sim::World::World() {
+ode_sim::World::World(SolverOption solverOption) : solverOption_(solverOption) {
 
   // world
   dInitODE();
@@ -100,12 +100,14 @@ void ode_sim::World::integrate(double dt) {
   dSpaceCollide(space_, 0, &nearCallback);
 
   // collision solving
-//  if (!pause) {
-//    if (solver == 0)
-//      dWorldQuickStep(dynamicsWorld_, dt);
-//    else
-  dWorldStep(dynamicsWorld_, dt);
-//  }
+  if(solverOption_ == SOLVER_QUICK)
+  {
+    dWorldQuickStep(dynamicsWorld_, dt);
+  } 
+  else
+  {
+    dWorldStep(dynamicsWorld_, dt);
+  }
 
   dJointGroupEmpty(contactGroup_);
 }

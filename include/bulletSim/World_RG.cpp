@@ -21,6 +21,8 @@ World_RG::World_RG(int windowWidth, int windowHeight, float cms, int flags, Solv
   frameY_.reset(new rai_graphics::object::Arrow(0.02 * cms, 0.04 * cms, 0.5 * cms, 0.08 * cms));
   frameZ_.reset(new rai_graphics::object::Arrow(0.02 * cms, 0.04 * cms, 0.5 * cms, 0.08 * cms));
 
+  watch_.start();
+  visualizerWatch_.start();
   lightProperty_.pos_light = {0.0, 10.0, 10.0};
 
   if (flags & NO_BACKGROUND) {

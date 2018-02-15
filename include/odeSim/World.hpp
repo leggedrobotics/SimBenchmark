@@ -14,10 +14,15 @@
 
 namespace ode_sim {
 
+enum SolverOption {
+  SOLVER_STANDARD,
+  SOLVER_QUICK
+};
+
 class World {
 
  public:
-  explicit World();
+  explicit World(SolverOption solverOption = SOLVER_STANDARD);
   virtual ~World();
 
   object::Sphere *addSphere(double radius, double mass,
@@ -51,7 +56,7 @@ class World {
   dVector3 gravity_ = {0, 0, -9.81};
 
   // contact solver
-  // TODO types and parameters
+  SolverOption solverOption_ = SOLVER_STANDARD;
 
   // list
   std::vector<object::SingleBodyObject*> objectList_;

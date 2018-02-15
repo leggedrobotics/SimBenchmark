@@ -129,19 +129,25 @@ target_link_libraries(odeTest ode)
 
 # benchmark tests
 # stack
-add_executable(boxStackRaiSim benchmark/stackRaiSim.cpp)
-target_link_libraries(boxStackRaiSim ${RAI_SIM_LINK})
+add_executable(stackRaiSim benchmark/stackRaiSim.cpp)
+target_link_libraries(stackRaiSim ${RAI_SIM_LINK})
 
-add_executable(boxStackBulletSim benchmark/stackBulletSim.cpp)
-target_link_libraries(boxStackBulletSim ${BulletSimLink})
+add_executable(stackBulletSim benchmark/stackBulletSim.cpp)
+target_link_libraries(stackBulletSim ${BulletSimLink})
 
-add_executable(boxStackODESim benchmark/stackODESim.cpp)
-target_link_libraries(boxStackODESim ${ODESimLink})
+add_executable(stackODESim benchmark/stackODESim.cpp)
+target_link_libraries(stackODESim ${ODESimLink})
 
 # rolling
 add_executable(rollingRaiSim benchmark/rollingRaiSim.cpp)
 target_link_libraries(rollingRaiSim ${RAI_SIM_LINK})
 
+# bouncing
+add_executable(bounceRaiSim benchmark/bounceRaiSim.cpp)
+target_link_libraries(bounceRaiSim ${RAI_SIM_LINK})
+
+add_executable(bounceBulletSim benchmark/bounceBulletSim.cpp)
+target_link_libraries(bounceBulletSim ${BulletSimLink})
 
 # anymal
 add_executable(anymalRaiSim benchmark/anymalRaiSim.cpp)

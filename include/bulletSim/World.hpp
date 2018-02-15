@@ -66,6 +66,7 @@ class World {
   btVector3 gravity_ = {0, 0, -9.81};
 
   // contact solver
+  SolverOption solverOption_ = SOLVER_SEQUENTIAL_IMPULSE;
   btConstraintSolver* solver_;
   btMLCPSolverInterface* mlcpSolver_ = 0;
 
