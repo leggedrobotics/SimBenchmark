@@ -29,9 +29,9 @@ World::World(SolverOption solverOption) : solverOption_(solverOption) {
       mlcpSolver_ = new btSolveProjectedGaussSeidel;
       solver_ = new btMLCPSolver(mlcpSolver_);
       break;
-//    case SOLVER_MLCP_DANTZIG:
-//      solver_ = new btMLCPSolver(new btDantzigSolver);
-//      break;
+    case SOLVER_MLCP_DANTZIG:
+      solver_ = new btMLCPSolver(new btDantzigSolver);
+      break;
     case SOLVER_MLCP_LEMKE:
       mlcpSolver_ = new btLemkeSolver;
       solver_ = new btMLCPSolver(mlcpSolver_);
@@ -57,10 +57,10 @@ World::World(SolverOption solverOption) : solverOption_(solverOption) {
 //  dynamicsWorld_->getSolverInfo().m_restitution = 0.0;
 //  dynamicsWorld_->getSolverInfo().m_maxErrorReduction = btScalar(20.);
 //  dynamicsWorld_->getSolverInfo().m_numIterations = 10;                     // TODO
-  dynamicsWorld_->getSolverInfo().m_erp = btScalar(0);
+//  dynamicsWorld_->getSolverInfo().m_erp = btScalar(0.2);
 //  dynamicsWorld_->getSolverInfo().m_erp2 = btScalar(0);
 //  dynamicsWorld_->getSolverInfo().m_globalCfm = btScalar(0.0);
-  dynamicsWorld_->getSolverInfo().m_frictionERP = 0;
+//  dynamicsWorld_->getSolverInfo().m_frictionERP = 0;
 //  dynamicsWorld_->getSolverInfo().m_frictionCFM = 0;
 //  dynamicsWorld_->getSolverInfo().m_sor = btScalar(1.);
 //  dynamicsWorld_->getSolverInfo().m_splitImpulse = false;
@@ -134,7 +134,7 @@ bullet_sim::object::CheckerBoard *bullet_sim::World::addCheckerboard(double grid
 void bullet_sim::World::integrate(double dt) {
   // TODO substep
   // simulation step
-  dynamicsWorld_->stepSimulation(dt, 1);
+  dynamicsWorld_->stepSimulation(dt, 0);
 
   // clear collision
   contactProblemList_.clear();

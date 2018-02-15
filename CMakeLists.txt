@@ -13,9 +13,8 @@ set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed -O3 -mtune=native -march=native")
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 
 # bullet double precision
-# TODO
-#add_definitions( -DBT_USE_DOUBLE_PRECISION)
-#set( BULLET_DOUBLE_DEF "-DBT_USE_DOUBLE_PRECISION")
+add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
+#set(BULLET_DOUBLE_DEF "-DBT_USE_DOUBLE_PRECISION")
 
 # raiCommons debug
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -111,7 +110,7 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 ## --------------------------- links ---------------------------
 # BulletSim
-set(BulletSimLink Bullet3Common BulletDynamics BulletCollision LinearMath BulletSim ${RAI_GRAPHICS_OPENGL_LINK})
+set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath BulletSim ${RAI_GRAPHICS_OPENGL_LINK})
 
 # ODESim
 set(ODESimLink ode ODESim ${RAI_GRAPHICS_OPENGL_LINK})
