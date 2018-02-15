@@ -30,10 +30,7 @@ class World_RG {
  public:
 
   /* constructor for visualization */
-  World_RG(int windowWidth,
-           int windowHeight,
-           float cms,
-           int flags = 0);
+  World_RG(int windowWidth, int windowHeight, float cms, int flags, SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
 
   /* constructor for no visualization */
   World_RG() = default;
@@ -103,6 +100,9 @@ class World_RG {
 
   std::vector<SingleBodyHandle> sbHandles_;
   std::vector<object::SingleBodyObject *> framesAndCOMobj_;
+
+  // solver type
+  SolverOption solverOption_ = SOLVER_SEQUENTIAL_IMPULSE;
 
   bool isReady_=false;
   bool isEnded_=false;

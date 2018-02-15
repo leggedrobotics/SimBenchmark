@@ -2,14 +2,16 @@
 // Created by kangd on 10.02.18.
 //
 
-#include "bulletSim/World_RG.hpp"
+#include "World_RG.hpp"
 
 namespace bullet_sim {
 
-World_RG::World_RG(int windowWidth, int windowHeight, float cms, int flags) :
+World_RG::World_RG(int windowWidth, int windowHeight, float cms, int flags, SolverOption solverOption) :
     windowWidth_(windowWidth),
     windowHeight_(windowHeight),
-    visualizerFlags_(flags) {
+    visualizerFlags_(flags),
+    solverOption_(solverOption),
+    world_(solverOption) {
 
   gui_.reset(new rai_graphics::RAI_graphics(windowWidth, windowHeight));
   graphicalComMarker_.reset(new rai_graphics::object::Sphere(0.05, false));
@@ -295,16 +297,16 @@ void World_RG::updateFrame() {
 //  }
 
   /// contact points
-//  if (gui_->getCustomToggleState(1)) {
-//    contactPointMarker_->mutexLock();
-//    contactPointMarker_->clearGhost();
-//    for (auto &pro: *world_.getCollisionProblem()) {
-//      Eigen::Vector3d pos = pro.position_W.e();
-//      contactPointMarker_->addGhost(pos);
-//    }
-//    contactPointMarker_->mutexUnLock();
-//  } else
-//    contactPointMarker_->clearGhost();
+  if (gui_->getCustomToggleState(1)) {
+    contactPointMarker_->mutexLock();
+    contactPointMarker_->clearGhost();
+    for (auto &pro: *world_.getCollisionProblem()) {
+      Eigen::Vector3d pos = pro.point_;
+      contactPointMarker_->addGhost(pos);
+    }
+    contactPointMarker_->mutexUnLock();
+  } else
+    contactPointMarker_->clearGhost();
 
   /// contact forces
 //  if (gui_->getCustomToggleState(2)) {

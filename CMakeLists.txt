@@ -12,6 +12,11 @@ set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed -O3 -mtune=native -march=native")
 # TODO bullet debug check (in release mode)
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 
+# bullet double precision
+# TODO
+#add_definitions( -DBT_USE_DOUBLE_PRECISION)
+#set( BULLET_DOUBLE_DEF "-DBT_USE_DOUBLE_PRECISION")
+
 # raiCommons debug
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DRAIDEBUG)
@@ -36,12 +41,13 @@ set(Benchmark_HDRS
 
 # BulletSim
 set(BulletSim_SRCS
-        src/bulletSim/World.cpp
-        src/bulletSim/World_RG.cpp
-        src/bulletSim/SingleBodyObject.cpp
-        src/bulletSim/Box.cpp
-        src/bulletSim/CheckerBoard.cpp
-        src/bulletSim/Sphere.cpp
+        include/bulletSim/World.cpp
+        include/bulletSim/World_RG.cpp
+        include/bulletSim/object/SingleBodyObject.cpp
+        include/bulletSim/object/Box.cpp
+        include/bulletSim/object/CheckerBoard.cpp
+        include/bulletSim/object/Sphere.cpp
+        include/bulletSim/object/Object.cpp
         )
 
 set(BulletSim_HDRS
@@ -51,7 +57,6 @@ set(BulletSim_HDRS
         include/bulletSim/object/Box.hpp
         include/bulletSim/object/CheckerBoard.hpp
         include/bulletSim/object/Sphere.hpp
-        include/bulletSim/object/Object.cpp
         include/bulletSim/object/Object.hpp
         )
 
@@ -59,12 +64,12 @@ add_library(BulletSim ${BulletSim_SRCS} ${BulletSim_HDRS})
 
 # ODESim
 set(ODESim_SRCS
-        src/odeSim/World.cpp
-        src/odeSim/World_RG.cpp
-        src/odeSim/SingleBodyObject.cpp
-        src/odeSim/Box.cpp
-        src/odeSim/CheckerBoard.cpp
-        src/odeSim/Sphere.cpp
+        include/odeSim/World.cpp
+        include/odeSim/World_RG.cpp
+        include/odeSim/object/SingleBodyObject.cpp
+        include/odeSim/object/Box.cpp
+        include/odeSim/object/CheckerBoard.cpp
+        include/odeSim/object/Sphere.cpp
         )
 
 set(ODESim_HDRS
@@ -106,7 +111,7 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 ## --------------------------- links ---------------------------
 # BulletSim
-set(BulletSimLink Bullet3Common BulletCollision BulletDynamics LinearMath BulletSim ${RAI_GRAPHICS_OPENGL_LINK})
+set(BulletSimLink Bullet3Common BulletDynamics BulletCollision LinearMath BulletSim ${RAI_GRAPHICS_OPENGL_LINK})
 
 # ODESim
 set(ODESimLink ode ODESim ${RAI_GRAPHICS_OPENGL_LINK})
@@ -123,15 +128,20 @@ add_executable(odeTest test/odeTest.cpp)
 target_link_libraries(odeTest ode)
 
 # benchmark tests
-# box stack
-add_executable(boxStackRaiSim benchmark/boxStackRaiSim.cpp)
+# stack
+add_executable(boxStackRaiSim benchmark/stackRaiSim.cpp)
 target_link_libraries(boxStackRaiSim ${RAI_SIM_LINK})
 
-add_executable(boxStackBulletSim benchmark/boxStackBulletSim.cpp)
+add_executable(boxStackBulletSim benchmark/stackBulletSim.cpp)
 target_link_libraries(boxStackBulletSim ${BulletSimLink})
 
-add_executable(boxStackODESim benchmark/boxStackODESim.cpp)
+add_executable(boxStackODESim benchmark/stackODESim.cpp)
 target_link_libraries(boxStackODESim ${ODESimLink})
+
+# rolling
+add_executable(rollingRaiSim benchmark/rollingRaiSim.cpp)
+target_link_libraries(rollingRaiSim ${RAI_SIM_LINK})
+
 
 # anymal
 add_executable(anymalRaiSim benchmark/anymalRaiSim.cpp)

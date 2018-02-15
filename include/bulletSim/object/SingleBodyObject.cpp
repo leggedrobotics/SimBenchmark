@@ -2,13 +2,13 @@
 // Created by kangd on 10.02.18.
 //
 
-#include "bulletSim/object/SingleBodyObject.hpp"
+#include "SingleBodyObject.hpp"
 
 bullet_sim::object::SingleBodyObject::SingleBodyObject(double mass) : mass_(mass) {}
 
 bullet_sim::object::SingleBodyObject::~SingleBodyObject() {
-  delete motionState_;
   delete rigidBody_;
+  delete motionState_;
   delete collisionShape_;
 }
 
@@ -18,34 +18,49 @@ bool bullet_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {
 }
 
 const Eigen::Map<Eigen::Matrix<double, 4, 1>> bullet_sim::object::SingleBodyObject::getQuaternion() {
-  return Eigen::Map<Eigen::Matrix<double, 4, 1>>(nullptr);
+  const btQuaternion &quaternion = rigidBody_->getWorldTransform().getRotation();
+  rai_sim::Vec<4> quat = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
+  return quat.e();
 }
 
 void bullet_sim::object::SingleBodyObject::getQuaternion(rai_sim::Vec<4> &quat) {
+  const btQuaternion &quaternion = rigidBody_->getWorldTransform().getRotation();
+  quat = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
 }
 
 void bullet_sim::object::SingleBodyObject::getRotationMatrix(rai_sim::Mat<3, 3> &rotation) {
+  const btQuaternion &quaternion = rigidBody_->getWorldTransform().getRotation();
+  RAIFATAL('not implemented yet');
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 3> > bullet_sim::object::SingleBodyObject::getRotationMatrix() {
+  RAIFATAL('not implemented yet');
   return Eigen::Map<Eigen::Matrix<double, 3, 3>>(nullptr);
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getPosition() {
-  btVector3 position = rigidBody_->getWorldTransform().getOrigin();
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
+  const btVector3 &position = rigidBody_->getWorldTransform().getOrigin();
+  rai_sim::Vec<3> pos = {position.x(), position.y(), position.z()};
+  return pos.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getComPosition() {
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
+  const btVector3 &position = rigidBody_->getWorldTransform().getOrigin();
+  rai_sim::Vec<3> pos = {position.x(), position.y(), position.z()};
+  RAIWARN('check if COM = body origin!');
+  return pos.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getLinearVelocity() {
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
+  const btVector3 &linearVelocity = rigidBody_->getLinearVelocity();
+  rai_sim::Vec<3> linvel = {linearVelocity.x(), linearVelocity.y(), linearVelocity.z()};
+  return linvel.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getAngularVelocity() {
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
+  const btVector3 &angularVelocity = rigidBody_->getAngularVelocity();
+  rai_sim::Vec<3> angvel = {angularVelocity.x(), angularVelocity.y(), angularVelocity.z()};
+  return angvel.e();
 }
 
 void bullet_sim::object::SingleBodyObject::getPosition_W(rai_sim::Vec<3> &pos_w) {
@@ -99,7 +114,7 @@ void bullet_sim::object::SingleBodyObject::setVelocity(double dx,
                                                        double wy,
                                                        double wz) {
 // TODO
-  assert('not implemented yet');
+  RAIFATAL('not implemented yet');
 }
 
 btRigidBody *bullet_sim::object::SingleBodyObject::getRigidBody() const {

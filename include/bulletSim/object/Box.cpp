@@ -1,13 +1,15 @@
 //
-// Created by kangd on 13.02.18.
+// Created by kangd on 09.02.18.
 //
 
-#include "bulletSim/object/Sphere.hpp"
+#include <bulletSim/object/Box.hpp>
 
-bullet_sim::object::Sphere::Sphere(double radius, double mass) : SingleBodyObject(mass) {
+bullet_sim::object::Box::Box(double xlength, double ylength, double zlength, double mass) : SingleBodyObject(mass) {
 
-// collision shape
-  collisionShape_ = new btSphereShape(radius);
+  // collision shape
+  collisionShape_ = new btBoxShape(btVector3(.5 * xlength,
+                                    .5 * ylength,
+                                    .5 * zlength));
 
   // position and orientation
   btTransform transform;
@@ -22,4 +24,5 @@ bullet_sim::object::Sphere::Sphere(double radius, double mass) : SingleBodyObjec
   // rigid body
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState_, collisionShape_, localInertia);
   rigidBody_ = new btRigidBody(rbInfo);
+  rigidBody_->setFlags(BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY);
 }

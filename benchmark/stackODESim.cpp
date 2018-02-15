@@ -15,6 +15,12 @@ int main() {
 
   auto box1 = odeSim.addBox(1, 1, 1, 100);
   box1->setPosition(0, 0, 0.5);
+  auto box2 = odeSim.addBox(1, 1, 1, 100);
+  box2->setPosition(0, 0, 1.5);
+  auto box3 = odeSim.addBox(1, 1, 1, 100);
+  box3->setPosition(0, 0, 2.5);
+  auto box4 = odeSim.addBox(1, 1, 1, 100);
+  box4->setPosition(0, 0, 3.5);
 
   double dt = 0.01;  // (sec)
 
