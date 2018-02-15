@@ -13,7 +13,12 @@ namespace object {
 class Sphere: public SingleBodyObject {
 
  public:
-  Sphere(double radius, double mass, dWorldID worldID, dSpaceID spaceID);
+  Sphere(double radius,
+           double mass,
+           dWorldID worldID,
+           dSpaceID spaceID,
+           CollisionGroupType collisionGroup,
+           CollisionGroupType collisionMask);
 
 };
 

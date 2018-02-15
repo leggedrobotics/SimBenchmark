@@ -10,40 +10,69 @@ object::SingleBodyObject::SingleBodyObject(const dWorldID worldID, const dSpaceI
     : worldID_(worldID), spaceID_ (spaceID) {}
 
 object::SingleBodyObject::~SingleBodyObject() {
-  dBodyDestroy(body_);
-  dGeomDestroy(geometry_);
+  if(body_)
+    dBodyDestroy(body_);
+  if(geometry_)
+    dGeomDestroy(geometry_);
 }
 
 const Eigen::Map<Eigen::Matrix<double, 4, 1>> ode_sim::object::SingleBodyObject::getQuaternion() {
+//  const dQuaternion *quaternion = dGeomGetQuaternion(geometry_);
+  RAIFATAL('not implemented yet');
   return Eigen::Map<Eigen::Matrix<double, 4, 1>>(nullptr);
 }
 
 void ode_sim::object::SingleBodyObject::getQuaternion(rai_sim::Vec<4> &quat) {
-
+//  dGeomGetQuaternion(geometry_, &dquaternion);
+//  RAIFATAL('not implemented yet');
+//  quat = {dquaternion[0], dquaternion[1], dquaternion[2] dquaternion[3]};
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 3> > ode_sim::object::SingleBodyObject::getRotationMatrix() {
+  const dReal* rot = dGeomGetRotation(geometry_);
+  RAIFATAL('not implemented yet');
   return Eigen::Map<Eigen::Matrix<double, 3, 3>>(nullptr);
 }
 
 void ode_sim::object::SingleBodyObject::getRotationMatrix(rai_sim::Mat<3, 3> &rotation) {
-
+  RAIFATAL('not implemented yet');
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::SingleBodyObject::getPosition() {
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
+  const dReal *position = dGeomGetPosition(geometry_);
+  rai_sim::Vec<3> pos = {position[0], position[1], position[2]};
+  return pos.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::SingleBodyObject::getComPosition() {
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
+  const dReal *position = dGeomGetPosition(geometry_);
+  rai_sim::Vec<3> pos = {position[0], position[1], position[2]};
+  RAIWARN('check if COM = body origin!');
+  return pos.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::SingleBodyObject::getLinearVelocity() {
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
+  const dReal *linearVelocity;
+  if(body_) {
+    linearVelocity = dBodyGetLinearVel(body_);
+  }
+  else {
+    RAIFATAL('cannot get velocity from static object');
+  }
+  rai_sim::Vec<3> linvel = {linearVelocity[0], linearVelocity[1], linearVelocity[2]};
+  return linvel.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::SingleBodyObject::getAngularVelocity() {
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
+  const dReal *angularVelocity;
+  if(body_) {
+    angularVelocity = dBodyGetAngularVel(body_);
+  }
+  else {
+    RAIFATAL('cannot get velocity from static object');
+  }
+  rai_sim::Vec<3> angvel = {angularVelocity[0], angularVelocity[1], angularVelocity[2]};
+  return angvel.e();
 }
 
 void ode_sim::object::SingleBodyObject::getPosition_W(rai_sim::Vec<3> &pos_w) {
@@ -96,8 +125,13 @@ void ode_sim::object::SingleBodyObject::setVelocity(Eigen::Vector3d linearVeloci
 }
 
 void ode_sim::object::SingleBodyObject::setVelocity(double dx, double dy, double dz, double wx, double wy, double wz) {
-// TODO
-  assert('not implemented yet');
+  if(body_) {
+    dBodySetLinearVel(body_, dx, dy, dz);
+    dBodySetAngularVel(body_, wx, wy, wz);
+  }
+  else {
+    RAIFATAL('cannot set velocity to static object');
+  }
 }
 
 bool ode_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {

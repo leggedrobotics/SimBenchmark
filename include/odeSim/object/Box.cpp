@@ -2,14 +2,18 @@
 // Created by kangd on 11.02.18.
 //
 
+#include <Configure.hpp>
 #include "odeSim/object/Box.hpp"
+#include "SingleBodyObject.hpp"
 
 ode_sim::object::Box::Box(double xlength,
                           double ylength,
                           double zlength,
                           double mass,
                           dWorldID worldID,
-                          dSpaceID spaceID)
+                          dSpaceID spaceID,
+                          CollisionGroupType collisionGroup,
+                          CollisionGroupType collisionMask)
     : SingleBodyObject(worldID, spaceID) {
 
   // body
@@ -18,6 +22,10 @@ ode_sim::object::Box::Box(double xlength,
   // geometry
   geometry_ = dCreateBox(spaceID, xlength, ylength, zlength);
   dGeomSetBody(geometry_, body_);
+
+  // collision group
+  dGeomSetCategoryBits(geometry_, collisionGroup);
+  dGeomSetCollideBits(geometry_, collisionMask);
 
   // position and orientation
   dMatrix3 R;

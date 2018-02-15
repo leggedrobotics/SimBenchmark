@@ -2,9 +2,16 @@
 // Created by kangd on 13.02.18.
 //
 
+#include <Configure.hpp>
 #include "odeSim/object/Sphere.hpp"
+#include "SingleBodyObject.hpp"
 
-ode_sim::object::Sphere::Sphere(double radius, double mass, dWorldID worldID, dSpaceID spaceID)
+ode_sim::object::Sphere::Sphere(double radius,
+                                double mass,
+                                dWorldID worldID,
+                                dSpaceID spaceID,
+                                CollisionGroupType collisionGroup,
+                                CollisionGroupType collisionMask)
     : SingleBodyObject(worldID, spaceID) {
 
   // body
@@ -13,6 +20,10 @@ ode_sim::object::Sphere::Sphere(double radius, double mass, dWorldID worldID, dS
   // geometry
   geometry_ = dCreateSphere(spaceID, radius);
   dGeomSetBody(geometry_, body_);
+
+  // collision group
+  dGeomSetCategoryBits(geometry_, collisionGroup);
+  dGeomSetCollideBits(geometry_, collisionMask);
 
   // position and orientation
   dMatrix3 R;

@@ -15,6 +15,7 @@ int main() {
 
   auto box1 = raiSim.addBox(20, 20, 1, 100);
   box1->setPosition(0, 0, 0.5);
+
   auto ball1 = raiSim.addSphere(0.5, 100);
   ball1->setPosition(0, -5, 1.5);
   auto ball2 = raiSim.addSphere(0.5, 100);

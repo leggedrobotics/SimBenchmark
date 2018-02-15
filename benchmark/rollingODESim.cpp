@@ -1,5 +1,5 @@
 //
-// Created by kangd on 12.02.18.
+// Created by kangd on 15.02.18.
 //
 
 #include "odeSim/World_RG.hpp"
@@ -13,15 +13,16 @@ int main() {
   // add objects
   auto checkerboard = odeSim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
 
-  auto box1 = odeSim.addBox(1, 1, 1, 100);
+  auto box1 = odeSim.addBox(20, 20, 1, 100);
   box1->setPosition(0, 0, 0.5);
-  auto box2 = odeSim.addBox(1, 1, 1, 100);
-  box2->setPosition(0, 0, 1.5);
-  auto box3 = odeSim.addBox(1, 1, 1, 100);
-  box3->setPosition(0, 0, 2.5);
-  auto box4 = odeSim.addBox(1, 1, 1, 100);
-  box4->setPosition(0, 0, 3.5);
 
+  auto ball1 = odeSim.addSphere(0.5, 100);
+  ball1->setPosition(0, -5, 1.5);
+  auto ball2 = odeSim.addSphere(0.5, 100);
+  ball2->setPosition(0, 0, 1.5);
+  auto ball3 = odeSim.addSphere(0.5, 100);
+  ball3->setPosition(0, 5, 1.5);
+  
   double dt = 0.01;  // (sec)
 
   // camera relative position

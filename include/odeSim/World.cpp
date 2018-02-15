@@ -103,7 +103,7 @@ void ode_sim::World::integrate(double dt) {
   if(solverOption_ == SOLVER_QUICK)
   {
     dWorldQuickStep(dynamicsWorld_, dt);
-  } 
+  }
   else
   {
     dWorldStep(dynamicsWorld_, dt);
@@ -116,7 +116,7 @@ ode_sim::object::Sphere *ode_sim::World::addSphere(double radius,
                                                    double mass,
                                                    CollisionGroupType collisionGroup,
                                                    CollisionGroupType collisionMask) {
-  object::Sphere *sphere = new ode_sim::object::Sphere(radius, mass, dynamicsWorld_, space_);
+  object::Sphere *sphere = new ode_sim::object::Sphere(radius, mass, dynamicsWorld_, space_, collisionGroup, collisionMask);
   objectList_.push_back(sphere);
   return sphere;
 }
@@ -127,7 +127,7 @@ ode_sim::object::Box *ode_sim::World::addBox(double xLength,
                                              double mass,
                                              CollisionGroupType collisionGroup,
                                              CollisionGroupType collisionMask) {
-  object::Box *box = new ode_sim::object::Box(xLength, yLength, zLength, mass, dynamicsWorld_, space_);
+  object::Box *box = new ode_sim::object::Box(xLength, yLength, zLength, mass, dynamicsWorld_, space_, collisionGroup, collisionMask);
   objectList_.push_back(box);
   return box;
 }
@@ -138,7 +138,7 @@ ode_sim::object::CheckerBoard *ode_sim::World::addCheckerboard(double gridSize,
                                                                double reflectanceI,
                                                                CollisionGroupType collisionGroup,
                                                                CollisionGroupType collisionMask) {
-  object::CheckerBoard *checkerBoard = new ode_sim::object::CheckerBoard(dynamicsWorld_, space_);
+  object::CheckerBoard *checkerBoard = new ode_sim::object::CheckerBoard(dynamicsWorld_, space_, collisionGroup, collisionMask);
   objectList_.push_back(checkerBoard);
   return checkerBoard;
 }

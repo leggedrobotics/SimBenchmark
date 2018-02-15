@@ -2,14 +2,23 @@
 // Created by kangd on 12.02.18.
 //
 
+#include <Configure.hpp>
 #include "odeSim/object/CheckerBoard.hpp"
+#include "SingleBodyObject.hpp"
 
-ode_sim::object::CheckerBoard::CheckerBoard(dWorldID worldId, dSpaceID spaceID)
+ode_sim::object::CheckerBoard::CheckerBoard(dWorldID worldId,
+                                            dSpaceID spaceID,
+                                            CollisionGroupType collisionGroup,
+                                            CollisionGroupType collisionMask)
     : SingleBodyObject(worldId, spaceID) {
 
   // geometry
   geometry_ = dCreatePlane(spaceID, 0, 0, 1, 0);
   body_ = 0;
+
+  // collision group
+  dGeomSetCategoryBits(geometry_, collisionGroup);
+  dGeomSetCollideBits(geometry_, collisionMask);
 }
 
 ode_sim::object::CheckerBoard::~CheckerBoard() {

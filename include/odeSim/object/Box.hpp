@@ -18,7 +18,9 @@ class Box: public SingleBodyObject {
         double zlength,
         double mass,
         dWorldID worldID,
-        dSpaceID spaceID);
+        dSpaceID spaceID,
+        CollisionGroupType collisionGroup,
+        CollisionGroupType collisionMask);
   virtual ~Box();
 
 };

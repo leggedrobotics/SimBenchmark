@@ -141,6 +141,12 @@ target_link_libraries(stackODESim ${ODESimLink})
 add_executable(rollingRaiSim benchmark/rollingRaiSim.cpp)
 target_link_libraries(rollingRaiSim ${RAI_SIM_LINK})
 
+add_executable(rollingBulletSim benchmark/rollingBulletSim.cpp)
+target_link_libraries(rollingBulletSim ${BulletSimLink})
+
+add_executable(rollingODESim benchmark/rollingODESim.cpp)
+target_link_libraries(rollingODESim ${ODESimLink})
+
 # bouncing
 add_executable(bounceRaiSim benchmark/bounceRaiSim.cpp)
 target_link_libraries(bounceRaiSim ${RAI_SIM_LINK})
