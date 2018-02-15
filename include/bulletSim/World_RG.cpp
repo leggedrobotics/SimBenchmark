@@ -104,6 +104,17 @@ SingleBodyHandle World_RG::addCheckerboard(double gridSize,
   return handle;
 }
 
+SingleBodyHandle World_RG::addCapsule(double radius,
+                                      double height,
+                                      double mass,
+                                      CollisionGroupType collisionGroup,
+                                      CollisionGroupType collisionMask) {
+  SingleBodyHandle handle(world_.addCapsule(radius, height, mass, collisionGroup, collisionMask), {}, {});
+  if(gui_) handle.visual().push_back(new rai_graphics::object::Capsule(radius, height, true));
+  processSingleBody(handle);
+  return handle;
+}
+
 void World_RG::loop(double dt, double realTimeFactor) {
   while (visualizerLoop(dt, realTimeFactor))
     integrate(dt);
@@ -440,7 +451,6 @@ void World_RG::processGraphicalObject(rai_graphics::object::SingleBodyObject *go
 //  interactionIdx_.insert(std::pair<int, std::pair<int, int>>(go->getSelectableObIndex(),
 //                                                             std::pair<int, int>(world_.getObjList().size() - 1, li)));
 }
-
 void World_RG::adjustTransparency(rai_graphics::object::SingleBodyObject *ob, bool hidable) {
   if (!hidable) return;
   if (gui_->getCustomToggleState(1) || gui_->getCustomToggleState(2) || gui_->getCustomToggleState(4))

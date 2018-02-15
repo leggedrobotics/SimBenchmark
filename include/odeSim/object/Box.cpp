@@ -3,8 +3,7 @@
 //
 
 #include <Configure.hpp>
-#include "odeSim/object/Box.hpp"
-#include "SingleBodyObject.hpp"
+#include "Box.hpp"
 
 ode_sim::object::Box::Box(double xlength,
                           double ylength,
@@ -41,6 +40,4 @@ ode_sim::object::Box::Box(double xlength,
 }
 
 ode_sim::object::Box::~Box() {
-  dBodyDestroy(body_);
-  dGeomDestroy(geometry_);
 }

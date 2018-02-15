@@ -132,6 +132,16 @@ ode_sim::object::Box *ode_sim::World::addBox(double xLength,
   return box;
 }
 
+ode_sim::object::Capsule *ode_sim::World::addCapsule(double radius,
+                                                     double height,
+                                                     double mass,
+                                                     CollisionGroupType collisionGroup,
+                                                     CollisionGroupType collisionMask) {
+  object::Capsule *capsule = new ode_sim::object::Capsule(radius, height, mass, dynamicsWorld_, space_, collisionGroup, collisionMask);
+  objectList_.push_back(capsule);
+  return capsule;
+}
+
 ode_sim::object::CheckerBoard *ode_sim::World::addCheckerboard(double gridSize,
                                                                double xLength,
                                                                double yLength,

@@ -22,7 +22,6 @@ ode_sim::object::CheckerBoard::CheckerBoard(dWorldID worldId,
 }
 
 ode_sim::object::CheckerBoard::~CheckerBoard() {
-  dGeomDestroy(geometry_);
 }
 
 const Eigen::Map<Eigen::Matrix<double, 4, 1>> ode_sim::object::CheckerBoard::getQuaternion() {

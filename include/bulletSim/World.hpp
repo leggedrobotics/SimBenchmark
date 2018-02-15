@@ -13,8 +13,9 @@
 #include <BulletDynamics/MLCPSolvers/btLemkeSolver.h>
 #include <Configure.hpp>
 
-#include <bulletSim/object/Sphere.hpp>
+#include "bulletSim/object/Sphere.hpp"
 #include "bulletSim/object/Box.hpp"
+#include "bulletSim/object/Capsule.hpp"
 #include "bulletSim/object/CheckerBoard.hpp"
 
 namespace bullet_sim {
@@ -48,6 +49,8 @@ class World {
                       CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) ;
   object::CheckerBoard *addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
                                         CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
+  object::Capsule *addCapsule(double radius, double height, double mass,
+                              CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
 
   void integrate(double dt);
 

@@ -62,7 +62,9 @@ class World_RG {
   SingleBodyHandle addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
                                    CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask = -1,
                                    int flags = 0);
-
+  SingleBodyHandle addCapsule(double radius, double height, double mass, 
+                              CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask=-1);
+  
   //////////////////////////
   /// simulation methods ///
   //////////////////////////
