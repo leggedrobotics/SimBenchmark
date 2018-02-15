@@ -134,6 +134,24 @@ void ode_sim::object::SingleBodyObject::setVelocity(double dx, double dy, double
   }
 }
 
+void object::SingleBodyObject::setExternalForce(Eigen::Vector3d force) {
+  if(body_) {
+    dBodySetForce(body_, force[0], force[1], force[2]);
+  }
+  else {
+    RAIFATAL('cannot set velocity to static object');
+  }
+}
+
+void object::SingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
+  if(body_) {
+    dBodySetForce(body_, torque[0], torque[2], torque[2]);
+  }
+  else {
+    RAIFATAL('cannot set torque to static object');
+  }
+}
+
 bool ode_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {
   return visualizeFramesAndCom_;
 }

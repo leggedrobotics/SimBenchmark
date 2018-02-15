@@ -13,14 +13,14 @@ int main() {
   // add objects
   auto checkerboard = raiSim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
 
-  auto box1 = raiSim.addBox(20, 20, 1, 100);
+  auto box1 = raiSim.addBox(20, 20, 1, 1);
   box1->setPosition(0, 0, 0.5);
 
-  auto ball1 = raiSim.addSphere(0.5, 100);
+  auto ball1 = raiSim.addSphere(0.5, 1);
   ball1->setPosition(0, -5, 1.5);
-  auto ball2 = raiSim.addSphere(0.5, 100);
+  auto ball2 = raiSim.addSphere(0.5, 1);
   ball2->setPosition(0, 0, 1.5);
-  auto ball3 = raiSim.addSphere(0.5, 100);
+  auto ball3 = raiSim.addSphere(0.5, 1);
   ball3->setPosition(0, 5, 1.5);
 
   // timestep
@@ -31,7 +31,11 @@ int main() {
 
   // simulation loop
   // press 'q' key to quit
-  raiSim.loop(dt, 1.0);
+  while (raiSim.visualizerLoop(dt, 1)) {
+    rai_sim::Vec<3> force = {0, 32, 0};
+    box1->setExternalForce(force, 0);
+    raiSim.integrate(dt);
+  }
 
   return 0;
 }

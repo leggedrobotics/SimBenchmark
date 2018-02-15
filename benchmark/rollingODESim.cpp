@@ -13,16 +13,16 @@ int main() {
   // add objects
   auto checkerboard = odeSim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
 
-  auto box1 = odeSim.addBox(20, 20, 1, 100);
+  auto box1 = odeSim.addBox(20, 20, 1, 1);
   box1->setPosition(0, 0, 0.5);
 
-  auto ball1 = odeSim.addSphere(0.5, 100);
+  auto ball1 = odeSim.addSphere(0.5, 1);
   ball1->setPosition(0, -5, 1.5);
-  auto ball2 = odeSim.addSphere(0.5, 100);
+  auto ball2 = odeSim.addSphere(0.5, 1);
   ball2->setPosition(0, 0, 1.5);
-  auto ball3 = odeSim.addSphere(0.5, 100);
+  auto ball3 = odeSim.addSphere(0.5, 1);
   ball3->setPosition(0, 5, 1.5);
-  
+
   double dt = 0.01;  // (sec)
 
   // camera relative position
@@ -30,7 +30,9 @@ int main() {
 
   // simulation loop
   // press 'q' key to quit
-  odeSim.loop(dt, 1.0);
-
+  while (odeSim.visualizerLoop(dt, 1)) {
+    box1->setExternalForce({0, 100, 0});
+    odeSim.integrate(dt);
+  }
   return 0;
 }

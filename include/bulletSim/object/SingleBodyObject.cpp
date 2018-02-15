@@ -113,8 +113,8 @@ void bullet_sim::object::SingleBodyObject::setVelocity(double dx,
                                                        double wx,
                                                        double wy,
                                                        double wz) {
-// TODO
-  RAIFATAL('not implemented yet');
+  rigidBody_->setLinearVelocity(btVector3(dx, dy, dz));
+  rigidBody_->setAngularVelocity(btVector3(wx, wy, wz));
 }
 
 btRigidBody *bullet_sim::object::SingleBodyObject::getRigidBody() const {
@@ -125,4 +125,12 @@ void bullet_sim::object::SingleBodyObject::setRestitution(double restitution) {
 }
 void bullet_sim::object::SingleBodyObject::setFriction(double friction) {
   rigidBody_->setFriction(friction);
+}
+
+void bullet_sim::object::SingleBodyObject::setExternalForce(Eigen::Vector3d force) {
+  rigidBody_->applyCentralForce(btVector3(force[0], force[1], force[2]));
+}
+
+void bullet_sim::object::SingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
+  rigidBody_->applyTorque(btVector3(torque[0], torque[1], torque[2]));
 }

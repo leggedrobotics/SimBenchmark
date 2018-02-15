@@ -20,7 +20,7 @@ int main() {
   // add objects
   auto checkerboard = bulletSim.addCheckerboard(5.0, 10.0, 10.0, 0.1);
 
-  Object object = BALL;
+  Object object = BOX;
   switch(object) {
     case BOX:
     {
@@ -51,7 +51,7 @@ int main() {
   double dt = 0.01;  // (sec)
 
   // camera relative position
-  bulletSim.cameraFollowObject(checkerboard, {10, 0, 20});
+  bulletSim.cameraFollowObject(checkerboard, {10, 0, 5});
 
   // simulation loop
   // press 'q' key to quit

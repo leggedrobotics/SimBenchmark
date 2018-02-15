@@ -39,6 +39,8 @@ class SingleBodyObject {
   virtual void setPose(Eigen::Vector3d originPosition, Eigen::Matrix3d rotationMatrix);
   virtual void setVelocity(Eigen::Vector3d linearVelocity, Eigen::Vector3d angularVelocity);
   virtual void setVelocity(double dx, double dy, double dz, double wx, double wy, double wz);
+  virtual void setExternalForce(Eigen::Vector3d force);
+  virtual void setExternalTorque(Eigen::Vector3d torque);
 
   virtual bool isVisualizeFramesAndCom() const;
 
