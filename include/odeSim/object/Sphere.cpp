@@ -33,6 +33,7 @@ ode_sim::object::Sphere::Sphere(double radius,
 
   // mass and local inertia
   dMassSetSphereTotal(&mass_, mass, radius);
+  dBodySetMass(body_, &mass_);
 
   // gyroscopic effect
   dBodySetGyroscopicMode(body_, true);

@@ -37,6 +37,7 @@ ode_sim::object::Box::Box(double xlength,
 
   // mass and local inertia
   dMassSetBoxTotal(&mass_, mass, xlength, ylength, zlength);
+  dBodySetMass(body_, &mass_);
 
   // gyroscopic effect
   dBodySetGyroscopicMode(body_, true);

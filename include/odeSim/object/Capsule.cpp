@@ -33,6 +33,7 @@ ode_sim::object::Capsule::Capsule(double radius,
 
   // mass and local inertia
   dMassSetCapsuleTotal(&mass_, mass, 3, radius, height);
+  dBodySetMass(body_, &mass_);
 
   // gyroscopic effect
   dBodySetGyroscopicMode(body_, true);
