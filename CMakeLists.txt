@@ -174,3 +174,15 @@ target_link_libraries(thousandODESim ${ODESimLink})
 # anymal
 add_executable(anymalRaiSim benchmark/anymalRaiSim.cpp)
 target_link_libraries(anymalRaiSim ${RAI_SIM_LINK})
+
+# collision anymal
+add_executable(collisionAnymalRaiSim benchmark/collisionAnymalRaiSim.cpp)
+target_link_libraries(collisionAnymalRaiSim ${RAI_SIM_LINK})
+
+# free drop anymal
+add_executable(freeDropAnymalRaiSim benchmark/freeDropAnymalRaiSim.cpp)
+target_link_libraries(freeDropAnymalRaiSim ${RAI_SIM_LINK})
+
+# friction
+add_executable(frictionODESim benchmark/frictionODESim.cpp)
+target_link_libraries(frictionODESim ${ODESimLink})

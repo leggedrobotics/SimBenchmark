@@ -21,8 +21,8 @@ bool bullet_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {
 
 const Eigen::Map<Eigen::Matrix<double, 4, 1>> bullet_sim::object::SingleBodyObject::getQuaternion() {
   const btQuaternion &quaternion = rigidBody_->getWorldTransform().getRotation();
-  rai_sim::Vec<4> quat = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
-  return quat.e();
+  quatTemp_ = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
+  return quatTemp_.e();
 }
 
 void bullet_sim::object::SingleBodyObject::getQuaternion(rai_sim::Vec<4> &quat) {
@@ -31,38 +31,43 @@ void bullet_sim::object::SingleBodyObject::getQuaternion(rai_sim::Vec<4> &quat) 
 }
 
 void bullet_sim::object::SingleBodyObject::getRotationMatrix(rai_sim::Mat<3, 3> &rotation) {
-  const btQuaternion &quaternion = rigidBody_->getWorldTransform().getRotation();
-  RAIFATAL('not implemented yet');
+  const btMatrix3x3 &rotMat = rigidBody_->getWorldTransform().getBasis();
+  rotation.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
+      rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
+      rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 3> > bullet_sim::object::SingleBodyObject::getRotationMatrix() {
-  RAIFATAL('not implemented yet');
-  return Eigen::Map<Eigen::Matrix<double, 3, 3>>(nullptr);
+  const btMatrix3x3 &rotMat = rigidBody_->getWorldTransform().getBasis();
+  rotMatTemp_.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
+      rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
+      rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
+  return rotMatTemp_.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getPosition() {
   const btVector3 &position = rigidBody_->getWorldTransform().getOrigin();
-  rai_sim::Vec<3> pos = {position.x(), position.y(), position.z()};
-  return pos.e();
+  posTemp_ = {position.x(), position.y(), position.z()};
+  return posTemp_.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getComPosition() {
   const btVector3 &position = rigidBody_->getWorldTransform().getOrigin();
-  rai_sim::Vec<3> pos = {position.x(), position.y(), position.z()};
-  RAIWARN('check if COM = body origin!');
-  return pos.e();
+  posTemp_ = {position.x(), position.y(), position.z()};
+  RAIWARN("check if COM = body origin!");
+  return posTemp_.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getLinearVelocity() {
   const btVector3 &linearVelocity = rigidBody_->getLinearVelocity();
-  rai_sim::Vec<3> linvel = {linearVelocity.x(), linearVelocity.y(), linearVelocity.z()};
-  return linvel.e();
+  linVelTemp_ = {linearVelocity.x(), linearVelocity.y(), linearVelocity.z()};
+  return linVelTemp_.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getAngularVelocity() {
   const btVector3 &angularVelocity = rigidBody_->getAngularVelocity();
-  rai_sim::Vec<3> angvel = {angularVelocity.x(), angularVelocity.y(), angularVelocity.z()};
-  return angvel.e();
+  angVelTemp_ = {angularVelocity.x(), angularVelocity.y(), angularVelocity.z()};
+  return angVelTemp_.e();
 }
 
 void bullet_sim::object::SingleBodyObject::getPosition_W(rai_sim::Vec<3> &pos_w) {

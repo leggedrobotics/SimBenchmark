@@ -17,10 +17,10 @@ object::SingleBodyObject::~SingleBodyObject() {
 }
 
 const Eigen::Map<Eigen::Matrix<double, 4, 1>> ode_sim::object::SingleBodyObject::getQuaternion() {
-  dQuaternion dquaternion; 
+  dQuaternion dquaternion;
   dGeomGetQuaternion(geometry_, dquaternion);
-  rai_sim::Vec<4> quaternion = {dquaternion[0], dquaternion[1], dquaternion[2], dquaternion[3]}; 
-  return quaternion.e();
+  quatTemp_ = {dquaternion[0], dquaternion[1], dquaternion[2], dquaternion[3]};
+  return quatTemp_.e();
 }
 
 void ode_sim::object::SingleBodyObject::getQuaternion(rai_sim::Vec<4> &quat) {
@@ -31,11 +31,10 @@ void ode_sim::object::SingleBodyObject::getQuaternion(rai_sim::Vec<4> &quat) {
 
 const Eigen::Map<Eigen::Matrix<double, 3, 3> > ode_sim::object::SingleBodyObject::getRotationMatrix() {
   const dReal* rot = dGeomGetRotation(geometry_);
-  rai_sim::Mat<3, 3> rotMat;
-  rotMat.e() << rot[0], rot[1], rot[2],
+  rotMatTemp_.e() << rot[0], rot[1], rot[2],
       rot[4], rot[5], rot[6],
       rot[8], rot[9], rot[10];
-  return rotMat.e();
+  return rotMatTemp_.e();
 }
 
 void ode_sim::object::SingleBodyObject::getRotationMatrix(rai_sim::Mat<3, 3> &rotation) {
@@ -47,15 +46,15 @@ void ode_sim::object::SingleBodyObject::getRotationMatrix(rai_sim::Mat<3, 3> &ro
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::SingleBodyObject::getPosition() {
   const dReal *position = dGeomGetPosition(geometry_);
-  rai_sim::Vec<3> pos = {position[0], position[1], position[2]};
-  return pos.e();
+  posTemp_ = {position[0], position[1], position[2]};
+  return posTemp_.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::SingleBodyObject::getComPosition() {
   const dReal *position = dGeomGetPosition(geometry_);
-  rai_sim::Vec<3> pos = {position[0], position[1], position[2]};
+  posTemp_ = {position[0], position[1], position[2]};
   RAIWARN('check if COM = body origin!');
-  return pos.e();
+  return posTemp_.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::SingleBodyObject::getLinearVelocity() {
@@ -66,8 +65,8 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::SingleBodyObject
   else {
     RAIFATAL('cannot get velocity from static object');
   }
-  rai_sim::Vec<3> linvel = {linearVelocity[0], linearVelocity[1], linearVelocity[2]};
-  return linvel.e();
+  linVelTemp_ = {linearVelocity[0], linearVelocity[1], linearVelocity[2]};
+  return linVelTemp_.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::SingleBodyObject::getAngularVelocity() {
@@ -78,8 +77,8 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::SingleBodyObject
   else {
     RAIFATAL('cannot get velocity from static object');
   }
-  rai_sim::Vec<3> angvel = {angularVelocity[0], angularVelocity[1], angularVelocity[2]};
-  return angvel.e();
+  angVelTemp_ = {angularVelocity[0], angularVelocity[1], angularVelocity[2]};
+  return angVelTemp_.e();
 }
 
 void ode_sim::object::SingleBodyObject::getPosition_W(rai_sim::Vec<3> &pos_w) {
@@ -149,7 +148,7 @@ void ode_sim::object::SingleBodyObject::setVelocity(double dx, double dy, double
 
 void object::SingleBodyObject::setExternalForce(Eigen::Vector3d force) {
   if(body_) {
-    dBodySetForce(body_, force[0], force[1], force[2]);
+    dBodyAddForce(body_, force[0], force[1], force[2]);
   }
   else {
     RAIFATAL('cannot set velocity to static object');
@@ -158,7 +157,7 @@ void object::SingleBodyObject::setExternalForce(Eigen::Vector3d force) {
 
 void object::SingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
   if(body_) {
-    dBodySetForce(body_, torque[0], torque[2], torque[2]);
+    dBodyAddTorque(body_, torque[0], torque[2], torque[2]);
   }
   else {
     RAIFATAL('cannot set torque to static object');

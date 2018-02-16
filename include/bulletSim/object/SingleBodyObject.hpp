@@ -57,6 +57,13 @@ class SingleBodyObject: public Object {
   btRigidBody *rigidBody_;
   btMotionState *motionState_;
 
+  // pose and velocity
+  rai_sim::Vec<4> quatTemp_ = {1.0, 0.0, 0.0, 0.0};
+  rai_sim::Mat<3, 3> rotMatTemp_;
+  rai_sim::Vec<3> posTemp_ = {0.0, 0.0, 0.0};
+  rai_sim::Vec<3> linVelTemp_ = {0.0, 0.0, 0.0};
+  rai_sim::Vec<3> angVelTemp_ = {0.0, 0.0, 0.0};
+
   // from object
   bool visualizeFramesAndCom_ = true;
 
