@@ -21,13 +21,12 @@ ode_sim::World::World(SolverOption solverOption) : solverOption_(solverOption) {
 
   dWorldSetGravity(dynamicsWorld_, gravity_[0], gravity_[1], gravity_[2]);
 
-//  dWorldSetCFM(world,1e-5);
-//  dWorldSetAutoDisableFlag(dynamicsWorld_, 1);
-
-#if 1
+////  auto disable
 //  dWorldSetAutoDisableAverageSamplesCount(dynamicsWorld_, 10);
-#endif
-
+//  dWorldSetAutoDisableFlag(dynamicsWorld_, 1);
+//
+////  parameters
+//  dWorldSetCFM(world,1e-5);
 //  dWorldSetLinearDamping(world, 0.00001);
 //  dWorldSetAngularDamping(world, 0.005);
 //  dWorldSetMaxAngularSpeed(world, 200);
@@ -73,9 +72,8 @@ void ode_sim::World::nearCallback(void *data, dGeomID o1, dGeomID o2) {
     object::MetrialProp *prop1 = (object::MetrialProp*)dGeomGetData(o1);
     object::MetrialProp *prop2 = (object::MetrialProp*)dGeomGetData(o2);
 
-    contact[i].surface.mode = dContactBounce;
-    contact[i].surface.mu = dInfinity;
-    contact[i].surface.mu2 = 0;
+    contact[i].surface.mode = dContactBounce | dContactApprox1;
+    contact[i].surface.mu = prop1->frictionalCoeff * prop2->frictionalCoeff;
     contact[i].surface.bounce = prop1->restitutionCoeff * prop2->restitutionCoeff;
   }
   if (int numc = dCollide(o1,o2, maxContactsPerBody, &contact[0].geom,

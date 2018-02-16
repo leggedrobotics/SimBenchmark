@@ -17,25 +17,32 @@ object::SingleBodyObject::~SingleBodyObject() {
 }
 
 const Eigen::Map<Eigen::Matrix<double, 4, 1>> ode_sim::object::SingleBodyObject::getQuaternion() {
-//  const dQuaternion *quaternion = dGeomGetQuaternion(geometry_);
-  RAIFATAL('not implemented yet');
-  return Eigen::Map<Eigen::Matrix<double, 4, 1>>(nullptr);
+  dQuaternion dquaternion; 
+  dGeomGetQuaternion(geometry_, dquaternion);
+  rai_sim::Vec<4> quaternion = {dquaternion[0], dquaternion[1], dquaternion[2], dquaternion[3]}; 
+  return quaternion.e();
 }
 
 void ode_sim::object::SingleBodyObject::getQuaternion(rai_sim::Vec<4> &quat) {
-//  dGeomGetQuaternion(geometry_, &dquaternion);
-//  RAIFATAL('not implemented yet');
-//  quat = {dquaternion[0], dquaternion[1], dquaternion[2] dquaternion[3]};
+  dQuaternion dquaternion;
+  dGeomGetQuaternion(geometry_, dquaternion);
+  quat = {dquaternion[0], dquaternion[1], dquaternion[2], dquaternion[3]};
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 3> > ode_sim::object::SingleBodyObject::getRotationMatrix() {
   const dReal* rot = dGeomGetRotation(geometry_);
-  RAIFATAL('not implemented yet');
-  return Eigen::Map<Eigen::Matrix<double, 3, 3>>(nullptr);
+  rai_sim::Mat<3, 3> rotMat;
+  rotMat.e() << rot[0], rot[1], rot[2],
+      rot[4], rot[5], rot[6],
+      rot[8], rot[9], rot[10];
+  return rotMat.e();
 }
 
 void ode_sim::object::SingleBodyObject::getRotationMatrix(rai_sim::Mat<3, 3> &rotation) {
-  RAIFATAL('not implemented yet');
+  const dReal* rot = dGeomGetRotation(geometry_);
+  rotation.e() << rot[0], rot[1], rot[2],
+      rot[4], rot[5], rot[6],
+      rot[8], rot[9], rot[10];
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::SingleBodyObject::getPosition() {
