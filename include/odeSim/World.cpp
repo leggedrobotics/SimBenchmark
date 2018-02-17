@@ -32,6 +32,8 @@ ode_sim::World::World(SolverOption solverOption) : solverOption_(solverOption) {
 //  dWorldSetMaxAngularSpeed(world, 200);
 //  dWorldSetContactMaxCorrectingVel(world,0.1);
 //  dWorldSetContactSurfaceLayer(world,0.001);
+  dWorldSetERP(dynamicsWorld_, 0);
+  dWorldSetCFM(dynamicsWorld_, 0);
 
 }
 
@@ -150,4 +152,8 @@ ode_sim::object::CheckerBoard *ode_sim::World::addCheckerboard(double gridSize,
   object::CheckerBoard *checkerBoard = new ode_sim::object::CheckerBoard(dynamicsWorld_, space_, collisionGroup, collisionMask);
   objectList_.push_back(checkerBoard);
   return checkerBoard;
+}
+
+void ode_sim::World::setERP(double erp) {
+  dWorldSetERP(dynamicsWorld_, erp);
 }

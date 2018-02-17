@@ -4,24 +4,27 @@
 
 #include "odeSim/World_RG.hpp"
 
+#include "rolling.hpp"
+
 int main() {
 
-  // parameters
-  double dt = 0.001;                     // time step
-  const int forceMaxTime = 3;           // time for applying force
-  Eigen::Vector3d force = {0, 150, 0};  // force
+  // logger
+  std::string path = "/tmp/ode_rolling";
+  rai::Utils::logger->setLogPath(path);
+  rai::Utils::logger->addVariableToLog(3, "linvel_box", "linear velocity of box");
+  rai::Utils::logger->addVariableToLog(3, "linvel_ball", "linear velocity of ball");
 
   ode_sim::World_RG sim(800, 600, 0.5, ode_sim::NO_BACKGROUND, ode_sim::SOLVER_STANDARD);
-  sim.setGravity({0, 0, -9.8});
-  sim.setLightPosition(30, 0, 10);
+  sim.setGravity(benchmark::gravity);
+  sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
 
   // add objects
   auto checkerboard = sim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
-  checkerboard->setFrictionCoefficient(0.5);
+  checkerboard->setFrictionCoefficient(benchmark::groundMu);
 
   auto box = sim.addBox(20, 20, 1, 10);
   box->setPosition(0, 0, 0.5);
-  box->setFrictionCoefficient(0.8);
+  box->setFrictionCoefficient(benchmark::boxMu);
 
   std::vector<ode_sim::SingleBodyHandle> objectList;
 
@@ -29,7 +32,7 @@ int main() {
     for(int j = 0; j < 5; j++) {
       auto ball = sim.addSphere(0.5, 1);
       ball->setPosition(i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5);
-      ball->setFrictionCoefficient(1.0);
+      ball->setFrictionCoefficient(benchmark::ballMu);
       objectList.push_back(ball);
     }
   }
@@ -42,11 +45,16 @@ int main() {
 
   // simulation loop
   // press 'q' key to quit
-  while (sim.visualizerLoop(dt, 1)) {
-    if (++cnt < forceMaxTime / dt)
-      box->setExternalForce(force);
+  while (sim.visualizerLoop(benchmark::dt, 1)) {
+    if (cnt++ < benchmark::simulationTime / benchmark::dt) {
+      box->setExternalForce(benchmark::force);
 
-    sim.integrate(dt);
+      // log
+      rai::Utils::logger->appendData("linvel_box", box->getLinearVelocity().data());
+      rai::Utils::logger->appendData("linvel_ball", objectList[0]->getLinearVelocity().data());
+    }
+
+    sim.integrate(benchmark::dt);
   }
   return 0;
 }

@@ -175,9 +175,16 @@ void bullet_sim::World::integrate(double dt) {
 const std::vector<Single3DContactProblem> *World::getCollisionProblem() const {
   return &contactProblemList_;
 }
+
 void bullet_sim::World::setGravity(const btVector3 &gravity_) {
   World::gravity_ = gravity_;
   dynamicsWorld_->setGravity(gravity_);
+}
+
+void World::setERP(double erp, double erp2, double frictionErp) {
+  dynamicsWorld_->getSolverInfo().m_erp = erp;
+  dynamicsWorld_->getSolverInfo().m_erp2 = erp2;
+  dynamicsWorld_->getSolverInfo().m_frictionERP = frictionErp;
 }
 
 } // bullet_sim

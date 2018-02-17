@@ -37,8 +37,8 @@ class World {
 
   void integrate(double dt);
 
-
   void setGravity(const dVector3 &gravity);
+  void setERP(double erp);
 
   // dynamics world
   static dWorldID dynamicsWorld_;

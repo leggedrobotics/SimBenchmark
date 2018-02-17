@@ -56,6 +56,7 @@ class World {
 
   const std::vector<Single3DContactProblem> *getCollisionProblem() const;
   void setGravity(const btVector3 &gravity);
+  void setERP(double erp, double erp2, double frictionErp);
 
  private:
 
