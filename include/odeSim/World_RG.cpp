@@ -57,6 +57,8 @@ World_RG::World_RG(int windowWidth, int windowHeight, float cms, int flags, Solv
   gui_->changeMenuFontSize(1, 2);
 }
 
+World_RG::World_RG(SolverOption solverOption) : world_(solverOption) {}
+
 World_RG::~World_RG() {
   if(!isEnded_ && isReady_)
     visEnd();
@@ -466,7 +468,6 @@ void World_RG::processGraphicalObject(rai_graphics::object::SingleBodyObject *go
 //  interactionIdx_.insert(std::pair<int, std::pair<int, int>>(go->getSelectableObIndex(),
 //                                                             std::pair<int, int>(world_.getObjList().size() - 1, li)));
 }
-
 void World_RG::adjustTransparency(rai_graphics::object::SingleBodyObject *ob, bool hidable) {
   if (!hidable) return;
   if (gui_->getCustomToggleState(1) || gui_->getCustomToggleState(2) || gui_->getCustomToggleState(4))

@@ -37,7 +37,7 @@ class World_RG {
            SolverOption solverOption = SOLVER_STANDARD);
 
   /* constructor for no visualization */
-  World_RG() = default;
+  World_RG(SolverOption solverOption = SOLVER_STANDARD);
   virtual ~World_RG();
 
   /////////////////////////////////////

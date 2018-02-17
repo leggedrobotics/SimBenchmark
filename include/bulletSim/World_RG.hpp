@@ -37,7 +37,7 @@ class World_RG {
            SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
 
   /* constructor for no visualization */
-  World_RG() = default;
+  World_RG(SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
   virtual ~World_RG();
 
   /////////////////////////////////////

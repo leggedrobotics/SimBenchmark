@@ -58,6 +58,8 @@ World_RG::World_RG(int windowWidth, int windowHeight, float cms, int flags, Solv
   gui_->changeMenuFontSize(1, 2);
 }
 
+World_RG::World_RG(SolverOption solverOption) : world_(solverOption) {}
+
 World_RG::~World_RG() {
   if(!isEnded_ && isReady_)
     visEnd();
@@ -444,7 +446,6 @@ void World_RG::processSingleBody(bullet_sim::SingleBodyHandle handle) {
 
   if(gui_) framesAndCOMobj_.push_back(handle.s_);
 }
-
 void World_RG::processGraphicalObject(rai_graphics::object::SingleBodyObject *go, int li) {
   gui_->addObject(go);
   // TODO?
