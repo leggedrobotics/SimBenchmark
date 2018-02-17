@@ -10,11 +10,10 @@ set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed -O3 -mtune=native -march=native")
 ## --------------------------- mode ---------------------------
 # bullet debug
 # TODO bullet debug check (in release mode)
-SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 
 # bullet double precision
 add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
-#set(BULLET_DOUBLE_DEF "-DBT_USE_DOUBLE_PRECISION")
 
 # raiCommons debug
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -112,12 +111,24 @@ include_directories(${ODE_INCLUDE_DIRS})
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+# mujoco
+set(MuJoCoDIR mjpro150)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/${MuJoCoDIR}/include)
+file(GLOB libMuJoCo
+        ${CMAKE_CURRENT_SOURCE_DIR}/${MuJoCoDIR}/bin/libmujoco150.so
+        ${CMAKE_CURRENT_SOURCE_DIR}/${MuJoCoDIR}/bin/libmujoco150nogl.so)
+find_library(MuJoCoSimLink
+        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/${MuJoCoDIR}/bin)
+
 ## --------------------------- links ---------------------------
 # BulletSim
 set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath BulletSim ${RAI_GRAPHICS_OPENGL_LINK})
 
 # ODESim
 set(ODESimLink ode ODESim ${RAI_GRAPHICS_OPENGL_LINK})
+
+# MuJoCoSim
+#set(MuJoCoSimLink glew glewegl glewosmesa glfw mujoco150 mujoco150nogl)
 
 ## --------------------------- executable ---------------------------
 # framework tests
@@ -129,6 +140,9 @@ target_link_libraries(bulletTest BulletCollision BulletDynamics LinearMath)
 
 add_executable(odeTest test/odeTest.cpp)
 target_link_libraries(odeTest ode)
+
+add_executable(mujocoTest test/mujocoTest.cpp)
+target_link_libraries(mujocoTest ${MuJoCoSimLink} ${libMuJoCo} GLU glut)
 
 # benchmark tests
 # stack

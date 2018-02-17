@@ -1,0 +1,20 @@
+MuJoCo Pro Personal license activation key, number 50412, type 6.
+
+Issued to Dongho Kang <east0822@snu.ac.kr>.
+
+Expires February 9, 2019.
+
+This file activates MuJoCo Pro on a single computer with id:
+LINUX_e3CH4eNn5_1n4v0p1950S9v0dmX067
+
+Do not modify this file. Its entire content, including the
+plain text section, is used by the activation manager.
+
+14b45f389dc5b78e475a6c5bb9c076a5c266577ddd039c3be8e9f0261c460a26
+a860f00b7ccfc9eeac775fd31bf8e26bae4aa323e084e9f8b9420d5b9742db06
+e9b798321aa6674e1f961b48a0211eb74abf37b564fcf9a3905318ee3201c72e
+dfb3f32635bb5b5386addd531774cd72f368453bd548d1a0cfef11ff0f149ecf
+f497315b5e8eb7179fe4a1afa9881055fcb3a519eebedb63ad220812c7059aea
+d3ec121966fff39bba3ee42d42505f30a544118e990eaaaa0acf5ba74fa9965e
+ae2cc4449a6da559515c2aa38ad5c287f8efb1e1b082c68015e978f829cd52e3
+17bb1a9b39f4090704d130e6488ec67dfa42c55bb28d1b543c8bf1d080a5e830
