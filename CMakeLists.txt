@@ -112,13 +112,13 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 # mujoco
-set(MuJoCoDIR mjpro150)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/${MuJoCoDIR}/include)
-file(GLOB libMuJoCo
-        ${CMAKE_CURRENT_SOURCE_DIR}/${MuJoCoDIR}/bin/libmujoco150.so
-        ${CMAKE_CURRENT_SOURCE_DIR}/${MuJoCoDIR}/bin/libmujoco150nogl.so)
-find_library(MuJoCoSimLink
-        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/${MuJoCoDIR}/bin)
+include_directories(mjpro150/include)
+find_library(glew NAMES glew PATHS mjpro150/bin)
+find_library(glewegl NAMES glewegl PATHS mjpro150/bin)
+find_library(glewosmesa NAMES glewosmesa PATHS mjpro150/bin)
+find_library(glfw NAMES glfw libglfw.so.3 PATHS mjpro150/bin)
+find_library(mujoco150 NAMES mujoco150 PATHS mjpro150/bin)
+find_library(mujoco150nogl NAMES mujoco150nogl PATHS mjpro150/bin)
 
 ## --------------------------- links ---------------------------
 # BulletSim
@@ -128,7 +128,7 @@ set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath Bullet
 set(ODESimLink ode ODESim ${RAI_GRAPHICS_OPENGL_LINK})
 
 # MuJoCoSim
-#set(MuJoCoSimLink glew glewegl glewosmesa glfw mujoco150 mujoco150nogl)
+set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl} GL GLU glut)
 
 ## --------------------------- executable ---------------------------
 # framework tests
@@ -142,7 +142,7 @@ add_executable(odeTest test/odeTest.cpp)
 target_link_libraries(odeTest ode)
 
 add_executable(mujocoTest test/mujocoTest.cpp)
-target_link_libraries(mujocoTest ${MuJoCoSimLink} ${libMuJoCo} GLU glut)
+target_link_libraries(mujocoTest ${MuJoCoSimLink})
 
 # benchmark tests
 # stack
