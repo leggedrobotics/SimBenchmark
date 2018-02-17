@@ -21,6 +21,9 @@ ode_sim::object::Capsule::Capsule(double radius,
   geometry_ = dCreateCapsule(spaceID, radius, height);
   dGeomSetBody(geometry_, body_);
 
+  // material prop
+  dGeomSetData(geometry_, &matrialProp_);
+
   // collision group
   dGeomSetCategoryBits(geometry_, collisionGroup);
   dGeomSetCollideBits(geometry_, collisionMask);

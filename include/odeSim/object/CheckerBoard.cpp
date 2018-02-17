@@ -16,6 +16,9 @@ ode_sim::object::CheckerBoard::CheckerBoard(dWorldID worldId,
   geometry_ = dCreatePlane(spaceID, 0, 0, 1, 0);
   body_ = 0;
 
+  // material prop
+  dGeomSetData(geometry_, &matrialProp_);
+
   // collision group
   dGeomSetCategoryBits(geometry_, collisionGroup);
   dGeomSetCollideBits(geometry_, collisionMask);

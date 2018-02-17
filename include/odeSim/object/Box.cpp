@@ -22,6 +22,9 @@ ode_sim::object::Box::Box(double xlength,
   geometry_ = dCreateBox(spaceID, xlength, ylength, zlength);
   dGeomSetBody(geometry_, body_);
 
+  // material prop
+  dGeomSetData(geometry_, &matrialProp_);
+
   // collision group
   dGeomSetCategoryBits(geometry_, collisionGroup);
   dGeomSetCollideBits(geometry_, collisionMask);
