@@ -52,6 +52,7 @@ int main(int argc, char* argv[]) {
 
   // random number generator
   rai::RandomNumberGenerator<double> rand;
+  rand.seed(benchmark::randomSeed);
 
   int nPerDim = n;
 
@@ -104,11 +105,13 @@ int main(int argc, char* argv[]) {
   if(is_visualization_mode) {
     sim->cameraFollowObject(objectPtrList.at(nPerDim*nPerDim*nPerDim/2), {0, 30.0, 10.0});
     // simulation loop with visualizer
-    sim->loop(benchmark::dt);
+    for(int i = 0; i < benchmark::simulationTime / benchmark::dt && sim->visualizerLoop(benchmark::dt); i++) {
+      sim->integrate(benchmark::dt);
+    }
   }
   else {
-    // simulate 10000 iteration without visualizer
-    for(int i = 0; i < 1000; i++) {
+    // simulate without visualizer
+    for(int i = 0; i < benchmark::simulationTime / benchmark::dt; i++) {
       // simulate one step
       sim->integrate(benchmark::dt);
     }

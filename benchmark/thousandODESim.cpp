@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
   // main arguments
   int n = 10;
   int shape = 0;    // 0: balls, 1: boxes, 2: capsules
-  bool is_visualization_mode = true;
+  bool is_visualization_mode = false;
   bool show_graph = true;
 
   if (argc == 5) {
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
   if (is_visualization_mode)
     sim = new ode_sim::World_RG(800, 600, 0.6, ode_sim::NO_BACKGROUND, ode_sim::SOLVER_QUICK);
   else
-    sim = new ode_sim::World_RG;
+    sim = new ode_sim::World_RG(ode_sim::SOLVER_QUICK);
 
   // objects
   auto checkerboard = sim->addCheckerboard(5.0, 200.0, 200.0, 0.1,  1, -1, ode_sim::GRID);
@@ -52,6 +52,7 @@ int main(int argc, char* argv[]) {
 
   // random number generator
   rai::RandomNumberGenerator<double> rand;
+  rand.seed(benchmark::randomSeed);
 
   int nPerDim = n;
   const double perturbation = 0.001;
@@ -102,17 +103,17 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  double dt = 0.01;  // (sec)
-
   rai::Utils::timer->startTimer("10000IterationBenchmark");
   if(is_visualization_mode) {
     sim->cameraFollowObject(objectPtrList.at(nPerDim*nPerDim*nPerDim/2), {0, 30.0, 10.0});
     // simulation loop with visualizer
-    sim->loop(benchmark::dt);
+    for(int i = 0; i < benchmark::simulationTime / benchmark::dt && sim->visualizerLoop(benchmark::dt); i++) {
+      sim->integrate(benchmark::dt);
+    }
   }
   else {
-    // simulate 10000 iteration without visualizer
-    for(int i = 0; i < 1000; i++) {
+    // simulate without visualizer
+    for(int i = 0; i < benchmark::simulationTime / benchmark::dt; i++) {
       // simulate one step
       sim->integrate(benchmark::dt);
     }

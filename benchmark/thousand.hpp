@@ -10,11 +10,14 @@
 namespace benchmark {
 
 // parameters
-double dt = 0.01;
+double dt = 0.001;
+double simulationTime = 10;
 
 double gap = 1.1;
 double perturbation = 0.001;
 double dropHeight = 5.0;
+
+double randomSeed = 42;
 
 // object geometry
 double ballR = 0.5;
