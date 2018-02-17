@@ -10,3 +10,5 @@
     - install library into local 
 - install raiCommons 
     - install library into local
+- mujoco150 is included in project
+    - mjkey.txt is only valid for Dongho Kang
