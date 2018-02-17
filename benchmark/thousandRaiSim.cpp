@@ -4,12 +4,14 @@
 
 #include <raiSim/World_RG.hpp>
 
+#include "thousand.hpp"
+
 int main(int argc, char* argv[]) {
 
   // main arguments
   int n = 10;
   int shape = 0;    // 0: balls, 1: boxes, 2: capsules
-  bool is_visualization_mode = true;
+  bool is_visualization_mode = false;
   bool show_graph = true;
 
   if (argc == 5) {
@@ -41,6 +43,8 @@ int main(int argc, char* argv[]) {
 
   if (is_visualization_mode)
     sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+  else
+    sim = new rai_sim::World_RG;
 
   // objects
   auto checkerboard = sim->addCheckerboard(5.0, 200.0, 200.0, 0.1, 1, -1, rai_sim::GRID);
@@ -50,8 +54,6 @@ int main(int argc, char* argv[]) {
   rai::RandomNumberGenerator<double> rand;
 
   int nPerDim = n;
-  const double perturbation = 0.001;
-  const double dropHeight = 5.0;
 
   rai_sim::SingleBodyHandle obj(nullptr, {}, {});
 
@@ -62,22 +64,22 @@ int main(int argc, char* argv[]) {
         switch(shape) {
           case 0:
             // sphere (aluminum density)
-            obj = sim->addSphere(0.5, 1500.0);
+            obj = sim->addSphere(benchmark::ballR, benchmark::ballM);
             break;
           case 1:
             // box (aluminum density)
-            obj = sim->addBox(0.8, 0.4, 0.2, 170.0);
+            obj = sim->addBox(benchmark::boxSize[0], benchmark::boxSize[1], benchmark::boxSize[2], benchmark::boxM);
             break;
           case 2:
             // capsule (aluminum density)
-            obj = sim->addCapsule(0.2, 0.6, 300.0);
+            obj = sim->addCapsule(benchmark::capsuleSize[0], benchmark::capsuleSize[1], benchmark::capsuleM);
             break;
         }
 
         // set position
-        obj->setPosition((double)i * 1.1 + rand.sampleUniform01() * perturbation,
-                         (double)j * 1.1  + rand.sampleUniform01() * perturbation,
-                         (double)k * 1.1  + rand.sampleUniform01() * perturbation + dropHeight);
+        obj->setPosition((double)i * benchmark::gap + rand.sampleUniform01() * benchmark::perturbation,
+                         (double)j * benchmark::gap + rand.sampleUniform01() * benchmark::perturbation,
+                         (double)k * benchmark::gap + rand.sampleUniform01() * benchmark::perturbation + benchmark::dropHeight);
 
         obj->setOrientationRandom();
 
@@ -98,23 +100,43 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  double dt = 0.01;  // (sec)
-
   rai::Utils::timer->startTimer("10000IterationBenchmark");
   if(is_visualization_mode) {
     sim->cameraFollowObject(objectPtrList.at(nPerDim*nPerDim*nPerDim/2), {0, 30.0, 10.0});
     // simulation loop with visualizer
-    sim->loop(dt);
+    sim->loop(benchmark::dt);
   }
   else {
     // simulate 10000 iteration without visualizer
     for(int i = 0; i < 1000; i++) {
       // simulate one step
-      sim->integrate(dt);
+      sim->integrate(benchmark::dt);
     }
   }
   rai::Utils::timer->stopTimer("10000IterationBenchmark");
   rai::Utils::timer->dumpToStdOuput();
+
+  // penetration check (sphere)
+  if (shape == 0) {
+    double error_sum = 0;
+    int numObj = objectPtrList.size();
+    for(int i = 0; i < numObj; i++) {
+      for(int j = i+1; j < numObj; j++) {
+        double dist = (objectPtrList[i]->getPosition() - objectPtrList[j]->getPosition()).norm();
+
+        // error between spheres
+        if(dist < benchmark::ballR * 2)
+          error_sum += (benchmark::ballR * 2 - dist);
+      }
+      // error sphere ~ ground
+      if(objectPtrList[i]->getPosition()[2] < benchmark::ballR) {
+        error_sum += benchmark::ballR - objectPtrList[i]->getPosition()[2];
+      }
+    }
+
+    RAIINFO("penetration error = ");
+    RAIINFO(error_sum);
+  }
 
   if(show_graph) {
     rai::Utils::Graph::FigPropPieChart propChart;
