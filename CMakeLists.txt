@@ -113,12 +113,16 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 # mujoco
 include_directories(mjpro150/include)
+# mujoco shared libraries
 find_library(glew NAMES glew PATHS mjpro150/bin)
 find_library(glewegl NAMES glewegl PATHS mjpro150/bin)
 find_library(glewosmesa NAMES glewosmesa PATHS mjpro150/bin)
 find_library(glfw NAMES glfw libglfw.so.3 PATHS mjpro150/bin)
 find_library(mujoco150 NAMES mujoco150 PATHS mjpro150/bin)
 find_library(mujoco150nogl NAMES mujoco150nogl PATHS mjpro150/bin)
+# mujoco keyfile
+file(COPY mjpro150/mjkey.txt
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 ## --------------------------- links ---------------------------
 # BulletSim
@@ -143,6 +147,10 @@ target_link_libraries(odeTest ode)
 
 add_executable(mujocoTest test/mujocoTest.cpp)
 target_link_libraries(mujocoTest ${MuJoCoSimLink})
+
+# mujoco simulation
+add_executable(mujocoSimulate mjpro150/sample/simulate.cpp)
+target_link_libraries(mujocoSimulate ${MuJoCoSimLink})
 
 # benchmark tests
 # stack
