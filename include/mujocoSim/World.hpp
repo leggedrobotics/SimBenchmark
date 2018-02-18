@@ -7,6 +7,8 @@
 
 #include <mujoco.h>
 
+#include "SingleBodyObject.hpp"
+
 namespace mujoco_sim {
 
 enum SolverOption {
@@ -21,12 +23,17 @@ class World {
   World(const char *modelPath);
   virtual ~World();
 
+  const std::vector<object::SingleBodyObject *> &getObjectList() const;
   mjModel *getWorldModel() const;
   mjData *getWorldData() const;
 
  private:
   mjModel *worldModel_;
   mjData *worldData_;
+
+  // list
+  std::vector<object::SingleBodyObject*> objectList_;
+
 };
 
 } // mujoco_sim

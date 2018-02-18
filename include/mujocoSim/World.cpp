@@ -3,7 +3,6 @@
 //
 
 #include "World.hpp"
-#include <raiCommon/utils/rai_message_logger/rai_message.hpp>
 
 mujoco_sim::World::World(const char* modelPath) {
 
@@ -22,9 +21,18 @@ mujoco_sim::World::World(const char* modelPath) {
   // make data corresponding to model
   worldData_ = mj_makeData(worldModel_);
 
+  // make objects
+  for(int i = 0; i < worldModel_->nbody; i++) {
+    object::SingleBodyObject *object = new object::SingleBodyObject(worldData_, i);
+    objectList_.push_back(object);
+  }
 }
 
 mujoco_sim::World::~World() {
+
+  // remove objects
+  for (auto *ob: objectList_)
+    delete ob;
 
   // free model and data, deactivate
   mj_deleteData(worldData_);
@@ -38,6 +46,9 @@ mjModel *mujoco_sim::World::getWorldModel() const {
 }
 mjData *mujoco_sim::World::getWorldData() const {
   return worldData_;
+}
+const std::vector<mujoco_sim::object::SingleBodyObject *> &mujoco_sim::World::getObjectList() const {
+  return objectList_;
 }
 
 

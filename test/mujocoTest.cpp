@@ -30,7 +30,6 @@ int main(void)
   // run simulation for 10 seconds
   while( d->time<10 ) {
     mj_step(m, d);
-    printf("%lf", *(d->xpos+8));
   }
 
   // free model and data, deactivate
