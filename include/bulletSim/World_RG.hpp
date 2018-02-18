@@ -84,6 +84,7 @@ class World_RG {
   //////////////////////////
   void integrate(double dt);
   void setGravity(Eigen::Vector3d gravity);
+  void setERP(double erp, double erp2, double frictionErp);
 
  private:
   void checkFileExistance(std::string nm);

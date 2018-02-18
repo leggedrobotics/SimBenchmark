@@ -468,6 +468,7 @@ void World_RG::processGraphicalObject(rai_graphics::object::SingleBodyObject *go
 //  interactionIdx_.insert(std::pair<int, std::pair<int, int>>(go->getSelectableObIndex(),
 //                                                             std::pair<int, int>(world_.getObjList().size() - 1, li)));
 }
+
 void World_RG::adjustTransparency(rai_graphics::object::SingleBodyObject *ob, bool hidable) {
   if (!hidable) return;
   if (gui_->getCustomToggleState(1) || gui_->getCustomToggleState(2) || gui_->getCustomToggleState(4))
@@ -475,8 +476,13 @@ void World_RG::adjustTransparency(rai_graphics::object::SingleBodyObject *ob, bo
   else
     ob->setTransparency(1.0);
 }
+
 void World_RG::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
+}
+
+void World_RG::setERP(double erp) {
+  world_.setERP(erp);
 }
 
 } // ode_sim

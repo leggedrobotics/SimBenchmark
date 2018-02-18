@@ -459,8 +459,13 @@ void World_RG::adjustTransparency(rai_graphics::object::SingleBodyObject *ob, bo
   else
     ob->setTransparency(1.0);
 }
+
 void World_RG::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
+}
+
+void World_RG::setERP(double erp, double erp2, double frictionErp) {
+  world_.setERP(erp, erp2, frictionErp);
 }
 
 } // bullet_sim

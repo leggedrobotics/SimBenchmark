@@ -70,6 +70,7 @@ class World_RG {
   //////////////////////////
   void integrate(double dt);
   void setGravity(Eigen::Vector3d gravity);
+  void setERP(double erp);
 
  private:
   void processSingleBody(SingleBodyHandle handle);

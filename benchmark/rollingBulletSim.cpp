@@ -16,6 +16,7 @@ int main() {
 
   bullet_sim::World_RG sim(800, 600, 0.5, bullet_sim::NO_BACKGROUND);
   sim.setGravity(benchmark::gravity);
+  sim.setERP(benchmark::erp, benchmark::erp, benchmark::erp);
   sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
 
   // add objects

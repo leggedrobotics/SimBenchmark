@@ -54,10 +54,10 @@ World::World(SolverOption solverOption) : solverOption_(solverOption) {
 //  dynamicsWorld_->getSolverInfo().m_restitution = 0.0;
 //  dynamicsWorld_->getSolverInfo().m_maxErrorReduction = btScalar(20.);
 //  dynamicsWorld_->getSolverInfo().m_numIterations = 10;                     // TODO
-  dynamicsWorld_->getSolverInfo().m_erp = btScalar(0);
-  dynamicsWorld_->getSolverInfo().m_erp2 = btScalar(0);
-//  dynamicsWorld_->getSolverInfo().m_globalCfm = btScalar(0.0);
+  dynamicsWorld_->getSolverInfo().m_erp = 0;
+  dynamicsWorld_->getSolverInfo().m_erp2 = 0;
   dynamicsWorld_->getSolverInfo().m_frictionERP = 0;
+//  dynamicsWorld_->getSolverInfo().m_globalCfm = btScalar(0.0);
 //  dynamicsWorld_->getSolverInfo().m_frictionCFM = 0;
 //  dynamicsWorld_->getSolverInfo().m_sor = btScalar(1.);
 //  dynamicsWorld_->getSolverInfo().m_splitImpulse = false;

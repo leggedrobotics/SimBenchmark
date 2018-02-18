@@ -16,6 +16,7 @@ int main() {
 
   ode_sim::World_RG sim(800, 600, 0.5, ode_sim::NO_BACKGROUND, ode_sim::SOLVER_STANDARD);
   sim.setGravity(benchmark::gravity);
+  sim.setERP(benchmark::erp);
   sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
 
   // add objects
