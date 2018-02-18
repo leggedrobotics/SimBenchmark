@@ -13,7 +13,7 @@ double lightY = 0.0;
 double lightZ = 10.0;
 
 // parameters
-double dt = 0.001;                          // time step
+double dt = 0.01;                          // time step
 const int simulationTime = 3;               // time for applying force
 Eigen::Vector3d force = {0, 150, 0};        // force
 Eigen::Vector3d gravity = {0, 0, -9.8};

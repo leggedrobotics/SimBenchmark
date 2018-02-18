@@ -85,6 +85,17 @@ set(ODESim_HDRS
 
 add_library(ODESim ${ODESim_SRCS} ${ODESim_HDRS})
 
+# MuJoCoSim
+set(MuJoCoSim_SRCS
+        include/mujocoSim/SingleBodyObject.cpp
+        )
+
+set(MuJoCoSim_HDRS
+        include/mujocoSim/SingleBodyObject.hpp
+        )
+
+add_library(MuJoCoSim ${MuJoCoSim_SRCS} ${MuJoCoSim_HDRS})
+
 ## --------------------------- dependencies ---------------------------
 # raiCommons
 find_package(raiCommon CONFIG REQUIRED)

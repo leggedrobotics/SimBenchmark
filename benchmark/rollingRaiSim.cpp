@@ -9,10 +9,12 @@
 int main() {
 
   // logger
-  std::string path = "/tmp/rai_rolling";
+  std::string path = "/home/kangd/Desktop/raisim-benchmark/log/rolling/rai";
   rai::Utils::logger->setLogPath(path);
   rai::Utils::logger->addVariableToLog(3, "linvel_box", "linear velocity of box");
   rai::Utils::logger->addVariableToLog(3, "linvel_ball", "linear velocity of ball");
+  rai::Utils::logger->addVariableToLog(3, "pos_box", "position of box");
+  rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
 
   // simulator
   rai_sim::World_RG sim(800, 600, 0.5, rai_sim::NO_BACKGROUND);
@@ -64,6 +66,8 @@ int main() {
       // log
       rai::Utils::logger->appendData("linvel_box", box->getLinearVelocity().data());
       rai::Utils::logger->appendData("linvel_ball", objectList[0]->getLinearVelocity().data());
+      rai::Utils::logger->appendData("pos_box", box->getPosition().data());
+      rai::Utils::logger->appendData("pos_ball", objectList[0]->getPosition().data());
     }
 
     sim.integrate(benchmark::dt);

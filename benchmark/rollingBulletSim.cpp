@@ -9,10 +9,15 @@
 int main() {
 
   // logger
-  std::string path = "/tmp/bullet_rolling";
+  std::string path = "/home/kangd/Desktop/raisim-benchmark/log/rolling/bullet";
+  std::string logName = "test";
   rai::Utils::logger->setLogPath(path);
+  rai::Utils::logger->setLogFileName(logName);
+  rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
   rai::Utils::logger->addVariableToLog(3, "linvel_box", "linear velocity of box");
   rai::Utils::logger->addVariableToLog(3, "linvel_ball", "linear velocity of ball");
+  rai::Utils::logger->addVariableToLog(3, "pos_box", "position of box");
+  rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
 
   bullet_sim::World_RG sim(800, 600, 0.5, bullet_sim::NO_BACKGROUND);
   sim.setGravity(benchmark::gravity);
@@ -53,6 +58,8 @@ int main() {
       // log
       rai::Utils::logger->appendData("linvel_box", box->getLinearVelocity().data());
       rai::Utils::logger->appendData("linvel_ball", objectList[0]->getLinearVelocity().data());
+      rai::Utils::logger->appendData("pos_box", box->getPosition().data());
+      rai::Utils::logger->appendData("pos_ball", objectList[0]->getPosition().data());
     }
 
     sim.integrate(benchmark::dt);
