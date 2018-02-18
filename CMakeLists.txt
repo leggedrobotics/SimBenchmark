@@ -29,73 +29,6 @@ link_directories(/usr/local/lib)
 link_directories(/usr/lib)
 link_directories(/usr/lib/x86_64-linux-gnu/)
 
-## --------------------------- local files ---------------------------
-include_directories(include)
-
-# Benchmark
-set(Benchmark_HDRS
-        include/interface/UserHandle.hpp
-        )
-
-# BulletSim
-set(BulletSim_SRCS
-        include/bulletSim/World.cpp
-        include/bulletSim/World_RG.cpp
-        include/bulletSim/object/SingleBodyObject.cpp
-        include/bulletSim/object/Box.cpp
-        include/bulletSim/object/CheckerBoard.cpp
-        include/bulletSim/object/Sphere.cpp
-        include/bulletSim/object/Capsule.cpp
-        include/bulletSim/object/Object.cpp
-        )
-
-set(BulletSim_HDRS
-        include/bulletSim/World.hpp
-        include/bulletSim/World_RG.hpp
-        include/bulletSim/object/SingleBodyObject.hpp
-        include/bulletSim/object/Box.hpp
-        include/bulletSim/object/CheckerBoard.hpp
-        include/bulletSim/object/Sphere.hpp
-        include/bulletSim/object/Capsule.hpp
-        include/bulletSim/object/Object.hpp
-        )
-
-add_library(BulletSim ${BulletSim_SRCS} ${BulletSim_HDRS})
-
-# ODESim
-set(ODESim_SRCS
-        include/odeSim/World.cpp
-        include/odeSim/World_RG.cpp
-        include/odeSim/object/SingleBodyObject.cpp
-        include/odeSim/object/Box.cpp
-        include/odeSim/object/CheckerBoard.cpp
-        include/odeSim/object/Sphere.cpp
-        include/odeSim/object/Capsule.cpp
-        )
-
-set(ODESim_HDRS
-        include/odeSim/World.hpp
-        include/odeSim/World_RG.hpp
-        include/odeSim/object/SingleBodyObject.hpp
-        include/odeSim/object/Box.hpp
-        include/odeSim/object/CheckerBoard.hpp
-        include/odeSim/object/Sphere.hpp
-        include/odeSim/object/Capsule.hpp
-        )
-
-add_library(ODESim ${ODESim_SRCS} ${ODESim_HDRS})
-
-# MuJoCoSim
-set(MuJoCoSim_SRCS
-        include/mujocoSim/SingleBodyObject.cpp
-        )
-
-set(MuJoCoSim_HDRS
-        include/mujocoSim/SingleBodyObject.hpp
-        )
-
-add_library(MuJoCoSim ${MuJoCoSim_SRCS} ${MuJoCoSim_HDRS})
-
 ## --------------------------- dependencies ---------------------------
 # raiCommons
 find_package(raiCommon CONFIG REQUIRED)
@@ -135,6 +68,66 @@ find_library(mujoco150nogl NAMES mujoco150nogl PATHS mjpro150/bin)
 file(COPY mjpro150/mjkey.txt
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+## --------------------------- local files ---------------------------
+include_directories(include)
+
+# Benchmark
+set(Benchmark_HDRS
+        include/interface/UserHandle.hpp
+        )
+
+# BulletSim
+set(BulletSim_SRCS
+        include/bulletSim/World.hpp
+        include/bulletSim/World.cpp
+        include/bulletSim/World_RG.hpp
+        include/bulletSim/World_RG.cpp
+        include/bulletSim/object/SingleBodyObject.hpp
+        include/bulletSim/object/SingleBodyObject.cpp
+        include/bulletSim/object/Box.hpp
+        include/bulletSim/object/Box.cpp
+        include/bulletSim/object/CheckerBoard.hpp
+        include/bulletSim/object/CheckerBoard.cpp
+        include/bulletSim/object/Sphere.hpp
+        include/bulletSim/object/Sphere.cpp
+        include/bulletSim/object/Capsule.hpp
+        include/bulletSim/object/Capsule.cpp
+        include/bulletSim/object/Object.hpp
+        include/bulletSim/object/Object.cpp
+        )
+
+add_library(BulletSim ${BulletSim_SRCS})
+
+# ODESim
+set(ODESim_SRCS
+        include/odeSim/World.hpp
+        include/odeSim/World.cpp
+        include/odeSim/World_RG.hpp
+        include/odeSim/World_RG.cpp
+        include/odeSim/object/SingleBodyObject.hpp
+        include/odeSim/object/SingleBodyObject.cpp
+        include/odeSim/object/Box.hpp
+        include/odeSim/object/Box.cpp
+        include/odeSim/object/CheckerBoard.hpp
+        include/odeSim/object/CheckerBoard.cpp
+        include/odeSim/object/Sphere.cpp
+        include/odeSim/object/Sphere.hpp
+        include/odeSim/object/Capsule.hpp
+        include/odeSim/object/Capsule.cpp
+        )
+
+add_library(ODESim ${ODESim_SRCS})
+
+# MuJoCoSim
+set(MuJoCoSim_SRCS
+        include/mujocoSim/World.hpp
+        include/mujocoSim/World.cpp
+        include/mujocoSim/SingleBodyObject.hpp
+        include/mujocoSim/SingleBodyObject.cpp
+        )
+
+add_library(MuJoCoSim ${MuJoCoSim_SRCS})
+
 ## --------------------------- links ---------------------------
 # BulletSim
 set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath BulletSim ${RAI_GRAPHICS_OPENGL_LINK})
@@ -143,7 +136,7 @@ set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath Bullet
 set(ODESimLink ode ODESim ${RAI_GRAPHICS_OPENGL_LINK})
 
 # MuJoCoSim
-set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl} GL GLU glut)
+set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl} GL GLU glut MuJoCoSim)
 
 ## --------------------------- executable ---------------------------
 # framework tests
@@ -193,6 +186,9 @@ target_link_libraries(bounceBulletSim ${BulletSimLink})
 
 add_executable(bounceODESim benchmark/bounceODESim.cpp)
 target_link_libraries(bounceODESim ${ODESimLink})
+
+add_executable(bounceMuJoCoSim benchmark/bounceMuJoCoSim.cpp)
+target_link_libraries(bounceMuJoCoSim ${MuJoCoSimLink})
 
 # thousand
 add_executable(thousandRaiSim benchmark/thousandRaiSim.cpp)
