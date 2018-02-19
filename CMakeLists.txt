@@ -138,7 +138,7 @@ set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath
         BulletSim BenchmakrLib ${RAI_GRAPHICS_OPENGL_LINK})
 
 # ODESim
-set(ODESimLink ode ODESim ${RAI_GRAPHICS_OPENGL_LINK})
+set(ODESimLink ode ODESim BenchmakrLib ${RAI_GRAPHICS_OPENGL_LINK})
 
 # MuJoCoSim
 set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl} GL GLU glut MuJoCoSim ${RAI_GRAPHICS_OPENGL_LINK})

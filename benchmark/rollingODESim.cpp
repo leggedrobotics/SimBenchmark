@@ -16,9 +16,9 @@ int main() {
   rai::Utils::logger->addVariableToLog(3, "pos_box", "position of box");
   rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
 
-  ode_sim::World_RG sim(800, 600, 0.5, ode_sim::NO_BACKGROUND, ode_sim::SOLVER_STANDARD);
+  ode_sim::World_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND, ode_sim::SOLVER_STANDARD);
   sim.setGravity(benchmark::gravity);
-  sim.setERP(benchmark::erp);
+  sim.setERP(benchmark::erp, 0, 0);
   sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
 
   // add objects
@@ -29,7 +29,7 @@ int main() {
   box->setPosition(0, 0, 0.5);
   box->setFrictionCoefficient(benchmark::boxMu);
 
-  std::vector<ode_sim::SingleBodyHandle> objectList;
+  std::vector<benchmark::SingleBodyHandle> objectList;
 
   for(int i = 0; i < 5; i++) {
     for(int j = 0; j < 5; j++) {

@@ -10,6 +10,8 @@
 #include <Eigen/Geometry>
 #include <raiSim/math.hpp>
 
+#include "base/SingleBodyObject.hpp"
+
 namespace ode_sim {
 namespace object {
 
@@ -18,7 +20,7 @@ struct MetrialProp {
   double restitutionCoeff = 0.0;
 };
 
-class SingleBodyObject {
+class SingleBodyObject: public benchmark::object::SingleBodyObject {
 
  public:
   SingleBodyObject(const dWorldID worldID, const dSpaceID spaceID);
@@ -68,9 +70,6 @@ class SingleBodyObject {
   rai_sim::Vec<3> posTemp_ = {0.0, 0.0, 0.0};
   rai_sim::Vec<3> linVelTemp_ = {0.0, 0.0, 0.0};
   rai_sim::Vec<3> angVelTemp_ = {0.0, 0.0, 0.0};
-
-  // from object
-  bool visualizeFramesAndCom_ = true;
 
   rai::RandomNumberGenerator<double> rn_;
 };

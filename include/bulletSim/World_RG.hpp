@@ -11,20 +11,10 @@
 #include <raiSim/math.hpp>
 
 #include "base/World_RG.hpp"
-//#include "UserHandle.hpp"
 #include "Configure.hpp"
 #include "World.hpp"
 
 namespace bullet_sim {
-
-enum VisualizerOption {
-  NO_BACKGROUND = 1<<(1),
-  DISABLE_INTERACTION = 1<<(2)
-};
-
-enum CheckerBoardOption {
-  GRID = 1<<(1),
-};
 
 class World_RG: public benchmark::World_RG {
 
@@ -67,7 +57,6 @@ class World_RG: public benchmark::World_RG {
                                          CollisionGroupType collisionGroup = 1,
                                          CollisionGroupType collisionMask=-1) override ;
 
-
   //////////////////////////
   /// simulation methods ///
   //////////////////////////
@@ -76,7 +65,7 @@ class World_RG: public benchmark::World_RG {
   void setERP(double erp, double erp2, double frictionErp) override ;
 
  private:
-  World world_;
+  bullet_sim::World world_;
 
   // solver type
   SolverOption solverOption_ = SOLVER_SEQUENTIAL_IMPULSE;

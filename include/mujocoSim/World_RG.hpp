@@ -5,6 +5,10 @@
 #ifndef MUJOCOSIM_WORLD_RG_HPP
 #define MUJOCOSIM_WORLD_RG_HPP
 
+#include <raiGraphics/RAI_graphics.hpp>
+
+#include "World.hpp"
+
 namespace mujoco_sim {
 
 class World_RG {
@@ -27,10 +31,10 @@ class World_RG {
              int windowHeight,
              float cms,
              int flags = 0,
-             SolverOption solverOption = SOLVER_STANDARD);
+             SolverOption solverOption = SOLVER_PGS);
 
     /* constructor for no visualization */
-    World_RG(SolverOption solverOption = SOLVER_STANDARD);
+    World_RG(SolverOption solverOption = SOLVER_PGS);
     virtual ~World_RG();
 
     /////////////////////////////////////

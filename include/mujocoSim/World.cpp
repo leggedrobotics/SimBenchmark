@@ -22,7 +22,18 @@ mujoco_sim::World::World(const char* modelPath) {
   worldData_ = mj_makeData(worldModel_);
 
   // make objects
-  for(int i = 0; i < worldModel_->nbody; i++) {
+  for(int i = 0; i < worldModel_->ngeom; i++) {
+
+    switch (*(worldModel_->geom_type + i)) {
+      case mjGEOM_PLANE:
+      case mjGEOM_SPHERE:
+      case mjGEOM_CAPSULE:
+      case mjGEOM_BOX:
+        break;
+      default:
+        RAIFATAL("wrong geometry type");
+    }
+
     object::SingleBodyObject *object = new object::SingleBodyObject(worldData_, i);
     objectList_.push_back(object);
   }

@@ -54,7 +54,7 @@ benchmark::SingleBodyHandle World_RG::addCheckerboard(double gridSize,
   handle.hidable = false;
   if(gui_) {
     handle.visual().push_back(new rai_graphics::object::CheckerBoard(gridSize, xLength, yLength, reflectanceI));
-    static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0])->gridMode = flags & GRID;
+    static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0])->gridMode = flags & benchmark::GRID;
     gui_->addCheckerBoard(static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0]));
   }
   sbHandles_.push_back(handle);
