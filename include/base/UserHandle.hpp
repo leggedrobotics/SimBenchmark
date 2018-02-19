@@ -5,8 +5,9 @@
 #ifndef BENCHMARK_USERHANDLE_HPP
 #define BENCHMARK_USERHANDLE_HPP
 
-#include "odeSim/World.hpp"
-#include "raiGraphics/RAI_graphics.hpp"
+#include <raiGraphics/RAI_graphics.hpp>
+
+#include "SingleBodyObject.hpp"
 
 namespace benchmark {
 
@@ -63,6 +64,13 @@ class UserWireHandle : public UserHandle<S> {
     return g_;
   }
 };
+
+typedef benchmark::UserObjectHandle<benchmark::object::SingleBodyObject> SingleBodyHandle;
+//typedef benchmark::UserObjectHandle<bullet_sim::object::ArticulatedSystem> ArticulatedSystemHandle;
+//typedef UserObjectHandle<bullet_sim::object::Compound> CompoundHandle;
+//typedef UserWireHandle<bullet_sim::Wire> WireHandle;
+//typedef UserWireHandle<bullet_sim::StiffWire> StiffWireHandle;
+//typedef UserWireHandle<bullet_sim::CompliantWire> CompliantWireHandle;
 
 } // benchmark
 

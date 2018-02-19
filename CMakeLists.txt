@@ -72,9 +72,15 @@ file(COPY mjpro150/mjkey.txt
 include_directories(include)
 
 # Benchmark
-set(Benchmark_HDRS
+set(Benchmark_SRCS
         include/base/UserHandle.hpp
+        include/base/World_RG.hpp
+        include/base/World_RG.cpp
+        include/base/SingleBodyObject.hpp
+        include/base/SingleBodyObject.cpp
         )
+
+add_library(BenchmakrLib ${Benchmark_SRCS})
 
 # BulletSim
 set(BulletSim_SRCS
@@ -128,7 +134,8 @@ add_library(MuJoCoSim ${MuJoCoSim_SRCS})
 
 ## --------------------------- links ---------------------------
 # BulletSim
-set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath BulletSim ${RAI_GRAPHICS_OPENGL_LINK})
+set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath
+        BulletSim BenchmakrLib ${RAI_GRAPHICS_OPENGL_LINK})
 
 # ODESim
 set(ODESimLink ode ODESim ${RAI_GRAPHICS_OPENGL_LINK})

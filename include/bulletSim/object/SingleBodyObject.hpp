@@ -65,9 +65,6 @@ class SingleBodyObject: public benchmark::object::SingleBodyObject {
   rai_sim::Vec<3> linVelTemp_ = {0.0, 0.0, 0.0};
   rai_sim::Vec<3> angVelTemp_ = {0.0, 0.0, 0.0};
 
-  // from object
-  bool visualizeFramesAndCom_ = true;
-
   rai::RandomNumberGenerator<double> rn_;
 };
 
