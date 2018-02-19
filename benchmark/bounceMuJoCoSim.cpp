@@ -5,9 +5,19 @@
 #include <mujoco.h>
 #include <mujocoSim/World.hpp>
 
+#include "bounce.hpp"
+
 char error[1000];
 
 int main() {
+  // logger
+  std::string path = benchmark::parentDir + "mujoco";
+  std::string name = std::to_string(benchmark::dt);
+  rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
+  rai::Utils::logger->setLogPath(path);
+  rai::Utils::logger->setLogFileName(name);
+  rai::Utils::logger->addVariableToLog(3, "vel_ball", "linear velocity of ball");
+  rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
 
   // load model from file and check for errors
   mujoco_sim::World world("/home/kangd/git/benchmark/mjpro150/model/hello.xml");
@@ -15,7 +25,9 @@ int main() {
   // run simulation for 10 seconds
   while( world.getWorldData()->time<10 ) {
     mj_step(world.getWorldModel(), world.getWorldData());
-    RAIINFO(world.getObjectList()[1]->getPosition());
+
+    rai::Utils::logger->appendData("vel_ball", world.getObjectList()[1]->getLinearVelocity().data());
+    rai::Utils::logger->appendData("pos_ball", world.getObjectList()[1]->getPosition().data());
   }
 
   return 0;

@@ -75,7 +75,7 @@ class World {
   btMLCPSolverInterface* mlcpSolver_ = 0;
 
   // list
-  std::vector<object::Object*> objectList_;
+  std::vector<object::SingleBodyObject*> objectList_;
   std::vector<Single3DContactProblem> contactProblemList_;
 
 //  std::vector<int> colIdxToObjIdx_;

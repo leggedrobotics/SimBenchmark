@@ -73,7 +73,7 @@ include_directories(include)
 
 # Benchmark
 set(Benchmark_HDRS
-        include/interface/UserHandle.hpp
+        include/base/UserHandle.hpp
         )
 
 # BulletSim
@@ -92,8 +92,6 @@ set(BulletSim_SRCS
         include/bulletSim/object/Sphere.cpp
         include/bulletSim/object/Capsule.hpp
         include/bulletSim/object/Capsule.cpp
-        include/bulletSim/object/Object.hpp
-        include/bulletSim/object/Object.cpp
         )
 
 add_library(BulletSim ${BulletSim_SRCS})
@@ -122,8 +120,8 @@ add_library(ODESim ${ODESim_SRCS})
 set(MuJoCoSim_SRCS
         include/mujocoSim/World.hpp
         include/mujocoSim/World.cpp
-        include/mujocoSim/SingleBodyObject.hpp
-        include/mujocoSim/SingleBodyObject.cpp
+        include/mujocoSim/object/SingleBodyObject.hpp
+        include/mujocoSim/object/SingleBodyObject.cpp
         )
 
 add_library(MuJoCoSim ${MuJoCoSim_SRCS})
@@ -136,7 +134,7 @@ set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath Bullet
 set(ODESimLink ode ODESim ${RAI_GRAPHICS_OPENGL_LINK})
 
 # MuJoCoSim
-set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl} GL GLU glut MuJoCoSim)
+set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl} GL GLU glut MuJoCoSim ${RAI_GRAPHICS_OPENGL_LINK})
 
 ## --------------------------- executable ---------------------------
 # framework tests

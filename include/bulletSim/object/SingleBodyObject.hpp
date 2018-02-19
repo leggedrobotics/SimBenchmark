@@ -9,12 +9,13 @@
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <raiSim/math.hpp>
 #include <Eigen/Geometry>
-#include "Object.hpp"
+
+#include "base/SingleBodyObject.hpp"
 
 namespace bullet_sim {
 namespace object {
 
-class SingleBodyObject: public Object {
+class SingleBodyObject: public benchmark::object::SingleBodyObject {
 
  public:
   SingleBodyObject(double mass);

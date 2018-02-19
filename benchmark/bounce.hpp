@@ -9,6 +9,9 @@
 
 namespace benchmark {
 
+// path
+std::string parentDir = "/home/kangd/Desktop/raisim-benchmark/log/bounce/";
+
 // sim properties
 double lightX = 30.0;
 double lightY = 0.0;
