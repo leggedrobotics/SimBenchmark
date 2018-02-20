@@ -53,7 +53,6 @@ class World {
                                 CollisionGroupType collisionGroup,
                                 CollisionGroupType collisionMask);
 
-  const std::vector<object::SingleBodyObject *> &getObjectList() const;
   mjModel *getWorldModel() const;
   mjData *getWorldData() const;
 

@@ -34,7 +34,7 @@ class World_RG: public benchmark::World_RG {
   //////////////////////////
   void integrate(double dt) override ;
 
-  const std::vector<object::SingleBodyObject *> &getObjectList() const;
+  benchmark::SingleBodyHandle getSingleBodyHandle(int index);
 
  private:
   void setGravity(Eigen::Vector3d gravity) override ;

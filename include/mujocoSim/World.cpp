@@ -43,9 +43,6 @@ mjModel *mujoco_sim::World::getWorldModel() const {
 mjData *mujoco_sim::World::getWorldData() const {
   return worldData_;
 }
-const std::vector<mujoco_sim::object::SingleBodyObject *> &mujoco_sim::World::getObjectList() const {
-  return objectList_;
-}
 
 void mujoco_sim::World::integrate(double dt) {
   RAIWARN("dt is not set. should be implemented");

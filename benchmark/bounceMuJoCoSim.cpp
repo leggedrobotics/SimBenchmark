@@ -22,6 +22,7 @@ int main() {
   // load model from file and check for errors
   mujoco_sim::World_RG sim(800, 600, 0.5, "/home/kangd/git/benchmark/mjpro150/model/hello.xml", benchmark::NO_BACKGROUND);
   sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
+  sim.cameraFollowObject(sim.getSingleBodyHandle(0), {10, 0, 5});
 
   // run simulation for 10 seconds
   sim.loop(0.01, 1.0);

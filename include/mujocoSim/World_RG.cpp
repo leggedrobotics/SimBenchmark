@@ -119,6 +119,9 @@ void mujoco_sim::World_RG::setGravity(Eigen::Vector3d gravity) {
 void mujoco_sim::World_RG::setERP(double erp, double erp2, double frictionErp) {
 
 }
-const std::vector<mujoco_sim::object::SingleBodyObject *> &mujoco_sim::World_RG::getObjectList() const {
-  return world_.getObjectList();
+
+benchmark::SingleBodyHandle mujoco_sim::World_RG::getSingleBodyHandle(int index) {
+  if(index > sbHandles_.size())
+    RAIFATAL("get singlebody handle failed. invalid index");
+  return sbHandles_[index];
 }
