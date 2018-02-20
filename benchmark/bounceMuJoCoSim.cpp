@@ -7,8 +7,6 @@
 
 #include "bounce.hpp"
 
-char error[1000];
-
 int main() {
   // logger
   std::string path = benchmark::parentDir + "mujoco";

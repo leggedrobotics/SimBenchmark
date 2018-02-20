@@ -14,7 +14,7 @@ int main() {
   rai::Utils::logger->addVariableToLog(3, "vel_ball", "linear velocity of ball");
   rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
 
-  bullet_sim::World_RG sim(800, 600, 0.5, bullet_sim::NO_BACKGROUND);
+  bullet_sim::World_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 
   sim.setGravity(benchmark::gravity);
   sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);

@@ -1,0 +1,103 @@
+<mujoco model="Humanoid and 100 objects">
+    <compiler angle="degree"/>
+
+    <option timestep="0.01" iterations="50" solver="PGS" jacobian="sparse" cone="elliptic" tolerance="1e-10"/>
+
+    <size njmax="5000" nconmax="2000" nstack="1000000000"/>
+
+    <default>
+        <geom solimp=".9 .9 .01"/>        
+
+        <default class="object5">
+			<geom type="box" material="geom" rgba=".9 .1 .1 1" size="0.400000 0.200000 0.100000"/>
+        </default>
+    </default>
+
+    <asset>
+        <texture type="skybox" builtin="gradient" width="128" height="128" rgb1=".4 .6 .8" rgb2="0 0 0"/>  
+        <texture name="texgeom" type="cube" builtin="flat" mark="cross" width="128" height="128" 
+            rgb1="0.6 0.6 0.6" rgb2="0.6 0.6 0.6" markrgb="1 1 1"/>  
+        <texture name="texplane" type="2d" builtin="checker" rgb1=".4 .4 .4" rgb2=".6 .6 .6" 
+            width="512" height="512"/>  
+        <material name='geom' texture="texgeom" texuniform="true"/>
+        <material name='MatPlane' reflectance='0.3' texture="texplane" texrepeat="1 1" texuniform="true"/>
+    </asset>
+
+    <visual>
+        <quality shadowsize="4096" offsamples="8"/>
+        <map znear="0.1" force="0.05"/>
+    </visual>
+
+    <statistic extent="4"/>
+
+    <worldbody>
+        <light directional="true" diffuse=".8 .8 .8" pos="0 0 10" dir="0 0 -10"/>
+
+        <geom pos="0 0 0" type="plane" size="3 3 .5" rgba=".7 .7 .7 1" material="MatPlane"/>
+		<body pos="1.100023 1.100584 6.100088" quat="0.332258 0.137241 0.819929 -0.445517"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100810 1.100134 7.200107" quat="0.412943 -0.263342 -0.575883 0.654590"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100234 1.100182 8.300841" quat="-0.369583 -0.594513 0.711351 -0.062793"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100562 1.100352 9.400053" quat="-0.713549 0.629655 -0.084299 0.295425"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100942 2.200017 6.100260" quat="-0.062821 0.186039 0.707368 -0.679024"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100404 2.200077 7.200202" quat="0.594417 0.241083 0.205678 -0.739083"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100185 2.200025 8.300795" quat="-0.411405 -0.028009 -0.014211 -0.910911"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100714 2.200000 9.400718" quat="-0.064713 0.335143 0.476306 -0.810324"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100251 3.300093 6.100785" quat="-0.610776 0.422342 -0.543697 -0.391119"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100077 3.300751 7.200146" quat="-0.298505 -0.111126 -0.817891 -0.479165"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100958 3.300158 8.300716" quat="-0.478486 0.561740 0.513132 0.438400"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100743 3.300086 9.400304" quat="-0.144394 0.151753 -0.257221 -0.943376"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100356 4.400088 6.100420" quat="-0.576840 0.645335 -0.401656 -0.299115"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100109 4.400950 7.200657" quat="0.514928 0.563193 -0.643626 -0.058380"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100425 4.400488 8.300908" quat="0.690307 0.221553 0.626220 0.286773"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100351 4.400224 9.400171" quat="-0.911518 -0.020765 -0.035596 -0.409190"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200767 1.100755 6.100300" quat="-0.103113 -0.634690 -0.764219 0.050045"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200768 1.100387 7.200643" quat="-0.397790 -0.179992 -0.779735 0.448752"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200523 1.100387 8.300503" quat="-0.881099 0.197205 0.278523 -0.327414"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200228 1.100366 9.400037" quat="-0.553123 -0.658572 0.332763 0.386791"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200000 2.200666 6.100950" quat="0.241433 -0.700127 -0.662227 -0.113966"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200144 2.200333 7.200278" quat="0.807334 -0.402623 -0.165283 -0.398482"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200780 2.200710 8.300758" quat="-0.405879 -0.111300 -0.528110 -0.737546"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200560 2.200399 9.400179" quat="0.725856 -0.484524 0.068140 -0.483452"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200876 3.300084 6.100478" quat="-0.609094 0.335891 0.074760 0.714558"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200676 3.300277 7.200466" quat="0.317811 0.237423 -0.787967 0.470886"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200854 3.300677 8.300708" quat="-0.595781 -0.168607 -0.658517 0.427752"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200186 3.300343 9.400080" quat="0.443497 -0.472035 0.390384 0.654289"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200376 4.400804 6.100149" quat="0.699961 -0.008038 -0.632509 0.331545"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200616 4.400607 7.200771" quat="-0.425035 0.891233 -0.087470 -0.131905"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200499 4.400058 8.300443" quat="-0.621900 -0.710382 0.028014 0.328349"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200137 4.400264 9.400718" quat="0.001610 -0.642915 -0.260599 -0.720240"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300719 1.100273 6.100679" quat="0.592987 -0.801012 -0.057412 -0.058739"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300407 1.100869 7.200875" quat="-0.318949 0.199831 0.720138 0.582872"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300203 1.100184 8.300246" quat="0.856771 -0.154094 -0.468294 -0.151325"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300588 1.100715 9.400178" quat="0.668886 -0.249739 0.688756 0.125846"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300451 2.200479 6.100737" quat="0.183823 0.483849 -0.229805 0.824190"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300960 2.200578 7.200325" quat="-0.857957 -0.193878 0.431419 0.200495"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300719 2.200251 8.300053" quat="0.413638 0.456552 -0.663223 0.424969"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300780 2.200792 9.400814" quat="0.233225 -0.001234 0.203441 -0.950903"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300791 3.300268 6.100780" quat="0.633783 0.532175 -0.274361 -0.489729"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300106 3.300803 7.200512" quat="-0.144560 0.232650 -0.514784 -0.812388"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300638 3.300485 8.300103" quat="-0.741093 0.376970 -0.437282 0.342722"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300547 3.300769 9.400729" quat="0.156670 -0.596080 -0.396090 0.680628"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300560 4.400115 6.100595" quat="-0.197693 -0.169498 -0.888558 -0.377693"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300363 4.400604 7.200674" quat="-0.448230 -0.549536 -0.592846 -0.381619"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300035 4.400850 8.300728" quat="-0.181696 -0.738594 0.099505 0.641533"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300363 4.400473 9.400449" quat="0.417841 0.606540 -0.548429 -0.395909"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400980 1.100704 6.100401" quat="-0.389944 -0.532335 0.739231 0.134541"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400553 1.100138 7.200684" quat="-0.323867 0.641295 -0.574493 0.392184"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400444 1.100888 8.300849" quat="0.242800 0.768163 0.590843 -0.043335"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400907 1.100325 9.400637" quat="0.724637 -0.159550 0.641530 0.194637"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400090 2.200720 6.100127" quat="0.507226 -0.644971 -0.198413 0.536066"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400515 2.200587 7.200701" quat="0.642111 -0.513383 -0.202961 0.531920"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400496 2.200099 8.300395" quat="0.523699 -0.457587 0.347031 0.629224"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400156 2.200905 9.400355" quat="0.315289 -0.704350 -0.235136 0.590927"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400450 3.300105 6.100516" quat="-0.146272 0.523639 0.771803 0.329739"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400592 3.300502 7.200861" quat="-0.251885 0.167879 -0.838777 0.452574"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400395 3.300217 8.300163" quat="0.137914 -0.519547 -0.702756 0.466031"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400187 3.300079 9.400091" quat="0.395071 0.659359 -0.607642 0.199842"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400826 4.400089 6.100020" quat="0.601184 -0.025749 0.473147 0.643464"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400138 4.400142 7.200874" quat="-0.371884 -0.642786 0.666625 -0.064335"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400535 4.400986 8.300111" quat="0.195319 -0.525486 0.573495 0.597343"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400555 4.400327 9.400913" quat="-0.140685 0.603681 -0.570950 -0.538325"> <freejoint/> <geom class="object5"/> </body> 
+
+    </worldbody>
+</mujoco>
