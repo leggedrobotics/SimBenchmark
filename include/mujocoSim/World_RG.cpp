@@ -45,7 +45,7 @@ void mujoco_sim::World_RG::initFromModel() {
         addCapsule(geomSize[0], geomSize[1] * 2, 1);
       case mjGEOM_BOX:
         // geomsize = (xlength, ylength, zlength)
-        addBox(geomSize[0], geomSize[1], geomSize[2], 1);
+        addBox(geomSize[0] * 2, geomSize[1] * 2, geomSize[2] * 2, 1);
         break;
       default:
       RAIFATAL("wrong geometry type");
