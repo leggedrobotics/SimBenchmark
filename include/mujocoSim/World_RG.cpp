@@ -113,12 +113,14 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addCapsule(double radius,
 void mujoco_sim::World_RG::integrate(double dt) {
   world_.integrate(dt);
 }
+
 void mujoco_sim::World_RG::setGravity(Eigen::Vector3d gravity) {
-
+  world_.getWorldModel()->opt.gravity[0] = gravity[0];
+  world_.getWorldModel()->opt.gravity[1] = gravity[1];
+  world_.getWorldModel()->opt.gravity[2] = gravity[2];
 }
-void mujoco_sim::World_RG::setERP(double erp, double erp2, double frictionErp) {
 
-}
+void mujoco_sim::World_RG::setERP(double erp, double erp2, double frictionErp) {}
 
 benchmark::SingleBodyHandle mujoco_sim::World_RG::getSingleBodyHandle(int index) {
   if(index > sbHandles_.size())

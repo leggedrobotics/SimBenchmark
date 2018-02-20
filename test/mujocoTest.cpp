@@ -17,7 +17,7 @@ int main(void)
   mj_activate("mjkey.txt");
 
   // load model from file and check for errors
-  m = mj_loadXML("/home/kangd/git/benchmark/mjpro150/model/hello.xml", NULL, error, 1000);
+  m = mj_loadXML("/home/kangd/git/benchmark/mjpro150/model/test.xml", NULL, error, 1000);
   if( !m )
   {
     printf("%s\n", error);

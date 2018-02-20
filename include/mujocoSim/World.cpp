@@ -45,7 +45,9 @@ mjData *mujoco_sim::World::getWorldData() const {
 }
 
 void mujoco_sim::World::integrate(double dt) {
-  RAIWARN("dt is not set. should be implemented");
+  if(worldModel_->opt.timestep != dt)
+    worldModel_->opt.timestep = dt;
+
   mj_step(worldModel_, worldData_);
 }
 

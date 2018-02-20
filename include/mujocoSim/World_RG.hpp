@@ -75,4 +75,4 @@ class World_RG: public benchmark::World_RG {
 
 } // mujoco_sim
 
-#endif //BENCHMARK_WORLD_RG_HPP
+#endif //MUJOCOSIM_WORLD_RG_HPP
