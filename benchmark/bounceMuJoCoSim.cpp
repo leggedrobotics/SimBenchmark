@@ -3,7 +3,7 @@
 //
 
 #include <mujoco.h>
-#include <mujocoSim/World.hpp>
+#include <mujocoSim/World_RG.hpp>
 
 #include "bounce.hpp"
 
@@ -20,15 +20,16 @@ int main() {
   rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
 
   // load model from file and check for errors
-  mujoco_sim::World world("/home/kangd/git/benchmark/mjpro150/model/hello.xml");
+  mujoco_sim::World_RG sim(800, 600, 0.5, "/home/kangd/git/benchmark/mjpro150/model/hello.xml", benchmark::NO_BACKGROUND);
+  sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
 
   // run simulation for 10 seconds
-  while( world.getWorldData()->time<10 ) {
-    mj_step(world.getWorldModel(), world.getWorldData());
+  sim.loop(0.01, 1.0);
 
-    rai::Utils::logger->appendData("vel_ball", world.getObjectList()[1]->getLinearVelocity().data());
-    rai::Utils::logger->appendData("pos_ball", world.getObjectList()[1]->getPosition().data());
-  }
+//  while( world.getWorldData()->time<10 ) {
+//    rai::Utils::logger->appendData("vel_ball", world.getObjectList()[1]->getLinearVelocity().data());
+//    rai::Utils::logger->appendData("pos_ball", world.getObjectList()[1]->getPosition().data());
+//  }
 
   return 0;
 }

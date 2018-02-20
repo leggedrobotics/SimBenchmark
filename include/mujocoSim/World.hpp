@@ -7,7 +7,11 @@
 
 #include <mujoco.h>
 
-#include "SingleBodyObject.hpp"
+#include "Configure.hpp"
+#include "object/Sphere.hpp"
+#include "object/Box.hpp"
+#include "object/Capsule.hpp"
+#include "object/CheckerBoard.hpp"
 
 namespace mujoco_sim {
 
@@ -23,9 +27,37 @@ class World {
   World(const char *modelPath);
   virtual ~World();
 
+  object::Sphere *addSphere(double radius,
+                              double mass,
+                              int objectID,
+                              CollisionGroupType collisionGroup,
+                              CollisionGroupType collisionMask);
+  object::Box *addBox(double xLength,
+                        double yLength,
+                        double zLength,
+                        double mass,
+                        int objectID,
+                        CollisionGroupType collisionGroup,
+                        CollisionGroupType collisionMask);
+  object::CheckerBoard *addCheckerboard(double gridSize,
+                                          double xLength,
+                                          double yLength,
+                                          double reflectanceI,
+                                          int objectID,
+                                          CollisionGroupType collisionGroup,
+                                          CollisionGroupType collisionMask);
+  object::Capsule *addCapsule(double radius,
+                                double height,
+                                double mass,
+                                int objectID,
+                                CollisionGroupType collisionGroup,
+                                CollisionGroupType collisionMask);
+
   const std::vector<object::SingleBodyObject *> &getObjectList() const;
   mjModel *getWorldModel() const;
   mjData *getWorldData() const;
+
+  void integrate(double dt);
 
  private:
   mjModel *worldModel_;

@@ -124,10 +124,20 @@ add_library(ODESim ${ODESim_SRCS})
 
 # MuJoCoSim
 set(MuJoCoSim_SRCS
-        include/mujocoSim/World.hpp
         include/mujocoSim/World.cpp
-        include/mujocoSim/object/SingleBodyObject.hpp
+        include/mujocoSim/World.hpp
+        include/mujocoSim/World_RG.cpp
+        include/mujocoSim/World_RG.hpp
         include/mujocoSim/object/SingleBodyObject.cpp
+        include/mujocoSim/object/SingleBodyObject.hpp
+        include/mujocoSim/object/Sphere.cpp
+        include/mujocoSim/object/Sphere.hpp
+        include/mujocoSim/object/Box.cpp
+        include/mujocoSim/object/Box.hpp
+        include/mujocoSim/object/Capsule.cpp
+        include/mujocoSim/object/Capsule.hpp
+        include/mujocoSim/object/CheckerBoard.cpp
+        include/mujocoSim/object/CheckerBoard.hpp
         )
 
 add_library(MuJoCoSim ${MuJoCoSim_SRCS})
@@ -141,7 +151,8 @@ set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath
 set(ODESimLink ode ODESim BenchmakrLib ${RAI_GRAPHICS_OPENGL_LINK})
 
 # MuJoCoSim
-set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl} GL GLU glut MuJoCoSim ${RAI_GRAPHICS_OPENGL_LINK})
+set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl}
+        GL GLU glut MuJoCoSim BenchmakrLib ${RAI_GRAPHICS_OPENGL_LINK})
 
 ## --------------------------- executable ---------------------------
 # framework tests

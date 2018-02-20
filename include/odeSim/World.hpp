@@ -8,10 +8,10 @@
 #include <ode/ode.h>
 #include <Configure.hpp>
 
-#include "odeSim/object/Sphere.hpp"
-#include "odeSim/object/Box.hpp"
-#include "odeSim/object/Capsule.hpp"
-#include "odeSim/object/CheckerBoard.hpp"
+#include "object/Sphere.hpp"
+#include "object/Box.hpp"
+#include "object/Capsule.hpp"
+#include "object/CheckerBoard.hpp"
 
 namespace ode_sim {
 

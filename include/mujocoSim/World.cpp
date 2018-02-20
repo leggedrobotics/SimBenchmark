@@ -4,6 +4,8 @@
 
 #include "World.hpp"
 
+namespace mujoco_sim {
+
 mujoco_sim::World::World(const char* modelPath) {
 
   // activate MuJoCo Pro
@@ -20,23 +22,6 @@ mujoco_sim::World::World(const char* modelPath) {
 
   // make data corresponding to model
   worldData_ = mj_makeData(worldModel_);
-
-  // make objects
-  for(int i = 0; i < worldModel_->ngeom; i++) {
-
-    switch (*(worldModel_->geom_type + i)) {
-      case mjGEOM_PLANE:
-      case mjGEOM_SPHERE:
-      case mjGEOM_CAPSULE:
-      case mjGEOM_BOX:
-        break;
-      default:
-        RAIFATAL("wrong geometry type");
-    }
-
-    object::SingleBodyObject *object = new object::SingleBodyObject(worldData_, i);
-    objectList_.push_back(object);
-  }
 }
 
 mujoco_sim::World::~World() {
@@ -62,4 +47,54 @@ const std::vector<mujoco_sim::object::SingleBodyObject *> &mujoco_sim::World::ge
   return objectList_;
 }
 
+void mujoco_sim::World::integrate(double dt) {
+  RAIWARN("dt is not set. should be implemented");
+  mj_step(worldModel_, worldData_);
+}
 
+object::Sphere *World::addSphere(double radius,
+                                 double mass,
+                                 int objectID,
+                                 CollisionGroupType collisionGroup,
+                                 CollisionGroupType collisionMask) {
+  object::Sphere *sphere = new object::Sphere(radius, mass, worldData_, objectID);
+  objectList_.push_back(sphere);
+  return sphere;
+}
+
+object::Box *World::addBox(double xLength,
+                           double yLength,
+                           double zLength,
+                           double mass,
+                           int objectID,
+                           CollisionGroupType collisionGroup,
+                           CollisionGroupType collisionMask) {
+  object::Box *box = new object::Box(xLength, yLength, zLength, worldData_, objectID);
+  objectList_.push_back(box);
+  return box;
+}
+
+object::CheckerBoard *World::addCheckerboard(double gridSize,
+                                             double xLength,
+                                             double yLength,
+                                             double reflectanceI,
+                                             int objectID,
+                                             CollisionGroupType collisionGroup,
+                                             CollisionGroupType collisionMask) {
+  object::CheckerBoard *checkerBoard = new object::CheckerBoard(xLength, yLength, worldData_, objectID);
+  objectList_.push_back(checkerBoard);
+  return checkerBoard;
+}
+
+object::Capsule *World::addCapsule(double radius,
+                                   double height,
+                                   double mass,
+                                   int objectID,
+                                   CollisionGroupType collisionGroup,
+                                   CollisionGroupType collisionMask) {
+  object::Capsule *capsule = new object::Capsule(radius, height, worldData_, objectID);
+  objectList_.push_back(capsule);
+  return capsule;
+}
+
+} // mujoco_sim

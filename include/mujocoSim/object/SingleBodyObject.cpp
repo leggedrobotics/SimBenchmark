@@ -58,9 +58,57 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1> > SingleBodyObject::getAngularVeloc
   angVelTemp_ = {angVel[0], angVel[1], angVel[2]};
   return angVelTemp_.e();
 }
+
 void SingleBodyObject::getPosition_W(rai_sim::Vec<3> &pos_w) {
   mjtNum *pos = (worldData_->xpos + 3 * objectID_);
   pos_w = {pos[0], pos[1], pos[2]};
+}
+
+bool SingleBodyObject::isVisualizeFramesAndCom() const {
+  return visualizeFramesAndCom_;
+}
+
+void SingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
+
+}
+void SingleBodyObject::setPosition(double x, double y, double z) {
+
+}
+void SingleBodyObject::setOrientation(Eigen::Quaterniond quaternion) {
+
+}
+void SingleBodyObject::setOrientation(double w, double x, double y, double z) {
+
+}
+void SingleBodyObject::setOrientation(Eigen::Matrix3d rotationMatrix) {
+
+}
+void SingleBodyObject::setOrientationRandom() {
+
+}
+void SingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Quaterniond quaternion) {
+
+}
+void SingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Matrix3d rotationMatrix) {
+
+}
+void SingleBodyObject::setVelocity(Eigen::Vector3d linearVelocity, Eigen::Vector3d angularVelocity) {
+
+}
+void SingleBodyObject::setVelocity(double dx, double dy, double dz, double wx, double wy, double wz) {
+
+}
+void SingleBodyObject::setExternalForce(Eigen::Vector3d force) {
+
+}
+void SingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
+
+}
+void SingleBodyObject::setRestitutionCoefficient(double restitution) {
+
+}
+void SingleBodyObject::setFrictionCoefficient(double friction) {
+
 }
 
 } // object
