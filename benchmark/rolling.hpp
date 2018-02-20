@@ -5,7 +5,12 @@
 #ifndef BENCHMARK_ROLLING_HPP
 #define BENCHMARK_ROLLING_HPP
 
+#include "benchmark.hpp"
+
 namespace benchmark {
+
+// path
+std::string parentDir = "rolling/";
 
 // sim properties
 double lightX = 30.0;

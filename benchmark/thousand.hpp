@@ -5,7 +5,7 @@
 #ifndef BENCHMARK_THOUSAND_HPP
 #define BENCHMARK_THOUSAND_HPP
 
-#include <Eigen/Geometry>
+#include "benchmark.hpp"
 
 namespace benchmark {
 

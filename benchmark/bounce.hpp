@@ -5,12 +5,12 @@
 #ifndef BENCHMARK_BOUNCE_HPP
 #define BENCHMARK_BOUNCE_HPP
 
-#include <Eigen/Geometry>
+#include "benchmark.hpp"
 
 namespace benchmark {
 
 // path
-std::string parentDir = "/home/kangd/Desktop/raisim-benchmark/log/bounce/";
+std::string parentDir = "bounce/";
 
 // sim properties
 double lightX = 30.0;
