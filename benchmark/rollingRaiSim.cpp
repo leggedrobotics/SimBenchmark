@@ -6,11 +6,17 @@
 
 #include "rolling.hpp"
 
-int main() {
+int main(int argc, char* argv[]) {
+
+  double dt = benchmark::dt;
+  if (argc == 2) {
+    dt = atof(argv[1]);
+    RAIINFO("timestep = " << dt);
+  }
 
   // logger
   std::string path = benchmark::dataPath + benchmark::parentDir + "rai";
-  std::string name = std::to_string(benchmark::dt);
+  std::string name = std::to_string(dt);
   rai::Utils::logger->setLogPath(path);
   rai::Utils::logger->setLogFileName(name);
   rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
@@ -65,14 +71,14 @@ int main() {
   rai_sim::Vec<3> force = {benchmark::force[0], benchmark::force[1], benchmark::force[2]};
 
   rai::Utils::timer->startTimer("rolling");
-  for(int i = 0; i < benchmark::simulationTime / benchmark::dt && sim.visualizerLoop(benchmark::dt); i++) {
+  for(int i = 0; i < benchmark::simulationTime / dt && sim.visualizerLoop(dt); i++) {
     box->setExternalForce(force, 0);
     // log
     rai::Utils::logger->appendData("linvel_box", box->getLinearVelocity().data());
     rai::Utils::logger->appendData("linvel_ball", objectList[0]->getLinearVelocity().data());
     rai::Utils::logger->appendData("pos_box", box->getPosition().data());
     rai::Utils::logger->appendData("pos_ball", objectList[0]->getPosition().data());
-    sim.integrate(benchmark::dt);
+    sim.integrate(dt);
   }
   rai::Utils::timer->stopTimer("rolling");
 
