@@ -14,13 +14,13 @@ class Box: public SingleBodyObject {
 
  public:
   Box(double xlength,
-        double ylength,
-        double zlength,
-        double mass,
-        dWorldID worldID,
-        dSpaceID spaceID,
-        CollisionGroupType collisionGroup,
-        CollisionGroupType collisionMask);
+      double ylength,
+      double zlength,
+      double mass,
+      dWorldID worldID,
+      dSpaceID spaceID,
+      benchmark::CollisionGroupType collisionGroup,
+      benchmark::CollisionGroupType collisionMask);
   virtual ~Box();
 
 };

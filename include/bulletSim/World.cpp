@@ -95,8 +95,8 @@ World::~World() {
 
 bullet_sim::object::Sphere *bullet_sim::World::addSphere(double radius,
                                                          double mass,
-                                                         CollisionGroupType collisionGroup,
-                                                         CollisionGroupType collisionMask) {
+                                                         benchmark::CollisionGroupType collisionGroup,
+                                                         benchmark::CollisionGroupType collisionMask) {
   bullet_sim::object::Sphere *sphere = new bullet_sim::object::Sphere(radius, mass);
   dynamicsWorld_->addRigidBody(sphere->getRigidBody(), collisionGroup, collisionMask);
   objectList_.push_back(sphere);
@@ -107,9 +107,8 @@ bullet_sim::object::Box *bullet_sim::World::addBox(double xLength,
                                                    double yLength,
                                                    double zLength,
                                                    double mass,
-                                                   CollisionGroupType collisionGroup,
-                                                   CollisionGroupType collisionMask) {
-
+                                                   benchmark::CollisionGroupType collisionGroup,
+                                                   benchmark::CollisionGroupType collisionMask) {
   bullet_sim::object::Box *box = new bullet_sim::object::Box(xLength, yLength, zLength, mass);
   dynamicsWorld_->addRigidBody(box->getRigidBody(), collisionGroup, collisionMask);
   objectList_.push_back(box);
@@ -119,8 +118,8 @@ bullet_sim::object::Box *bullet_sim::World::addBox(double xLength,
 object::Capsule *World::addCapsule(double radius,
                                    double height,
                                    double mass,
-                                   CollisionGroupType collisionGroup,
-                                   CollisionGroupType collisionMask) {
+                                   benchmark::CollisionGroupType collisionGroup,
+                                   benchmark::CollisionGroupType collisionMask) {
   bullet_sim::object::Capsule *capsule = new bullet_sim::object::Capsule(radius, height, mass);
   dynamicsWorld_->addRigidBody(capsule->getRigidBody(), collisionGroup, collisionMask);
   objectList_.push_back(capsule);
@@ -131,9 +130,8 @@ bullet_sim::object::CheckerBoard *bullet_sim::World::addCheckerboard(double grid
                                                                      double xLength,
                                                                      double yLength,
                                                                      double reflectanceI,
-                                                                     CollisionGroupType collisionGroup,
-                                                                     CollisionGroupType collisionMask) {
-
+                                                                     benchmark::CollisionGroupType collisionGroup,
+                                                                     benchmark::CollisionGroupType collisionMask) {
   object::CheckerBoard *checkerBoard = new bullet_sim::object::CheckerBoard(xLength, yLength);
   dynamicsWorld_->addRigidBody(checkerBoard->getRigidBody(), collisionGroup, collisionMask);
   objectList_.push_back(checkerBoard);

@@ -14,9 +14,9 @@ class CheckerBoard: public SingleBodyObject {
 
  public:
   CheckerBoard(dWorldID worldId,
-                 dSpaceID spaceID,
-                 CollisionGroupType collisionGroup,
-                 CollisionGroupType collisionMask);
+               dSpaceID spaceID,
+               benchmark::CollisionGroupType collisionGroup,
+               benchmark::CollisionGroupType collisionMask);
   virtual ~CheckerBoard();
 
   virtual const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion();

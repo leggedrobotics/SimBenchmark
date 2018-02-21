@@ -16,13 +16,20 @@ int main() {
   rai::Utils::logger->addVariableToLog(3, "vel_ball", "linear velocity of ball");
   rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
 
+  // timer
+  std::string timer = name + "timer";
+  rai::Utils::timer->setLogPath(path);
+  rai::Utils::timer->setLogFileName(timer);
+
+  // sim
   // load model from file and check for errors
   mujoco_sim::World_RG sim(800, 600, 0.5, "/home/kangd/git/benchmark/benchmark/mujoco/rolling.xml", benchmark::NO_BACKGROUND);
   sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
   sim.cameraFollowObject(sim.getSingleBodyHandle(0), {30, 0, 10});
 
-// simulation loop
+  // simulation loop
   // press 'q' key to quit
+  rai::Utils::timer->startTimer("rolling");
   for(int i = 0; i < benchmark::simulationTime / benchmark::dt && sim.visualizerLoop(benchmark::dt); i++) {
     sim.getSingleBodyHandle(1)->setExternalForce(benchmark::force);
     // log
@@ -32,6 +39,7 @@ int main() {
     rai::Utils::logger->appendData("pos_ball", sim.getSingleBodyHandle(2)->getPosition().data());
     sim.integrate(benchmark::dt);
   }
+  rai::Utils::timer->stopTimer("rolling");
 
   return 0;
 }

@@ -30,28 +30,28 @@ class World {
   object::Sphere *addSphere(double radius,
                               double mass,
                               int objectID,
-                              CollisionGroupType collisionGroup,
-                              CollisionGroupType collisionMask);
+                              benchmark::CollisionGroupType collisionGroup,
+                              benchmark::CollisionGroupType collisionMask);
   object::Box *addBox(double xLength,
                         double yLength,
                         double zLength,
                         double mass,
                         int objectID,
-                        CollisionGroupType collisionGroup,
-                        CollisionGroupType collisionMask);
+                        benchmark::CollisionGroupType collisionGroup,
+                        benchmark::CollisionGroupType collisionMask);
   object::CheckerBoard *addCheckerboard(double gridSize,
                                           double xLength,
                                           double yLength,
                                           double reflectanceI,
                                           int objectID,
-                                          CollisionGroupType collisionGroup,
-                                          CollisionGroupType collisionMask);
+                                          benchmark::CollisionGroupType collisionGroup,
+                                          benchmark::CollisionGroupType collisionMask);
   object::Capsule *addCapsule(double radius,
                                 double height,
                                 double mass,
                                 int objectID,
-                                CollisionGroupType collisionGroup,
-                                CollisionGroupType collisionMask);
+                                benchmark::CollisionGroupType collisionGroup,
+                                benchmark::CollisionGroupType collisionMask);
 
   mjModel *getWorldModel() const;
   mjData *getWorldData() const;

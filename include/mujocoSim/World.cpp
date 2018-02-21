@@ -54,8 +54,8 @@ void mujoco_sim::World::integrate(double dt) {
 object::Sphere *World::addSphere(double radius,
                                  double mass,
                                  int objectID,
-                                 CollisionGroupType collisionGroup,
-                                 CollisionGroupType collisionMask) {
+                                 benchmark::CollisionGroupType collisionGroup,
+                                 benchmark::CollisionGroupType collisionMask) {
   object::Sphere *sphere = new object::Sphere(radius, mass, worldData_, worldModel_, objectID);
   objectList_.push_back(sphere);
   return sphere;
@@ -66,8 +66,8 @@ object::Box *World::addBox(double xLength,
                            double zLength,
                            double mass,
                            int objectID,
-                           CollisionGroupType collisionGroup,
-                           CollisionGroupType collisionMask) {
+                           benchmark::CollisionGroupType collisionGroup,
+                           benchmark::CollisionGroupType collisionMask) {
   object::Box *box = new object::Box(xLength, yLength, zLength, worldData_, worldModel_, objectID);
   objectList_.push_back(box);
   return box;
@@ -78,8 +78,8 @@ object::CheckerBoard *World::addCheckerboard(double gridSize,
                                              double yLength,
                                              double reflectanceI,
                                              int objectID,
-                                             CollisionGroupType collisionGroup,
-                                             CollisionGroupType collisionMask) {
+                                             benchmark::CollisionGroupType collisionGroup,
+                                             benchmark::CollisionGroupType collisionMask) {
   object::CheckerBoard *checkerBoard = new object::CheckerBoard(xLength, yLength, worldData_, worldModel_, objectID);
   objectList_.push_back(checkerBoard);
   return checkerBoard;
@@ -89,8 +89,8 @@ object::Capsule *World::addCapsule(double radius,
                                    double height,
                                    double mass,
                                    int objectID,
-                                   CollisionGroupType collisionGroup,
-                                   CollisionGroupType collisionMask) {
+                                   benchmark::CollisionGroupType collisionGroup,
+                                   benchmark::CollisionGroupType collisionMask) {
   object::Capsule *capsule = new object::Capsule(radius, height, worldData_, worldModel_, objectID);
   objectList_.push_back(capsule);
   return capsule;

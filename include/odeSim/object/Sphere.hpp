@@ -14,11 +14,11 @@ class Sphere: public SingleBodyObject {
 
  public:
   Sphere(double radius,
-           double mass,
-           dWorldID worldID,
-           dSpaceID spaceID,
-           CollisionGroupType collisionGroup,
-           CollisionGroupType collisionMask);
+         double mass,
+         dWorldID worldID,
+         dSpaceID spaceID,
+         benchmark::CollisionGroupType collisionGroup,
+         benchmark::CollisionGroupType collisionMask);
 
 };
 

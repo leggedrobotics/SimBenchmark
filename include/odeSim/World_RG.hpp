@@ -36,26 +36,26 @@ class World_RG: public benchmark::World_RG {
   //////////World////////////////////////
   benchmark::SingleBodyHandle addSphere(double radius,
                                         double mass,
-                                        CollisionGroupType collisionGroup = 1,
-                                        CollisionGroupType collisionMask=-1) override ;
+                                        benchmark::CollisionGroupType collisionGroup = 1,
+                                        benchmark::CollisionGroupType collisionMask=-1) override ;
   benchmark::SingleBodyHandle addBox(double xLength,
                                      double yLength,
                                      double zLength,
                                      double mass,
-                                     CollisionGroupType collisionGroup = 1,
-                                     CollisionGroupType collisionMask = -1) override ;
+                                     benchmark::CollisionGroupType collisionGroup = 1,
+                                     benchmark::CollisionGroupType collisionMask = -1) override ;
   benchmark::SingleBodyHandle addCheckerboard(double gridSize,
                                               double xLength,
                                               double yLength,
                                               double reflectanceI,
-                                              CollisionGroupType collisionGroup = 1,
-                                              CollisionGroupType collisionMask = -1,
+                                              benchmark::CollisionGroupType collisionGroup = 1,
+                                              benchmark::CollisionGroupType collisionMask = -1,
                                               int flags = 0) override ;
   benchmark::SingleBodyHandle addCapsule(double radius,
                                          double height,
                                          double mass,
-                                         CollisionGroupType collisionGroup = 1,
-                                         CollisionGroupType collisionMask=-1) override ;
+                                         benchmark::CollisionGroupType collisionGroup = 1,
+                                         benchmark::CollisionGroupType collisionMask=-1) override ;
 
   //////////////////////////
   /// simulation methods ///

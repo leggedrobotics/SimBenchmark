@@ -19,8 +19,8 @@ class Capsule: public SingleBodyObject {
           double mass,
           dWorldID worldID,
           dSpaceID spaceID,
-          CollisionGroupType collisionGroup,
-          CollisionGroupType collisionMask);
+          benchmark::CollisionGroupType collisionGroup,
+          benchmark::CollisionGroupType collisionMask);
 
 };
 

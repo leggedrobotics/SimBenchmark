@@ -44,13 +44,13 @@ class World {
   virtual ~World();
 
   object::Sphere *addSphere(double radius, double mass,
-                            CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) ;
+                            benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) ;
   object::Box *addBox(double xLength, double yLength, double zLength, double mass,
-                      CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1) ;
+                      benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) ;
   object::CheckerBoard *addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
-                                        CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
+                                        benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
   object::Capsule *addCapsule(double radius, double height, double mass,
-                              CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
+                              benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
 
   void integrate(double dt);
 

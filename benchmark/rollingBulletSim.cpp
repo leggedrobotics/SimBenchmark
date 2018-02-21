@@ -19,6 +19,12 @@ int main() {
   rai::Utils::logger->addVariableToLog(3, "pos_box", "position of box");
   rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
 
+  // timer
+  std::string timer = name + "timer";
+  rai::Utils::timer->setLogPath(path);
+  rai::Utils::timer->setLogFileName(timer);
+
+  // sim
   bullet_sim::World_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
   sim.setGravity(benchmark::gravity);
   sim.setERP(benchmark::erp, benchmark::erp, benchmark::erp);
@@ -44,10 +50,11 @@ int main() {
   }
 
   // camera relative position
-  sim.cameraFollowObject(checkerboard, {10, 0, 15});
+  sim.cameraFollowObject(checkerboard, {30, 0, 15});
 
   // simulation loop
   // press 'q' key to quit
+  rai::Utils::timer->startTimer("rolling");
   for(int i = 0; i < benchmark::simulationTime / benchmark::dt && sim.visualizerLoop(benchmark::dt); i++) {
     box->setExternalForce(benchmark::force);
     // log
@@ -57,6 +64,7 @@ int main() {
     rai::Utils::logger->appendData("pos_ball", objectList[0]->getPosition().data());
     sim.integrate(benchmark::dt);
   }
+  rai::Utils::timer->stopTimer("rolling");
 
   return 0;
 }

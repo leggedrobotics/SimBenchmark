@@ -9,8 +9,8 @@ ode_sim::object::Capsule::Capsule(double radius,
                                   double mass,
                                   dWorldID worldID,
                                   dSpaceID spaceID,
-                                  CollisionGroupType collisionGroup,
-                                  CollisionGroupType collisionMask)
+                                  benchmark::CollisionGroupType collisionGroup,
+                                  benchmark::CollisionGroupType collisionMask)
     : SingleBodyObject(worldID, spaceID) {
 
 

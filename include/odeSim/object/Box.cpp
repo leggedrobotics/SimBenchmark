@@ -11,8 +11,8 @@ ode_sim::object::Box::Box(double xlength,
                           double mass,
                           dWorldID worldID,
                           dSpaceID spaceID,
-                          CollisionGroupType collisionGroup,
-                          CollisionGroupType collisionMask)
+                          benchmark::CollisionGroupType collisionGroup,
+                          benchmark::CollisionGroupType collisionMask)
     : SingleBodyObject(worldID, spaceID) {
 
   // body

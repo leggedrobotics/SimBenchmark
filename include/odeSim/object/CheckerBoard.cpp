@@ -8,8 +8,8 @@
 
 ode_sim::object::CheckerBoard::CheckerBoard(dWorldID worldId,
                                             dSpaceID spaceID,
-                                            CollisionGroupType collisionGroup,
-                                            CollisionGroupType collisionMask)
+                                            benchmark::CollisionGroupType collisionGroup,
+                                            benchmark::CollisionGroupType collisionMask)
     : SingleBodyObject(worldId, spaceID) {
 
   // geometry

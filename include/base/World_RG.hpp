@@ -52,14 +52,14 @@ class World_RG {
   /// adding or removing objects ///
   //////////World////////////////////////
   virtual SingleBodyHandle addSphere(double radius, double mass,
-                             CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask=-1) = 0;
+                                     benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask=-1) = 0;
   virtual SingleBodyHandle addBox(double xLength, double yLength, double zLength, double mass,
-                          CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask = -1) = 0;
+                                  benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask = -1) = 0;
   virtual SingleBodyHandle addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
-                                   CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask = -1,
-                                   int flags = 0) = 0;
+                                           benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask = -1,
+                                           int flags = 0) = 0;
   virtual SingleBodyHandle addCapsule(double radius, double height, double mass,
-                              CollisionGroupType collisionGroup = 1, CollisionGroupType collisionMask=-1) = 0;
+                                      benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask=-1) = 0;
 
   //////////////////////////
   /// simulation methods ///

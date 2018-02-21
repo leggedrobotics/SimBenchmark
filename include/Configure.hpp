@@ -5,12 +5,10 @@
 #ifndef BENCHMARK_CONFIGURE_HPP
 #define BENCHMARK_CONFIGURE_HPP
 
+namespace benchmark {
+
 typedef int CollisionGroupType;
 
-// TODO ODE
-//typedef unsigned long CollisionGroupType;
-
-namespace benchmark {
 enum ObjectType { SPHERE, BOX, CYLINDER, CONE, CAPSULE, CONVEXMESH, HALFSPACE, COMPOUND, HEIGHTMAP, ARTICULATED_SYSTEM };
 }
 
