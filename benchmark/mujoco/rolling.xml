@@ -2,110 +2,136 @@
     <option cone="elliptic"/>
 
     <worldbody>
-        <geom type="plane" size="100 100 5" rgba=".9 0 0 1"/>
+        <geom type="plane" size="100 100 5" rgba=".9 0 0 1" friction="0.4 0 0"/>
         <body pos="0 0 0.5">
+            <inertial pos="0 0 0" mass="10" diaginertia="666.67 344.17 344.17"/>
             <joint type="free"/>
-            <geom type="box" size="10.0 10.0 0.5" rgba="0 .9 0 1"/>
+            <geom type="box" size="10.0 10.0 0.5" rgba="0 .9 0 1" friction="0.4 0 0"/>
         </body>
         <body pos="-4.000000 -4.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="-4.000000 -2.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="-4.000000 0.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="-4.000000 2.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="-4.000000 4.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="-2.000000 -4.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="-2.000000 -2.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="-2.000000 0.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="-2.000000 2.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="-2.000000 4.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="0.000000 -4.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="0.000000 -2.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="0.000000 0.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="0.000000 2.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="0.000000 4.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="2.000000 -4.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="2.000000 -2.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="2.000000 0.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="2.000000 2.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="2.000000 4.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="4.000000 -4.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="4.000000 -2.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="4.000000 0.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="4.000000 2.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
         <body pos="4.000000 4.000000 1.500000">
+            <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>
             <joint type="free"/>
-            <geom type="sphere" size=".5" rgba="0 .9 0 1"/>
+            <geom type="sphere" size=".5" rgba="0 .9 0 1" friction="0.8 0 0"/>
         </body>
     </worldbody>
 </mujoco>

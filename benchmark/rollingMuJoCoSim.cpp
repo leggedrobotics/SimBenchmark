@@ -23,13 +23,13 @@ int main() {
 
 // simulation loop
   // press 'q' key to quit
-  for(int i = 0; /*i < benchmark::simulationTime / benchmark::dt && */sim.visualizerLoop(benchmark::dt); i++) {
+  for(int i = 0; i < benchmark::simulationTime / benchmark::dt && sim.visualizerLoop(benchmark::dt); i++) {
     sim.getSingleBodyHandle(1)->setExternalForce(benchmark::force);
     // log
-//    rai::Utils::logger->appendData("linvel_box", sim.getSingleBodyHandle(1)->getLinearVelocity().data());
-//    rai::Utils::logger->appendData("linvel_ball", sim.getSingleBodyHandle(2)->getLinearVelocity().data());
-//    rai::Utils::logger->appendData("pos_box", sim.getSingleBodyHandle(1)->getPosition().data());
-//    rai::Utils::logger->appendData("pos_ball", sim.getSingleBodyHandle(2)->getPosition().data());
+    rai::Utils::logger->appendData("linvel_box", sim.getSingleBodyHandle(1)->getLinearVelocity().data());
+    rai::Utils::logger->appendData("linvel_ball", sim.getSingleBodyHandle(2)->getLinearVelocity().data());
+    rai::Utils::logger->appendData("pos_box", sim.getSingleBodyHandle(1)->getPosition().data());
+    rai::Utils::logger->appendData("pos_ball", sim.getSingleBodyHandle(2)->getPosition().data());
     sim.integrate(benchmark::dt);
   }
 

@@ -28,7 +28,6 @@ void mujoco_sim::World_RG::initFromModel() {
   // make objects
   for(int i = 0; i < model->ngeom; i++) {
     mjtNum *geomSize = model->geom_size + i * 3;
-    RAIINFO(geomSize[0] << geomSize[1] << geomSize[2]);
 
     switch (*(model->geom_type + i)) {
 
