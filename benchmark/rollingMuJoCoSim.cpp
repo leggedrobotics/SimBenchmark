@@ -30,23 +30,47 @@ int main(int argc, char* argv[]) {
 
   // sim
   // load model from file and check for errors
-  mujoco_sim::World_RG sim(800, 600, 0.5, "/home/kangd/git/benchmark/benchmark/mujoco/rolling.xml", benchmark::NO_BACKGROUND);
-  sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
-  sim.cameraFollowObject(sim.getSingleBodyHandle(0), {30, 0, 10});
+  mujoco_sim::World_RG *sim;
+
+  if(benchmark::visualize)
+    sim = new mujoco_sim::World_RG(800, 600, 0.5, "/home/kangd/git/benchmark/benchmark/mujoco/rolling.xml", benchmark::NO_BACKGROUND);
+  else
+    sim = new mujoco_sim::World_RG("/home/kangd/git/benchmark/benchmark/mujoco/rolling.xml");
+
 
   // simulation loop
   // press 'q' key to quit
   rai::Utils::timer->startTimer("rolling");
-  for(int i = 0; i < benchmark::simulationTime / dt && sim.visualizerLoop(dt); i++) {
-    sim.getSingleBodyHandle(1)->setExternalForce(benchmark::force);
-    // log
-    rai::Utils::logger->appendData("linvel_box", sim.getSingleBodyHandle(1)->getLinearVelocity().data());
-    rai::Utils::logger->appendData("linvel_ball", sim.getSingleBodyHandle(2)->getLinearVelocity().data());
-    rai::Utils::logger->appendData("pos_box", sim.getSingleBodyHandle(1)->getPosition().data());
-    rai::Utils::logger->appendData("pos_ball", sim.getSingleBodyHandle(2)->getPosition().data());
-    sim.integrate(dt);
+  if(benchmark::visualize) {
+    // camera relative position
+    sim->setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
+    sim->cameraFollowObject(sim->getSingleBodyHandle(0), {30, 0, 10});
+
+    for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
+      sim->getSingleBodyHandle(1)->setExternalForce(benchmark::force);
+      // log
+      rai::Utils::logger->appendData("linvel_box", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
+      rai::Utils::logger->appendData("linvel_ball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());
+      rai::Utils::logger->appendData("pos_box", sim->getSingleBodyHandle(1)->getPosition().data());
+      rai::Utils::logger->appendData("pos_ball", sim->getSingleBodyHandle(2)->getPosition().data());
+      sim->integrate(dt);
+    }
+  }
+  else {
+    for(int i = 0; i < benchmark::simulationTime / dt; i++) {
+      sim->getSingleBodyHandle(1)->setExternalForce(benchmark::force);
+      // log
+      rai::Utils::logger->appendData("linvel_box", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
+      rai::Utils::logger->appendData("linvel_ball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());
+      rai::Utils::logger->appendData("pos_box", sim->getSingleBodyHandle(1)->getPosition().data());
+      rai::Utils::logger->appendData("pos_ball", sim->getSingleBodyHandle(2)->getPosition().data());
+      sim->integrate(dt);
+    }
   }
   rai::Utils::timer->stopTimer("rolling");
+
+  // delete sim
+  delete sim;
 
   return 0;
 }

@@ -12,6 +12,9 @@ namespace benchmark {
 // path
 std::string parentDir = "rolling/";
 
+// option
+bool visualize = false;
+
 // sim properties
 double lightX = 30.0;
 double lightY = 0.0;

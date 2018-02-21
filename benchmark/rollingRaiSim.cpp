@@ -31,56 +31,77 @@ int main(int argc, char* argv[]) {
   rai::Utils::timer->setLogFileName(timer);
 
   // sim
-  rai_sim::World_RG sim(800, 600, 0.5, rai_sim::NO_BACKGROUND);
-  rai_sim::MaterialManager materials;
+  rai_sim::World_RG *sim;
 
-  sim.setGravity(benchmark::gravity);
-  sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
+  if(benchmark::visualize)
+    sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+  else
+    sim = new rai_sim::World_RG;
+
+  rai_sim::MaterialManager materials;
+  sim->setGravity(benchmark::gravity);
 
   // materials
   materials.setMaterialNames({"ground", "box", "ball"});
   materials.setMaterialPairProp("ground", "ball", benchmark::groundMu * benchmark::ballMu, 0.0, 0.01);
   materials.setMaterialPairProp("ground", "box", benchmark::groundMu * benchmark::boxMu, 0.0, 0.01);
   materials.setMaterialPairProp("ball", "box", benchmark::ballMu * benchmark::boxMu, 0.0, 0.01);
-  sim.updateMaterialProp(materials);
+  sim->updateMaterialProp(materials);
 
   // add objects
-  auto checkerboard = sim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
-  checkerboard->setMaterial(sim.getMaterialKey("ground"));
+  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1);
+  checkerboard->setMaterial(sim->getMaterialKey("ground"));
 
-  auto box = sim.addBox(20, 20, 1, 10);
+  auto box = sim->addBox(20, 20, 1, 10);
   box->setPosition(0, 0, 0.5);
-  box->setMaterial(sim.getMaterialKey("box"));
+  box->setMaterial(sim->getMaterialKey("box"));
 
   std::vector<rai_sim::SingleBodyHandle> objectList;
 
   for(int i = 0; i < 5; i++) {
     for(int j = 0; j < 5; j++) {
-      auto ball = sim.addSphere(0.5, 1);
+      auto ball = sim->addSphere(0.5, 1);
       ball->setPosition(i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5);
-      ball->setMaterial(sim.getMaterialKey("ball"));
+      ball->setMaterial(sim->getMaterialKey("ball"));
       objectList.push_back(ball);
     }
   }
-
-  // camera relative position
-  sim.cameraFollowObject(box, {30, 0, 10});
 
   // simulation loop
   // press 'q' key to quit
   rai_sim::Vec<3> force = {benchmark::force[0], benchmark::force[1], benchmark::force[2]};
 
   rai::Utils::timer->startTimer("rolling");
-  for(int i = 0; i < benchmark::simulationTime / dt && sim.visualizerLoop(dt); i++) {
-    box->setExternalForce(force, 0);
-    // log
-    rai::Utils::logger->appendData("linvel_box", box->getLinearVelocity().data());
-    rai::Utils::logger->appendData("linvel_ball", objectList[0]->getLinearVelocity().data());
-    rai::Utils::logger->appendData("pos_box", box->getPosition().data());
-    rai::Utils::logger->appendData("pos_ball", objectList[0]->getPosition().data());
-    sim.integrate(dt);
+  if(benchmark::visualize) {
+    // camera relative position
+    sim->cameraFollowObject(box, {30, 0, 10});
+    sim->setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
+
+    for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
+      box->setExternalForce(force, 0);
+      // log
+      rai::Utils::logger->appendData("linvel_box", box->getLinearVelocity().data());
+      rai::Utils::logger->appendData("linvel_ball", objectList[0]->getLinearVelocity().data());
+      rai::Utils::logger->appendData("pos_box", box->getPosition().data());
+      rai::Utils::logger->appendData("pos_ball", objectList[0]->getPosition().data());
+      sim->integrate(dt);
+    }
+  } else {
+    for(int i = 0; i < benchmark::simulationTime / dt; i++) {
+      box->setExternalForce(force, 0);
+      // log
+      rai::Utils::logger->appendData("linvel_box", box->getLinearVelocity().data());
+      rai::Utils::logger->appendData("linvel_ball", objectList[0]->getLinearVelocity().data());
+      rai::Utils::logger->appendData("pos_box", box->getPosition().data());
+      rai::Utils::logger->appendData("pos_ball", objectList[0]->getPosition().data());
+      sim->integrate(dt);
+    }
   }
+
   rai::Utils::timer->stopTimer("rolling");
+
+  // delete sim
+  delete sim;
 
   return 0;
 }
