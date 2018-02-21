@@ -13,7 +13,7 @@ namespace object {
 class CheckerBoard: public SingleBodyObject {
 
  public:
-  CheckerBoard(double xLength, double yLength, mjData *data, int objectID);
+  CheckerBoard(double xLength, double yLength, mjData *data, mjModel *model, int objectID);
 
 };
 

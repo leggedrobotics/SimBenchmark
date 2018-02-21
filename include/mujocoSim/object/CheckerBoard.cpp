@@ -3,5 +3,5 @@
 //
 
 #include "CheckerBoard.hpp"
-mujoco_sim::object::CheckerBoard::CheckerBoard(double xLength, double yLength, mjData *data, int objectID)
-    : SingleBodyObject(data, objectID) {}
+mujoco_sim::object::CheckerBoard::CheckerBoard(double xLength, double yLength, mjData *data, mjModel *model, int objectID)
+    : SingleBodyObject(data, model, objectID) {}

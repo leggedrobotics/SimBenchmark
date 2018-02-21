@@ -17,7 +17,9 @@ namespace object {
 class SingleBodyObject: public benchmark::object::SingleBodyObject {
 
  public:
-  SingleBodyObject(mjData *data, int objectID);
+  SingleBodyObject(mjData *data,
+                   mjModel *model,
+                   int objectID);
 
   const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion() override ;
   void getQuaternion(rai_sim::Vec<4>& quat) override ;
@@ -28,6 +30,9 @@ class SingleBodyObject: public benchmark::object::SingleBodyObject {
   const Eigen::Map<Eigen::Matrix<double, 3, 1> > getLinearVelocity() override ;
   const Eigen::Map<Eigen::Matrix<double, 3, 1> > getAngularVelocity() override ;
   void getPosition_W(rai_sim::Vec<3>& pos_w) override ;
+
+  void setExternalForce(Eigen::Vector3d force) override ;
+  void setExternalTorque(Eigen::Vector3d torque) override ;
 
  private:
   void setPosition(Eigen::Vector3d originPosition) override ;
@@ -40,8 +45,6 @@ class SingleBodyObject: public benchmark::object::SingleBodyObject {
   void setPose(Eigen::Vector3d originPosition, Eigen::Matrix3d rotationMatrix) override ;
   void setVelocity(Eigen::Vector3d linearVelocity, Eigen::Vector3d angularVelocity) override ;
   void setVelocity(double dx, double dy, double dz, double wx, double wy, double wz) override ;
-  void setExternalForce(Eigen::Vector3d force) override ;
-  void setExternalTorque(Eigen::Vector3d torque) override ;
 
   void setRestitutionCoefficient(double restitution) override ;
   void setFrictionCoefficient(double friction) override ;
@@ -52,6 +55,7 @@ class SingleBodyObject: public benchmark::object::SingleBodyObject {
   int objectID_ = 0;
 
   mjData* worldData_;
+  mjModel* worldModel_;
 
   // pose and velocity
   rai_sim::Vec<4> quatTemp_ = {1.0, 0.0, 0.0, 0.0};

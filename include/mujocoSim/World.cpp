@@ -56,7 +56,7 @@ object::Sphere *World::addSphere(double radius,
                                  int objectID,
                                  CollisionGroupType collisionGroup,
                                  CollisionGroupType collisionMask) {
-  object::Sphere *sphere = new object::Sphere(radius, mass, worldData_, objectID);
+  object::Sphere *sphere = new object::Sphere(radius, mass, worldData_, worldModel_, objectID);
   objectList_.push_back(sphere);
   return sphere;
 }
@@ -68,7 +68,7 @@ object::Box *World::addBox(double xLength,
                            int objectID,
                            CollisionGroupType collisionGroup,
                            CollisionGroupType collisionMask) {
-  object::Box *box = new object::Box(xLength, yLength, zLength, worldData_, objectID);
+  object::Box *box = new object::Box(xLength, yLength, zLength, worldData_, worldModel_, objectID);
   objectList_.push_back(box);
   return box;
 }
@@ -80,7 +80,7 @@ object::CheckerBoard *World::addCheckerboard(double gridSize,
                                              int objectID,
                                              CollisionGroupType collisionGroup,
                                              CollisionGroupType collisionMask) {
-  object::CheckerBoard *checkerBoard = new object::CheckerBoard(xLength, yLength, worldData_, objectID);
+  object::CheckerBoard *checkerBoard = new object::CheckerBoard(xLength, yLength, worldData_, worldModel_, objectID);
   objectList_.push_back(checkerBoard);
   return checkerBoard;
 }
@@ -91,7 +91,7 @@ object::Capsule *World::addCapsule(double radius,
                                    int objectID,
                                    CollisionGroupType collisionGroup,
                                    CollisionGroupType collisionMask) {
-  object::Capsule *capsule = new object::Capsule(radius, height, worldData_, objectID);
+  object::Capsule *capsule = new object::Capsule(radius, height, worldData_, worldModel_, objectID);
   objectList_.push_back(capsule);
   return capsule;
 }

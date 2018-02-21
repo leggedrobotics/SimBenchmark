@@ -7,7 +7,9 @@
 namespace mujoco_sim {
 namespace object {
 
-SingleBodyObject::SingleBodyObject(mjData *data, int objectID) : worldData_(data), objectID_(objectID) {}
+SingleBodyObject::SingleBodyObject(mjData *data,
+                                   mjModel *model,
+                                   int objectID) : worldData_(data), worldModel_(model), objectID_(objectID) {}
 
 const Eigen::Map<Eigen::Matrix<double, 4, 1>> SingleBodyObject::getQuaternion() {
   mjtNum *quaternion = (worldData_->xquat + 4 * objectID_);
@@ -99,10 +101,16 @@ void SingleBodyObject::setVelocity(double dx, double dy, double dz, double wx, d
 
 }
 void SingleBodyObject::setExternalForce(Eigen::Vector3d force) {
-
+  mjtNum *extforce = (worldData_->xfrc_applied + 6 * objectID_);
+  extforce[0] = force[0];
+  extforce[1] = force[1];
+  extforce[2] = force[2];
 }
 void SingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
-
+  mjtNum *extforce = (worldData_->xfrc_applied + 6 * objectID_ + 3);
+  extforce[0] = torque[0];
+  extforce[1] = torque[1];
+  extforce[2] = torque[2];
 }
 void SingleBodyObject::setRestitutionCoefficient(double restitution) {
 

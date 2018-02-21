@@ -13,7 +13,7 @@ namespace object {
 class Box: public SingleBodyObject {
 
  public:
-  Box(double xLength, double yLength, double zLength, mjData *data, int objectID);
+  Box(double xLength, double yLength, double zLength, mjData *data, mjModel *model, int objectID);
 
 };
 

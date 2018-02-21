@@ -12,7 +12,7 @@ namespace object {
 
 class Capsule: public SingleBodyObject {
  public:
-  Capsule(double radius, double height, mjData *data, int objectID);
+  Capsule(double radius, double height, mjData *data, mjModel *model, int objectID);
 };
 
 } // object

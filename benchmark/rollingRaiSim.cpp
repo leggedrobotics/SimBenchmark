@@ -55,9 +55,6 @@ int main() {
   // camera relative position
   sim.cameraFollowObject(box, {10, 0, 5});
 
-  // iteration counter
-  int cnt = 0;
-
   // simulation loop
   // press 'q' key to quit
   rai_sim::Vec<3> force = {benchmark::force[0], benchmark::force[1], benchmark::force[2]};

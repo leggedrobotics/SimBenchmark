@@ -46,9 +46,6 @@ int main() {
   // camera relative position
   sim.cameraFollowObject(checkerboard, {10, 0, 5});
 
-  // iteration counter
-  int cnt = 0;
-
   // simulation loop
   // press 'q' key to quit
   for(int i = 0; i < benchmark::simulationTime / benchmark::dt && sim.visualizerLoop(benchmark::dt); i++) {
