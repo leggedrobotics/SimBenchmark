@@ -13,7 +13,7 @@ enum Object {
 int main() {
 
   bullet_sim::World_RG sim(800, 600, 0.5,
-                           bullet_sim::NO_BACKGROUND,
+                           benchmark::NO_BACKGROUND,
                            bullet_sim::SOLVER_SEQUENTIAL_IMPULSE);
   sim.setGravity({0, 0, -9.8});
   sim.setLightPosition(30, 0, 10);

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 2.9)
 project(benchmark)
 
 ## --------------------------- compiler ---------------------------
@@ -158,8 +158,8 @@ set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl}
 file(COPY benchmark/shell/benchmark.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-## --------------------------- executable ---------------------------
-# framework tests
+## --------------------------- test executable ---------------------------
+# library tests
 add_executable(raisimTest test/raisimTest.cpp)
 target_link_libraries(raisimTest ${RAI_SIM_LINK})
 
@@ -176,17 +176,22 @@ target_link_libraries(mujocoTest ${MuJoCoSimLink})
 add_executable(mujocoSimulate mjpro150/sample/simulate.cpp)
 target_link_libraries(mujocoSimulate ${MuJoCoSimLink})
 
-# benchmark tests
+## --------------------------- demo executable ---------------------------
 # stack
-add_executable(stackRaiSim benchmark/stackRaiSim.cpp)
+add_executable(stackRaiSim demo/stackRaiSim.cpp)
 target_link_libraries(stackRaiSim ${RAI_SIM_LINK})
 
-add_executable(stackBulletSim benchmark/stackBulletSim.cpp)
+add_executable(stackBulletSim demo/stackBulletSim.cpp)
 target_link_libraries(stackBulletSim ${BulletSimLink})
 
-add_executable(stackODESim benchmark/stackODESim.cpp)
+add_executable(stackODESim demo/stackODESim.cpp)
 target_link_libraries(stackODESim ${ODESimLink})
 
+# friction
+add_executable(frictionODESim demo/frictionODESim.cpp)
+target_link_libraries(frictionODESim ${ODESimLink})
+
+## --------------------------- benchmark executable ---------------------------
 # rolling
 add_executable(rollingRaiSim benchmark/rollingRaiSim.cpp)
 target_link_libraries(rollingRaiSim ${RAI_SIM_LINK})
@@ -234,7 +239,3 @@ target_link_libraries(collisionAnymalRaiSim ${RAI_SIM_LINK})
 # free drop anymal
 add_executable(freeDropAnymalRaiSim benchmark/freeDropAnymalRaiSim.cpp)
 target_link_libraries(freeDropAnymalRaiSim ${RAI_SIM_LINK})
-
-# friction
-add_executable(frictionODESim benchmark/frictionODESim.cpp)
-target_link_libraries(frictionODESim ${ODESimLink})
