@@ -10,13 +10,13 @@ mujoco_sim::World_RG::World_RG(int windowWidth,
                                const char *modelPath,
                                int flags,
                                mujoco_sim::SolverOption solverOption) :
-    world_(modelPath),
+    world_(modelPath, solverOption),
     benchmark::World_RG(windowWidth, windowHeight, cms, flags) {
   initFromModel();
 }
 
 mujoco_sim::World_RG::World_RG(const char *modelPath, mujoco_sim::SolverOption solverOption) :
-    world_(modelPath),
+    world_(modelPath, solverOption),
     benchmark::World_RG() {
   initFromModel();
 }

@@ -9,13 +9,37 @@
 int main(int argc, char* argv[]) {
 
   double dt = benchmark::dt;
+
+  mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS;
+  std::string solverName = "pgs";
+
   if (argc == 2) {
     dt = atof(argv[1]);
+    RAIINFO("----------------------")
+    RAIINFO("MuJoCoSim")
     RAIINFO("timestep = " << dt);
+  } else if (argc = 3) {
+    dt = atof(argv[1]);
+
+    if (strcmp(argv[2], "pgs") == 0) {
+      solverOption = mujoco_sim::SOLVER_PGS;
+      solverName = "pgs";
+    } else if (strcmp(argv[2], "cg") == 0) {
+      solverOption = mujoco_sim::SOLVER_CG;
+      solverName = "cg";
+    } else if (strcmp(argv[2], "newton") == 0) {
+      solverOption = mujoco_sim::SOLVER_NEWTON;
+      solverName = "newton";
+    }
+
+    RAIINFO("----------------------")
+    RAIINFO("MuJoCoSim")
+    RAIINFO("timestep = " << dt);
+    RAIINFO("solver   = " << solverName);
   }
 
   // logger
-  std::string path = benchmark::parentDir + "mujoco";
+  std::string path = benchmark::dataPath + benchmark::parentDir + solverName + "/mujoco";
   std::string name = std::to_string(dt);
   rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
   rai::Utils::logger->setLogPath(path);
@@ -33,9 +57,9 @@ int main(int argc, char* argv[]) {
   mujoco_sim::World_RG *sim;
 
   if(benchmark::visualize)
-    sim = new mujoco_sim::World_RG(800, 600, 0.5, "/home/kangd/git/benchmark/benchmark/mujoco/rolling.xml", benchmark::NO_BACKGROUND);
+    sim = new mujoco_sim::World_RG(800, 600, 0.5, "/home/kangd/git/benchmark/benchmark/mujoco/rolling.xml", benchmark::NO_BACKGROUND, solverOption);
   else
-    sim = new mujoco_sim::World_RG("/home/kangd/git/benchmark/benchmark/mujoco/rolling.xml");
+    sim = new mujoco_sim::World_RG("/home/kangd/git/benchmark/benchmark/mujoco/rolling.xml", solverOption);
 
 
   // simulation loop
@@ -71,6 +95,9 @@ int main(int argc, char* argv[]) {
 
   // delete sim
   delete sim;
+
+  // time log
+  rai::Utils::timer->dumpToStdOuput();
 
   return 0;
 }

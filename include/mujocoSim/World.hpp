@@ -24,7 +24,7 @@ enum SolverOption {
 class World {
 
  public:
-  World(const char *modelPath);
+  World(const char *modelPath, SolverOption solverOption = SOLVER_PGS);
   virtual ~World();
 
   object::Sphere *addSphere(double radius,

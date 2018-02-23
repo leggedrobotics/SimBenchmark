@@ -9,13 +9,34 @@
 int main(int argc, char* argv[]) {
 
   double dt = benchmark::dt;
+
+  ode_sim::SolverOption solverOption = ode_sim::SOLVER_STANDARD;
+  std::string solverName = "std";
+
   if (argc == 2) {
     dt = atof(argv[1]);
+    RAIINFO("----------------------")
+    RAIINFO("ODESim")
     RAIINFO("timestep = " << dt);
+  } else if (argc == 3) {
+    dt = atof(argv[1]);
+
+    if(strcmp(argv[2],"std")==0) {
+      solverOption = ode_sim::SOLVER_STANDARD;
+      std::string solverName = "std";
+    } else if(strcmp(argv[2],"quick")==0) {
+      solverOption = ode_sim::SOLVER_QUICK;
+      std::string solverName = "quick";
+    }
+
+    RAIINFO("----------------------")
+    RAIINFO("ODESim")
+    RAIINFO("timestep = " << dt);
+    RAIINFO("solver   = " << solverName);
   }
 
   // logger
-  std::string path = benchmark::dataPath + benchmark::parentDir + "ode";
+  std::string path = benchmark::dataPath + benchmark::parentDir + solverName + "/ode";
   std::string name = std::to_string(dt);
   rai::Utils::logger->setLogPath(path);
   rai::Utils::logger->setLogFileName(name);
@@ -34,9 +55,9 @@ int main(int argc, char* argv[]) {
   ode_sim::World_RG *sim;
 
   if(benchmark::visualize)
-    sim = new ode_sim::World_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, ode_sim::SOLVER_STANDARD);
+    sim = new ode_sim::World_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, solverOption);
   else
-    sim = new ode_sim::World_RG();
+    sim = new ode_sim::World_RG(solverOption);
 
   sim->setGravity(benchmark::gravity);
   sim->setERP(benchmark::erp, 0, 0);
@@ -93,6 +114,9 @@ int main(int argc, char* argv[]) {
 
   // delete sim
   delete sim;
+
+  // time log
+  rai::Utils::timer->dumpToStdOuput();
 
   return 0;
 }

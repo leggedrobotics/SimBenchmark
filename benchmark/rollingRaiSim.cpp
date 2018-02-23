@@ -11,6 +11,8 @@ int main(int argc, char* argv[]) {
   double dt = benchmark::dt;
   if (argc == 2) {
     dt = atof(argv[1]);
+    RAIINFO("----------------------")
+    RAIINFO("raiSim")
     RAIINFO("timestep = " << dt);
   }
 

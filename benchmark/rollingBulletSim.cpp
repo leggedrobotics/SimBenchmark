@@ -9,13 +9,43 @@
 int main(int argc, char* argv[]) {
 
   double dt = benchmark::dt;
+
+  bullet_sim::SolverOption solverOption = bullet_sim::SOLVER_SEQUENTIAL_IMPULSE;
+  std::string solverName = "seqImp";
+
   if (argc == 2) {
     dt = atof(argv[1]);
+    RAIINFO("----------------------")
+    RAIINFO("BulletSim")
     RAIINFO("timestep = " << dt);
+  } else if (argc == 3) {
+    dt = atof(argv[1]);
+
+    if(strcmp(argv[2],"seqImp")==0) {
+      solverOption = bullet_sim::SOLVER_SEQUENTIAL_IMPULSE;
+      solverName = "seqImp";
+    } else if(strcmp(argv[2],"nncg")==0) {
+      solverOption = bullet_sim::SOLVER_NNCG;
+      solverName = "nncg";
+    } else if(strcmp(argv[2],"pgs")==0) {
+      solverOption = bullet_sim::SOLVER_MLCP_PGS;
+      solverName = "pgs";
+    } else if(strcmp(argv[2],"dantzig")==0) {
+      solverOption = bullet_sim::SOLVER_MLCP_DANTZIG;
+      solverName = "dantzig";
+    } else if(strcmp(argv[2],"lemke")==0) {
+      solverOption = bullet_sim::SOLVER_MLCP_LEMKE;
+      solverName = "lemke";
+    }
+
+    RAIINFO("----------------------")
+    RAIINFO("BulletSim")
+    RAIINFO("timestep = " << dt);
+    RAIINFO("solver   = " << solverName);
   }
 
     // logger
-  std::string path = benchmark::dataPath + benchmark::parentDir + "bullet";
+  std::string path = benchmark::dataPath + benchmark::parentDir + solverName + "/bullet";
   std::string name = std::to_string(dt);
   rai::Utils::logger->setLogPath(path);
   rai::Utils::logger->setLogFileName(name);
@@ -34,9 +64,9 @@ int main(int argc, char* argv[]) {
   bullet_sim::World_RG *sim;
 
   if(benchmark::visualize)
-    sim = new bullet_sim::World_RG(800, 600, 0.5, benchmark::NO_BACKGROUND);
+    sim = new bullet_sim::World_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, solverOption);
   else
-    sim = new bullet_sim::World_RG;
+    sim = new bullet_sim::World_RG(solverOption);
 
   sim->setGravity(benchmark::gravity);
   sim->setERP(benchmark::erp, benchmark::erp, benchmark::erp);
@@ -93,6 +123,9 @@ int main(int argc, char* argv[]) {
 
   // delete sim
   delete sim;
+
+  // time log
+  rai::Utils::timer->dumpToStdOuput();
 
   return 0;
 }

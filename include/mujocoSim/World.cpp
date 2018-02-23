@@ -6,7 +6,7 @@
 
 namespace mujoco_sim {
 
-mujoco_sim::World::World(const char* modelPath) {
+mujoco_sim::World::World(const char *modelPath, SolverOption solverOption) {
 
   // activate MuJoCo Pro
   mj_activate("mjkey.txt");
@@ -18,6 +18,18 @@ mujoco_sim::World::World(const char* modelPath) {
   if( !worldModel_ )
   {
     RAIFATAL(error);
+  }
+
+  // set solver
+  switch (solverOption) {
+    case SOLVER_PGS:
+      worldModel_->opt.solver = mjSOL_PGS;
+    case SOLVER_NEWTON:
+      worldModel_->opt.solver = mjSOL_NEWTON;
+    case SOLVER_CG:
+      worldModel_->opt.solver = mjSOL_CG;
+    default:
+      worldModel_->opt.solver = mjSOL_PGS;
   }
 
   // make data corresponding to model
