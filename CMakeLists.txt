@@ -5,15 +5,16 @@ project(benchmark)
 set(CMAKE_C_COMPILER "/usr/bin/gcc-7")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 #set(CMAKE_CXX_STANDARD 17)
-
 add_definitions(-std=c++17)
-
-set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed -O3 -mtune=native -march=native")
 
 ## --------------------------- mode ---------------------------
 # bullet debug
 # TODO bullet debug check (in release mode)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG
+        "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -Wl,--no-as-needed -O0 -mtune=native -march=native")
+
+set(CMAKE_CXX_FLAGS_RELEASE
+        "-Wl,--no-as-needed -O3 -mtune=native -march=native")
 
 # bullet double precision
 add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
@@ -21,10 +22,8 @@ add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
 # raiCommons debug
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DRAIDEBUG)
-    set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed -O0 -mtune=native -march=native")
 else ()
     remove_definitions(-DRAIDEBUG)
-    set(CMAKE_CXX_FLAGS "-Wl,--no-as-needed -O3 -mtune=native -march=native")
 endif()
 
 ## --------------------------- link directories ---------------------------
