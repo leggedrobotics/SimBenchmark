@@ -82,7 +82,7 @@ set(Benchmark_SRCS
         include/base/SingleBodyObject.cpp
         )
 
-add_library(BenchmakrLib ${Benchmark_SRCS})
+add_library(BenchmarkLib ${Benchmark_SRCS})
 
 # BulletSim
 set(BulletSim_SRCS
@@ -147,14 +147,14 @@ add_library(MuJoCoSim ${MuJoCoSim_SRCS})
 ## --------------------------- links ---------------------------
 # BulletSim
 set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath
-        BulletSim BenchmakrLib ${RAI_GRAPHICS_OPENGL_LINK})
+        BulletSim BenchmarkLib ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
 
 # ODESim
-set(ODESimLink ode ODESim BenchmakrLib ${RAI_GRAPHICS_OPENGL_LINK})
+set(ODESimLink ode ODESim BenchmarkLib ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
 
 # MuJoCoSim
 set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl}
-        GL GLU glut MuJoCoSim BenchmakrLib ${RAI_GRAPHICS_OPENGL_LINK})
+        GL GLU glut MuJoCoSim BenchmarkLib ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
 
 ## --------------------------- export files ---------------------------
 file(COPY benchmark/shell/benchmark.sh

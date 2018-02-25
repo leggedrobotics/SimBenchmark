@@ -8,11 +8,16 @@
 dWorldID ode_sim::World::dynamicsWorld_;
 dJointGroupID ode_sim::World::contactGroup_;
 
+void message(int errnum, const char *msg, va_list ap) {
+  // no debug message
+}
+
 ode_sim::World::World(SolverOption solverOption) : solverOption_(solverOption) {
 
   // world
   dInitODE();
   dynamicsWorld_ = dWorldCreate();
+  dSetMessageHandler(0);
 
   dVector3 Center = {0, 0, 0, 0};
   dVector3 Extents = {10, 0, 10, 0};
@@ -24,10 +29,10 @@ ode_sim::World::World(SolverOption solverOption) : solverOption_(solverOption) {
 ////  auto disable
 //  dWorldSetAutoDisableAverageSamplesCount(dynamicsWorld_, 10);
 //  dWorldSetAutoDisableFlag(dynamicsWorld_, 1);
-//
+
 ////  parameters
-//  dWorldSetCFM(world,1e-5);
-//  dWorldSetLinearDamping(world, 0.00001);
+//  dWorldSetCFM(dynamicsWorld_, 1e-5);
+//  dWorldSetLinearDamping(dynamicsWorld_, 0.00001);
 //  dWorldSetAngularDamping(world, 0.005);
 //  dWorldSetMaxAngularSpeed(world, 200);
 //  dWorldSetContactMaxCorrectingVel(world,0.1);
@@ -35,6 +40,8 @@ ode_sim::World::World(SolverOption solverOption) : solverOption_(solverOption) {
   dWorldSetERP(dynamicsWorld_, 0);
   dWorldSetCFM(dynamicsWorld_, 0);
 
+  // no debug message
+  dSetMessageHandler(message);
 }
 
 ode_sim::World::~World() {
