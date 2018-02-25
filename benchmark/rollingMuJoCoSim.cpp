@@ -39,13 +39,15 @@ int main(int argc, char* argv[]) {
   }
 
   // logger
-  std::string path = benchmark::dataPath + benchmark::parentDir + solverName + "/mujoco";
+  std::string path = benchmark::dataPath + benchmark::parentDir + "mujoco/" + solverName;
   std::string name = std::to_string(dt);
   rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
   rai::Utils::logger->setLogPath(path);
   rai::Utils::logger->setLogFileName(name);
-  rai::Utils::logger->addVariableToLog(3, "vel_ball", "linear velocity of ball");
-  rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
+  rai::Utils::logger->addVariableToLog(3, "velbox", "linear velocity of box");
+  rai::Utils::logger->addVariableToLog(3, "velball", "linear velocity of ball");
+  rai::Utils::logger->addVariableToLog(3, "posbox", "position of box");
+  rai::Utils::logger->addVariableToLog(3, "posball", "position of ball");
 
   // timer
   std::string timer = name + "timer";
@@ -73,10 +75,10 @@ int main(int argc, char* argv[]) {
     for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
       sim->getSingleBodyHandle(1)->setExternalForce(benchmark::force);
       // log
-      rai::Utils::logger->appendData("linvel_box", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
-      rai::Utils::logger->appendData("linvel_ball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());
-      rai::Utils::logger->appendData("pos_box", sim->getSingleBodyHandle(1)->getPosition().data());
-      rai::Utils::logger->appendData("pos_ball", sim->getSingleBodyHandle(2)->getPosition().data());
+      rai::Utils::logger->appendData("velbox", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
+      rai::Utils::logger->appendData("velball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());
+      rai::Utils::logger->appendData("posbox", sim->getSingleBodyHandle(1)->getPosition().data());
+      rai::Utils::logger->appendData("posball", sim->getSingleBodyHandle(2)->getPosition().data());
       sim->integrate(dt);
     }
   }
@@ -84,10 +86,10 @@ int main(int argc, char* argv[]) {
     for(int i = 0; i < benchmark::simulationTime / dt; i++) {
       sim->getSingleBodyHandle(1)->setExternalForce(benchmark::force);
       // log
-      rai::Utils::logger->appendData("linvel_box", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
-      rai::Utils::logger->appendData("linvel_ball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());
-      rai::Utils::logger->appendData("pos_box", sim->getSingleBodyHandle(1)->getPosition().data());
-      rai::Utils::logger->appendData("pos_ball", sim->getSingleBodyHandle(2)->getPosition().data());
+      rai::Utils::logger->appendData("velbox", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
+      rai::Utils::logger->appendData("velball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());
+      rai::Utils::logger->appendData("posbox", sim->getSingleBodyHandle(1)->getPosition().data());
+      rai::Utils::logger->appendData("posball", sim->getSingleBodyHandle(2)->getPosition().data());
       sim->integrate(dt);
     }
   }

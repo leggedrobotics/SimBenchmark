@@ -157,7 +157,7 @@ set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl}
         GL GLU glut MuJoCoSim BenchmarkLib ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
 
 ## --------------------------- export files ---------------------------
-file(COPY benchmark/shell/benchmark.sh
+file(COPY benchmark/shell/rolling.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 ## --------------------------- test executable ---------------------------
@@ -221,14 +221,14 @@ add_executable(bounceMuJoCoSim benchmark/bounceMuJoCoSim.cpp)
 target_link_libraries(bounceMuJoCoSim ${MuJoCoSimLink})
 
 # thousand
-#add_executable(thousandRaiSim benchmark/thousandRaiSim.cpp)
-#target_link_libraries(thousandRaiSim ${RAI_SIM_LINK})
-#
-#add_executable(thousandBulletSim benchmark/thousandBulletSim.cpp)
-#target_link_libraries(thousandBulletSim ${BulletSimLink})
-#
-#add_executable(thousandODESim benchmark/thousandODESim.cpp)
-#target_link_libraries(thousandODESim ${ODESimLink})
+add_executable(thousandRaiSim benchmark/thousandRaiSim.cpp)
+target_link_libraries(thousandRaiSim ${RAI_SIM_LINK})
+
+add_executable(thousandBulletSim benchmark/thousandBulletSim.cpp)
+target_link_libraries(thousandBulletSim ${BulletSimLink})
+
+add_executable(thousandODESim benchmark/thousandODESim.cpp)
+target_link_libraries(thousandODESim ${ODESimLink})
 
 # anymal
 add_executable(anymalRaiSim benchmark/anymalRaiSim.cpp)

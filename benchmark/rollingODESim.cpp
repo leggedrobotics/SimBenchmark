@@ -23,10 +23,10 @@ int main(int argc, char* argv[]) {
 
     if(strcmp(argv[2],"std")==0) {
       solverOption = ode_sim::SOLVER_STANDARD;
-      std::string solverName = "std";
+      solverName = "std";
     } else if(strcmp(argv[2],"quick")==0) {
       solverOption = ode_sim::SOLVER_QUICK;
-      std::string solverName = "quick";
+      solverName = "quick";
     }
 
     RAIINFO("----------------------")
@@ -36,15 +36,15 @@ int main(int argc, char* argv[]) {
   }
 
   // logger
-  std::string path = benchmark::dataPath + benchmark::parentDir + solverName + "/ode";
+  std::string path = benchmark::dataPath + benchmark::parentDir + "ode/" + solverName;
   std::string name = std::to_string(dt);
   rai::Utils::logger->setLogPath(path);
   rai::Utils::logger->setLogFileName(name);
   rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
-  rai::Utils::logger->addVariableToLog(3, "linvel_box", "linear velocity of box");
-  rai::Utils::logger->addVariableToLog(3, "linvel_ball", "linear velocity of ball");
-  rai::Utils::logger->addVariableToLog(3, "pos_box", "position of box");
-  rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
+  rai::Utils::logger->addVariableToLog(3, "velbox", "linear velocity of box");
+  rai::Utils::logger->addVariableToLog(3, "velball", "linear velocity of ball");
+  rai::Utils::logger->addVariableToLog(3, "posbox", "position of box");
+  rai::Utils::logger->addVariableToLog(3, "posball", "position of ball");
 
   // timer
   std::string timer = name + "timer";
@@ -92,10 +92,10 @@ int main(int argc, char* argv[]) {
     for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
       box->setExternalForce(benchmark::force);
       // log
-      rai::Utils::logger->appendData("linvel_box", box->getLinearVelocity().data());
-      rai::Utils::logger->appendData("linvel_ball", objectList[0]->getLinearVelocity().data());
-      rai::Utils::logger->appendData("pos_box", box->getPosition().data());
-      rai::Utils::logger->appendData("pos_ball", objectList[0]->getPosition().data());
+      rai::Utils::logger->appendData("velbox", box->getLinearVelocity().data());
+      rai::Utils::logger->appendData("velball", objectList[0]->getLinearVelocity().data());
+      rai::Utils::logger->appendData("posbox", box->getPosition().data());
+      rai::Utils::logger->appendData("posball", objectList[0]->getPosition().data());
       sim->integrate(dt);
     }
   }
@@ -103,10 +103,10 @@ int main(int argc, char* argv[]) {
     for(int i = 0; i < benchmark::simulationTime / dt; i++) {
       box->setExternalForce(benchmark::force);
       // log
-      rai::Utils::logger->appendData("linvel_box", box->getLinearVelocity().data());
-      rai::Utils::logger->appendData("linvel_ball", objectList[0]->getLinearVelocity().data());
-      rai::Utils::logger->appendData("pos_box", box->getPosition().data());
-      rai::Utils::logger->appendData("pos_ball", objectList[0]->getPosition().data());
+      rai::Utils::logger->appendData("velbox", box->getLinearVelocity().data());
+      rai::Utils::logger->appendData("velball", objectList[0]->getLinearVelocity().data());
+      rai::Utils::logger->appendData("posbox", box->getPosition().data());
+      rai::Utils::logger->appendData("posball", objectList[0]->getPosition().data());
       sim->integrate(dt);
     }
   }
