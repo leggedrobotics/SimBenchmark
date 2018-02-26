@@ -24,10 +24,13 @@ mujoco_sim::World::World(const char *modelPath, SolverOption solverOption) {
   switch (solverOption) {
     case SOLVER_PGS:
       worldModel_->opt.solver = mjSOL_PGS;
+      break;
     case SOLVER_NEWTON:
       worldModel_->opt.solver = mjSOL_NEWTON;
+      break;
     case SOLVER_CG:
       worldModel_->opt.solver = mjSOL_CG;
+      break;
     default:
       worldModel_->opt.solver = mjSOL_PGS;
   }

@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
   checkerboard->setFrictionCoefficient(benchmark::groundMu);
 
   auto box = sim->addBox(20, 20, 1, 10);
-  box->setPosition(0, 0, 0.5);
+  box->setPosition(0, 0, 0.5 - benchmark::initPenetration);
   box->setFrictionCoefficient(benchmark::boxMu);
 
   std::vector<benchmark::SingleBodyHandle> objectList;
@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
   for(int i = 0; i < 5; i++) {
     for(int j = 0; j < 5; j++) {
       auto ball = sim->addSphere(0.5, 1);
-      ball->setPosition(i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5);
+      ball->setPosition(i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5 - benchmark::initPenetration * 2);
       ball->setFrictionCoefficient(benchmark::ballMu);
       objectList.push_back(ball);
     }

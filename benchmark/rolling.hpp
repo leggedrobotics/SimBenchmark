@@ -13,7 +13,7 @@ namespace benchmark {
 std::string parentDir = "rolling/";
 
 // option
-bool visualize = false;
+bool visualize = true;
 
 // sim properties
 double lightX = 30.0;
@@ -31,6 +31,8 @@ double erp = 0.2;                           // bullet and ode
 double groundMu = 0.5;
 double ballMu = 1.0;
 double boxMu = 0.8;
+
+double initPenetration = 1e-6;
 
 }
 
