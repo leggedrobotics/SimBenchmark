@@ -12,6 +12,9 @@ namespace benchmark {
 // path
 std::string parentDir = "bounce/";
 
+// option
+bool visualize = true;
+
 // sim properties
 double lightX = 30.0;
 double lightY = 0.0;
@@ -25,6 +28,9 @@ double friction = 0.0;                // friction coefficient
 double dropHeight = 10.0;
 
 Eigen::Vector3d gravity = {0, 0, -9.8};
+
+double erp = 0.2;                           // bullet and ode
+
 
 // object
 double ballR = 0.5;

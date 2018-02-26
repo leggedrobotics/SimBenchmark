@@ -6,19 +6,52 @@
 
 #include "bounce.hpp"
 
-int main() {
+int main(int argc, char* argv[]) {
+
+  double dt = benchmark::dt;
+  double restitution = benchmark::restitution;
+
+  if (argc == 2) {
+    dt = atof(argv[1]);
+    RAIINFO("----------------------")
+    RAIINFO("raiSim")
+    RAIINFO("timestep = " << dt);
+  } else if (argc == 3) {
+    dt = atof(argv[1]);
+
+    restitution = atof(argv[2]);
+
+    RAIINFO("----------------------")
+    RAIINFO("BulletSim")
+    RAIINFO("timestep    = " << dt);
+    RAIINFO("restitution = " << restitution);
+  }
 
   // logger
-  std::string path = "/tmp/rai_bounce";
+  std::string path = benchmark::dataPath + benchmark::parentDir + "rai";
+  std::string name = std::to_string(dt);
   rai::Utils::logger->setLogPath(path);
-  rai::Utils::logger->addVariableToLog(3, "vel_ball", "linear velocity of ball");
-  rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
+  rai::Utils::logger->setLogFileName(name);
+  rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
+  rai::Utils::logger->addVariableToLog(3, "velball", "linear velocity of ball");
+  rai::Utils::logger->addVariableToLog(3, "posball", "position of ball");
 
-  rai_sim::World_RG sim(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+  // timer
+  std::string timer = name + "timer";
+  rai::Utils::timer->setLogPath(path);
+  rai::Utils::timer->setLogFileName(timer);
+
+// sim
+  rai_sim::World_RG *sim;
+
+  if(benchmark::visualize)
+    sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+  else
+    sim = new rai_sim::World_RG;
+
   rai_sim::MaterialManager materials;
 
-  sim.setGravity(benchmark::gravity);
-  sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
+  sim->setGravity(benchmark::gravity);
 
   // materials
   materials.setMaterialNames({"ground", "ball"});
@@ -26,35 +59,55 @@ int main() {
                                 benchmark::friction,
                                 benchmark::restitution,
                                 0.01);
-  sim.updateMaterialProp(materials);
+  sim->updateMaterialProp(materials);
 
   // add objects
   // checkerboard
-  auto checkerboard = sim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
-  checkerboard->setMaterial(sim.getMaterialKey("ground"));
+  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1);
+  checkerboard->setMaterial(sim->getMaterialKey("ground"));
 
   // ball
-  auto ball = sim.addSphere(benchmark::ballR, benchmark::ballM);
-  ball->setMaterial(sim.getMaterialKey("ball"));
-  ball->setPosition(0, 0, benchmark::dropHeight);
+  std::vector<rai_sim::SingleBodyHandle> objectList;
 
-  // camera relative position
-  sim.cameraFollowObject(ball, {10, 0, 5});
-
-  // iteration counter
-  int cnt = 0;
+  for(int i = 0; i < 5; i++) {
+    for(int j = 0; j < 5; j++) {
+      auto ball = sim->addSphere(0.5, 1);
+      ball->setPosition(i * 2.0 - 4.0, j * 2.0 - 4.0, benchmark::dropHeight);
+      ball->setMaterial(sim->getMaterialKey("ball"));
+      objectList.push_back(ball);
+    }
+  }
 
   // simulation loop
   // press 'q' key to quit
-  while (sim.visualizerLoop(benchmark::dt, 1)) {
-    if (cnt++ < benchmark::simulationTime / benchmark::dt) {
+  rai::Utils::timer->startTimer("bounce");
+  if(benchmark::visualize) {
+    // camera relative position
+    sim->setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
+    sim->cameraFollowObject(objectList[12], {10, 0, 5});
 
+    for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
       // log
-      rai::Utils::logger->appendData("vel_ball", ball->getLinearVelocity().data());
-      rai::Utils::logger->appendData("pos_ball", ball->getPosition().data());
+      rai::Utils::logger->appendData("velball", objectList[12]->getLinearVelocity().data());
+      rai::Utils::logger->appendData("posball", objectList[12]->getPosition().data());
+      sim->integrate(benchmark::dt);
     }
-
-    sim.integrate(benchmark::dt);
   }
+  else {
+    for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
+      // log
+      rai::Utils::logger->appendData("velball", objectList[12]->getLinearVelocity().data());
+      rai::Utils::logger->appendData("posball", objectList[12]->getPosition().data());
+      sim->integrate(benchmark::dt);
+    }
+  }
+  rai::Utils::timer->stopTimer("bounce");
+
+  // delete sim
+  delete sim;
+
+  // time log
+  rai::Utils::timer->dumpToStdOuput();
+
   return 0;
 }

@@ -13,7 +13,7 @@ namespace benchmark {
 std::string parentDir = "rolling/";
 
 // option
-bool visualize = true;
+bool visualize = false;
 
 // sim properties
 double lightX = 30.0;
@@ -26,7 +26,7 @@ const int simulationTime = 4;               // time for applying force
 Eigen::Vector3d force = {0, 150, 0};        // force
 Eigen::Vector3d gravity = {0, 0, -9.8};
 
-double erp = 0.2;                           // bullet and ode
+double erp = 0.0;                           // bullet and ode
 
 double groundMu = 0.5;
 double ballMu = 1.0;

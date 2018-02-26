@@ -11,44 +11,62 @@ int main(int argc, char* argv[]) {
   // main arguments
   int n = 10;
   int shape = 0;    // 0: balls, 1: boxes, 2: capsules
-  bool is_visualization_mode = false;
-  bool show_graph = true;
+  bool show_graph = false;
 
-  if (argc == 5) {
-    n = atoi(argv[1]);                            // n
-    shape = atoi(argv[2]);                        // shape
-    is_visualization_mode = (atoi(argv[3]) != 0); // visulization on/off
-    show_graph = (atoi(argv[4]) != 0);            // graph on/off
+  double dt = benchmark::dt;
+
+  ode_sim::SolverOption solverOption = ode_sim::SOLVER_STANDARD;
+  std::string solverName = "std";
+
+  if (argc == 2) {
+    dt = atof(argv[1]);
+    RAIINFO("----------------------")
+    RAIINFO("ODESim")
+    RAIINFO("timestep = " << dt);
+  } else if (argc == 3) {
+    dt = atof(argv[1]);
+
+    if(strcmp(argv[2],"std")==0) {
+      solverOption = ode_sim::SOLVER_STANDARD;
+      solverName = "std";
+    } else if(strcmp(argv[2],"quick")==0) {
+      solverOption = ode_sim::SOLVER_QUICK;
+      solverName = "quick";
+    }
+
+    RAIINFO("----------------------")
+    RAIINFO("ODESim")
+    RAIINFO("timestep = " << dt);
+    RAIINFO("solver   = " << solverName);
   }
 
   RAIFATAL_IF(n > 10 || n < 1, "n should be natural number less or equal than 10");
   RAIFATAL_IF(shape > 2 || shape < 0,  "shape should be 0 or 1 or 2");
 
-  // print benchmark parameters
-  RAIINFO(  std::endl
-                << "===========================================" << std::endl
-                << "Benchmark parameters: " << std::endl
-                << "shape       = " << shape << "   (0: balls / 1: boxes / 2 : capsules)" << std::endl
-                << "n           = " << n << "   (total n^3 objects)" << std::endl
-                << "visualizer  = " << is_visualization_mode << "   (0: false / 1: true)" << std::endl
-                << "===========================================");
+  // logger
+  std::string path = benchmark::dataPath + benchmark::parentDir + "ode/" + solverName;
+  std::string name = std::to_string(dt);
+  rai::Utils::logger->setLogPath(path);
+  rai::Utils::logger->setLogFileName(name);
+  rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
+  rai::Utils::logger->addVariableToLog(1, "error", "penetration error");
 
   // timer
-  std::string path = "/tmp";
+  std::string timer = name + "timer";
   rai::Utils::timer->setLogPath(path);
-  rai::Utils::logger->setLogPath(path);
+  rai::Utils::timer->setLogFileName(timer);
 
   // collision world
   ode_sim::World_RG* sim;
 
-  if (is_visualization_mode)
-    sim = new ode_sim::World_RG(800, 600, 0.6, ode_sim::NO_BACKGROUND, ode_sim::SOLVER_QUICK);
+  if (benchmark::visualize)
+    sim = new ode_sim::World_RG(800, 600, 0.6, benchmark::NO_BACKGROUND, solverOption);
   else
-    sim = new ode_sim::World_RG(ode_sim::SOLVER_QUICK);
+    sim = new ode_sim::World_RG(solverOption);
 
   // objects
-  auto checkerboard = sim->addCheckerboard(5.0, 200.0, 200.0, 0.1,  1, -1, ode_sim::GRID);
-  std::vector<ode_sim::SingleBodyHandle> objectPtrList;
+  auto checkerboard = sim->addCheckerboard(5.0, 200.0, 200.0, 0.1,  1, -1, benchmark::GRID);
+  std::vector<benchmark::SingleBodyHandle> objectPtrList;
 
   // random number generator
   rai::RandomNumberGenerator<double> rand;
@@ -58,7 +76,7 @@ int main(int argc, char* argv[]) {
   const double perturbation = 0.001;
   const double dropHeight = 5.0;
 
-  ode_sim::SingleBodyHandle obj(nullptr, {}, {});
+  benchmark::SingleBodyHandle obj(nullptr, {}, {});
 
   for(int i = 0; i < nPerDim; i++) {
     for(int j = 0; j < nPerDim; j++) {
@@ -86,7 +104,7 @@ int main(int argc, char* argv[]) {
 
         obj->setOrientationRandom();
 
-        if (is_visualization_mode) {
+        if (benchmark::visualize) {
           if((i + j + k) % 3 == 0) {
             obj.visual()[0]->setColor({1.0, 0.0, 0.0});
           }
@@ -103,22 +121,22 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  rai::Utils::timer->startTimer("10000IterationBenchmark");
-  if(is_visualization_mode) {
+  rai::Utils::timer->startTimer("thousand");
+  if(benchmark::visualize) {
     sim->cameraFollowObject(objectPtrList.at(nPerDim*nPerDim*nPerDim/2), {0, 30.0, 10.0});
     // simulation loop with visualizer
-    for(int i = 0; i < benchmark::simulationTime / benchmark::dt && sim->visualizerLoop(benchmark::dt); i++) {
-      sim->integrate(benchmark::dt);
+    for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
+      sim->integrate(dt);
     }
   }
   else {
     // simulate without visualizer
-    for(int i = 0; i < benchmark::simulationTime / benchmark::dt; i++) {
+    for(int i = 0; i < benchmark::simulationTime / dt; i++) {
       // simulate one step
-      sim->integrate(benchmark::dt);
+      sim->integrate(dt);
     }
   }
-  rai::Utils::timer->stopTimer("10000IterationBenchmark");
+  rai::Utils::timer->stopTimer("thousand");
   rai::Utils::timer->dumpToStdOuput();
 
   // penetration check (sphere)
@@ -131,16 +149,17 @@ int main(int argc, char* argv[]) {
 
         // error between spheres
         if(dist < benchmark::ballR * 2)
-          error_sum += (benchmark::ballR * 2 - dist);
+          error_sum += (benchmark::ballR * 2 - dist) * (benchmark::ballR * 2 - dist);
       }
       // error sphere ~ ground
       if(objectPtrList[i]->getPosition()[2] < benchmark::ballR) {
-        error_sum += benchmark::ballR - objectPtrList[i]->getPosition()[2];
+        error_sum += (benchmark::ballR - objectPtrList[i]->getPosition()[2]) * (benchmark::ballR - objectPtrList[i]->getPosition()[2]);
       }
     }
 
     RAIINFO("penetration error = ");
     RAIINFO(error_sum);
+    rai::Utils::logger->appendData("error", error_sum);
   }
 
   if(show_graph) {

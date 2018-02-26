@@ -9,6 +9,12 @@
 
 namespace benchmark {
 
+// path
+std::string parentDir = "thousand/";
+
+// option
+bool visualize = true;
+
 // parameters
 double dt = 0.001;
 double simulationTime = 10;
