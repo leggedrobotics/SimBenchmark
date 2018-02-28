@@ -160,6 +160,9 @@ set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl}
 file(COPY benchmark/shell/rolling.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+file(COPY benchmark/shell/bounce.sh
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 ## --------------------------- test executable ---------------------------
 # library tests
 add_executable(raisimTest test/raisimTest.cpp)

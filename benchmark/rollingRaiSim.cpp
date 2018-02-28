@@ -43,6 +43,10 @@ int main(int argc, char* argv[]) {
   rai_sim::MaterialManager materials;
   sim->setGravity(benchmark::gravity);
 
+  // solver params
+  sim->setERP(benchmark::erp);
+  sim->setContactSolverParam(1.0, 0.7, 1.0, 50, 1e-6);
+
   // materials
   materials.setMaterialNames({"ground", "box", "ball"});
   materials.setMaterialPairProp("ground", "ball", benchmark::groundMu * benchmark::ballMu, 0.0, 0.01);

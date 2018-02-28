@@ -13,7 +13,7 @@ namespace benchmark {
 std::string parentDir = "bounce/";
 
 // option
-bool visualize = true;
+bool visualize = false;
 
 // sim properties
 double lightX = 30.0;

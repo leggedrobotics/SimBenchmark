@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
 
   // logger
   std::string path = benchmark::dataPath + benchmark::parentDir + "bullet/" + solverName;
-  std::string name = std::to_string(dt);
+  std::string name = std::to_string(dt) + std::to_string(restitution);
   rai::Utils::logger->setLogPath(path);
   rai::Utils::logger->setLogFileName(name);
   rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
@@ -121,21 +121,21 @@ int main(int argc, char* argv[]) {
   if(benchmark::visualize) {
     // camera relative position
     sim->setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
-    sim->cameraFollowObject(objectList[12], {10, 0, 5});
+    sim->cameraFollowObject(checkerboard, {50, 0, 5});
 
     for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
       // log
       rai::Utils::logger->appendData("velball", objectList[12]->getLinearVelocity().data());
       rai::Utils::logger->appendData("posball", objectList[12]->getPosition().data());
-      sim->integrate(benchmark::dt);
+      sim->integrate(dt);
     }
   }
   else {
-    for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
+    for(int i = 0; i < benchmark::simulationTime / dt; i++) {
       // log
       rai::Utils::logger->appendData("velball", objectList[12]->getLinearVelocity().data());
       rai::Utils::logger->appendData("posball", objectList[12]->getPosition().data());
-      sim->integrate(benchmark::dt);
+      sim->integrate(dt);
     }
   }
   rai::Utils::timer->stopTimer("bounce");

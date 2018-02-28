@@ -1,5 +1,7 @@
+format long
+
 %% path
-dir_path = './data/rolling-noerp/';
+dir_path = './data/rolling-noslip-noerp/';
 
 %% constants
 simTime = 4;
@@ -35,7 +37,7 @@ mujoco_timer = zeros(length(mujoco_solvers), length(dt_array));
 rai_timer = zeros(1, length(dt_array));
 
 
-%% plotbox error (cumulative).png
+%% main loop
 for simid = 1:length(sims)
     sim = sims{simid};
     switch(sim)
@@ -45,8 +47,8 @@ for simid = 1:length(sims)
                 
                 for dtid = 1:length(dt_array)
                     dt = dt_array{dtid};
-                    plot_ball_vel(dir_path, sim, solver, dt, simTime);
-                    plot_box_vel(dir_path, sim, solver, dt, simTime);
+%                     plot_ball_vel(dir_path, sim, solver, dt, simTime);
+%                     plot_box_vel(dir_path, sim, solver, dt, simTime);
                     
                     ball_e = ball_error(dir_path, sim, solver, dt, simTime);
                     box_e = box_error(dir_path, sim, solver, dt, simTime);
@@ -66,8 +68,8 @@ for simid = 1:length(sims)
                 
                 for dtid = 1:length(dt_array)
                     dt = dt_array{dtid};
-                    plot_ball_vel(dir_path, sim, solver, dt, simTime);
-                    plot_box_vel(dir_path, sim, solver, dt, simTime);
+%                     plot_ball_vel(dir_path, sim, solver, dt, simTime);
+%                     plot_box_vel(dir_path, sim, solver, dt, simTime);
                     
                     ball_e = ball_error(dir_path, sim, solver, dt, simTime);
                     box_e = box_error(dir_path, sim, solver, dt, simTime);
@@ -88,8 +90,8 @@ for simid = 1:length(sims)
                 
                 for dtid = 1:length(dt_array)
                     dt = dt_array{dtid};
-                    plot_ball_vel(dir_path, sim, solver, dt, simTime);
-                    plot_box_vel(dir_path, sim, solver, dt, simTime);
+%                     plot_ball_vel(dir_path, sim, solver, dt, simTime);
+%                     plot_box_vel(dir_path, sim, solver, dt, simTime);
                     
                     ball_e = ball_error(dir_path, sim, solver, dt, simTime);
                     box_e = box_error(dir_path, sim, solver, dt, simTime);
@@ -106,8 +108,8 @@ for simid = 1:length(sims)
         case "rai"
             for dtid = 1:length(dt_array)
                 dt = dt_array{dtid};
-                plot_ball_vel(dir_path, sim, '.', dt, simTime);
-                plot_box_vel(dir_path, sim, '.', dt, simTime);
+%                 plot_ball_vel(dir_path, sim, '.', dt, simTime);
+%                 plot_box_vel(dir_path, sim, '.', dt, simTime);
                 
                 ball_e = ball_error(dir_path, sim, '.', dt, simTime);
                 box_e = box_error(dir_path, sim, '.', dt, simTime);
@@ -133,8 +135,8 @@ plot(bullet_errors(2,:,1), '-r*', 'DisplayName', 'btNNCG')
 plot(bullet_errors(3,:,1), '-ro', 'DisplayName', 'btPGS')
 % plot(bullet_errors(4,:,1), '-rs', 'DisplayName', 'btLemke')
 plot(bullet_errors(5,:,1), 'r:', 'DisplayName', 'btDantzig')
-plot(ode_errors(1,:,1), 'y-', 'DisplayName', 'odeStd')
-plot(ode_errors(2,:,1), 'y--', 'DisplayName', 'odeQuick')
+plot(ode_errors(1,:,1), 'm-', 'DisplayName', 'odeStd')
+plot(ode_errors(2,:,1), 'm--', 'DisplayName', 'odeQuick')
 plot(mujoco_errors(1,:,1), 'b-', 'DisplayName', 'mjcPGS')
 plot(mujoco_errors(2,:,1), '-b*', 'DisplayName', 'mjcCG')
 plot(mujoco_errors(3,:,1), '-bo', 'DisplayName', 'mjcNewton')
@@ -154,8 +156,8 @@ plot(bullet_sum_errors(2,:,1), '-r*', 'DisplayName', 'btNNCG')
 plot(bullet_sum_errors(3,:,1), '-ro', 'DisplayName', 'btPGS')
 % plot(bullet_sum_errors(4,:,1), '-rs', 'DisplayName', 'btLemke')
 plot(bullet_sum_errors(5,:,1), 'r:', 'DisplayName', 'btDantzig')
-plot(ode_sum_errors(1,:,1), 'y-', 'DisplayName', 'odeStd')
-plot(ode_sum_errors(2,:,1), 'y--', 'DisplayName', 'odeQuick')
+plot(ode_sum_errors(1,:,1), 'm-', 'DisplayName', 'odeStd')
+plot(ode_sum_errors(2,:,1), 'm--', 'DisplayName', 'odeQuick')
 plot(mujoco_sum_errors(1,:,1), 'b-', 'DisplayName', 'mjcPGS')
 plot(mujoco_sum_errors(2,:,1), '-b*', 'DisplayName', 'mjcCG')
 plot(mujoco_sum_errors(3,:,1), '-bo', 'DisplayName', 'mjcNewton')
@@ -176,8 +178,8 @@ plot(bullet_errors(2,:,2), '-r*', 'DisplayName', 'btNNCG')
 plot(bullet_errors(3,:,2), '-ro', 'DisplayName', 'btPGS')
 % plot(bullet_errors(4,:,2), '-rs', 'DisplayName', 'btLemke')
 plot(bullet_errors(5,:,2), 'r:', 'DisplayName', 'btDantzig')
-plot(ode_errors(1,:,2), 'y-', 'DisplayName', 'odeStd')
-plot(ode_errors(2,:,2), 'y--', 'DisplayName', 'odeQuick')
+plot(ode_errors(1,:,2), 'm-', 'DisplayName', 'odeStd')
+plot(ode_errors(2,:,2), 'm--', 'DisplayName', 'odeQuick')
 plot(mujoco_errors(1,:,2), 'b-', 'DisplayName', 'mjcPGS')
 plot(mujoco_errors(2,:,2), '-b*', 'DisplayName', 'mjcCG')
 plot(mujoco_errors(3,:,2), '-bo', 'DisplayName', 'mjcNewton')
@@ -197,8 +199,8 @@ plot(bullet_sum_errors(2,:,2), '-r*', 'DisplayName', 'btNNCG')
 plot(bullet_sum_errors(3,:,2), '-ro', 'DisplayName', 'btPGS')
 % plot(bullet_sum_errors(4,:,2), '-rs', 'DisplayName', 'btLemke')
 plot(bullet_sum_errors(5,:,2), 'r:', 'DisplayName', 'btDantzig')
-plot(ode_sum_errors(1,:,2), 'y-', 'DisplayName', 'odeStd')
-plot(ode_sum_errors(2,:,2), 'y--', 'DisplayName', 'odeQuick')
+plot(ode_sum_errors(1,:,2), 'm-', 'DisplayName', 'odeStd')
+plot(ode_sum_errors(2,:,2), 'm--', 'DisplayName', 'odeQuick')
 plot(mujoco_sum_errors(1,:,2), 'b-', 'DisplayName', 'mjcPGS')
 plot(mujoco_sum_errors(2,:,2), '-b*', 'DisplayName', 'mjcCG')
 plot(mujoco_sum_errors(3,:,2), '-bo', 'DisplayName', 'mjcNewton')
@@ -221,8 +223,8 @@ plot(simTime ./ bullet_timer(2,:),  bullet_errors(2,:,1),   '-r*', 'DisplayName'
 plot(simTime ./ bullet_timer(3,:),  bullet_errors(3,:,1),   '-ro', 'DisplayName', 'btPGS')
 % plot(simTime ./ bullet_timer(4,:),  bullet_errors(4,:,1),   '-rs', 'DisplayName', 'btLemke')
 plot(simTime ./ bullet_timer(5,:),  bullet_errors(5,:,1),   'r:', 'DisplayName', 'btDantzig')
-plot(simTime ./ ode_timer(1,:),     ode_errors(1,:,1),      'y-', 'DisplayName', 'odeStd')
-plot(simTime ./ ode_timer(2,:),     ode_errors(2,:,1),      'y--', 'DisplayName', 'odeQuick')
+plot(simTime ./ ode_timer(1,:),     ode_errors(1,:,1),      'm-', 'DisplayName', 'odeStd')
+plot(simTime ./ ode_timer(2,:),     ode_errors(2,:,1),      'm--', 'DisplayName', 'odeQuick')
 plot(simTime ./ mujoco_timer(1,:),  mujoco_errors(1,:,1),   'b-', 'DisplayName', 'mjcPGS')
 plot(simTime ./ mujoco_timer(2,:),  mujoco_errors(2,:,1),   '-b*', 'DisplayName', 'mjcCG')
 plot(simTime ./ mujoco_timer(3,:),  mujoco_errors(3,:,1),   '-bo', 'DisplayName', 'mjcNewton')
@@ -242,8 +244,8 @@ plot(simTime ./ bullet_timer(2,:),  bullet_sum_errors(2,:,1),   '-r*', 'DisplayN
 plot(simTime ./ bullet_timer(3,:),  bullet_sum_errors(3,:,1),   '-ro', 'DisplayName', 'btPGS')
 % plot(simTime ./ bullet_timer(4,:),  bullet_sum_errors(4,:,1),   '-rs', 'DisplayName', 'btLemke')
 plot(simTime ./ bullet_timer(5,:),  bullet_sum_errors(5,:,1),   'r:', 'DisplayName', 'btDantzig')
-plot(simTime ./ ode_timer(1,:),     ode_sum_errors(1,:,1),      'y-', 'DisplayName', 'odeStd')
-plot(simTime ./ ode_timer(2,:),     ode_sum_errors(2,:,1),      'y--', 'DisplayName', 'odeQuick')
+plot(simTime ./ ode_timer(1,:),     ode_sum_errors(1,:,1),      'm-', 'DisplayName', 'odeStd')
+plot(simTime ./ ode_timer(2,:),     ode_sum_errors(2,:,1),      'm--', 'DisplayName', 'odeQuick')
 plot(simTime ./ mujoco_timer(1,:),  mujoco_sum_errors(1,:,1),   'b-', 'DisplayName', 'mjcPGS')
 plot(simTime ./ mujoco_timer(2,:),  mujoco_sum_errors(2,:,1),   '-b*', 'DisplayName', 'mjcCG')
 plot(simTime ./ mujoco_timer(3,:),  mujoco_sum_errors(3,:,1),   '-bo', 'DisplayName', 'mjcNewton')
@@ -264,8 +266,8 @@ plot(simTime ./ bullet_timer(2,:),  bullet_errors(2,:,2),   '-r*', 'DisplayName'
 plot(simTime ./ bullet_timer(3,:),  bullet_errors(3,:,2),   '-ro', 'DisplayName', 'btPGS')
 % plot(simTime ./ bullet_timer(4,:),  bullet_errors(4,:,2),   '-rs', 'DisplayName', 'btLemke')
 plot(simTime ./ bullet_timer(5,:),  bullet_errors(5,:,2),   'r:', 'DisplayName', 'btDantzig')
-plot(simTime ./ ode_timer(1,:),     ode_errors(1,:,2),      'y-', 'DisplayName', 'odeStd')
-plot(simTime ./ ode_timer(2,:),     ode_errors(2,:,2),      'y--', 'DisplayName', 'odeQuick')
+plot(simTime ./ ode_timer(1,:),     ode_errors(1,:,2),      'm-', 'DisplayName', 'odeStd')
+plot(simTime ./ ode_timer(2,:),     ode_errors(2,:,2),      'm--', 'DisplayName', 'odeQuick')
 plot(simTime ./ mujoco_timer(1,:),  mujoco_errors(1,:,2),   'b-', 'DisplayName', 'mjcPGS')
 plot(simTime ./ mujoco_timer(2,:),  mujoco_errors(2,:,2),   '-b*', 'DisplayName', 'mjcCG')
 plot(simTime ./ mujoco_timer(3,:),  mujoco_errors(3,:,2),   '-bo', 'DisplayName', 'mjcNewton')
@@ -285,8 +287,8 @@ plot(simTime ./ bullet_timer(2,:),  bullet_sum_errors(2,:,2),   '-r*', 'DisplayN
 plot(simTime ./ bullet_timer(3,:),  bullet_sum_errors(3,:,2),   '-ro', 'DisplayName', 'btPGS')
 % plot(simTime ./ bullet_timer(4,:),  bullet_sum_errors(4,:,2),   '-rs', 'DisplayName', 'btLemke')
 plot(simTime ./ bullet_timer(5,:),  bullet_sum_errors(5,:,2),   'r:', 'DisplayName', 'btDantzig')
-plot(simTime ./ ode_timer(1,:),     ode_sum_errors(1,:,2),      'y-', 'DisplayName', 'odeStd')
-plot(simTime ./ ode_timer(2,:),     ode_sum_errors(2,:,2),      'y--', 'DisplayName', 'odeQuick')
+plot(simTime ./ ode_timer(1,:),     ode_sum_errors(1,:,2),      'm-', 'DisplayName', 'odeStd')
+plot(simTime ./ ode_timer(2,:),     ode_sum_errors(2,:,2),      'm--', 'DisplayName', 'odeQuick')
 plot(simTime ./ mujoco_timer(1,:),  mujoco_sum_errors(1,:,2),   'b-', 'DisplayName', 'mjcPGS')
 plot(simTime ./ mujoco_timer(2,:),  mujoco_sum_errors(2,:,2),   '-b*', 'DisplayName', 'mjcCG')
 plot(simTime ./ mujoco_timer(3,:),  mujoco_sum_errors(3,:,2),   '-bo', 'DisplayName', 'mjcNewton')
@@ -338,10 +340,10 @@ function error = ball_error(dir_path, sim, solver, dtstr, simTime)
 
 % analytical solution
 g = 9.8;
-m = 1;
+m = 1.0;
 n = 25;
-M = 10;
-F = 150;
+M = 10.0;
+F = 150.0;
 mu1 = 0.4;
 mu2 = 0.8;
 
@@ -351,7 +353,7 @@ a1 = double((F - f1 - n * f2) / M);
 a2 = double(f2 / m);
 
 dt = str2num(dtstr);
-t = (0:int32(simTime/dt - 1)) * dt;
+t = double(0:int32(simTime/dt - 1)) * dt;
 v = a2 * double(t);
 v = [zeros(length(v), 1), v', zeros(length(v), 1)];
 
@@ -377,10 +379,9 @@ f1 = double(mu1 * (M + n * m)  * g);
 f2 = double(1 / M * (150 - f1) / (3.5 / m + 25 / M));
 a1 = double((F - f1 - n * f2) / M);
 a2 = double(f2 / m);
-
 dt = str2num(dtstr);
-t = (0:int32(simTime/dt - 1)) * dt;
-v = a1 * double(t);
+t = double(0:int32(simTime/dt - 1)) * dt;
+v = a1 * t;
 v = [zeros(length(v), 1), v', zeros(length(v), 1)];
 
 % error
