@@ -1,4 +1,7 @@
 # sim-benchmark
+
+Matlab R2017b is required for plotting
+
 ## Installation
 
 - install Bullet Physics
