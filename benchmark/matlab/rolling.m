@@ -1,12 +1,12 @@
 format long
 
 %% path
-dir_path = './data/rolling-noslip-noerp/';
+dir_path = '../../data/rolling/';
 
 %% constants
 simTime = 4;
 sims = {'bullet', 'ode', 'mujoco', 'rai'};
-bullet_solvers = {'seqImp', 'nncg', 'pgs', 'lemke', 'dantzig'};
+bullet_solvers = {'seqImp', 'nncg', 'pgs', 'dantzig'}; % 'lemke',
 ode_solvers = {'std', 'quick'};
 mujoco_solvers = {'pgs', 'cg', 'newton'};
 
@@ -127,26 +127,26 @@ end
 
 %% error plot
 % ball
-figure('Name','ball error');
-plot(bullet_errors(1,:,1), '-r', 'DisplayName', 'btSeqImp')
-set(gca, 'YScale', 'log')
-hold on
-plot(bullet_errors(2,:,1), '-r*', 'DisplayName', 'btNNCG')
-plot(bullet_errors(3,:,1), '-ro', 'DisplayName', 'btPGS')
-% plot(bullet_errors(4,:,1), '-rs', 'DisplayName', 'btLemke')
-plot(bullet_errors(5,:,1), 'r:', 'DisplayName', 'btDantzig')
-plot(ode_errors(1,:,1), 'm-', 'DisplayName', 'odeStd')
-plot(ode_errors(2,:,1), 'm--', 'DisplayName', 'odeQuick')
-plot(mujoco_errors(1,:,1), 'b-', 'DisplayName', 'mjcPGS')
-plot(mujoco_errors(2,:,1), '-b*', 'DisplayName', 'mjcCG')
-plot(mujoco_errors(3,:,1), '-bo', 'DisplayName', 'mjcNewton')
-plot(rai_errors(1,:,1), 'g-', 'DisplayName', 'rai')
-hold off
-title('Ball Velocity Error')
-xlabel('timestep size')
-ylabel('squared error (log scale)')
-xticklabels(dt_array);
-legend('Location', 'eastoutside');
+% figure('Name','ball error');
+% plot(bullet_errors(1,:,1), '-r', 'DisplayName', 'btSeqImp')
+% set(gca, 'YScale', 'log')
+% hold on
+% plot(bullet_errors(2,:,1), '-r*', 'DisplayName', 'btNNCG')
+% plot(bullet_errors(3,:,1), '-ro', 'DisplayName', 'btPGS')
+% % plot(bullet_errors(4,:,1), '-rs', 'DisplayName', 'btLemke')
+% plot(bullet_errors(5,:,1), 'r:', 'DisplayName', 'btDantzig')
+% plot(ode_errors(1,:,1), 'm-', 'DisplayName', 'odeStd')
+% plot(ode_errors(2,:,1), 'm--', 'DisplayName', 'odeQuick')
+% plot(mujoco_errors(1,:,1), 'b-', 'DisplayName', 'mjcPGS')
+% plot(mujoco_errors(2,:,1), '-b*', 'DisplayName', 'mjcCG')
+% plot(mujoco_errors(3,:,1), '-bo', 'DisplayName', 'mjcNewton')
+% plot(rai_errors(1,:,1), 'g-', 'DisplayName', 'rai')
+% hold off
+% title('Ball Velocity Error')
+% xlabel('timestep size')
+% ylabel('squared error (log scale)')
+% xticklabels(dt_array);
+% legend('Location', 'eastoutside');
 
 figure('Name','ball error (cumulative)');
 plot(bullet_sum_errors(1,:,1), '-r', 'DisplayName', 'btSeqImp')
@@ -155,7 +155,7 @@ hold on
 plot(bullet_sum_errors(2,:,1), '-r*', 'DisplayName', 'btNNCG')
 plot(bullet_sum_errors(3,:,1), '-ro', 'DisplayName', 'btPGS')
 % plot(bullet_sum_errors(4,:,1), '-rs', 'DisplayName', 'btLemke')
-plot(bullet_sum_errors(5,:,1), 'r:', 'DisplayName', 'btDantzig')
+plot(bullet_sum_errors(4,:,1), 'r:', 'DisplayName', 'btDantzig')
 plot(ode_sum_errors(1,:,1), 'm-', 'DisplayName', 'odeStd')
 plot(ode_sum_errors(2,:,1), 'm--', 'DisplayName', 'odeQuick')
 plot(mujoco_sum_errors(1,:,1), 'b-', 'DisplayName', 'mjcPGS')
@@ -170,26 +170,26 @@ xticklabels(dt_array);
 legend('Location', 'eastoutside');
 
 % box
-figure('Name','box error');
-plot(bullet_errors(1,:,2), '-r', 'DisplayName', 'btSeqImp')
-set(gca, 'YScale', 'log')
-hold on
-plot(bullet_errors(2,:,2), '-r*', 'DisplayName', 'btNNCG')
-plot(bullet_errors(3,:,2), '-ro', 'DisplayName', 'btPGS')
-% plot(bullet_errors(4,:,2), '-rs', 'DisplayName', 'btLemke')
-plot(bullet_errors(5,:,2), 'r:', 'DisplayName', 'btDantzig')
-plot(ode_errors(1,:,2), 'm-', 'DisplayName', 'odeStd')
-plot(ode_errors(2,:,2), 'm--', 'DisplayName', 'odeQuick')
-plot(mujoco_errors(1,:,2), 'b-', 'DisplayName', 'mjcPGS')
-plot(mujoco_errors(2,:,2), '-b*', 'DisplayName', 'mjcCG')
-plot(mujoco_errors(3,:,2), '-bo', 'DisplayName', 'mjcNewton')
-plot(rai_errors(1,:,2), 'g-', 'DisplayName', 'rai')
-hold off
-title('Box Velocity Error')
-xlabel('timestep size')
-ylabel('squared error (log scale)')
-xticklabels(dt_array);
-legend('Location', 'eastoutside');
+% figure('Name','box error');
+% plot(bullet_errors(1,:,2), '-r', 'DisplayName', 'btSeqImp')
+% set(gca, 'YScale', 'log')
+% hold on
+% plot(bullet_errors(2,:,2), '-r*', 'DisplayName', 'btNNCG')
+% plot(bullet_errors(3,:,2), '-ro', 'DisplayName', 'btPGS')
+% % plot(bullet_errors(4,:,2), '-rs', 'DisplayName', 'btLemke')
+% plot(bullet_errors(5,:,2), 'r:', 'DisplayName', 'btDantzig')
+% plot(ode_errors(1,:,2), 'm-', 'DisplayName', 'odeStd')
+% plot(ode_errors(2,:,2), 'm--', 'DisplayName', 'odeQuick')
+% plot(mujoco_errors(1,:,2), 'b-', 'DisplayName', 'mjcPGS')
+% plot(mujoco_errors(2,:,2), '-b*', 'DisplayName', 'mjcCG')
+% plot(mujoco_errors(3,:,2), '-bo', 'DisplayName', 'mjcNewton')
+% plot(rai_errors(1,:,2), 'g-', 'DisplayName', 'rai')
+% hold off
+% title('Box Velocity Error')
+% xlabel('timestep size')
+% ylabel('squared error (log scale)')
+% xticklabels(dt_array);
+% legend('Location', 'eastoutside');
 
 figure('Name','box error (cumulative)');
 plot(bullet_sum_errors(1,:,2), '-r', 'DisplayName', 'btSeqImp')
@@ -198,7 +198,7 @@ hold on
 plot(bullet_sum_errors(2,:,2), '-r*', 'DisplayName', 'btNNCG')
 plot(bullet_sum_errors(3,:,2), '-ro', 'DisplayName', 'btPGS')
 % plot(bullet_sum_errors(4,:,2), '-rs', 'DisplayName', 'btLemke')
-plot(bullet_sum_errors(5,:,2), 'r:', 'DisplayName', 'btDantzig')
+plot(bullet_sum_errors(4,:,2), 'r:', 'DisplayName', 'btDantzig')
 plot(ode_sum_errors(1,:,2), 'm-', 'DisplayName', 'odeStd')
 plot(ode_sum_errors(2,:,2), 'm--', 'DisplayName', 'odeQuick')
 plot(mujoco_sum_errors(1,:,2), 'b-', 'DisplayName', 'mjcPGS')
@@ -214,26 +214,26 @@ legend('Location', 'eastoutside');
 
 %% error with realtime factor plot
 % ball
-h = figure('Name','ball error vs realtime factor');
-plot(simTime ./ bullet_timer(1,:), bullet_errors(1,:,1),    '-r', 'DisplayName', 'btSeqImp')
-set(gca, 'YScale', 'log', 'XScale', 'log')
-% set(gca, 'XScale', 'log')
-hold on
-plot(simTime ./ bullet_timer(2,:),  bullet_errors(2,:,1),   '-r*', 'DisplayName', 'btNNCG')
-plot(simTime ./ bullet_timer(3,:),  bullet_errors(3,:,1),   '-ro', 'DisplayName', 'btPGS')
-% plot(simTime ./ bullet_timer(4,:),  bullet_errors(4,:,1),   '-rs', 'DisplayName', 'btLemke')
-plot(simTime ./ bullet_timer(5,:),  bullet_errors(5,:,1),   'r:', 'DisplayName', 'btDantzig')
-plot(simTime ./ ode_timer(1,:),     ode_errors(1,:,1),      'm-', 'DisplayName', 'odeStd')
-plot(simTime ./ ode_timer(2,:),     ode_errors(2,:,1),      'm--', 'DisplayName', 'odeQuick')
-plot(simTime ./ mujoco_timer(1,:),  mujoco_errors(1,:,1),   'b-', 'DisplayName', 'mjcPGS')
-plot(simTime ./ mujoco_timer(2,:),  mujoco_errors(2,:,1),   '-b*', 'DisplayName', 'mjcCG')
-plot(simTime ./ mujoco_timer(3,:),  mujoco_errors(3,:,1),   '-bo', 'DisplayName', 'mjcNewton')
-plot(simTime ./ rai_timer(1,:),     rai_errors(1,:,1),      'g-', 'DisplayName', 'rai')
-hold off
-title('Ball Velocity Error vs Realtime factor')
-xlabel('realtime factor')
-ylabel('squared error (log scale)')
-legend('Location', 'eastoutside');
+% h = figure('Name','ball error vs realtime factor');
+% plot(simTime ./ bullet_timer(1,:), bullet_errors(1,:,1),    '-r', 'DisplayName', 'btSeqImp')
+% set(gca, 'YScale', 'log', 'XScale', 'log')
+% % set(gca, 'XScale', 'log')
+% hold on
+% plot(simTime ./ bullet_timer(2,:),  bullet_errors(2,:,1),   '-r*', 'DisplayName', 'btNNCG')
+% plot(simTime ./ bullet_timer(3,:),  bullet_errors(3,:,1),   '-ro', 'DisplayName', 'btPGS')
+% % plot(simTime ./ bullet_timer(4,:),  bullet_errors(4,:,1),   '-rs', 'DisplayName', 'btLemke')
+% plot(simTime ./ bullet_timer(5,:),  bullet_errors(5,:,1),   'r:', 'DisplayName', 'btDantzig')
+% plot(simTime ./ ode_timer(1,:),     ode_errors(1,:,1),      'm-', 'DisplayName', 'odeStd')
+% plot(simTime ./ ode_timer(2,:),     ode_errors(2,:,1),      'm--', 'DisplayName', 'odeQuick')
+% plot(simTime ./ mujoco_timer(1,:),  mujoco_errors(1,:,1),   'b-', 'DisplayName', 'mjcPGS')
+% plot(simTime ./ mujoco_timer(2,:),  mujoco_errors(2,:,1),   '-b*', 'DisplayName', 'mjcCG')
+% plot(simTime ./ mujoco_timer(3,:),  mujoco_errors(3,:,1),   '-bo', 'DisplayName', 'mjcNewton')
+% plot(simTime ./ rai_timer(1,:),     rai_errors(1,:,1),      'g-', 'DisplayName', 'rai')
+% hold off
+% title('Ball Velocity Error vs Realtime factor')
+% xlabel('realtime factor')
+% ylabel('squared error (log scale)')
+% legend('Location', 'eastoutside');
 
 h = figure('Name','ball error vs realtime factor (cumulative)');
 plot(simTime ./ bullet_timer(1,:), bullet_sum_errors(1,:,1),    '-r', 'DisplayName', 'btSeqImp')
@@ -243,7 +243,7 @@ hold on
 plot(simTime ./ bullet_timer(2,:),  bullet_sum_errors(2,:,1),   '-r*', 'DisplayName', 'btNNCG')
 plot(simTime ./ bullet_timer(3,:),  bullet_sum_errors(3,:,1),   '-ro', 'DisplayName', 'btPGS')
 % plot(simTime ./ bullet_timer(4,:),  bullet_sum_errors(4,:,1),   '-rs', 'DisplayName', 'btLemke')
-plot(simTime ./ bullet_timer(5,:),  bullet_sum_errors(5,:,1),   'r:', 'DisplayName', 'btDantzig')
+plot(simTime ./ bullet_timer(4,:),  bullet_sum_errors(4,:,1),   'r:', 'DisplayName', 'btDantzig')
 plot(simTime ./ ode_timer(1,:),     ode_sum_errors(1,:,1),      'm-', 'DisplayName', 'odeStd')
 plot(simTime ./ ode_timer(2,:),     ode_sum_errors(2,:,1),      'm--', 'DisplayName', 'odeQuick')
 plot(simTime ./ mujoco_timer(1,:),  mujoco_sum_errors(1,:,1),   'b-', 'DisplayName', 'mjcPGS')
@@ -257,26 +257,26 @@ ylabel('squared error (log scale)')
 legend('Location', 'eastoutside');
 
 % box
-h = figure('Name','box error vs realtime factor');
-plot(simTime ./ bullet_timer(1,:), bullet_errors(1,:,2),    '-r', 'DisplayName', 'btSeqImp')
-set(gca, 'YScale', 'log', 'XScale', 'log')
-% set(gca, 'XScale', 'log')
-hold on
-plot(simTime ./ bullet_timer(2,:),  bullet_errors(2,:,2),   '-r*', 'DisplayName', 'btNNCG')
-plot(simTime ./ bullet_timer(3,:),  bullet_errors(3,:,2),   '-ro', 'DisplayName', 'btPGS')
-% plot(simTime ./ bullet_timer(4,:),  bullet_errors(4,:,2),   '-rs', 'DisplayName', 'btLemke')
-plot(simTime ./ bullet_timer(5,:),  bullet_errors(5,:,2),   'r:', 'DisplayName', 'btDantzig')
-plot(simTime ./ ode_timer(1,:),     ode_errors(1,:,2),      'm-', 'DisplayName', 'odeStd')
-plot(simTime ./ ode_timer(2,:),     ode_errors(2,:,2),      'm--', 'DisplayName', 'odeQuick')
-plot(simTime ./ mujoco_timer(1,:),  mujoco_errors(1,:,2),   'b-', 'DisplayName', 'mjcPGS')
-plot(simTime ./ mujoco_timer(2,:),  mujoco_errors(2,:,2),   '-b*', 'DisplayName', 'mjcCG')
-plot(simTime ./ mujoco_timer(3,:),  mujoco_errors(3,:,2),   '-bo', 'DisplayName', 'mjcNewton')
-plot(simTime ./ rai_timer(1,:),     rai_errors(1,:,2),      'g-', 'DisplayName', 'rai')
-hold off
-title('Box Velocity Error vs Realtime factor')
-xlabel('realtime factor')
-ylabel('squared error (log scale)')
-legend('Location', 'eastoutside');
+% h = figure('Name','box error vs realtime factor');
+% plot(simTime ./ bullet_timer(1,:), bullet_errors(1,:,2),    '-r', 'DisplayName', 'btSeqImp')
+% set(gca, 'YScale', 'log', 'XScale', 'log')
+% % set(gca, 'XScale', 'log')
+% hold on
+% plot(simTime ./ bullet_timer(2,:),  bullet_errors(2,:,2),   '-r*', 'DisplayName', 'btNNCG')
+% plot(simTime ./ bullet_timer(3,:),  bullet_errors(3,:,2),   '-ro', 'DisplayName', 'btPGS')
+% % plot(simTime ./ bullet_timer(4,:),  bullet_errors(4,:,2),   '-rs', 'DisplayName', 'btLemke')
+% plot(simTime ./ bullet_timer(5,:),  bullet_errors(5,:,2),   'r:', 'DisplayName', 'btDantzig')
+% plot(simTime ./ ode_timer(1,:),     ode_errors(1,:,2),      'm-', 'DisplayName', 'odeStd')
+% plot(simTime ./ ode_timer(2,:),     ode_errors(2,:,2),      'm--', 'DisplayName', 'odeQuick')
+% plot(simTime ./ mujoco_timer(1,:),  mujoco_errors(1,:,2),   'b-', 'DisplayName', 'mjcPGS')
+% plot(simTime ./ mujoco_timer(2,:),  mujoco_errors(2,:,2),   '-b*', 'DisplayName', 'mjcCG')
+% plot(simTime ./ mujoco_timer(3,:),  mujoco_errors(3,:,2),   '-bo', 'DisplayName', 'mjcNewton')
+% plot(simTime ./ rai_timer(1,:),     rai_errors(1,:,2),      'g-', 'DisplayName', 'rai')
+% hold off
+% title('Box Velocity Error vs Realtime factor')
+% xlabel('realtime factor')
+% ylabel('squared error (log scale)')
+% legend('Location', 'eastoutside');
 
 h = figure('Name','box error vs realtime factor (cumulative)');
 plot(simTime ./ bullet_timer(1,:), bullet_sum_errors(1,:,2),    '-r', 'DisplayName', 'btSeqImp')
@@ -286,7 +286,7 @@ hold on
 plot(simTime ./ bullet_timer(2,:),  bullet_sum_errors(2,:,2),   '-r*', 'DisplayName', 'btNNCG')
 plot(simTime ./ bullet_timer(3,:),  bullet_sum_errors(3,:,2),   '-ro', 'DisplayName', 'btPGS')
 % plot(simTime ./ bullet_timer(4,:),  bullet_sum_errors(4,:,2),   '-rs', 'DisplayName', 'btLemke')
-plot(simTime ./ bullet_timer(5,:),  bullet_sum_errors(5,:,2),   'r:', 'DisplayName', 'btDantzig')
+plot(simTime ./ bullet_timer(4,:),  bullet_sum_errors(4,:,2),   'r:', 'DisplayName', 'btDantzig')
 plot(simTime ./ ode_timer(1,:),     ode_sum_errors(1,:,2),      'm-', 'DisplayName', 'odeStd')
 plot(simTime ./ ode_timer(2,:),     ode_sum_errors(2,:,2),      'm--', 'DisplayName', 'odeQuick')
 plot(simTime ./ mujoco_timer(1,:),  mujoco_sum_errors(1,:,2),   'b-', 'DisplayName', 'mjcPGS')

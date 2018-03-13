@@ -44,6 +44,11 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 # raisim (optional)
 if(raiSim)
     message("Benchmark raiSim")
+
+    # set raiSim backend
+    add_definitions(-DCOLLISION_BACKEND_ODE)        # ODE
+#    add_definitions(-DCOLLISION_BACKEND_BULLET)     # BULLET
+
     find_package(raiSim CONFIG)
     include_directories(${RAI_SIM_INCLUDE_DIR})
 endif()
