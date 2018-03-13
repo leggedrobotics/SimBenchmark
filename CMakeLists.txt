@@ -85,15 +85,15 @@ if(mujocoSim)
 endif()
 
 ## =========================== FILES ===========================
-include_directories(include)
+include_directories(src)
 
 # Benchmark
 set(Benchmark_SRCS
-        include/base/UserHandle.hpp
-        include/base/World_RG.hpp
-        include/base/World_RG.cpp
-        include/base/SingleBodyObject.hpp
-        include/base/SingleBodyObject.cpp
+        src/base/UserHandle.hpp
+        src/base/World_RG.hpp
+        src/base/World_RG.cpp
+        src/base/SingleBodyObject.hpp
+        src/base/SingleBodyObject.cpp
         )
 
 add_library(BenchmarkLib ${Benchmark_SRCS})
@@ -111,20 +111,20 @@ if(BulletSim AND Bullet_FOUND)
     message("Bullet installation was found in local path")
 
     set(BulletSim_SRCS
-            include/bulletSim/World.hpp
-            include/bulletSim/World.cpp
-            include/bulletSim/World_RG.hpp
-            include/bulletSim/World_RG.cpp
-            include/bulletSim/object/SingleBodyObject.hpp
-            include/bulletSim/object/SingleBodyObject.cpp
-            include/bulletSim/object/Box.hpp
-            include/bulletSim/object/Box.cpp
-            include/bulletSim/object/CheckerBoard.hpp
-            include/bulletSim/object/CheckerBoard.cpp
-            include/bulletSim/object/Sphere.hpp
-            include/bulletSim/object/Sphere.cpp
-            include/bulletSim/object/Capsule.hpp
-            include/bulletSim/object/Capsule.cpp
+            src/bulletSim/World.hpp
+            src/bulletSim/World.cpp
+            src/bulletSim/World_RG.hpp
+            src/bulletSim/World_RG.cpp
+            src/bulletSim/object/SingleBodyObject.hpp
+            src/bulletSim/object/SingleBodyObject.cpp
+            src/bulletSim/object/Box.hpp
+            src/bulletSim/object/Box.cpp
+            src/bulletSim/object/CheckerBoard.hpp
+            src/bulletSim/object/CheckerBoard.cpp
+            src/bulletSim/object/Sphere.hpp
+            src/bulletSim/object/Sphere.cpp
+            src/bulletSim/object/Capsule.hpp
+            src/bulletSim/object/Capsule.cpp
             )
 
     add_library(BulletSim ${BulletSim_SRCS})
@@ -143,20 +143,20 @@ if(odeSim AND ode_FOUND)
     message("ODE installation was found in local path")
 
     set(ODESim_SRCS
-            include/odeSim/World.hpp
-            include/odeSim/World.cpp
-            include/odeSim/World_RG.hpp
-            include/odeSim/World_RG.cpp
-            include/odeSim/object/SingleBodyObject.hpp
-            include/odeSim/object/SingleBodyObject.cpp
-            include/odeSim/object/Box.hpp
-            include/odeSim/object/Box.cpp
-            include/odeSim/object/CheckerBoard.hpp
-            include/odeSim/object/CheckerBoard.cpp
-            include/odeSim/object/Sphere.cpp
-            include/odeSim/object/Sphere.hpp
-            include/odeSim/object/Capsule.hpp
-            include/odeSim/object/Capsule.cpp
+            src/odeSim/World.hpp
+            src/odeSim/World.cpp
+            src/odeSim/World_RG.hpp
+            src/odeSim/World_RG.cpp
+            src/odeSim/object/SingleBodyObject.hpp
+            src/odeSim/object/SingleBodyObject.cpp
+            src/odeSim/object/Box.hpp
+            src/odeSim/object/Box.cpp
+            src/odeSim/object/CheckerBoard.hpp
+            src/odeSim/object/CheckerBoard.cpp
+            src/odeSim/object/Sphere.cpp
+            src/odeSim/object/Sphere.hpp
+            src/odeSim/object/Capsule.hpp
+            src/odeSim/object/Capsule.cpp
             )
 
     add_library(ODESim ${ODESim_SRCS})
@@ -172,20 +172,20 @@ endif()
 # MuJoCoSim
 if(mujocoSim)
     set(MuJoCoSim_SRCS
-            include/mujocoSim/World.cpp
-            include/mujocoSim/World.hpp
-            include/mujocoSim/World_RG.cpp
-            include/mujocoSim/World_RG.hpp
-            include/mujocoSim/object/SingleBodyObject.cpp
-            include/mujocoSim/object/SingleBodyObject.hpp
-            include/mujocoSim/object/Sphere.cpp
-            include/mujocoSim/object/Sphere.hpp
-            include/mujocoSim/object/Box.cpp
-            include/mujocoSim/object/Box.hpp
-            include/mujocoSim/object/Capsule.cpp
-            include/mujocoSim/object/Capsule.hpp
-            include/mujocoSim/object/CheckerBoard.cpp
-            include/mujocoSim/object/CheckerBoard.hpp
+            src/mujocoSim/World.cpp
+            src/mujocoSim/World.hpp
+            src/mujocoSim/World_RG.cpp
+            src/mujocoSim/World_RG.hpp
+            src/mujocoSim/object/SingleBodyObject.cpp
+            src/mujocoSim/object/SingleBodyObject.hpp
+            src/mujocoSim/object/Sphere.cpp
+            src/mujocoSim/object/Sphere.hpp
+            src/mujocoSim/object/Box.cpp
+            src/mujocoSim/object/Box.hpp
+            src/mujocoSim/object/Capsule.cpp
+            src/mujocoSim/object/Capsule.hpp
+            src/mujocoSim/object/CheckerBoard.cpp
+            src/mujocoSim/object/CheckerBoard.hpp
             )
 
     add_library(MuJoCoSim ${MuJoCoSim_SRCS})
