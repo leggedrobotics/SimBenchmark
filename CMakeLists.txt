@@ -43,14 +43,14 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 # raisim (optional)
 if(raiSim)
-    message("benchmark raiSim")
+    message("Benchmark raiSim")
     find_package(raiSim CONFIG)
     include_directories(${RAI_SIM_INCLUDE_DIR})
 endif()
 
 # bullet (optional)
 if(BulletSim)
-    message("benchmark Bullet")
+    message("Benchmark Bullet")
 
     # bullet double precision
     add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
@@ -62,14 +62,18 @@ endif()
 
 # ode (optional)
 if(odeSim)
-    message("benchmark ODE")
+    message("Benchmark ODE")
+
+    # ode double precision
+    add_definitions(-DODE_DOUBLE_PRECISION)
+
     find_package(ode CONFIG)
     include_directories(${ODE_INCLUDE_DIRS})
 endif()
 
 # mujoco (optional)
 if(mujocoSim)
-    message("benchmark mujoco")
+    message("Benchmark mujoco")
 
     include_directories(mjpro150/include)
     # mujoco shared libraries
@@ -205,8 +209,7 @@ if(mujocoSim)
 endif()
 
 ## --------------------------- export files ---------------------------
-file(COPY benchmark/shell/rolling.sh
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+configure_file(benchmark/shell/rolling.sh.in ${CMAKE_CURRENT_BINARY_DIR}/rolling.sh @ONLY)
 
 file(COPY benchmark/shell/bounce.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

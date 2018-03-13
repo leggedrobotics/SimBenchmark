@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+DT_ARRAY=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" "0.1" )
+
+# options
+BENCHMARK_RAISIM="@raiSim@"
+BENCHMARK_BULLETSIM="@BulletSim@"
+BENCHMARK_ODESIM="@odeSim@"
+BENCHMARK_MUJOCOSIM="@mujocoSim@"
+
+# benchmark test
+for dt in ${DT_ARRAY[@]}
+do
+    # rai sim
+    if [ "$BENCHMARK_RAISIM" == "ON" ] ; then
+        ./rollingRaiSim $dt
+    fi
+
+    # bullet sim
+    if [ "$BENCHMARK_BULLETSIM" == "ON" ] ; then
+        for solver in seqImp nncg pgs dantzig #lemke
+        do
+            ./rollingBulletSim $dt $solver
+        done
+    fi
+
+    # ode sim
+    if [ "$BENCHMARK_ODESIM" == "ON" ] ; then
+        for solver in std quick
+        do
+            ./rollingODESim $dt $solver
+        done
+    fi
+
+    # mujoco sim
+    if [ "$BENCHMARK_MUJOCOSIM" == "ON" ] ; then
+        for solver in pgs cg newton
+        do
+            ./rollingMuJoCoSim $dt $solver
+        done
+    fi
+done
