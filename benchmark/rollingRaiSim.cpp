@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
   // solver params
   sim->setERP(benchmark::erp);
-  sim->setContactSolverParam(1.0, 0.7, 1.0, 50, 1e-6);
+  sim->setContactSolverParam(1.0, 0.7, 1.0, 50, 1e-7*dt);
 
   // materials
   materials.setMaterialNames({"ground", "box", "ball"});
