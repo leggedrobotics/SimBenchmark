@@ -47,44 +47,48 @@ include_directories(${RAI_GRAPHICS_OPENGL_INCLUDE_DIRS})
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+# yaml-cpp
+find_package(YAML-CPP REQUIRED)
+include_directories(${YAML_CPP_INCLUDE_DIR})
+
 # raisim (optional)
 if(BENCHMARK_RAISIM)
-    message("Benchmark raiSim")
+    message(STATUS "Benchmark raiSim option is on")
 
     # set raiSim backend
     add_definitions(-DCOLLISION_BACKEND_ODE)        # ODE
 #    add_definitions(-DCOLLISION_BACKEND_BULLET)     # BULLET
 
-    find_package(raiSim CONFIG)
+    find_package(raiSim CONFIG REQUIRED)
     include_directories(${RAI_SIM_INCLUDE_DIR})
 endif()
 
 # bullet (optional)
 if(BENCHMARK_BULLET)
-    message("Benchmark Bullet")
+    message(STATUS "Benchmark Bullet option is on")
 
     # bullet double precision
     add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
 
-    find_package(Bullet CONFIG)
+    find_package(Bullet CONFIG REQUIRED)
     include_directories(${BULLET_ROOT_DIR}/${BULLET_INCLUDE_DIR})
     link_directories(${BULLET_ROOT_DIR}/${BULLET_LIBRARY_DIRS})
 endif()
 
 # ode (optional)
 if(BENCHMARK_ODE)
-    message("Benchmark ODE")
+    message(STATUS "Benchmark ODE option is on")
 
     # ode double precision
     add_definitions(-DODE_DOUBLE_PRECISION)
 
-    find_package(ode CONFIG)
+    find_package(ode CONFIG REQUIRED)
     include_directories(${ODE_INCLUDE_DIRS})
 endif()
 
 # mujoco (optional)
 if(BENCHMARK_MUJOCO)
-    message("Benchmark mujoco")
+    message(STATUS "Benchmark mujoco option is on")
 
     include_directories(mjpro150/include)
     # mujoco shared libraries

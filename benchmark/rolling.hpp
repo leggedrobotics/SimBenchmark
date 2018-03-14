@@ -16,7 +16,7 @@ std::string parentDir = "rolling/";
 enum ForceDirection { FORCE_Y, FORCE_XY };
 
 bool visualize = false;
-ForceDirection forceDirection = FORCE_Y;
+ForceDirection forceDirection = FORCE_XY;
 
 // sim properties
 double lightX = 30.0;
@@ -28,7 +28,7 @@ double dt = 0.01;                          // time step
 const int simulationTime = 4;               // time for applying force
 
 Eigen::Vector3d forceY = {0, 150, 0};           // force along Y
-Eigen::Vector3d forceXY = {110, 110, 0};        // force along XY
+Eigen::Vector3d forceXY = {106.0660171779821, 106.0660171779821, 0};        // force along XY
 Eigen::Vector3d gravity = {0, 0, -9.8};
 
 double erp = 0.0;                           // bullet and ode
