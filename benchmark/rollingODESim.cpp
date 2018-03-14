@@ -90,7 +90,11 @@ int main(int argc, char* argv[]) {
     sim->setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
 
     for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
-      box->setExternalForce(benchmark::force);
+      if(benchmark::forceDirection == benchmark::FORCE_Y)
+        box->setExternalForce(benchmark::forceY);
+      else if(benchmark::forceDirection == benchmark::FORCE_XY)
+        box->setExternalForce(benchmark::forceXY);
+
       // log
       rai::Utils::logger->appendData("velbox", box->getLinearVelocity().data());
       rai::Utils::logger->appendData("velball", objectList[0]->getLinearVelocity().data());
@@ -101,7 +105,11 @@ int main(int argc, char* argv[]) {
   }
   else {
     for(int i = 0; i < benchmark::simulationTime / dt; i++) {
-      box->setExternalForce(benchmark::force);
+      if(benchmark::forceDirection == benchmark::FORCE_Y)
+        box->setExternalForce(benchmark::forceY);
+      else if(benchmark::forceDirection == benchmark::FORCE_XY)
+        box->setExternalForce(benchmark::forceXY);
+
       // log
       rai::Utils::logger->appendData("velbox", box->getLinearVelocity().data());
       rai::Utils::logger->appendData("velball", objectList[0]->getLinearVelocity().data());

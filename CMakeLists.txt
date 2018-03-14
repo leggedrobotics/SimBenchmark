@@ -7,7 +7,7 @@ set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 #set(CMAKE_CXX_STANDARD 17)
 add_definitions(-std=c++17)
 
-## =========================== MODE ===========================
+## =========================== CMAKE MODE ===========================
 # bullet debug
 # TODO bullet debug check (in release mode)
 set(CMAKE_CXX_FLAGS_DEBUG
@@ -22,6 +22,12 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 else ()
     remove_definitions(-DRAIDEBUG)
 endif()
+
+# options
+option(BENCHMARK_RAISIM OFF)
+option(BENCHMARK_BULLET OFF)
+option(BENCHMARK_ODE OFF)
+option(BENCHMARK_MUJOCO OFF)
 
 ## =========================== LINK DIRECTORIES ===========================
 link_directories(/usr/local/lib)
@@ -42,7 +48,7 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 # raisim (optional)
-if(raiSim)
+if(BENCHMARK_RAISIM)
     message("Benchmark raiSim")
 
     # set raiSim backend
@@ -54,7 +60,7 @@ if(raiSim)
 endif()
 
 # bullet (optional)
-if(BulletSim)
+if(BENCHMARK_BULLET)
     message("Benchmark Bullet")
 
     # bullet double precision
@@ -66,7 +72,7 @@ if(BulletSim)
 endif()
 
 # ode (optional)
-if(odeSim)
+if(BENCHMARK_ODE)
     message("Benchmark ODE")
 
     # ode double precision
@@ -77,7 +83,7 @@ if(odeSim)
 endif()
 
 # mujoco (optional)
-if(mujocoSim)
+if(BENCHMARK_MUJOCO)
     message("Benchmark mujoco")
 
     include_directories(mjpro150/include)
@@ -108,7 +114,7 @@ set(Benchmark_SRCS
 add_library(BenchmarkLib ${Benchmark_SRCS})
 
 # raiSim
-if(raiSim AND raiSim_FOUND)
+if(BENCHMARK_RAISIM AND raiSim_FOUND)
     message("raiSim installation was found in local path")
 
     add_executable(raisimTest test/raisimTest.cpp)
@@ -116,7 +122,7 @@ if(raiSim AND raiSim_FOUND)
 endif()
 
 # BulletSim
-if(BulletSim AND Bullet_FOUND)
+if(BENCHMARK_BULLET AND Bullet_FOUND)
     message("Bullet installation was found in local path")
 
     set(BulletSim_SRCS
@@ -148,7 +154,7 @@ if(BulletSim AND Bullet_FOUND)
 endif()
 
 # ODESim
-if(odeSim AND ode_FOUND)
+if(BENCHMARK_ODE AND ode_FOUND)
     message("ODE installation was found in local path")
 
     set(ODESim_SRCS
@@ -179,7 +185,7 @@ if(odeSim AND ode_FOUND)
 endif()
 
 # MuJoCoSim
-if(mujocoSim)
+if(BENCHMARK_MUJOCO)
     set(MuJoCoSim_SRCS
             src/mujocoSim/World.cpp
             src/mujocoSim/World.hpp
@@ -220,7 +226,7 @@ file(COPY benchmark/shell/bounce.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 ## =========================== DEMOS ===========================
-if(raiSim AND raiSim_FOUND)
+if(BENCHMARK_RAISIM AND raiSim_FOUND)
     # stack
     add_executable(stackRaiSim demo/stackRaiSim.cpp)
     target_link_libraries(stackRaiSim ${RAI_SIM_LINK})
@@ -238,13 +244,13 @@ if(raiSim AND raiSim_FOUND)
     target_link_libraries(freeDropAnymalRaiSim ${RAI_SIM_LINK})
 endif()
 
-if(BulletSim AND Bullet_FOUND)
+if(BENCHMARK_BULLET AND Bullet_FOUND)
     # stack
     add_executable(stackBulletSim demo/stackBulletSim.cpp)
     target_link_libraries(stackBulletSim ${BulletSimLink})
 endif()
 
-if(odeSim AND ode_FOUND)
+if(BENCHMARK_ODE AND ode_FOUND)
     # stack
     add_executable(stackODESim demo/stackODESim.cpp)
     target_link_libraries(stackODESim ${ODESimLink})
@@ -255,7 +261,7 @@ if(odeSim AND ode_FOUND)
 endif()
 
 ## =========================== BENCHMARKS ===========================
-if(raiSim AND raiSim_FOUND)
+if(BENCHMARK_RAISIM AND raiSim_FOUND)
     # rolling
     add_executable(rollingRaiSim benchmark/rollingRaiSim.cpp)
     target_link_libraries(rollingRaiSim ${RAI_SIM_LINK})
@@ -269,7 +275,7 @@ if(raiSim AND raiSim_FOUND)
     target_link_libraries(thousandRaiSim ${RAI_SIM_LINK})
 endif()
 
-if(BulletSim AND Bullet_FOUND)
+if(BENCHMARK_BULLET AND Bullet_FOUND)
     # rolling
     add_executable(rollingBulletSim benchmark/rollingBulletSim.cpp)
     target_link_libraries(rollingBulletSim ${BulletSimLink})
@@ -283,7 +289,7 @@ if(BulletSim AND Bullet_FOUND)
     target_link_libraries(thousandBulletSim ${BulletSimLink})
 endif()
 
-if(odeSim AND ode_FOUND)
+if(BENCHMARK_ODE AND ode_FOUND)
     # rolling
     add_executable(rollingODESim benchmark/rollingODESim.cpp)
     target_link_libraries(rollingODESim ${ODESimLink})
@@ -297,7 +303,7 @@ if(odeSim AND ode_FOUND)
     target_link_libraries(thousandODESim ${ODESimLink})
 endif()
 
-if(mujocoSim)
+if(BENCHMARK_MUJOCO)
     ## --------------------------- benchmark test ---------------------------
     # rolling
     add_executable(rollingMuJoCoSim benchmark/rollingMuJoCoSim.cpp)

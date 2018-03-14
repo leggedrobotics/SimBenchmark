@@ -73,7 +73,11 @@ int main(int argc, char* argv[]) {
     sim->cameraFollowObject(sim->getSingleBodyHandle(0), {30, 0, 10});
 
     for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
-      sim->getSingleBodyHandle(1)->setExternalForce(benchmark::force);
+      if(benchmark::forceDirection == benchmark::FORCE_Y)
+        sim->getSingleBodyHandle(1)->setExternalForce(benchmark::forceY);
+      else if(benchmark::forceDirection == benchmark::FORCE_XY)
+        sim->getSingleBodyHandle(1)->setExternalForce(benchmark::forceXY);
+
       // log
       rai::Utils::logger->appendData("velbox", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
       rai::Utils::logger->appendData("velball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());
@@ -84,7 +88,11 @@ int main(int argc, char* argv[]) {
   }
   else {
     for(int i = 0; i < benchmark::simulationTime / dt; i++) {
-      sim->getSingleBodyHandle(1)->setExternalForce(benchmark::force);
+      if(benchmark::forceDirection == benchmark::FORCE_Y)
+        sim->getSingleBodyHandle(1)->setExternalForce(benchmark::forceY);
+      else if(benchmark::forceDirection == benchmark::FORCE_XY)
+        sim->getSingleBodyHandle(1)->setExternalForce(benchmark::forceXY);
+
       // log
       rai::Utils::logger->appendData("velbox", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
       rai::Utils::logger->appendData("velball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());

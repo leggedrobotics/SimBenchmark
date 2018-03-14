@@ -75,7 +75,11 @@ int main(int argc, char* argv[]) {
 
   // simulation loop
   // press 'q' key to quit
-  rai_sim::Vec<3> force = {benchmark::force[0], benchmark::force[1], benchmark::force[2]};
+  rai_sim::Vec<3> force;
+  if(benchmark::forceDirection == benchmark::FORCE_Y)
+    force = {benchmark::forceY[0], benchmark::forceY[1], benchmark::forceY[2]};
+  else if(benchmark::forceDirection == benchmark::FORCE_XY)
+    force = {benchmark::forceXY[0], benchmark::forceXY[1], benchmark::forceXY[2]};
 
   rai::Utils::timer->startTimer("rolling");
   if(benchmark::visualize) {

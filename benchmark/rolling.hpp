@@ -13,7 +13,10 @@ namespace benchmark {
 std::string parentDir = "rolling/";
 
 // option
+enum ForceDirection { FORCE_Y, FORCE_XY };
+
 bool visualize = false;
+ForceDirection forceDirection = FORCE_Y;
 
 // sim properties
 double lightX = 30.0;
@@ -23,8 +26,9 @@ double lightZ = 10.0;
 // parameters
 double dt = 0.01;                          // time step
 const int simulationTime = 4;               // time for applying force
-Eigen::Vector3d force = {0, 150, 0};        // force
-//Eigen::Vector3d force = {110, 110, 0};        // force
+
+Eigen::Vector3d forceY = {0, 150, 0};           // force along Y
+Eigen::Vector3d forceXY = {110, 110, 0};        // force along XY
 Eigen::Vector3d gravity = {0, 0, -9.8};
 
 double erp = 0.0;                           // bullet and ode
