@@ -3,10 +3,10 @@
 DT_ARRAY=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" "0.1" )
 
 # options
-BENCHMARK_RAISIM="@raiSim@"
-BENCHMARK_BULLETSIM="@BulletSim@"
-BENCHMARK_ODESIM="@odeSim@"
-BENCHMARK_MUJOCOSIM="@mujocoSim@"
+BENCHMARK_RAISIM="@BENCHMARK_RAISIM@"
+BENCHMARK_BULLET="@BENCHMARK_BULLET@"
+BENCHMARK_ODE="@BENCHMARK_ODE@"
+BENCHMARK_MUJOCO="@BENCHMARK_MUJOCO@"
 
 # benchmark test
 for dt in ${DT_ARRAY[@]}
@@ -17,7 +17,7 @@ do
     fi
 
     # bullet sim
-    if [ "$BENCHMARK_BULLETSIM" == "ON" ] ; then
+    if [ "$BENCHMARK_BULLET" == "ON" ] ; then
         for solver in seqImp nncg pgs dantzig #lemke
         do
             ./rollingBulletSim $dt $solver
@@ -25,7 +25,7 @@ do
     fi
 
     # ode sim
-    if [ "$BENCHMARK_ODESIM" == "ON" ] ; then
+    if [ "$BENCHMARK_ODE" == "ON" ] ; then
         for solver in std quick
         do
             ./rollingODESim $dt $solver
@@ -33,7 +33,7 @@ do
     fi
 
     # mujoco sim
-    if [ "$BENCHMARK_MUJOCOSIM" == "ON" ] ; then
+    if [ "$BENCHMARK_MUJOCO" == "ON" ] ; then
         for solver in pgs cg newton
         do
             ./rollingMuJoCoSim $dt $solver

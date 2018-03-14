@@ -117,6 +117,9 @@ set(Benchmark_SRCS
 
 add_library(BenchmarkLib ${Benchmark_SRCS})
 
+add_executable(yamlTest test/yamlTest.cpp)
+target_link_libraries(yamlTest ${YAML_CPP_LIBRARIES})
+
 # raiSim
 if(BENCHMARK_RAISIM AND raiSim_FOUND)
     message("raiSim installation was found in local path")

@@ -1,0 +1,56 @@
+README
+======
+
+Matlab YAML library
+
+This package contains Matlab class to serialize/decode matlab object in
+yaml format. The software uses SnakeYAML java class to convert yaml to
+java object and then translates it into Matlab object.
+
+
+Kota Yamaguchi 2011 <kyamagu@cs.stonybrook.edu>
+
+
+Usage
+-----
+
+Make sure YAML.m is in your matlab path.
+
+To serialize matlab object:
+
+  >> X = struct('matrix', rand(3,4), 'char', 'hello');
+  >> S = YAML.dump(X);
+  >> disp(S);
+  matrix:
+  - [0.9571669482429456, 0.14188633862721534]
+  - [0.4853756487228412, 0.421761282626275]
+  - [0.8002804688888001, 0.9157355251890671]
+  char: hello
+
+To decode yaml string:
+
+  >> X = YAML.load(S);
+  >> disp(X)
+    matrix: [3x2 double]
+      char: 'hello'
+
+
+Limitation
+----------
+ * Currently the software doesn't support N-D array.
+ * Due to the multiple ways to represent an array in Matlab (i.e., numeric
+   array, cell array, or struct array), it is not possible to represent
+   everything in compatible format. The software converts cell array of
+   numbers or struct to numeric array or struct array when possible.
+
+License
+-------
+You may redistribute this software under BSD license. You must follow
+Apache license 2.0 to redistribute snakeyaml attached under java/
+directory.
+
+
+See also
+--------
+snakeyaml: http://code.google.com/p/snakeyaml/
+yamlmatlab: http://code.google.com/p/yamlmatlab/
