@@ -37,7 +37,7 @@ double groundMu = 0.5;
 double ballMu = 1.0;
 double boxMu = 0.8;
 
-double initPenetration = 1e-6;
+double initPenetration = 5e-6;
 
 }
 

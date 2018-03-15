@@ -52,3 +52,7 @@ endif()
 
 ## --------------------------- export files ---------------------------
 configure_file(shell/rolling.sh.in ${CMAKE_CURRENT_BINARY_DIR}/rolling.sh @ONLY)
+configure_file(shell/bounce.sh.in ${CMAKE_CURRENT_BINARY_DIR}/bounce.sh @ONLY)
+
+file(COPY rolling.yaml
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
