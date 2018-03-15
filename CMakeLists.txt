@@ -43,6 +43,10 @@ include_directories(${RAI_COMMON_INCLUDE_DIR})
 find_package(raiGraphicsOpengl CONFIG REQUIRED)
 include_directories(${RAI_GRAPHICS_OPENGL_INCLUDE_DIRS})
 
+# raiSim
+find_package(raiSim CONFIG REQUIRED)
+include_directories(${RAI_SIM_INCLUDE_DIR})
+
 # eigen
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
@@ -51,6 +55,11 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 find_package(YAML-CPP REQUIRED)
 include_directories(${YAML_CPP_INCLUDE_DIR})
 
+# boost
+find_package( Boost COMPONENTS system filesystem program_options REQUIRED )
+include_directories( ${Boost_INCLUDE_DIR} )
+link_directories(${Boost_LIBRARY_DIRS})
+
 # raisim (optional)
 if(BENCHMARK_RAISIM)
     message(STATUS "Benchmark raiSim option is on")
@@ -58,9 +67,6 @@ if(BENCHMARK_RAISIM)
     # set raiSim backend
     add_definitions(-DCOLLISION_BACKEND_ODE)        # ODE
 #    add_definitions(-DCOLLISION_BACKEND_BULLET)     # BULLET
-
-    find_package(raiSim CONFIG REQUIRED)
-    include_directories(${RAI_SIM_INCLUDE_DIR})
 endif()
 
 # bullet (optional)
@@ -116,18 +122,16 @@ set(Benchmark_SRCS
         )
 
 add_library(BenchmarkLib ${Benchmark_SRCS})
-
-add_executable(yamlTest test/yamlTest.cpp)
-target_link_libraries(yamlTest ${YAML_CPP_LIBRARIES})
+set(BENCHMARK_LINK ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} BenchmarkLib)
 
 # raiSim
 if(BENCHMARK_RAISIM AND raiSim_FOUND)
-    message("raiSim installation was found in local path")
+    message(STATUS "raiSim installation was found in local path")
 endif()
 
 # BulletSim
 if(BENCHMARK_BULLET AND Bullet_FOUND)
-    message("Bullet installation was found in local path")
+    message(STATUS "Bullet installation was found in local path")
 
     set(BulletSim_SRCS
             src/bulletSim/World.hpp
@@ -150,12 +154,12 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
 
     ## --------------------------- links ---------------------------
     set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath
-            BulletSim BenchmarkLib ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
+            BulletSim ${BENCHMARK_LINK} ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
 endif()
 
 # ODESim
 if(BENCHMARK_ODE AND ode_FOUND)
-    message("ODE installation was found in local path")
+    message(STATUS "ODE installation was found in local path")
 
     set(ODESim_SRCS
             src/odeSim/World.hpp
@@ -177,7 +181,7 @@ if(BENCHMARK_ODE AND ode_FOUND)
     add_library(ODESim ${ODESim_SRCS})
 
     ## --------------------------- link ---------------------------
-    set(ODESimLink ode ODESim BenchmarkLib ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
+    set(ODESimLink ode ODESim ${BENCHMARK_LINK} ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
 endif()
 
 # MuJoCoSim
@@ -203,7 +207,7 @@ if(BENCHMARK_MUJOCO)
 
     ## --------------------------- links ---------------------------
     set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl}
-            GL GLU glut MuJoCoSim BenchmarkLib ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
+            GL GLU glut MuJoCoSim ${BENCHMARK_LINK} ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
 
     # mujoco simulation
     add_executable(mujocoSimulate mjpro150/sample/simulate.cpp)

@@ -1,3 +1,6 @@
+add_executable(yamlTest yamlTest.cpp)
+target_link_libraries(yamlTest ${YAML_CPP_LIBRARIES})
+
 if(BENCHMARK_RAISIM AND raiSim_FOUND)
     add_executable(raisimTest raisimTest.cpp)
     target_link_libraries(raisimTest ${RAI_SIM_LINK})

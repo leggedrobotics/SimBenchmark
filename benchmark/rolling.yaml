@@ -4,15 +4,13 @@ parent_diretory: rolling/
 
 # simulation options
 options:
-  visualization_on: False
   erp_on: True
-  force_direction: XY
-
-default:
+  force_direction: xy     # xy / y
   dt: 0.01
 
 # simulation properties
-light_position: [30.0, 0.0, 10.0]
+sim_properties:
+  light_position: [30.0, 0.0, 10.0]
 
 # solver parameters
 solver_params:
@@ -36,5 +34,5 @@ constant:
   mu_ground: 0.5
   mu_ball: 1.0
   mu_box: 0.8
-  penentration: 5e-8   # initial penetration
+  penentration0: 5e-8   # initial penetration
 ...

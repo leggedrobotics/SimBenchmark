@@ -9,35 +9,46 @@
 
 namespace benchmark {
 
-// path
-std::string parentDir = "rolling/";
-
-// option
 enum ForceDirection { FORCE_Y, FORCE_XY };
 
-bool visualize = false;
-ForceDirection forceDirection = FORCE_XY;
+struct Options {
+  // visualization on/off
+  bool visualize = true;
 
-// sim properties
-double lightX = 30.0;
-double lightY = 0.0;
-double lightZ = 10.0;
+  // solver
+  std::string solverName;
 
-// parameters
-double dt = 0.01;                          // time step
-const int simulationTime = 4;               // time for applying force
+  // data path
+  const std::string parentDir = "rolling/";
 
-Eigen::Vector3d forceY = {0, 150, 0};           // force along Y
-Eigen::Vector3d forceXY = {106.0660171779821, 106.0660171779821, 0};        // force along XY
-Eigen::Vector3d gravity = {0, 0, -9.8};
+  // force-direction
+  ForceDirection forceDirection = FORCE_Y;
 
-double erp = 0.0;                           // bullet and ode
+  // erp
+  bool erpYN = true;
+};
 
-double groundMu = 0.5;
-double ballMu = 1.0;
-double boxMu = 0.8;
+struct Params {
 
-double initPenetration = 5e-6;
+  /// sim properties
+  std::vector<double> lightPosition = {30.0, 0, 10.0};
+
+  /// solver parameters
+  double dt = 0.01;     // time step
+  double erp = 0.0;
+
+  /// simulation constants
+  double m = 1;
+  double n = 25;
+  double M = 10;
+  double g = -9.8;
+  double T = 4.0;
+  double F = 150;
+  double groundMu = 0.5;
+  double ballMu = 1.0;
+  double boxMu = 0.8;
+  double initPenetration = 5e-6;
+};
 
 }
 
