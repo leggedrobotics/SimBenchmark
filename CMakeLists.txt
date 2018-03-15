@@ -123,9 +123,6 @@ target_link_libraries(yamlTest ${YAML_CPP_LIBRARIES})
 # raiSim
 if(BENCHMARK_RAISIM AND raiSim_FOUND)
     message("raiSim installation was found in local path")
-
-    add_executable(raisimTest test/raisimTest.cpp)
-    target_link_libraries(raisimTest ${RAI_SIM_LINK})
 endif()
 
 # BulletSim
@@ -154,10 +151,6 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
     ## --------------------------- links ---------------------------
     set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath
             BulletSim BenchmarkLib ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
-
-    ## --------------------------- tests ---------------------------
-    add_executable(bulletTest test/bulletTest.cpp)
-    target_link_libraries(bulletTest BulletCollision BulletDynamics LinearMath)
 endif()
 
 # ODESim
@@ -185,10 +178,6 @@ if(BENCHMARK_ODE AND ode_FOUND)
 
     ## --------------------------- link ---------------------------
     set(ODESimLink ode ODESim BenchmarkLib ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
-
-    ## --------------------------- tests ---------------------------
-    add_executable(odeTest test/odeTest.cpp)
-    target_link_libraries(odeTest ode)
 endif()
 
 # MuJoCoSim
@@ -220,103 +209,9 @@ if(BENCHMARK_MUJOCO)
     add_executable(mujocoSimulate mjpro150/sample/simulate.cpp)
     target_link_libraries(mujocoSimulate ${MuJoCoSimLink})
 
-    ## --------------------------- tests ---------------------------
-    add_executable(mujocoTest test/mujocoTest.cpp)
-    target_link_libraries(mujocoTest ${MuJoCoSimLink})
-
 endif()
 
-## --------------------------- export files ---------------------------
-configure_file(benchmark/shell/rolling.sh.in ${CMAKE_CURRENT_BINARY_DIR}/rolling.sh @ONLY)
-
-file(COPY benchmark/shell/bounce.sh
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-## =========================== DEMOS ===========================
-if(BENCHMARK_RAISIM AND raiSim_FOUND)
-    # stack
-    add_executable(stackRaiSim demo/stackRaiSim.cpp)
-    target_link_libraries(stackRaiSim ${RAI_SIM_LINK})
-
-    # anymal
-    add_executable(anymalRaiSim benchmark/anymalRaiSim.cpp)
-    target_link_libraries(anymalRaiSim ${RAI_SIM_LINK})
-
-    # collision anymal
-    add_executable(collisionAnymalRaiSim benchmark/collisionAnymalRaiSim.cpp)
-    target_link_libraries(collisionAnymalRaiSim ${RAI_SIM_LINK})
-
-    # free drop anymal
-    add_executable(freeDropAnymalRaiSim benchmark/freeDropAnymalRaiSim.cpp)
-    target_link_libraries(freeDropAnymalRaiSim ${RAI_SIM_LINK})
-endif()
-
-if(BENCHMARK_BULLET AND Bullet_FOUND)
-    # stack
-    add_executable(stackBulletSim demo/stackBulletSim.cpp)
-    target_link_libraries(stackBulletSim ${BulletSimLink})
-endif()
-
-if(BENCHMARK_ODE AND ode_FOUND)
-    # stack
-    add_executable(stackODESim demo/stackODESim.cpp)
-    target_link_libraries(stackODESim ${ODESimLink})
-
-    # friction
-    add_executable(frictionODESim demo/frictionODESim.cpp)
-    target_link_libraries(frictionODESim ${ODESimLink})
-endif()
-
-## =========================== BENCHMARKS ===========================
-if(BENCHMARK_RAISIM AND raiSim_FOUND)
-    # rolling
-    add_executable(rollingRaiSim benchmark/rollingRaiSim.cpp)
-    target_link_libraries(rollingRaiSim ${RAI_SIM_LINK})
-
-    # bounce
-    add_executable(bounceRaiSim benchmark/bounceRaiSim.cpp)
-    target_link_libraries(bounceRaiSim ${RAI_SIM_LINK})
-
-    # thousand
-    add_executable(thousandRaiSim benchmark/thousandRaiSim.cpp)
-    target_link_libraries(thousandRaiSim ${RAI_SIM_LINK})
-endif()
-
-if(BENCHMARK_BULLET AND Bullet_FOUND)
-    # rolling
-    add_executable(rollingBulletSim benchmark/rollingBulletSim.cpp)
-    target_link_libraries(rollingBulletSim ${BulletSimLink})
-
-    # bounce
-    add_executable(bounceBulletSim benchmark/bounceBulletSim.cpp)
-    target_link_libraries(bounceBulletSim ${BulletSimLink})
-
-    # thousand
-    add_executable(thousandBulletSim benchmark/thousandBulletSim.cpp)
-    target_link_libraries(thousandBulletSim ${BulletSimLink})
-endif()
-
-if(BENCHMARK_ODE AND ode_FOUND)
-    # rolling
-    add_executable(rollingODESim benchmark/rollingODESim.cpp)
-    target_link_libraries(rollingODESim ${ODESimLink})
-
-    # bounce
-    add_executable(bounceODESim benchmark/bounceODESim.cpp)
-    target_link_libraries(bounceODESim ${ODESimLink})
-
-    # thousand
-    add_executable(thousandODESim benchmark/thousandODESim.cpp)
-    target_link_libraries(thousandODESim ${ODESimLink})
-endif()
-
-if(BENCHMARK_MUJOCO)
-    ## --------------------------- benchmark test ---------------------------
-    # rolling
-    add_executable(rollingMuJoCoSim benchmark/rollingMuJoCoSim.cpp)
-    target_link_libraries(rollingMuJoCoSim ${MuJoCoSimLink})
-
-    # bouncing
-    add_executable(bounceMuJoCoSim benchmark/bounceMuJoCoSim.cpp)
-    target_link_libraries(bounceMuJoCoSim ${MuJoCoSimLink})
-endif()
+## =========================== EXECUTABLES ===========================
+add_subdirectory(test)
+add_subdirectory(demo)
+add_subdirectory(benchmark)
