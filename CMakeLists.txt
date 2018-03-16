@@ -120,6 +120,7 @@ endif()
 
 ## =========================== FILES ===========================
 include_directories(src)
+add_subdirectory(src)
 
 # Benchmark
 set(Benchmark_SRCS
