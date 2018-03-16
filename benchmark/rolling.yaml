@@ -20,8 +20,6 @@ solver_params:
     erp: 0.2    # when erp_on = true
   ode:
     erp: 0.2    # when erp_on = true
-  mujoco:
-    erp: 0.2    # when erp_on = true
 
 # simulation constants
 constant:

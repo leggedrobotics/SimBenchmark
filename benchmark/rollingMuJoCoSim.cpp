@@ -6,99 +6,69 @@
 
 #include "rolling.hpp"
 
-int main(int argc, char* argv[]) {
+namespace rb = rolling_benchmark;
 
-  double dt = benchmark::dt;
+// sim
+mujoco_sim::World_RG *sim;
 
-  mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS;
-  std::string solverName = "pgs";
+// functions
+void getParams(int argc, const char* argv[], char* yamlfile);
+void simulationSetup(char *modelPath);
 
-  if (argc == 2) {
-    dt = atof(argv[1]);
-    RAIINFO("----------------------")
-    RAIINFO("MuJoCoSim")
-    RAIINFO("timestep = " << dt);
-  } else if (argc = 3) {
-    dt = atof(argv[1]);
+// variables
+mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS;
 
-    if (strcmp(argv[2], "pgs") == 0) {
-      solverOption = mujoco_sim::SOLVER_PGS;
-      solverName = "pgs";
-    } else if (strcmp(argv[2], "cg") == 0) {
-      solverOption = mujoco_sim::SOLVER_CG;
-      solverName = "cg";
-    } else if (strcmp(argv[2], "newton") == 0) {
-      solverOption = mujoco_sim::SOLVER_NEWTON;
-      solverName = "newton";
-    }
+int main(int argc, const char* argv[]) {
 
-    RAIINFO("----------------------")
-    RAIINFO("MuJoCoSim")
-    RAIINFO("timestep = " << dt);
-    RAIINFO("solver   = " << solverName);
-  }
+  // get parameter from argument and yaml
+  getParams(argc, argv, "./rolling.yaml");
 
-  // logger
-  std::string path = benchmark::dataPath + benchmark::parentDir + "mujoco/" + solverName;
-  std::string name = std::to_string(dt);
-  rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
-  rai::Utils::logger->setLogPath(path);
-  rai::Utils::logger->setLogFileName(name);
-  rai::Utils::logger->addVariableToLog(3, "velbox", "linear velocity of box");
-  rai::Utils::logger->addVariableToLog(3, "velball", "linear velocity of ball");
-  rai::Utils::logger->addVariableToLog(3, "posbox", "position of box");
-  rai::Utils::logger->addVariableToLog(3, "posball", "position of ball");
+  // set up logger and timer
+  std::string parentDir =
+      rb::parentDir + "-" +
+          "erp" + "=" + std::to_string(rb::options.erpYN) + "-" +
+          "dir" + "=" + std::to_string(rb::options.forceDirection) + "/";
+  rb::loggerSetup(
+      benchmark::dataPath + parentDir + "mujoco/" + rb::options.solverName,
+      std::to_string(rb::params.dt));
 
-  // timer
-  std::string timer = name + "timer";
-  rai::Utils::timer->setLogPath(path);
-  rai::Utils::timer->setLogFileName(timer);
-
-  // sim
-  // load model from file and check for errors
-  mujoco_sim::World_RG *sim;
-
-  if(benchmark::visualize)
-    sim = new mujoco_sim::World_RG(800, 600, 0.5, "/home/kangd/git/benchmark/benchmark/mujoco/rolling.xml", benchmark::NO_BACKGROUND, solverOption);
-  else
-    sim = new mujoco_sim::World_RG("/home/kangd/git/benchmark/benchmark/mujoco/rolling.xml", solverOption);
-
+  // set up simulation
+  simulationSetup("./mujoco/rolling.xml");
 
   // simulation loop
   // press 'q' key to quit
   rai::Utils::timer->startTimer("rolling");
-  if(benchmark::visualize) {
-    // camera relative position
-    sim->setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
-    sim->cameraFollowObject(sim->getSingleBodyHandle(0), {30, 0, 10});
-
-    for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
-      if(benchmark::forceDirection == benchmark::FORCE_Y)
-        sim->getSingleBodyHandle(1)->setExternalForce(benchmark::forceY);
-      else if(benchmark::forceDirection == benchmark::FORCE_XY)
-        sim->getSingleBodyHandle(1)->setExternalForce(benchmark::forceXY);
+  if(rb::options.visualize) {
+    for(int i = 0; i < rb::params.T / rb::params.dt && sim->visualizerLoop(rb::params.dt); i++) {
+      if(rb::options.forceDirection == rolling_benchmark::FORCE_Y)
+        sim->getSingleBodyHandle(1)->setExternalForce(Eigen::Vector3d(0, rb::params.F, 0));
+      else if(rb::options.forceDirection == rolling_benchmark::FORCE_XY)
+        sim->getSingleBodyHandle(1)->setExternalForce(Eigen::Vector3d(rb::params.F * 0.707106781186547,
+                                                        rb::params.F * 0.707106781186547,
+                                                        0));
 
       // log
       rai::Utils::logger->appendData("velbox", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
       rai::Utils::logger->appendData("velball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());
       rai::Utils::logger->appendData("posbox", sim->getSingleBodyHandle(1)->getPosition().data());
       rai::Utils::logger->appendData("posball", sim->getSingleBodyHandle(2)->getPosition().data());
-      sim->integrate(dt);
+      sim->integrate(rb::params.dt);
     }
   }
   else {
-    for(int i = 0; i < benchmark::simulationTime / dt; i++) {
-      if(benchmark::forceDirection == benchmark::FORCE_Y)
-        sim->getSingleBodyHandle(1)->setExternalForce(benchmark::forceY);
-      else if(benchmark::forceDirection == benchmark::FORCE_XY)
-        sim->getSingleBodyHandle(1)->setExternalForce(benchmark::forceXY);
+    for(int i = 0; i < rb::params.T / rb::params.dt; i++) {
+      if(rb::options.forceDirection == rolling_benchmark::FORCE_Y)
+        sim->getSingleBodyHandle(1)->setExternalForce(Eigen::Vector3d(0, rb::params.F, 0));
+      else if(rb::options.forceDirection == rolling_benchmark::FORCE_XY)
+        sim->getSingleBodyHandle(1)->setExternalForce(Eigen::Vector3d(rb::params.F * 0.707106781186547,
+                                                        rb::params.F * 0.707106781186547, 0));
 
       // log
       rai::Utils::logger->appendData("velbox", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
       rai::Utils::logger->appendData("velball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());
       rai::Utils::logger->appendData("posbox", sim->getSingleBodyHandle(1)->getPosition().data());
       rai::Utils::logger->appendData("posball", sim->getSingleBodyHandle(2)->getPosition().data());
-      sim->integrate(dt);
+      sim->integrate(rb::params.dt);
     }
   }
   rai::Utils::timer->stopTimer("rolling");
@@ -110,4 +80,71 @@ int main(int argc, char* argv[]) {
   rai::Utils::timer->dumpToStdOuput();
 
   return 0;
+}
+
+void getParams(int argc, const char *argv[], char *yamlfile) {
+
+  /// parameters from yaml
+  YAML::Node yaml = YAML::LoadFile(yamlfile);
+
+  // generic
+  rb::getParamsFromYAML(yamlfile);
+
+  /// parameter from arguments
+  // sim specific
+  po::options_description simdesc("sim specific");
+  simdesc.add_options()
+      ("solver", po::value<std::string>(), "contact solver (pgs / cg / newton)")
+      ;
+  rb::desc.add(simdesc);
+
+  // generic
+  rb::getParamsFromArg(argc, argv);
+
+  po::variables_map vm;
+  po::store(po::parse_command_line(argc, argv, rb::desc), vm);
+
+  // solver option
+  if(vm.count("solver")) {
+    std::string solverStr = vm["solver"].as<std::string>();
+
+    if(solverStr.compare("pgs")==0) {
+      solverOption = mujoco_sim::SOLVER_PGS;
+      rb::options.solverName = "seqImp";
+    } else if(solverStr.compare("cg")==0) {
+      solverOption = mujoco_sim::SOLVER_CG;
+      rb::options.solverName = "cg";
+    } else if(solverStr.compare("newton")==0) {
+      solverOption = mujoco_sim::SOLVER_NEWTON;
+      rb::options.solverName = "newton";
+    } else {
+      RAIFATAL("invalid solver option")
+    }
+  } else {
+    rb::options.solverName = "pgs";
+  }
+
+  RAIINFO("----------------------")
+  RAIINFO("mujocoSim")
+  RAIINFO("timestep        = " << rb::params.dt);
+  RAIINFO("solver          = " << rb::options.solverName);
+  RAIINFO("erpYN           = " << rb::options.erpYN);
+  RAIINFO("force-direction = " << rb::options.forceDirection);
+}
+
+void simulationSetup(char *modelPath) {
+
+  if(rb::options.visualize)
+    sim = new mujoco_sim::World_RG(800, 600, 0.5, modelPath, benchmark::NO_BACKGROUND, solverOption);
+  else
+    sim = new mujoco_sim::World_RG(modelPath, solverOption);
+
+  // visualization settings
+  if(rb::options.visualize) {
+    // camera relative position
+    sim->setLightPosition(rb::params.lightPosition[0],
+                          rb::params.lightPosition[1],
+                          rb::params.lightPosition[2]);
+    sim->cameraFollowObject(sim->getSingleBodyHandle(0), {30, 0, 15});
+  }
 }

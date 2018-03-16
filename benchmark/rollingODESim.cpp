@@ -6,125 +6,168 @@
 
 #include "rolling.hpp"
 
-int main(int argc, char* argv[]) {
+namespace rb = rolling_benchmark;
 
-  double dt = benchmark::dt;
+// sim
+ode_sim::World_RG *sim;
 
-  ode_sim::SolverOption solverOption = ode_sim::SOLVER_STANDARD;
-  std::string solverName = "std";
+// functions
+void getParams(int argc, const char* argv[], char* yamlfile);
+void simulationSetup();
 
-  if (argc == 2) {
-    dt = atof(argv[1]);
-    RAIINFO("----------------------")
-    RAIINFO("ODESim")
-    RAIINFO("timestep = " << dt);
-  } else if (argc == 3) {
-    dt = atof(argv[1]);
+// variables
+ode_sim::SolverOption solverOption = ode_sim::SOLVER_STANDARD;
+std::vector<benchmark::SingleBodyHandle> objectList;
 
-    if(strcmp(argv[2],"std")==0) {
-      solverOption = ode_sim::SOLVER_STANDARD;
-      solverName = "std";
-    } else if(strcmp(argv[2],"quick")==0) {
-      solverOption = ode_sim::SOLVER_QUICK;
-      solverName = "quick";
-    }
+int main(int argc, const char* argv[]) {
 
-    RAIINFO("----------------------")
-    RAIINFO("ODESim")
-    RAIINFO("timestep = " << dt);
-    RAIINFO("solver   = " << solverName);
-  }
+  // get parameter from argument and yaml
+  getParams(argc, argv, "./rolling.yaml");
 
-  // logger
-  std::string path = benchmark::dataPath + benchmark::parentDir + "ode/" + solverName;
-  std::string name = std::to_string(dt);
-  rai::Utils::logger->setLogPath(path);
-  rai::Utils::logger->setLogFileName(name);
-  rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
-  rai::Utils::logger->addVariableToLog(3, "velbox", "linear velocity of box");
-  rai::Utils::logger->addVariableToLog(3, "velball", "linear velocity of ball");
-  rai::Utils::logger->addVariableToLog(3, "posbox", "position of box");
-  rai::Utils::logger->addVariableToLog(3, "posball", "position of ball");
+  // set up logger and timer
+  std::string parentDir =
+      rb::parentDir + "-" +
+          "erp" + "=" + std::to_string(rb::options.erpYN) + "-" +
+          "dir" + "=" + std::to_string(rb::options.forceDirection) + "/";
+  rb::loggerSetup(
+      benchmark::dataPath + parentDir + "ode/" + rb::options.solverName,
+      std::to_string(rb::params.dt));
 
-  // timer
-  std::string timer = name + "timer";
-  rai::Utils::timer->setLogPath(path);
-  rai::Utils::timer->setLogFileName(timer);
-
-  // sim
-  ode_sim::World_RG *sim;
-
-  if(benchmark::visualize)
-    sim = new ode_sim::World_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, solverOption);
-  else
-    sim = new ode_sim::World_RG(solverOption);
-
-  sim->setGravity(benchmark::gravity);
-  sim->setERP(benchmark::erp, 0, 0);
-
-  // add objects
-  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1);
-  checkerboard->setFrictionCoefficient(benchmark::groundMu);
-
-  auto box = sim->addBox(20, 20, 1, 10);
-  box->setPosition(0, 0, 0.5 - benchmark::initPenetration);
-  box->setFrictionCoefficient(benchmark::boxMu);
-
-  std::vector<benchmark::SingleBodyHandle> objectList;
-
-  for(int i = 0; i < 5; i++) {
-    for(int j = 0; j < 5; j++) {
-      auto ball = sim->addSphere(0.5, 1);
-      ball->setPosition(i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5 - benchmark::initPenetration * 2);
-      ball->setFrictionCoefficient(benchmark::ballMu);
-      objectList.push_back(ball);
-    }
-  }
+  // set up simulation
+  simulationSetup();
 
   // simulation loop
   // press 'q' key to quit
-  rai::Utils::timer->startTimer("rolling");
-  if(benchmark::visualize) {
-    // camera relative position
-    sim->cameraFollowObject(checkerboard, {30, 0, 10});
-    sim->setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
-
-    for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
-      if(benchmark::forceDirection == benchmark::FORCE_Y)
-        box->setExternalForce(benchmark::forceY);
-      else if(benchmark::forceDirection == benchmark::FORCE_XY)
-        box->setExternalForce(benchmark::forceXY);
+  ru::timer->startTimer("rolling");
+  if(rb::options.visualize) {
+    for(int i = 0; i < rb::params.T / rb::params.dt && sim->visualizerLoop(rb::params.dt); i++) {
+      if(rb::options.forceDirection == rb::FORCE_Y)
+        objectList[0]->setExternalForce(Eigen::Vector3d(0, rb::params.F, 0));
+      else if(rb::options.forceDirection == rb::FORCE_XY)
+        objectList[0]->setExternalForce(Eigen::Vector3d(rb::params.F * 0.707106781186547,
+                                                        rb::params.F * 0.707106781186547, 0));
 
       // log
-      rai::Utils::logger->appendData("velbox", box->getLinearVelocity().data());
-      rai::Utils::logger->appendData("velball", objectList[0]->getLinearVelocity().data());
-      rai::Utils::logger->appendData("posbox", box->getPosition().data());
-      rai::Utils::logger->appendData("posball", objectList[0]->getPosition().data());
-      sim->integrate(dt);
+      ru::logger->appendData("velbox", objectList[0]->getLinearVelocity().data());
+      ru::logger->appendData("velball", objectList[1]->getLinearVelocity().data());
+      ru::logger->appendData("posbox", objectList[0]->getPosition().data());
+      ru::logger->appendData("posball", objectList[1]->getPosition().data());
+      sim->integrate(rb::params.dt);
     }
   }
   else {
-    for(int i = 0; i < benchmark::simulationTime / dt; i++) {
-      if(benchmark::forceDirection == benchmark::FORCE_Y)
-        box->setExternalForce(benchmark::forceY);
-      else if(benchmark::forceDirection == benchmark::FORCE_XY)
-        box->setExternalForce(benchmark::forceXY);
+    for(int i = 0; i < rb::params.T / rb::params.dt; i++) {
+      if(rb::options.forceDirection == rb::FORCE_Y)
+        objectList[0]->setExternalForce(Eigen::Vector3d(0, rb::params.F, 0));
+      else if(rb::options.forceDirection == rb::FORCE_XY)
+        objectList[0]->setExternalForce(Eigen::Vector3d(rb::params.F * 0.707106781186547,
+                                                        rb::params.F * 0.707106781186547, 0));
 
       // log
-      rai::Utils::logger->appendData("velbox", box->getLinearVelocity().data());
-      rai::Utils::logger->appendData("velball", objectList[0]->getLinearVelocity().data());
-      rai::Utils::logger->appendData("posbox", box->getPosition().data());
-      rai::Utils::logger->appendData("posball", objectList[0]->getPosition().data());
-      sim->integrate(dt);
+      ru::logger->appendData("velbox", objectList[0]->getLinearVelocity().data());
+      ru::logger->appendData("velball", objectList[1]->getLinearVelocity().data());
+      ru::logger->appendData("posbox", objectList[0]->getPosition().data());
+      ru::logger->appendData("posball", objectList[1]->getPosition().data());
+      sim->integrate(rb::params.dt);
     }
   }
-  rai::Utils::timer->stopTimer("rolling");
+  ru::timer->stopTimer("rolling");
 
   // delete sim
   delete sim;
 
   // time log
-  rai::Utils::timer->dumpToStdOuput();
+  ru::timer->dumpToStdOuput();
 
   return 0;
+}
+
+void getParams(int argc, const char *argv[], char *yamlfile) {
+
+  /// parameters from yaml
+  YAML::Node yaml = YAML::LoadFile(yamlfile);
+
+  // sim specific
+  rb::params.erp = yaml["solver_params"]["ode"]["erp"].as<double>();
+
+  // generic
+  rb::getParamsFromYAML(yamlfile);
+
+  /// parameter from arguments
+  // sim specific
+  po::options_description simdesc("sim specific");
+  simdesc.add_options()
+      ("solver", po::value<std::string>(), "contact solver (std / quick)")
+      ;
+  rb::desc.add(simdesc);
+
+  // generic
+  rb::getParamsFromArg(argc, argv);
+
+  po::variables_map vm;
+  po::store(po::parse_command_line(argc, argv, rb::desc), vm);
+
+  // solver option
+  if(vm.count("solver")) {
+    std::string solverStr = vm["solver"].as<std::string>();
+
+    if(strcmp(argv[2],"std")==0) {
+      solverOption = ode_sim::SOLVER_STANDARD;
+      rb::options.solverName = "std";
+    } else if(strcmp(argv[2],"quick")==0) {
+      solverOption = ode_sim::SOLVER_QUICK;
+      rb::options.solverName = "quick";
+    } else {
+      RAIFATAL("invalid solver option")
+    }
+  } else {
+    rb::options.solverName = "std";
+  }
+
+  RAIINFO("----------------------")
+  RAIINFO("odeSim")
+  RAIINFO("timestep        = " << rb::params.dt);
+  RAIINFO("solver          = " << rb::options.solverName);
+  RAIINFO("erpYN           = " << rb::options.erpYN);
+  RAIINFO("force-direction = " << rb::options.forceDirection);
+}
+
+void simulationSetup() {
+
+  if(rb::options.visualize)
+    sim = new ode_sim::World_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, solverOption);
+  else
+    sim = new ode_sim::World_RG(solverOption);
+
+  sim->setGravity(Eigen::Vector3d(0, 0, rb::params.g));
+  if(rb::options.erpYN)
+    sim->setERP(rb::params.erp, 0, 0);
+
+  // add ground
+  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1);
+  checkerboard->setFrictionCoefficient(rb::params.groundMu);
+
+  // visualization settings
+  if(rb::options.visualize) {
+    // camera relative position
+    sim->setLightPosition(rb::params.lightPosition[0],
+                          rb::params.lightPosition[1],
+                          rb::params.lightPosition[2]);
+    sim->cameraFollowObject(checkerboard, {30, 0, 15});
+  }
+
+  // add objects
+  auto box = sim->addBox(20, 20, 1, rb::params.M);
+  box->setPosition(0, 0, 0.5 - rb::params.initPenetration);
+  box->setFrictionCoefficient(rb::params.boxMu);
+  objectList.push_back(box);
+
+  for(int i = 0; i < 5; i++) {
+    for(int j = 0; j < 5; j++) {
+      auto ball = sim->addSphere(0.5, rb::params.m);
+      ball->setPosition(i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5 - rb::params.initPenetration * 2);
+      ball->setFrictionCoefficient(rb::params.ballMu);
+      objectList.push_back(ball);
+    }
+  }
 }

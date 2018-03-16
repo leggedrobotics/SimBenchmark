@@ -11,32 +11,44 @@ BENCHMARK_MUJOCO="@BENCHMARK_MUJOCO@"
 # benchmark test
 for dt in ${DT_ARRAY[@]}
 do
-    # rai sim
-    if [ "$BENCHMARK_RAISIM" == "ON" ] ; then
-        ./rollingRaiSim $dt
-    fi
+    for forcedir in xy y
+    do
+        # rai sim
+        if [ "$BENCHMARK_RAISIM" == "ON" ] ; then
+            for erpon in true false
+            do
+                ./rollingRaiSim --nogui --erp-on=$erpon --dt=$dt --force-direction=$forcedir
+            done
+        fi
 
-    # bullet sim
-    if [ "$BENCHMARK_BULLET" == "ON" ] ; then
-        for solver in seqImp nncg pgs dantzig #lemke
-        do
-            ./rollingBulletSim $dt $solver
-        done
-    fi
+        # bullet sim
+        if [ "$BENCHMARK_BULLET" == "ON" ] ; then
+            for solver in seqImp nncg pgs dantzig #lemke
+            do
+                for erpon in true false
+                do
+                    ./rollingBulletSim --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force-direction=$forcedir
+                done
+            done
+        fi
 
-    # ode sim
-    if [ "$BENCHMARK_ODE" == "ON" ] ; then
-        for solver in std quick
-        do
-            ./rollingODESim $dt $solver
-        done
-    fi
+        # ode sim
+        if [ "$BENCHMARK_ODE" == "ON" ] ; then
+            for solver in std quick
+            do
+                for erpon in true false
+                do
+                    ./rollingODESim --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force-direction=$forcedir
+                done
+            done
+        fi
 
-    # mujoco sim
-    if [ "$BENCHMARK_MUJOCO" == "ON" ] ; then
-        for solver in pgs cg newton
-        do
-            ./rollingMuJoCoSim $dt $solver
-        done
-    fi
+        # mujoco sim
+        if [ "$BENCHMARK_MUJOCO" == "ON" ] ; then
+            for solver in pgs cg newton
+            do
+                ./rollingMuJoCoSim --nogui --dt=$dt --solver=$solver --force-direction=$forcedir
+            done
+        fi
+    done
 done

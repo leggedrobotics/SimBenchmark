@@ -6,115 +6,159 @@
 
 #include "rolling.hpp"
 
-int main(int argc, char* argv[]) {
+namespace rb = rolling_benchmark;
 
-  double dt = benchmark::dt;
-  if (argc == 2) {
-    dt = atof(argv[1]);
-    RAIINFO("----------------------")
-    RAIINFO("raiSim")
-    RAIINFO("timestep = " << dt);
-  }
+// sim
+rai_sim::World_RG *sim;
 
-  // logger
-  std::string path = benchmark::dataPath + benchmark::parentDir + "rai";
-  std::string name = std::to_string(dt);
-  rai::Utils::logger->setLogPath(path);
-  rai::Utils::logger->setLogFileName(name);
-  rai::Utils::logger->setOptions(rai::Utils::ONEFILE_FOR_ONEDATA);
-  rai::Utils::logger->addVariableToLog(3, "velbox", "linear velocity of box");
-  rai::Utils::logger->addVariableToLog(3, "velball", "linear velocity of ball");
-  rai::Utils::logger->addVariableToLog(3, "posbox", "position of box");
-  rai::Utils::logger->addVariableToLog(3, "posball", "position of ball");
+// functions
+void getParams(int argc, const char* argv[], char* yamlfile);
+void simulationSetup();
 
-  // timer
-  std::string timer = name + "timer";
-  rai::Utils::timer->setLogPath(path);
-  rai::Utils::timer->setLogFileName(timer);
+// variables
+std::vector<rai_sim::SingleBodyHandle> objectList;
 
-  // sim
-  rai_sim::World_RG *sim;
+int main(int argc, const char* argv[]) {
 
-  if(benchmark::visualize)
-    sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
-  else
-    sim = new rai_sim::World_RG;
+  // get parameter from argument and yaml
+  getParams(argc, argv, "./rolling.yaml");
 
-  rai_sim::MaterialManager materials;
-  sim->setGravity(benchmark::gravity);
+  // set up logger and timer
+  std::string parentDir =
+      rb::parentDir + "-" +
+          "erp" + "=" + std::to_string(rb::options.erpYN) + "-" +
+          "dir" + "=" + std::to_string(rb::options.forceDirection) + "/";
+  rb::loggerSetup(
+      benchmark::dataPath + parentDir + "rai",
+      std::to_string(rb::params.dt));
 
-  // solver params
-  sim->setERP(benchmark::erp);
-  sim->setContactSolverParam(1.0, 0.7, 1.0, 50, 1e-7*dt);
+  // set up simulation
+  simulationSetup();
 
-  // materials
-  materials.setMaterialNames({"ground", "box", "ball"});
-  materials.setMaterialPairProp("ground", "ball", benchmark::groundMu * benchmark::ballMu, 0.0, 0.01);
-  materials.setMaterialPairProp("ground", "box", benchmark::groundMu * benchmark::boxMu, 0.0, 0.01);
-  materials.setMaterialPairProp("ball", "box", benchmark::ballMu * benchmark::boxMu, 0.0, 0.01);
-  sim->updateMaterialProp(materials);
-
-  // add objects
-  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1);
-  checkerboard->setMaterial(sim->getMaterialKey("ground"));
-
-  auto box = sim->addBox(20, 20, 1, 10);
-  box->setPosition(0, 0, 0.5 - benchmark::initPenetration);
-  box->setMaterial(sim->getMaterialKey("box"));
-
-  std::vector<rai_sim::SingleBodyHandle> objectList;
-
-  for(int i = 0; i < 5; i++) {
-    for(int j = 0; j < 5; j++) {
-      auto ball = sim->addSphere(0.5, 1);
-      ball->setPosition(i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5 - 2 * benchmark::initPenetration);
-      ball->setMaterial(sim->getMaterialKey("ball"));
-      objectList.push_back(ball);
-    }
-  }
+  rai_sim::Vec<3> force;
+  if(rb::options.forceDirection == rb::FORCE_Y)
+    force = {0, rb::params.F, 0};
+  else if(rb::options.forceDirection == rb::FORCE_XY)
+    force = {rb::params.F * 0.707106781186547,
+             rb::params.F * 0.707106781186547,
+             0};
 
   // simulation loop
   // press 'q' key to quit
-  rai_sim::Vec<3> force;
-  if(benchmark::forceDirection == benchmark::FORCE_Y)
-    force = {benchmark::forceY[0], benchmark::forceY[1], benchmark::forceY[2]};
-  else if(benchmark::forceDirection == benchmark::FORCE_XY)
-    force = {benchmark::forceXY[0], benchmark::forceXY[1], benchmark::forceXY[2]};
+  ru::timer->startTimer("rolling");
+  if(rb::options.visualize) {
+    for(int i = 0; i < rb::params.T / rb::params.dt && sim->visualizerLoop(rb::params.dt); i++) {
+      objectList[0]->setExternalForce(force, 0);
 
-  rai::Utils::timer->startTimer("rolling");
-  if(benchmark::visualize) {
-    // camera relative position
-    sim->cameraFollowObject(box, {30, 0, 10});
-    sim->setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
-
-    for(int i = 0; i < benchmark::simulationTime / dt && sim->visualizerLoop(dt); i++) {
-      box->setExternalForce(force, 0);
       // log
-      rai::Utils::logger->appendData("velbox", box->getLinearVelocity().data());
-      rai::Utils::logger->appendData("velball", objectList[0]->getLinearVelocity().data());
-      rai::Utils::logger->appendData("posbox", box->getPosition().data());
-      rai::Utils::logger->appendData("posball", objectList[0]->getPosition().data());
-      sim->integrate(dt);
-    }
-  } else {
-    for(int i = 0; i < benchmark::simulationTime / dt; i++) {
-      box->setExternalForce(force, 0);
-      // log
-      rai::Utils::logger->appendData("velbox", box->getLinearVelocity().data());
-      rai::Utils::logger->appendData("velball", objectList[0]->getLinearVelocity().data());
-      rai::Utils::logger->appendData("posbox", box->getPosition().data());
-      rai::Utils::logger->appendData("posball", objectList[0]->getPosition().data());
-      sim->integrate(dt);
+      ru::logger->appendData("velbox", objectList[0]->getLinearVelocity().data());
+      ru::logger->appendData("velball", objectList[1]->getLinearVelocity().data());
+      ru::logger->appendData("posbox", objectList[0]->getPosition().data());
+      ru::logger->appendData("posball", objectList[1]->getPosition().data());
+      sim->integrate(rb::params.dt);
     }
   }
+  else {
+    for(int i = 0; i < rb::params.T / rb::params.dt; i++) {
+      objectList[0]->setExternalForce(force, 0);
 
-  rai::Utils::timer->stopTimer("rolling");
+      // log
+      ru::logger->appendData("velbox", objectList[0]->getLinearVelocity().data());
+      ru::logger->appendData("velball", objectList[1]->getLinearVelocity().data());
+      ru::logger->appendData("posbox", objectList[0]->getPosition().data());
+      ru::logger->appendData("posball", objectList[1]->getPosition().data());
+      sim->integrate(rb::params.dt);
+    }
+  }
+  ru::timer->stopTimer("rolling");
 
   // delete sim
   delete sim;
 
   // time log
-  rai::Utils::timer->dumpToStdOuput();
+  ru::timer->dumpToStdOuput();
 
   return 0;
+}
+
+void simulationSetup() {
+
+  if(rb::options.visualize)
+    sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+  else
+    sim = new rai_sim::World_RG;
+
+  sim->setGravity(Eigen::Vector3d(0, 0, rb::params.g));
+  if(rb::options.erpYN)
+    sim->setERP(rb::params.erp);
+
+  rai_sim::MaterialManager materials;
+
+  // solver params
+  sim->setContactSolverParam(1.0, 0.7, 1.0, 50, 1e-7*rb::params.dt);
+
+  // materials
+  materials.setMaterialNames({"ground", "box", "ball"});
+  materials.setMaterialPairProp("ground", "ball", rb::params.groundMu * rb::params.ballMu, 0.0, 0.01);
+  materials.setMaterialPairProp("ground", "box", rb::params.groundMu * rb::params.boxMu, 0.0, 0.01);
+  materials.setMaterialPairProp("ball", "box", rb::params.ballMu * rb::params.boxMu, 0.0, 0.01);
+  sim->updateMaterialProp(materials);
+
+  // add ground
+  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1);
+  checkerboard->setMaterial(sim->getMaterialKey("ground"));
+
+  // visualization settings
+  if(rb::options.visualize) {
+    // camera relative position
+    sim->setLightPosition(rb::params.lightPosition[0],
+                          rb::params.lightPosition[1],
+                          rb::params.lightPosition[2]);
+    sim->cameraFollowObject(checkerboard, {30, 0, 15});
+  }
+
+  // add objects
+  auto box = sim->addBox(20, 20, 1, 10);
+  box->setPosition(0, 0, 0.5 - rb::params.initPenetration);
+  box->setMaterial(sim->getMaterialKey("box"));
+  objectList.push_back(box);
+
+  for(int i = 0; i < 5; i++) {
+    for(int j = 0; j < 5; j++) {
+      auto ball = sim->addSphere(0.5, 1);
+      ball->setPosition(i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5 - 2 * rb::params.initPenetration);
+      ball->setMaterial(sim->getMaterialKey("ball"));
+      objectList.push_back(ball);
+    }
+  }
+}
+
+
+void getParams(int argc, const char *argv[], char *yamlfile) {
+
+  /// parameters from yaml
+  YAML::Node yaml = YAML::LoadFile(yamlfile);
+
+  // sim specific
+  rb::params.erp = yaml["solver_params"]["raiSim"]["erp"].as<double>();
+
+  // generic
+  rb::getParamsFromYAML(yamlfile);
+
+  /// parameter from arguments
+  // sim specific
+  po::options_description simdesc("sim specific");
+  rb::desc.add(simdesc);
+
+  // generic
+  rb::getParamsFromArg(argc, argv);
+
+  po::variables_map vm;
+  po::store(po::parse_command_line(argc, argv, rb::desc), vm);
+
+  RAIINFO("----------------------")
+  RAIINFO("raiSim")
+  RAIINFO("timestep        = " << rb::params.dt);
+  RAIINFO("erpYN           = " << rb::options.erpYN);
+  RAIINFO("force-direction = " << rb::options.forceDirection);
 }

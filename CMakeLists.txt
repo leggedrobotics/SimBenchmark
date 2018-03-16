@@ -122,7 +122,11 @@ set(Benchmark_SRCS
         )
 
 add_library(BenchmarkLib ${Benchmark_SRCS})
-set(BENCHMARK_LINK ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} BenchmarkLib)
+set(BENCHMARK_LINK
+        ${Boost_LIBRARIES}
+        ${YAML_CPP_LIBRARIES}
+        BenchmarkLib
+        )
 
 # raiSim
 if(BENCHMARK_RAISIM AND raiSim_FOUND)
@@ -153,8 +157,16 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
     add_library(BulletSim ${BulletSim_SRCS})
 
     ## --------------------------- links ---------------------------
-    set(BulletSimLink BulletDynamics Bullet3Common BulletCollision LinearMath
-            BulletSim ${BENCHMARK_LINK} ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
+    set(BulletSimLink
+            BulletDynamics
+            Bullet3Common
+            BulletCollision
+            LinearMath
+            BulletSim
+            ${BENCHMARK_LINK}
+            ${RAI_COMMON_LINK}
+            ${RAI_GRAPHICS_OPENGL_LINK}
+            )
 endif()
 
 # ODESim
@@ -181,7 +193,13 @@ if(BENCHMARK_ODE AND ode_FOUND)
     add_library(ODESim ${ODESim_SRCS})
 
     ## --------------------------- link ---------------------------
-    set(ODESimLink ode ODESim ${BENCHMARK_LINK} ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
+    set(ODESimLink
+            ode
+            ODESim
+            ${BENCHMARK_LINK}
+            ${RAI_COMMON_LINK}
+            ${RAI_GRAPHICS_OPENGL_LINK}
+            )
 endif()
 
 # MuJoCoSim
@@ -208,10 +226,6 @@ if(BENCHMARK_MUJOCO)
     ## --------------------------- links ---------------------------
     set(MuJoCoSimLink ${glew} ${glfw} ${mujoco150} ${mujoco150nogl}
             GL GLU glut MuJoCoSim ${BENCHMARK_LINK} ${RAI_COMMON_LINK} ${RAI_GRAPHICS_OPENGL_LINK})
-
-    # mujoco simulation
-    add_executable(mujocoSimulate mjpro150/sample/simulate.cpp)
-    target_link_libraries(mujocoSimulate ${MuJoCoSimLink})
 
 endif()
 

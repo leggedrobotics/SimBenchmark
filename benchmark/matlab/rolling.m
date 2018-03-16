@@ -32,16 +32,12 @@ dt_array = {'0.000010',...
     '0.100000'};
 
 %% constants
-const = struct(...
-    'm', 1 , ...
-    'n', 25, ...
-    'M', 10, ...
-    'g', 9.8, ...
-    'T', 4.0, ...
-    'F', 150.0, ...
-    'F_xy', true, ... % true for xy, false for y
-    'mu1', 0.4, ...
-    'mu2', 0.8);
+yaml_data = yaml.ReadYaml(yaml_path);
+
+const = yaml_data.constant;
+const.mu1 = const.mu_box * const.mu_ground;
+const.mu2 = const.mu_ball * const.mu_box;
+const.F_xy = yaml_data.options.force_direction; % true for xy, false for y
 
 simTime = const.T;
 
@@ -292,7 +288,7 @@ end
 function error = ball_error(dir_path, sim, solver, dtstr, const, save_subplots)
 
 % analytical solution
-g = const.g;
+g = -const.g;
 m = const.m;
 n = const.n;
 M = const.M;
@@ -342,7 +338,7 @@ end
 function error = box_error(dir_path, sim, solver, dtstr, const, save_subplots)
 
 % analytical solution
-g = const.g;
+g = -const.g;
 m = const.m;
 n = const.n;
 M = const.M;
