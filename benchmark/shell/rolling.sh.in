@@ -3,10 +3,25 @@
 DT_ARRAY=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" "0.1" )
 
 # options
-BENCHMARK_RAISIM="@BENCHMARK_RAISIM@"
-BENCHMARK_BULLET="@BENCHMARK_BULLET@"
-BENCHMARK_ODE="@BENCHMARK_ODE@"
-BENCHMARK_MUJOCO="@BENCHMARK_MUJOCO@"
+raisim_installed="@BENCHMARK_RAISIM@"
+bulletsim_installed="@BENCHMARK_BULLET@"
+odesim_installed="@BENCHMARK_ODE@"
+mujocosim_installed="@BENCHMARK_MUJOCO@"
+
+raisim_flag=''
+bullet_flag=''
+ode_flag=''
+mujoco_flag=''
+
+while getopts 'rbom' flag; do
+  case "${flag}" in
+    r) raisim_flag='true' ;;
+    b) bullet_flag='true' ;;
+    o) ode_flag='true' ;;
+    m) mujoco_flag='true' ;;
+    *) error "Unexpected option ${flag}" ;;
+  esac
+done
 
 # benchmark test
 for dt in ${DT_ARRAY[@]}
@@ -14,41 +29,57 @@ do
     for forcedir in xy y
     do
         # rai sim
-        if [ "$BENCHMARK_RAISIM" == "ON" ] ; then
-            for erpon in true false
-            do
-                ./rollingRaiSim --nogui --erp-on=$erpon --dt=$dt --force-direction=$forcedir
-            done
+        if [ "$raisim_flag" == 'true' ]; then
+            if [ "$raisim_installed" == "ON" ]; then
+                for erpon in true false
+                do
+                    ./rollingRaiSim --nogui --erp-on=$erpon --dt=$dt --force-direction=$forcedir
+                done
+            else
+                echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
+            fi
         fi
 
         # bullet sim
-        if [ "$BENCHMARK_BULLET" == "ON" ] ; then
-            for solver in seqImp nncg pgs dantzig #lemke
-            do
-                for erpon in true false
+        if [ "$bulletsim_flag" == 'true' ]; then
+            if [ "$bulletsim_installed" == "ON" ]; then
+                for solver in seqImp nncg pgs dantzig #lemke
                 do
-                    ./rollingBulletSim --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force-direction=$forcedir
+                    for erpon in true false
+                    do
+                        ./rollingBulletSim --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force-direction=$forcedir
+                    done
                 done
-            done
+            else
+                echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
+            fi
         fi
 
         # ode sim
-        if [ "$BENCHMARK_ODE" == "ON" ] ; then
-            for solver in std quick
-            do
-                for erpon in true false
+        if [ "$odesim_flag" == 'true' ]; then
+            if [ "$odesim_installed" == "ON" ] ; then
+                for solver in std quick
                 do
-                    ./rollingODESim --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force-direction=$forcedir
+                    for erpon in true false
+                    do
+                        ./rollingODESim --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force-direction=$forcedir
+                    done
                 done
-            done
+            else
+                echo "odesim is not built. turn on BENCHMARK_ODESIM option in cmake"
+            fi
         fi
 
         # mujoco sim
-        if [ "$BENCHMARK_MUJOCO" == "ON" ] ; then
-            for solver in pgs cg newton
-            do
-                ./rollingMuJoCoSim --nogui --dt=$dt --solver=$solver --force-direction=$forcedir
-            done
+        if [ "$mujocosim_flag" == 'true' ]; then
+            if [ "$mujocosim_installed" == "ON" ] ; then
+                for solver in pgs cg newton
+                do
+                    ./rollingMuJoCoSim --nogui --dt=$dt --solver=$solver --force-direction=$forcedir
+                done
+            else
+                echo "mujocosim is not built. turn on BENCHMARK_MUJOCOSIM option in cmake"
+            fi
         fi
     done
 done

@@ -111,10 +111,10 @@ void getParams(int argc, const char *argv[], char *yamlfile) {
   if(vm.count("solver")) {
     std::string solverStr = vm["solver"].as<std::string>();
 
-    if(strcmp(argv[2],"std")==0) {
+    if(solverStr.compare("std")==0) {
       solverOption = ode_sim::SOLVER_STANDARD;
       rb::options.solverName = "std";
-    } else if(strcmp(argv[2],"quick")==0) {
+    } else if(solverStr.compare("quick")==0) {
       solverOption = ode_sim::SOLVER_QUICK;
       rb::options.solverName = "quick";
     } else {

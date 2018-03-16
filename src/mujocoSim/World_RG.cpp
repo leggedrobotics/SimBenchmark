@@ -8,15 +8,18 @@ mujoco_sim::World_RG::World_RG(int windowWidth,
                                int windowHeight,
                                float cms,
                                const char *modelPath,
+                               const char *keyPath,
                                int flags,
                                mujoco_sim::SolverOption solverOption) :
-    world_(modelPath, solverOption),
+    world_(modelPath, keyPath, solverOption),
     benchmark::World_RG(windowWidth, windowHeight, cms, flags) {
   initFromModel();
 }
 
-mujoco_sim::World_RG::World_RG(const char *modelPath, mujoco_sim::SolverOption solverOption) :
-    world_(modelPath, solverOption),
+mujoco_sim::World_RG::World_RG(const char *modelPath,
+                               const char *keyPath,
+                               mujoco_sim::SolverOption solverOption) :
+    world_(modelPath, keyPath, solverOption),
     benchmark::World_RG() {
   initFromModel();
 }

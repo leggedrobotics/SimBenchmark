@@ -6,10 +6,12 @@
 
 namespace mujoco_sim {
 
-mujoco_sim::World::World(const char *modelPath, SolverOption solverOption) {
+mujoco_sim::World::World(const char *modelPath,
+                         const char *keyPath,
+                         SolverOption solverOption) {
 
   // activate MuJoCo Pro
-  mj_activate("mjkey.txt");
+  mj_activate(keyPath);
 
   // load model
   char error[1000];

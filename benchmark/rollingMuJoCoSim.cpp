@@ -13,7 +13,7 @@ mujoco_sim::World_RG *sim;
 
 // functions
 void getParams(int argc, const char* argv[], char* yamlfile);
-void simulationSetup(char *modelPath);
+void simulationSetup(const char *modelPath, const char *keyPath);
 
 // variables
 mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS;
@@ -33,7 +33,7 @@ int main(int argc, const char* argv[]) {
       std::to_string(rb::params.dt));
 
   // set up simulation
-  simulationSetup("./mujoco/rolling.xml");
+  simulationSetup("./mujoco/rolling.xml", "../mjkey.txt");
 
   // simulation loop
   // press 'q' key to quit
@@ -132,12 +132,12 @@ void getParams(int argc, const char *argv[], char *yamlfile) {
   RAIINFO("force-direction = " << rb::options.forceDirection);
 }
 
-void simulationSetup(char *modelPath) {
+void simulationSetup(const char *modelPath, const char *keyPath) {
 
   if(rb::options.visualize)
-    sim = new mujoco_sim::World_RG(800, 600, 0.5, modelPath, benchmark::NO_BACKGROUND, solverOption);
+    sim = new mujoco_sim::World_RG(800, 600, 0.5, modelPath, keyPath, benchmark::NO_BACKGROUND, solverOption);
   else
-    sim = new mujoco_sim::World_RG(modelPath, solverOption);
+    sim = new mujoco_sim::World_RG(modelPath, keyPath, solverOption);
 
   // visualization settings
   if(rb::options.visualize) {

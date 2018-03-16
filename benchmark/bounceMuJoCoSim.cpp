@@ -18,7 +18,13 @@ int main() {
   rai::Utils::logger->addVariableToLog(3, "pos_ball", "position of ball");
 
   // load model from file and check for errors
-  mujoco_sim::World_RG sim(800, 600, 0.5, "/home/kangd/git/benchmark/benchmark/mujoco/test.xml", benchmark::NO_BACKGROUND);
+  mujoco_sim::World_RG sim(800,
+                           600,
+                           0.5,
+                           "/home/kangd/git/benchmark/benchmark/mujoco/test.xml",
+                           nullptr,
+                           benchmark::NO_BACKGROUND,
+                           mujoco_sim::SOLVER_NEWTON);
   sim.setLightPosition(benchmark::lightX, benchmark::lightY, benchmark::lightZ);
   sim.cameraFollowObject(sim.getSingleBodyHandle(0), {10, 0, 5});
 

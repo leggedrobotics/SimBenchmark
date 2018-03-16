@@ -21,12 +21,14 @@ class World_RG: public benchmark::World_RG {
            int windowHeight,
            float cms,
            const char *modelPath,
-           int flags = 0,
-           mujoco_sim::SolverOption solverOption = SOLVER_PGS);
+           const char *keyPath,
+           int flags,
+           mujoco_sim::SolverOption solverOption);
 
   /* constructor for no visualization */
   World_RG(const char *modelPath,
-           mujoco_sim::SolverOption solverOption = SOLVER_PGS);
+           const char *keyPath,
+           mujoco_sim::SolverOption solverOption);
   virtual ~World_RG();
 
   //////////////////////////
