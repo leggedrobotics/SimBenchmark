@@ -28,6 +28,7 @@ option(BENCHMARK_RAISIM OFF)
 option(BENCHMARK_BULLET OFF)
 option(BENCHMARK_ODE OFF)
 option(BENCHMARK_MUJOCO OFF)
+option(BENCHMARK_DART OFF)
 
 ## =========================== LINK DIRECTORIES ===========================
 link_directories(/usr/local/lib)
@@ -109,8 +110,17 @@ if(BENCHMARK_MUJOCO)
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
+# dart (optional)
+if(BENCHMARK_DART)
+    message(STATUS "Benchmark dart option is on")
+
+    find_package(DART CONFIG REQUIRED)
+    include_directories(${DART_INCLUDE_DIRS})
+endif()
+
 ## =========================== FILES ===========================
 include_directories(src)
+add_subdirectory(src)
 
 # Benchmark
 set(Benchmark_SRCS

@@ -38,7 +38,7 @@ do
             if [ "$raisim_installed" == "ON" ]; then
                 for erpon in true false
                 do
-                    ./rollingRaiSim --nogui --erp-on=$erpon --dt=$dt --force-direction=$forcedir
+                    timeout 600 ./rollingRaiSim --nogui --erp-on=$erpon --dt=$dt --force-direction=$forcedir
                 done
             else
                 echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
@@ -52,7 +52,7 @@ do
                 do
                     for erpon in true false
                     do
-                        ./rollingBulletSim --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force-direction=$forcedir
+                        timeout 600 ./rollingBulletSim --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force-direction=$forcedir
                     done
                 done
             else
@@ -67,7 +67,7 @@ do
                 do
                     for erpon in true false
                     do
-                        ./rollingODESim --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force-direction=$forcedir
+                        timeout 600 ./rollingODESim --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force-direction=$forcedir
                     done
                 done
             else
@@ -80,7 +80,7 @@ do
             if [ "$mujocosim_installed" == "ON" ] ; then
                 for solver in pgs cg newton
                 do
-                    ./rollingMuJoCoSim --nogui --dt=$dt --solver=$solver --force-direction=$forcedir
+                    timeout 600 ./rollingMuJoCoSim --nogui --dt=$dt --solver=$solver --force-direction=$forcedir
                 done
             else
                 echo "mujocosim is not built. turn on BENCHMARK_MUJOCOSIM option in cmake"
