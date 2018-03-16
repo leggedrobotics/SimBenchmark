@@ -13,15 +13,20 @@ bullet_flag=''
 ode_flag=''
 mujoco_flag=''
 
+echo "----------------------"
+echo "Benchmark rolling test"
+
 while getopts 'rbom' flag; do
   case "${flag}" in
-    r) raisim_flag='true' ;;
-    b) bullet_flag='true' ;;
-    o) ode_flag='true' ;;
-    m) mujoco_flag='true' ;;
+    r) raisim_flag='true'; echo "Test raisim" ;;
+    b) bullet_flag='true'; echo "Test bullet" ;;
+    o) ode_flag='true'; echo "Test ode" ;;
+    m) mujoco_flag='true'; echo "Test mujoco" ;;
     *) error "Unexpected option ${flag}" ;;
   esac
 done
+
+echo "----------------------"
 
 # benchmark test
 for dt in ${DT_ARRAY[@]}
@@ -41,7 +46,7 @@ do
         fi
 
         # bullet sim
-        if [ "$bulletsim_flag" == 'true' ]; then
+        if [ "$bullet_flag" == 'true' ]; then
             if [ "$bulletsim_installed" == "ON" ]; then
                 for solver in seqImp nncg pgs dantzig #lemke
                 do
@@ -56,7 +61,7 @@ do
         fi
 
         # ode sim
-        if [ "$odesim_flag" == 'true' ]; then
+        if [ "$ode_flag" == 'true' ]; then
             if [ "$odesim_installed" == "ON" ] ; then
                 for solver in std quick
                 do
@@ -71,7 +76,7 @@ do
         fi
 
         # mujoco sim
-        if [ "$mujocosim_flag" == 'true' ]; then
+        if [ "$mujoco_flag" == 'true' ]; then
             if [ "$mujocosim_installed" == "ON" ] ; then
                 for solver in pgs cg newton
                 do
