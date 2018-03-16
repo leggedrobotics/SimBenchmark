@@ -56,7 +56,7 @@ configure_file(shell/bounce.sh.in ${CMAKE_CURRENT_BINARY_DIR}/bounce.sh @ONLY)
 
 # mujoco model scripts
 file(COPY mujoco
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/mujoco)
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 # parameter yaml
 file(COPY rolling.yaml
