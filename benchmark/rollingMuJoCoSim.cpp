@@ -110,7 +110,7 @@ void getParams(int argc, const char *argv[], char *yamlfile) {
 
     if(solverStr.compare("pgs")==0) {
       solverOption = mujoco_sim::SOLVER_PGS;
-      rb::options.solverName = "seqImp";
+      rb::options.solverName = "pgs";
     } else if(solverStr.compare("cg")==0) {
       solverOption = mujoco_sim::SOLVER_CG;
       rb::options.solverName = "cg";

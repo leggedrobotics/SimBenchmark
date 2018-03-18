@@ -1,25 +1,48 @@
 format long
 
+% TODO dt_array from sh script
+% TODO analytic solution for different F
+
 %% path
 % lib path
 addpath(genpath('./lib/yamlmatlab'))
 
 % data path
-dir_path = '../../data/rolling/';
+dir_path = '../../data/rolling-erp=0-dir=0/';
 
 % yaml path 
 yaml_path = '../rolling.yaml';
 
 % plot path
-mkdir('../../data/rolling/plots');
+mkdir(strcat(dir_path, 'plots'));
 
 %% options
-save_subplots = false;
+save_subplots = true;
+plot_bullet = true;
+plot_ode = true;
+plot_mujoco = true;
+plot_rai = true;
 
-sims = {'bullet', 'ode', 'mujoco', 'rai'};
-bullet_solvers = {'seqImp', 'nncg', 'pgs', 'dantzig'}; % 'lemke',
-ode_solvers = {'std', 'quick'};
-mujoco_solvers = {'pgs', 'cg', 'newton'};
+sims = {};
+
+if plot_bullet
+    sims{end+1} = 'bullet';
+    bullet_solvers = {'seqImp', 'nncg', 'pgs', 'dantzig'}; % 'lemke',
+end
+
+if plot_ode
+    sims{end+1} = 'ode';
+    ode_solvers = {'std', 'quick'};
+end
+
+if plot_mujoco
+    sims{end+1} = 'mujoco';
+    mujoco_solvers = {'pgs', 'cg', 'newton'};
+end
+
+if plot_rai
+    sims{end+1} = 'rai';
+end
 
 dt_array = {'0.000010',...
     '0.000040',...
@@ -30,6 +53,11 @@ dt_array = {'0.000010',...
     '0.010000',...
     '0.040000',...
     '0.100000'};
+
+disp('==============================')
+disp('plot sims: ')
+disp(sims)
+disp('==============================')
 
 %% constants
 yaml_data = yaml.ReadYaml(yaml_path);
@@ -158,9 +186,21 @@ for simid = 1:length(sims)
     end
 end
 
-%% error plot
+% error plot
+disp('plotting error vs timestep...')
+plot_error_dt(bullet_sum_errors, ode_sum_errors, mujoco_sum_errors, rai_sum_errors, dt_array)
+
+% error with realtime factor plot
+disp('plotting error vs real-time-factor...')
+plot_error_realtimefactor(bullet_sum_errors, ode_sum_errors, mujoco_sum_errors, rai_sum_errors, ...
+    bullet_timer, ode_timer, mujoco_timer, rai_timer)
+
+disp('plotting is finished.')
+
+%% functions
+function plot_error_dt(bullet_sum_errors, ode_sum_errors, mujoco_sum_errors, rai_sum_errors, dt_array)
 % ball
-figure('Name','ball error (cumulative)');
+h = figure('Name','ball error (cumulative)');
 plot(bullet_sum_errors(1,:,1), '-r', 'DisplayName', 'btSeqImp')
 set(gca, 'YScale', 'log')
 hold on
@@ -180,9 +220,10 @@ xlabel('timestep size')
 ylabel('squared error (log scale)')
 xticklabels(dt_array);
 legend('Location', 'eastoutside');
+saveas(h, strcat(dir_path, 'plots/', 'ballerror_dt.png'))
 
 % box
-figure('Name','box error (cumulative)');
+h = figure('Name','box error (cumulative)');
 plot(bullet_sum_errors(1,:,2), '-r', 'DisplayName', 'btSeqImp')
 set(gca, 'YScale', 'log')
 hold on
@@ -202,8 +243,12 @@ xlabel('timestep size')
 ylabel('squared error (log scale)')
 xticklabels(dt_array);
 legend('Location', 'eastoutside');
+saveas(h, strcat(dir_path, 'plots/', 'boxerror_dt.png'))
 
-%% error with realtime factor plot
+end
+
+function plot_error_realtimefactor(bullet_sum_errors, ode_sum_errors, mujoco_sum_errors, rai_sum_errors, ...
+    bullet_timer, ode_timer, mujoco_timer, rai_timer)
 % ball
 h = figure('Name','ball error vs realtime factor (cumulative)');
 plot(simTime ./ bullet_timer(1,:), bullet_sum_errors(1,:,1),    '-r', 'DisplayName', 'btSeqImp')
@@ -225,6 +270,7 @@ title('Ball Velocity Error vs Realtime factor (cumulative)')
 xlabel('realtime factor')
 ylabel('squared error (log scale)')
 legend('Location', 'eastoutside');
+saveas(h, strcat(dir_path, 'plots/', 'ballerror_realtimefactor.png'))
 
 % box
 h = figure('Name','box error vs realtime factor (cumulative)');
@@ -247,9 +293,10 @@ title('Box Velocity Error vs Realtime factor (cumulative)')
 xlabel('realtime factor')
 ylabel('squared error (log scale)')
 legend('Location', 'eastoutside');
+saveas(h, strcat(dir_path, 'plots/', 'boxerror_realtimefactor.png'))
 
+end
 
-%% functions
 function plot_ball_vel(dir_path, sim, solver, dtstr)
 parent_dir = strcat(dir_path, sim, "/", solver, "/");
 data_path = strcat(parent_dir, dtstr, "_velball.rlog");
