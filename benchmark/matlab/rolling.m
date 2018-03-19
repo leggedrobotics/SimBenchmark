@@ -9,40 +9,30 @@ addpath(genpath('./lib/yamlmatlab'))
 
 % data path
 dir_path = '../../data/rolling-erp=0-dir=0/';
+plot_path = strcat(dir_path, 'plots/');
 
-% yaml path 
+% yaml path
 yaml_path = '../rolling.yaml';
 
 % plot path
-mkdir(strcat(dir_path, 'plots'));
+mkdir(plot_path);
 
 %% options
-save_subplots = true;
-plot_bullet = true;
-plot_ode = true;
-plot_mujoco = true;
-plot_rai = true;
+save_subplots = false;
 
-sims = {};
-
-if plot_bullet
-    sims{end+1} = 'bullet';
-    bullet_solvers = {'seqImp', 'nncg', 'pgs', 'dantzig'}; % 'lemke',
-end
-
-if plot_ode
-    sims{end+1} = 'ode';
-    ode_solvers = {'std', 'quick'};
-end
-
-if plot_mujoco
-    sims{end+1} = 'mujoco';
-    mujoco_solvers = {'pgs', 'cg', 'newton'};
-end
-
-if plot_rai
-    sims{end+1} = 'rai';
-end
+% always plot raisim
+plot_options = struct(...
+    'plot_bullet_seqImp', true, ...
+    'plot_bullet_nncg', true, ...
+    'plot_bullet_pgs', true, ...
+    'plot_bullet_dantzig', true, ...
+    'plot_bullet_lemke', false, ...
+    'plot_ode_std', true, ...
+    'plot_ode_quick', true, ...
+    'plot_mujoco_pgs', true, ...
+    'plot_mujoco_cg', true, ...
+    'plot_mujoco_newton', true ...
+    );
 
 dt_array = {'0.000010',...
     '0.000040',...
@@ -56,7 +46,11 @@ dt_array = {'0.000010',...
 
 disp('==============================')
 disp('plot sims: ')
-disp(sims)
+[sims, solvers] = print_solvers(plot_options);
+disp('data path: ')
+fprintf('\t%s\n', dir_path)
+disp('plot save path: ')
+fprintf('\t%s\n', plot_path)
 disp('==============================')
 
 %% constants
@@ -65,239 +59,152 @@ yaml_data = yaml.ReadYaml(yaml_path);
 const = yaml_data.constant;
 const.mu1 = const.mu_box * const.mu_ground;
 const.mu2 = const.mu_ball * const.mu_box;
-const.F_xy = yaml_data.options.force_direction; % true for xy, false for y
+% const.F_xy = yaml_data.options.force_direction; % true for xy, false for y
+const.F_xy = false; % true for xy, false for y
 
 simTime = const.T;
 
 %% variables
-bullet_errors = zeros(length(bullet_solvers), length(dt_array), 2);
-ode_errors = zeros(length(ode_solvers), length(dt_array), 2);
-mujoco_errors = zeros(length(mujoco_solvers), length(dt_array), 2);
-rai_errors = zeros(1, length(dt_array), 2);
-
-bullet_sum_errors = zeros(length(bullet_solvers), length(dt_array), 2);
-ode_sum_errors = zeros(length(ode_solvers), length(dt_array), 2);
-mujoco_sum_errors = zeros(length(mujoco_solvers), length(dt_array), 2);
-rai_sum_errors = zeros(1, length(dt_array), 2);
-
-bullet_timer = zeros(length(bullet_solvers), length(dt_array));
-ode_timer = zeros(length(ode_solvers), length(dt_array));
-mujoco_timer = zeros(length(mujoco_solvers), length(dt_array));
-rai_timer = zeros(1, length(dt_array));
-
+data_array = {};
 
 %% main loop
-for simid = 1:length(sims)
-    sim = sims{simid};
-    switch(sim)
-        case "bullet"
-            for solverid = 1:length(bullet_solvers)
-                solver = bullet_solvers{solverid};
-                
-                for dtid = 1:length(dt_array)
-                    dt = dt_array{dtid};
-                    
-                    if save_subplots
-                        plot_ball_vel(dir_path, sim, solver, dt);
-                        plot_box_vel(dir_path, sim, solver, dt);
-                    end
-                    
-                    ball_e = ball_error(dir_path, sim, solver, dt, const, save_subplots);
-                    box_e = box_error(dir_path, sim, solver, dt, const, save_subplots);
-                    
-                    bullet_errors(solverid, dtid, 1) = ball_e(end);
-                    bullet_errors(solverid, dtid, 2) = box_e(end);
-                    
-                    bullet_sum_errors(solverid, dtid, 1) = mean(ball_e);
-                    bullet_sum_errors(solverid, dtid, 2) = mean(box_e);
-                    
-                    bullet_timer(solverid, dtid) = timer_value(dir_path, sim, solver, dt, const.T);
-                end
-            end
-        case "ode"
-            for solverid = 1:length(ode_solvers)
-                solver = ode_solvers{solverid};
-                
-                for dtid = 1:length(dt_array)
-                    dt = dt_array{dtid};
-                    
-                    if save_subplots
-                        plot_ball_vel(dir_path, sim, solver, dt);
-                        plot_box_vel(dir_path, sim, solver, dt);
-                    end
-                    
-                    ball_e = ball_error(dir_path, sim, solver, dt, const, save_subplots);
-                    box_e = box_error(dir_path, sim, solver, dt, const, save_subplots);
-                    
-                    ode_errors(solverid, dtid, 1) = ball_e(end);
-                    ode_errors(solverid, dtid, 2) = box_e(end);
-                    
-                    ode_sum_errors(solverid, dtid, 1) = mean(ball_e);
-                    ode_sum_errors(solverid, dtid, 2) = mean(box_e);
-                    
-                    ode_timer(solverid, dtid) = timer_value(dir_path, sim, solver, dt, const.T);
-                end
-                
-            end
-        case "mujoco"
-            for solverid = 1:length(mujoco_solvers)
-                solver = mujoco_solvers{solverid};
-                
-                for dtid = 1:length(dt_array)
-                    dt = dt_array{dtid};
-                    
-                    if save_subplots
-                        plot_ball_vel(dir_path, sim, solver, dt);
-                        plot_box_vel(dir_path, sim, solver, dt);
-                    end
-                    
-                    ball_e = ball_error(dir_path, sim, solver, dt, const, save_subplots);
-                    box_e = box_error(dir_path, sim, solver, dt, const, save_subplots);
-                    
-                    mujoco_errors(solverid, dtid, 1) = ball_e(end);
-                    mujoco_errors(solverid, dtid, 2) = box_e(end);
-                    
-                    mujoco_sum_errors(solverid, dtid, 1) = mean(ball_e);
-                    mujoco_sum_errors(solverid, dtid, 2) = mean(box_e);
-                    
-                    mujoco_timer(solverid, dtid) = timer_value(dir_path, sim, solver, dt, const.T);
-                end
-            end
-        case "rai"
-            for dtid = 1:length(dt_array)
-                dt = dt_array{dtid};
-                
-                if save_subplots
-                    plot_ball_vel(dir_path, sim, '.', dt);
-                    plot_box_vel(dir_path, sim, '.', dt);
-                end
-                
-                ball_e = ball_error(dir_path, sim, '.', dt, const, save_subplots);
-                box_e = box_error(dir_path, sim, '.', dt, const, save_subplots);
-                
-                rai_errors(1, dtid, 1) = ball_e(end);
-                rai_errors(1, dtid, 2) = box_e(end);
-                
-                rai_sum_errors(1, dtid, 1) = mean(ball_e);
-                rai_sum_errors(1, dtid, 2) = mean(box_e);
-                
-                rai_timer(1, dtid) = timer_value(dir_path, sim, '.', dt, const.T);
-            end
+for i = 1:length(sims)
+    sim = sims{i};
+    solver = solvers{i};
+    
+    % simname, solvername, testoption
+    data_ = data(sim, solver, struct());
+    data_.data_content.ball_error = zeros(length(dt_array), 1);
+    data_.data_content.box_error = zeros(length(dt_array), 1);
+    data_.data_content.timer = zeros(length(dt_array), 1);
+    data_.data_content.dt = zeros(length(dt_array), 1);
+    
+    for j = 1:length(dt_array)
+        dt = dt_array{j};
+        
+        if save_subplots
+            plot_ball_vel(dir_path, plot_path, sim, solver, dt);
+            plot_box_vel(dir_path, plot_path, sim, solver, dt);
+        end
+        
+        ball_e = ball_error(dir_path, plot_path, sim, solver, dt, const, save_subplots);
+        box_e = box_error(dir_path, plot_path, sim, solver, dt, const, save_subplots);
+        
+        % save to data array
+        data_.data_content.dt(j) = str2double(dt);
+        data_.data_content.ball_error(j) = mean(ball_e);
+        data_.data_content.box_error(j) = mean(box_e);
+        data_.data_content.timer(j) = timer_value(dir_path, sim, solver, dt, const.T);
     end
+    
+    data_array{end+1} = data_;
 end
 
-% error plot
+%% error plot
+% error plot vs dt
 disp('plotting error vs timestep...')
-plot_error_dt(bullet_sum_errors, ode_sum_errors, mujoco_sum_errors, rai_sum_errors, dt_array)
+plot_error_dt(plot_path, data_array)
 
-% error with realtime factor plot
+% error vs realtime factor plot
 disp('plotting error vs real-time-factor...')
-plot_error_realtimefactor(bullet_sum_errors, ode_sum_errors, mujoco_sum_errors, rai_sum_errors, ...
-    bullet_timer, ode_timer, mujoco_timer, rai_timer)
+plot_error_realtimefactor(plot_path, simTime, data_array)
 
 disp('plotting is finished.')
 
 %% functions
-function plot_error_dt(bullet_sum_errors, ode_sum_errors, mujoco_sum_errors, rai_sum_errors, dt_array)
+function plot_error_dt(plot_path, data_array)
 % ball
 h = figure('Name','ball error (cumulative)');
-plot(bullet_sum_errors(1,:,1), '-r', 'DisplayName', 'btSeqImp')
+data_ = data_array{1};
+plot(data_.data_content.dt, ...
+    data_.data_content.ball_error, ...
+    data_.mark, 'DisplayName', data_.disp_name)
 set(gca, 'YScale', 'log')
 hold on
-plot(bullet_sum_errors(2,:,1), '-r*', 'DisplayName', 'btNNCG')
-plot(bullet_sum_errors(3,:,1), '-ro', 'DisplayName', 'btPGS')
-% plot(bullet_sum_errors(4,:,1), '-rs', 'DisplayName', 'btLemke')
-plot(bullet_sum_errors(4,:,1), 'r:', 'DisplayName', 'btDantzig')
-plot(ode_sum_errors(1,:,1), 'm-', 'DisplayName', 'odeStd')
-plot(ode_sum_errors(2,:,1), 'm--', 'DisplayName', 'odeQuick')
-plot(mujoco_sum_errors(1,:,1), 'b-', 'DisplayName', 'mjcPGS')
-plot(mujoco_sum_errors(2,:,1), '-b*', 'DisplayName', 'mjcCG')
-plot(mujoco_sum_errors(3,:,1), '-bo', 'DisplayName', 'mjcNewton')
-plot(rai_sum_errors(1,:,1), 'g-', 'DisplayName', 'rai')
+for i = 2:length(data_array)
+    data_ = data_array{i};
+    plot(data_.data_content.dt, ...
+        data_.data_content.ball_error, ...
+        data_.mark, 'DisplayName', data_.disp_name)
+end
 hold off
 title('Ball Velocity Error (cumulative)')
 xlabel('timestep size')
 ylabel('squared error (log scale)')
-xticklabels(dt_array);
 legend('Location', 'eastoutside');
-saveas(h, strcat(dir_path, 'plots/', 'ballerror_dt.png'))
+saveas(h, strcat(plot_path, 'ballerror_dt.png'))
 
 % box
 h = figure('Name','box error (cumulative)');
-plot(bullet_sum_errors(1,:,2), '-r', 'DisplayName', 'btSeqImp')
+data_ = data_array{1};
+plot(data_.data_content.dt, ...
+    data_.data_content.ball_error, ...
+    data_.mark, 'DisplayName', data_.disp_name)
 set(gca, 'YScale', 'log')
 hold on
-plot(bullet_sum_errors(2,:,2), '-r*', 'DisplayName', 'btNNCG')
-plot(bullet_sum_errors(3,:,2), '-ro', 'DisplayName', 'btPGS')
-% plot(bullet_sum_errors(4,:,2), '-rs', 'DisplayName', 'btLemke')
-plot(bullet_sum_errors(4,:,2), 'r:', 'DisplayName', 'btDantzig')
-plot(ode_sum_errors(1,:,2), 'm-', 'DisplayName', 'odeStd')
-plot(ode_sum_errors(2,:,2), 'm--', 'DisplayName', 'odeQuick')
-plot(mujoco_sum_errors(1,:,2), 'b-', 'DisplayName', 'mjcPGS')
-plot(mujoco_sum_errors(2,:,2), '-b*', 'DisplayName', 'mjcCG')
-plot(mujoco_sum_errors(3,:,2), '-bo', 'DisplayName', 'mjcNewton')
-plot(rai_sum_errors(1,:,2), 'g-', 'DisplayName', 'rai')
+for i = 2:length(data_array)
+    data_ = data_array{i};
+    plot(data_.data_content.dt, ...
+        data_.data_content.ball_error, ...
+        data_.mark, 'DisplayName', data_.disp_name)
+end
 hold off
 title('Box Velocity Error (cumulative)')
 xlabel('timestep size')
 ylabel('squared error (log scale)')
-xticklabels(dt_array);
 legend('Location', 'eastoutside');
-saveas(h, strcat(dir_path, 'plots/', 'boxerror_dt.png'))
+saveas(h, strcat(plot_path, 'boxerror_dt.png'))
 
 end
 
-function plot_error_realtimefactor(bullet_sum_errors, ode_sum_errors, mujoco_sum_errors, rai_sum_errors, ...
-    bullet_timer, ode_timer, mujoco_timer, rai_timer)
+function plot_error_realtimefactor(plot_path, simTime, data_array)
 % ball
 h = figure('Name','ball error vs realtime factor (cumulative)');
-plot(simTime ./ bullet_timer(1,:), bullet_sum_errors(1,:,1),    '-r', 'DisplayName', 'btSeqImp')
+data_ = data_array{1};
+plot(simTime ./ data_.data_content.timer, ...
+    data_.data_content.ball_error, ...
+    data_.mark, 'DisplayName', data_.disp_name)
 set(gca, 'YScale', 'log', 'XScale', 'log')
 % set(gca, 'XScale', 'log')
 hold on
-plot(simTime ./ bullet_timer(2,:),  bullet_sum_errors(2,:,1),   '-r*', 'DisplayName', 'btNNCG')
-plot(simTime ./ bullet_timer(3,:),  bullet_sum_errors(3,:,1),   '-ro', 'DisplayName', 'btPGS')
-% plot(simTime ./ bullet_timer(4,:),  bullet_sum_errors(4,:,1),   '-rs', 'DisplayName', 'btLemke')
-plot(simTime ./ bullet_timer(4,:),  bullet_sum_errors(4,:,1),   'r:', 'DisplayName', 'btDantzig')
-plot(simTime ./ ode_timer(1,:),     ode_sum_errors(1,:,1),      'm-', 'DisplayName', 'odeStd')
-plot(simTime ./ ode_timer(2,:),     ode_sum_errors(2,:,1),      'm--', 'DisplayName', 'odeQuick')
-plot(simTime ./ mujoco_timer(1,:),  mujoco_sum_errors(1,:,1),   'b-', 'DisplayName', 'mjcPGS')
-plot(simTime ./ mujoco_timer(2,:),  mujoco_sum_errors(2,:,1),   '-b*', 'DisplayName', 'mjcCG')
-plot(simTime ./ mujoco_timer(3,:),  mujoco_sum_errors(3,:,1),   '-bo', 'DisplayName', 'mjcNewton')
-plot(simTime ./ rai_timer(1,:),     rai_sum_errors(1,:,1),      'g-', 'DisplayName', 'rai')
+for i = 2:length(data_array)
+    data_ = data_array{i};
+    plot(simTime ./ data_.data_content.timer, ...
+        data_.data_content.ball_error, ...
+        data_.mark, 'DisplayName', data_.disp_name)
+end
 hold off
 title('Ball Velocity Error vs Realtime factor (cumulative)')
 xlabel('realtime factor')
 ylabel('squared error (log scale)')
 legend('Location', 'eastoutside');
-saveas(h, strcat(dir_path, 'plots/', 'ballerror_realtimefactor.png'))
+saveas(h, strcat(plot_path, 'ballerror_realtimefactor.png'))
 
 % box
 h = figure('Name','box error vs realtime factor (cumulative)');
-plot(simTime ./ bullet_timer(1,:), bullet_sum_errors(1,:,2),    '-r', 'DisplayName', 'btSeqImp')
+data_ = data_array{1};
+plot(simTime ./ data_.data_content.timer, ...
+    data_.data_content.box_error, ...
+    data_.mark, 'DisplayName', data_.disp_name)
 set(gca, 'YScale', 'log', 'XScale', 'log')
 % set(gca, 'XScale', 'log')
 hold on
-plot(simTime ./ bullet_timer(2,:),  bullet_sum_errors(2,:,2),   '-r*', 'DisplayName', 'btNNCG')
-plot(simTime ./ bullet_timer(3,:),  bullet_sum_errors(3,:,2),   '-ro', 'DisplayName', 'btPGS')
-% plot(simTime ./ bullet_timer(4,:),  bullet_sum_errors(4,:,2),   '-rs', 'DisplayName', 'btLemke')
-plot(simTime ./ bullet_timer(4,:),  bullet_sum_errors(4,:,2),   'r:', 'DisplayName', 'btDantzig')
-plot(simTime ./ ode_timer(1,:),     ode_sum_errors(1,:,2),      'm-', 'DisplayName', 'odeStd')
-plot(simTime ./ ode_timer(2,:),     ode_sum_errors(2,:,2),      'm--', 'DisplayName', 'odeQuick')
-plot(simTime ./ mujoco_timer(1,:),  mujoco_sum_errors(1,:,2),   'b-', 'DisplayName', 'mjcPGS')
-plot(simTime ./ mujoco_timer(2,:),  mujoco_sum_errors(2,:,2),   '-b*', 'DisplayName', 'mjcCG')
-plot(simTime ./ mujoco_timer(3,:),  mujoco_sum_errors(3,:,2),   '-bo', 'DisplayName', 'mjcNewton')
-plot(simTime ./ rai_timer(1,:),     rai_sum_errors(1,:,2),      'g-', 'DisplayName', 'rai')
+for i = 2:length(data_array)
+    data_ = data_array{i};
+    plot(simTime ./ data_.data_content.timer, ...
+        data_.data_content.box_error, ...
+        data_.mark, 'DisplayName', data_.disp_name)
+end
 hold off
 title('Box Velocity Error vs Realtime factor (cumulative)')
 xlabel('realtime factor')
 ylabel('squared error (log scale)')
 legend('Location', 'eastoutside');
-saveas(h, strcat(dir_path, 'plots/', 'boxerror_realtimefactor.png'))
+saveas(h, strcat(plot_path, 'boxerror_realtimefactor.png'))
 
 end
 
-function plot_ball_vel(dir_path, sim, solver, dtstr)
+function plot_ball_vel(dir_path, plot_path, sim, solver, dtstr)
 parent_dir = strcat(dir_path, sim, "/", solver, "/");
 data_path = strcat(parent_dir, dtstr, "_velball.rlog");
 data = dlmread(data_path,'',4,0);
@@ -311,11 +218,11 @@ plot(data(:, 3))
 hold off
 legend('vx', 'vy', 'vz')
 title(strcat(sim, ' ', solver, ' ', dtstr))
-saveas(h, strcat(dir_path, 'plots/', sim, '_', solver, '_', dtstr, "_velball.png"))
+saveas(h, strcat(plot_path, sim, '_', solver, '_', dtstr, "_velball.png"))
 
 end
 
-function plot_box_vel(dir_path, sim, solver, dtstr)
+function plot_box_vel(dir_path, plot_path, sim, solver, dtstr)
 parent_dir = strcat(dir_path, sim, "/", solver, "/");
 data_path = strcat(parent_dir, dtstr, "_velbox.rlog");
 data = dlmread(data_path,'',4,0);
@@ -329,10 +236,10 @@ plot(data(:, 3))
 hold off
 legend('vx', 'vy', 'vz')
 title(strcat(sim, ' ', solver, ' ', dtstr))
-saveas(h, strcat(dir_path, 'plots/', sim, '_', solver, '_', dtstr, "_velbox.png"))
+saveas(h, strcat(plot_path, sim, '_', solver, '_', dtstr, "_velbox.png"))
 end
 
-function error = ball_error(dir_path, sim, solver, dtstr, const, save_subplots)
+function error = ball_error(dir_path, plot_path, sim, solver, dtstr, const, save_subplots)
 
 % analytical solution
 g = -const.g;
@@ -363,26 +270,33 @@ end
 parent_dir = strcat(dir_path, sim, "/", solver, "/");
 data_path = strcat(parent_dir, dtstr, "_velball.rlog");
 data = dlmread(data_path,'',4,0);
-error = sum((v - data).^2, 2);
 
-% error plots
-if save_subplots
-    h = figure('Name','ball errors');
-    set(h, 'Visible', 'off');
-    plot(error)
-    hold on 
-    plot((v(:,1) - data(:,1)).^2)
-    plot((v(:,2) - data(:,2)).^2)
-    plot((v(:,3) - data(:,3)).^2)
-    hold off
-    title(strcat(sim, ' ', solver, ' ', dtstr))
-    legend('sum', 'x error sq', 'y error sq', 'z error sq')
-    saveas(h, strcat(dir_path, 'plots/', sim, '_', solver, '_', dtstr, "_velballerror.png"))
+if eq(size(v), size(data))
+    error = sum((v - data).^2, 2);
+    
+    % error plots
+    if save_subplots
+        h = figure('Name','ball errors');
+        set(h, 'Visible', 'off');
+        plot(error)
+        hold on
+        plot((v(:,1) - data(:,1)).^2)
+        plot((v(:,2) - data(:,2)).^2)
+        plot((v(:,3) - data(:,3)).^2)
+        hold off
+        title(strcat(sim, ' ', solver, ' ', dtstr))
+        legend('sum', 'x error sq', 'y error sq', 'z error sq')
+        saveas(h, strcat(plot_path, sim, '_', solver, '_', dtstr, "_velballerror.png"))
+    end
+else
+    % data size differs with analytical solution size
+    error = nan;
+    warning(['data size neq with solution size for ', sim, '-', solver])
 end
 
 end
 
-function error = box_error(dir_path, sim, solver, dtstr, const, save_subplots)
+function error = box_error(dir_path, plot_path, sim, solver, dtstr, const, save_subplots)
 
 % analytical solution
 g = -const.g;
@@ -412,21 +326,28 @@ end
 parent_dir = strcat(dir_path, sim, "/", solver, "/");
 data_path = strcat(parent_dir, dtstr, "_velbox.rlog");
 data = dlmread(data_path,'',4,0);
-error = sum((v - data).^2, 2);
 
-% error plots
-if save_subplots
-    h = figure('Name','box errors');
-    set(h, 'Visible', 'off');
-    plot(error)
-    hold on 
-    plot((v(:,1) - data(:,1)).^2)
-    plot((v(:,2) - data(:,2)).^2)
-    plot((v(:,3) - data(:,3)).^2)
-    hold off
-    title(strcat(sim, ' ', solver, ' ', dtstr))
-    legend('sum', 'x error sq', 'y error sq', 'z error sq')
-    saveas(h, strcat(dir_path, 'plots/', sim, '_', solver, '_', dtstr, "_velboxerror.png"))
+if eq(size(v), size(data))
+    error = sum((v - data).^2, 2);
+    
+    % error plots
+    if save_subplots
+        h = figure('Name','box errors');
+        set(h, 'Visible', 'off');
+        plot(error)
+        hold on
+        plot((v(:,1) - data(:,1)).^2)
+        plot((v(:,2) - data(:,2)).^2)
+        plot((v(:,3) - data(:,3)).^2)
+        hold off
+        title(strcat(sim, ' ', solver, ' ', dtstr))
+        legend('sum', 'x error sq', 'y error sq', 'z error sq')
+        saveas(h, strcat(plot_path, sim, '_', solver, '_', dtstr, "_velboxerror.png"))
+    end
+else
+    % data size differs with analytical solution size
+    error = nan;
+    warning(['data size neq with solution size for ', sim, '-', solver])
 end
 
 end
@@ -440,4 +361,91 @@ text = fileread(char(data_path));
 C = strsplit(text);
 
 time = str2num(C{11});
+end
+
+function [sims, solvers] = print_solvers(options)
+
+sims = {};
+solvers = {};
+
+fprintf('\t-rai\n') % always
+sims{end+1} = 'rai';
+solvers{end+1} = '';
+
+% bullet
+if options.plot_bullet_seqImp ...
+        || options.plot_bullet_nncg ...
+        || options.plot_bullet_pgs ...
+        || options.plot_bullet_dantzig ...
+        || options.plot_bullet_lemke
+    
+    fprintf('\t-bullet\n')
+    
+    if options.plot_bullet_seqImp
+        fprintf('\t\t-seqImp\n')
+        sims{end+1} = 'bullet';
+        solvers{end+1} = 'seqImp';
+    end
+    if options.plot_bullet_nncg
+        fprintf('\t\t-nncg\n')
+        sims{end+1} = 'bullet';
+        solvers{end+1} = 'nncg';
+    end
+    if options.plot_bullet_pgs
+        fprintf('\t\t-pgs\n')
+        sims{end+1} = 'bullet';
+        solvers{end+1} = 'pgs';
+    end
+    if options.plot_bullet_dantzig
+        fprintf('\t\t-dantzig\n')
+        sims{end+1} = 'bullet';
+        solvers{end+1} = 'dantzig';
+    end
+    if options.plot_bullet_lemke
+        fprintf('\t\t-lemke\n')
+        sims{end+1} = 'bullet';
+        solvers{end+1} = 'lemke';
+    end
+end
+
+% ode
+if options.plot_ode_std ...
+        || options.plot_ode_quick
+    fprintf('\t-ode\n')
+    
+    if options.plot_ode_std
+        fprintf('\t\t-std\n')
+        sims{end+1} = 'ode';
+        solvers{end+1} = 'std';
+    end
+    if options.plot_ode_quick
+        fprintf('\t\t-quick\n')
+        sims{end+1} = 'ode';
+        solvers{end+1} = 'quick';
+    end
+end
+
+% mujoco
+if options.plot_mujoco_pgs ...
+        || options.plot_mujoco_cg ...
+        || options.plot_mujoco_newton
+    fprintf('\t-mujoco\n')
+    
+    if options.plot_mujoco_pgs
+        fprintf('\t\t-pgs\n')
+        sims{end+1} = 'mujoco';
+        solvers{end+1} = 'pgs';
+    end
+    if options.plot_mujoco_cg
+        fprintf('\t\t-cg\n')
+        sims{end+1} = 'mujoco';
+        solvers{end+1} = 'cg';
+    end
+    if options.plot_mujoco_newton
+        fprintf('\t\t-newton\n')
+        sims{end+1} = 'mujoco';
+        solvers{end+1} = 'newton';
+    end
+end
+
 end
