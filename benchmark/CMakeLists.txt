@@ -27,6 +27,7 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
 endif()
 
 if(BENCHMARK_ODE AND ode_FOUND)
+
     # rolling
     add_executable(rollingODESim rollingODESim.cpp rolling.hpp)
     target_link_libraries(rollingODESim ${ODESimLink})
