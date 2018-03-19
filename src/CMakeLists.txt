@@ -1,9 +1,3 @@
-add_subdirectory(bulletSim)
-#add_subdirectory(odeSim)
-#add_subdirectory(mujocoSim)
-add_subdirectory(dartSim)
-
-# Benchmark
 set(Benchmark_SRCS
         base/UserHandle.hpp
         base/World_RG.hpp
@@ -13,8 +7,9 @@ set(Benchmark_SRCS
         )
 
 add_library(BenchmarkLib ${Benchmark_SRCS})
-set(BENCHMARK_LINK
-        ${Boost_LIBRARIES}
-        ${YAML_CPP_LIBRARIES}
-        BenchmarkLib
-        )
+
+# sims
+add_subdirectory(bulletSim)
+add_subdirectory(odeSim)
+add_subdirectory(mujocoSim)
+add_subdirectory(dartSim)

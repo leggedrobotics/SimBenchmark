@@ -67,7 +67,7 @@ if(BENCHMARK_RAISIM)
 
     # set raiSim backend
     add_definitions(-DCOLLISION_BACKEND_ODE)        # ODE
-#    add_definitions(-DCOLLISION_BACKEND_BULLET)     # BULLET
+    #    add_definitions(-DCOLLISION_BACKEND_BULLET)     # BULLET
 endif()
 
 # bullet (optional)
@@ -118,6 +118,49 @@ if(BENCHMARK_DART)
     include_directories(${DART_INCLUDE_DIRS})
 endif()
 
+
+## =========================== LINK ===========================
+set(BENCHMARK_LINK
+        ${Boost_LIBRARIES}
+        ${YAML_CPP_LIBRARIES}
+        BenchmarkLib
+        ${RAI_COMMON_LINK}
+        ${RAI_GRAPHICS_OPENGL_LINK}
+        )
+
+if(BENCHMARK_BULLET AND Bullet_FOUND)
+    set(BulletSimLink
+            BulletDynamics
+            Bullet3Common
+            BulletCollision
+            LinearMath
+            BulletSimLib
+            ${BENCHMARK_LINK}
+            )
+endif()
+
+if(BENCHMARK_ODE AND ode_FOUND)
+    set(ODESimLink
+            ode
+            ODESimLib
+            ${BENCHMARK_LINK}
+            )
+endif()
+
+if(BENCHMARK_MUJOCO)
+    set(MuJoCoSimLink
+            ${glew}
+            ${glfw}
+            ${mujoco150}
+            ${mujoco150nogl}
+            GL
+            GLU
+            glut
+            MuJoCoSimLib
+            ${BENCHMARK_LINK}
+            )
+endif()
+
 ## =========================== FILES ===========================
 include_directories(src)
 add_subdirectory(src)
@@ -127,7 +170,6 @@ if(BENCHMARK_RAISIM AND raiSim_FOUND)
     message(STATUS "raiSim installation was found in local path")
 endif()
 
-## =========================== EXECUTABLES ===========================
 add_subdirectory(test)
 add_subdirectory(demo)
 add_subdirectory(benchmark)

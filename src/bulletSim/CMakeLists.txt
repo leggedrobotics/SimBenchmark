@@ -18,17 +18,5 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
             object/Capsule.cpp
             )
 
-    add_library(BulletSim ${BulletSim_SRCS})
-
-    ## --------------------------- links ---------------------------
-    set(BulletSimLink
-            BulletDynamics
-            Bullet3Common
-            BulletCollision
-            LinearMath
-            BulletSim
-            ${BENCHMARK_LINK}
-            ${RAI_COMMON_LINK}
-            ${RAI_GRAPHICS_OPENGL_LINK}
-            )
+    add_library(BulletSimLib ${BulletSim_SRCS})
 endif()
