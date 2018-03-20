@@ -54,14 +54,18 @@ class World_RG: public benchmark::World_RG {
   //////////////////////////
   virtual void setGravity(Eigen::Vector3d gravity) override ;
 
+  void loop(double realTimeFactor = 1.0);
   void integrate();
   void setTimeStep(double timeStep);
 
  private:
-  virtual void integrate(double dt) override ;
+  virtual void loop(double dt, double realTimeFactor = 1.0) override ;
   void setERP(double erp, double erp2, double frictionErp) override ;
+  virtual void integrate(double dt) override ;
 
   dart_sim::World world_;
+
+  double timeStep_ = 0.01;
 
   // solver type
 //  SolverOption solverOption_ = SOLVER_SEQUENTIAL_IMPULSE;

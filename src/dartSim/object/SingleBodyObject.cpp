@@ -37,9 +37,12 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObjec
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObject::getAngularVelocity() {
   return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
 }
-void dart_sim::object::SingleBodyObject::getPosition_W(rai_sim::Vec<3> &pos_w) {
 
+void dart_sim::object::SingleBodyObject::getPosition_W(rai_sim::Vec<3> &pos_w) {
+  Eigen::Vector6d positions = skeletonPtr_->getJoint(0)->getPositions();
+  pos_w = {positions[3], positions[4], positions[5]};
 }
+
 void dart_sim::object::SingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
   Eigen::Vector6d positions(Eigen::Vector6d::Zero());
   positions[3] = originPosition.x();
@@ -72,10 +75,26 @@ void dart_sim::object::SingleBodyObject::setPose(Eigen::Vector3d originPosition,
 
 }
 void dart_sim::object::SingleBodyObject::setVelocity(Eigen::Vector3d linearVelocity, Eigen::Vector3d angularVelocity) {
+  Eigen::Vector6d velocity(Eigen::Vector6d::Zero());
+  velocity[0] = angularVelocity.x();
+  velocity[1] = angularVelocity.y();
+  velocity[2] = angularVelocity.z();
+  velocity[3] = linearVelocity.x();
+  velocity[4] = linearVelocity.y();
+  velocity[5] = linearVelocity.z();
 
+  skeletonPtr_->getJoint(0)->setVelocities(velocity);
 }
 void dart_sim::object::SingleBodyObject::setVelocity(double dx, double dy, double dz, double wx, double wy, double wz) {
+  Eigen::Vector6d velocity(Eigen::Vector6d::Zero());
+  velocity[0] = wx;
+  velocity[1] = wy;
+  velocity[2] = wz;
+  velocity[3] = dx;
+  velocity[4] = dy;
+  velocity[5] = dz;
 
+  skeletonPtr_->getJoint(0)->setVelocities(velocity);
 }
 void dart_sim::object::SingleBodyObject::setExternalForce(Eigen::Vector3d force) {
 

@@ -75,6 +75,7 @@ void World_RG::setGravity(Eigen::Vector3d gravity) {
 }
 
 void World_RG::setTimeStep(double timeStep) {
+  timeStep_ = timeStep;
   world_.setTimeStep(timeStep);
 }
 
@@ -82,8 +83,15 @@ void World_RG::integrate() {
   world_.integrate();
 }
 
-void World_RG::integrate(double dt) {
+void World_RG::loop(double realTimeFactor) {
+  while (visualizerLoop(timeStep_, realTimeFactor))
+    integrate();
+}
 
+void World_RG::loop(double dt, double realTimeFactor) {
+}
+
+void World_RG::integrate(double dt) {
 }
 
 void World_RG::setERP(double erp, double erp2, double frictionErp) {

@@ -8,10 +8,8 @@ int main() {
 
   dart_sim::World_RG dartSim(800, 600, 0.5);
 
-  double dt = 0.01;  // (sec)
   dartSim.setGravity({0,0,0});
   dartSim.setLightPosition(30, 0, 10);
-  dartSim.setTimeStep(dt);
 
   // ball
   auto ball1 = dartSim.addSphere(2, 10.0);
@@ -56,5 +54,7 @@ int main() {
 
   // simulation loop
   // press 'q' key to quit
-  dartSim.loop(dt, 1.0);
+  double dt = 0.01;  // (sec)
+  dartSim.setTimeStep(dt);
+  dartSim.loop();
 }
