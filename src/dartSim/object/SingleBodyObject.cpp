@@ -1,13 +1,16 @@
 //
+// Created by kangd on 19.03.18.
+//
 
 #include "SingleBodyObject.hpp"
-//
-// Created by kangd on 19.03.18.
 
 namespace dart_sim {
 namespace object {
 
 dart_sim::object::SingleBodyObject::SingleBodyObject(double mass): mass_(mass) {
+}
+
+SingleBodyObject::~SingleBodyObject() {
 }
 
 const Eigen::Map<Eigen::Matrix<double, 4, 1>> dart_sim::object::SingleBodyObject::getQuaternion() {
@@ -43,7 +46,7 @@ void dart_sim::object::SingleBodyObject::setPosition(Eigen::Vector3d originPosit
   positions[4] = originPosition.y();
   positions[5] = originPosition.z();
 
-  skeletonPtr_->getJoint(0)->setPosition(positions);
+  skeletonPtr_->getJoint(0)->setPositions(positions);
 }
 void dart_sim::object::SingleBodyObject::setPosition(double x, double y, double z) {
   Eigen::Vector6d positions(Eigen::Vector6d::Zero());
@@ -51,7 +54,7 @@ void dart_sim::object::SingleBodyObject::setPosition(double x, double y, double 
   positions[4] = y;
   positions[5] = z;
 
-  skeletonPtr_->getJoint(0)->setPosition(positions);
+  skeletonPtr_->getJoint(0)->setPositions(positions);
 }
 void dart_sim::object::SingleBodyObject::setOrientation(Eigen::Quaterniond quaternion) {
 
@@ -86,9 +89,13 @@ void dart_sim::object::SingleBodyObject::setRestitutionCoefficient(double restit
 void dart_sim::object::SingleBodyObject::setFrictionCoefficient(double friction) {
 
 }
+void SingleBodyObject::setOrientationRandom() {
+
+}
 bool dart_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {
   return false;
 }
+
 const dart::dynamics::SkeletonPtr &SingleBodyObject::getSkeletonPtr() const {
   return skeletonPtr_;
 }

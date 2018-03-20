@@ -20,3 +20,8 @@ if(BENCHMARK_MUJOCO)
     add_executable(testMujoco testMujoco.cpp)
     target_link_libraries(testMujoco ${MuJoCoSimLink})
 endif()
+
+if(BENCHMARK_DART)
+    add_executable(testDart testDart.cpp)
+    target_link_libraries(testDart ${DartSimLink})
+endif()

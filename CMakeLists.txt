@@ -8,14 +8,6 @@ set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 add_definitions(-std=c++17)
 
 ## =========================== CMAKE MODE ===========================
-# bullet debug
-# TODO bullet debug check (in release mode)
-set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -Wl,--no-as-needed -O0 -mtune=native -march=native")
-
-set(CMAKE_CXX_FLAGS_RELEASE
-        "-Wl,--no-as-needed -O3 -mtune=native -march=native")
-
 # raiCommons debug
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DRAIDEBUG)
@@ -157,6 +149,14 @@ if(BENCHMARK_MUJOCO)
             GLU
             glut
             MuJoCoSimLib
+            ${BENCHMARK_LINK}
+            )
+endif()
+
+if(BENCHMARK_DART)
+    set(DartSimLink
+            DartSimLib
+            ${DART_LIBRARIES}
             ${BENCHMARK_LINK}
             )
 endif()

@@ -14,7 +14,7 @@ namespace object {
 class SingleBodyObject: public benchmark::object::SingleBodyObject {
 
  public:
-  SingleBodyObject(double mass);
+  explicit SingleBodyObject(double mass);
   virtual ~SingleBodyObject();
 
   const dart::dynamics::SkeletonPtr &getSkeletonPtr() const;
