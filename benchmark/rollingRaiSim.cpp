@@ -5,6 +5,7 @@
 #include <raiSim/World_RG.hpp>
 
 #include "rolling.hpp"
+#include <valarray>
 
 namespace rb = rolling_benchmark;
 
@@ -42,6 +43,7 @@ int main(int argc, const char* argv[]) {
     force = {rb::params.F * 0.707106781186547,
              rb::params.F * 0.707106781186547,
              0};
+  std::vector<double> squaredError;
 
   // simulation loop
   // press 'q' key to quit
@@ -68,10 +70,15 @@ int main(int argc, const char* argv[]) {
       ru::logger->appendData("posbox", objectList[0]->getPosition().data());
       ru::logger->appendData("posball", objectList[1]->getPosition().data());
       sim->integrate(rb::params.dt);
+      squaredError.push_back(std::pow(objectList[1]->getLinearVelocity()[1] - (0.15084944665*(rb::params.dt*(i+1))),2)+
+        std::pow(objectList[1]->getLinearVelocity()[0] - (0.15084944665*(rb::params.dt*(i+1))),2)+
+        std::pow(objectList[1]->getLinearVelocity()[2],2));
     }
   }
   ru::timer->stopTimer("rolling");
 
+  std::valarray<double> squaredErrorVal{squaredError.data(), squaredError.size()};
+  std::cout << "sum = " << squaredErrorVal.sum()/squaredError.size() << "\n";
   // delete sim
   delete sim;
 
