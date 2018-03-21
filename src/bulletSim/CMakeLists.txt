@@ -7,6 +7,13 @@ set(CMAKE_CXX_FLAGS_RELEASE
 if(BENCHMARK_BULLET AND Bullet_FOUND)
     message(STATUS "Bullet installation was found in local path")
 
+    link_libraries(
+            BulletDynamics
+            Bullet3Common
+            BulletCollision
+            LinearMath
+    )
+
     set(BulletSim_SRCS
             World.hpp
             World.cpp

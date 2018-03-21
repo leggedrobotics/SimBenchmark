@@ -7,6 +7,10 @@ set(CMAKE_CXX_FLAGS_RELEASE
 if(BENCHMARK_DART AND DART_FOUND)
     message(STATUS "DART installation was found in local path")
 
+    link_libraries(
+            ${DART_LIBRARIES}
+    )
+
     set(DartSim_SRCS
             World.cpp
             World.hpp

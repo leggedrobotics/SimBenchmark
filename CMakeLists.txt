@@ -16,11 +16,11 @@ else ()
 endif()
 
 # options
-option(BENCHMARK_RAISIM OFF)
-option(BENCHMARK_BULLET OFF)
-option(BENCHMARK_ODE OFF)
-option(BENCHMARK_MUJOCO OFF)
-option(BENCHMARK_DART OFF)
+option(BENCHMARK_RAISIM "benchmark raiSim" ON)
+option(BENCHMARK_BULLET "benchmark Bullet" ON)
+option(BENCHMARK_ODE "benchmark ODE" ON)
+option(BENCHMARK_MUJOCO "benchmark MUJOCO" OFF)
+option(BENCHMARK_DART "benchmark DART" OFF)
 
 ## =========================== LINK DIRECTORIES ===========================
 link_directories(/usr/local/lib)
@@ -55,7 +55,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 
 # raisim (optional)
 if(BENCHMARK_RAISIM)
-    message(STATUS "Benchmark raiSim option is on")
+    message(STATUS "Benchmark raiSim")
 
     # set raiSim backend
     add_definitions(-DCOLLISION_BACKEND_ODE)        # ODE
@@ -64,7 +64,7 @@ endif()
 
 # bullet (optional)
 if(BENCHMARK_BULLET)
-    message(STATUS "Benchmark Bullet option is on")
+    message(STATUS "Benchmark Bullet")
 
     # bullet double precision
     add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
@@ -76,7 +76,7 @@ endif()
 
 # ode (optional)
 if(BENCHMARK_ODE)
-    message(STATUS "Benchmark ODE option is on")
+    message(STATUS "Benchmark ODE")
 
     # ode double precision
     add_definitions(-DODE_DOUBLE_PRECISION)
@@ -87,7 +87,7 @@ endif()
 
 # mujoco (optional)
 if(BENCHMARK_MUJOCO)
-    message(STATUS "Benchmark mujoco option is on")
+    message(STATUS "Benchmark MUJOCO")
 
     include_directories(mjpro150/include)
     # mujoco shared libraries
@@ -104,7 +104,7 @@ endif()
 
 # dart (optional)
 if(BENCHMARK_DART)
-    message(STATUS "Benchmark dart option is on")
+    message(STATUS "Benchmark DART")
 
     find_package(DART CONFIG REQUIRED)
     include_directories(${DART_INCLUDE_DIRS})
@@ -122,10 +122,6 @@ set(BENCHMARK_LINK
 
 if(BENCHMARK_BULLET AND Bullet_FOUND)
     set(BulletSimLink
-            BulletDynamics
-            Bullet3Common
-            BulletCollision
-            LinearMath
             BulletSimLib
             ${BENCHMARK_LINK}
             )
@@ -133,7 +129,6 @@ endif()
 
 if(BENCHMARK_ODE AND ode_FOUND)
     set(ODESimLink
-            ode
             ODESimLib
             ${BENCHMARK_LINK}
             )
@@ -156,7 +151,6 @@ endif()
 if(BENCHMARK_DART)
     set(DartSimLink
             DartSimLib
-            ${DART_LIBRARIES}
             ${BENCHMARK_LINK}
             )
 endif()
