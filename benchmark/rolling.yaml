@@ -32,5 +32,5 @@ constant:
   mu_ground: 0.5
   mu_ball: 1.0
   mu_box: 0.8
-  penentration0: 5e-6   # initial penetration
+  penentration0: 1e-5   # initial penetration
 ...
