@@ -102,7 +102,7 @@ void simulationSetup() {
   rai_sim::MaterialManager materials;
 
   // solver params
-  sim->setContactSolverParam(1.0, 0.7, 1.0, 50, 1e-7*rb::params.dt);
+  sim->setContactSolverParam(1.0, 1, 1.0, 50, 1e-7*rb::params.dt);
 
   // materials
   materials.setMaterialNames({"ground", "box", "ball"});
