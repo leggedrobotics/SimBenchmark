@@ -133,7 +133,7 @@ void simulationSetup() {
   for(int i = 0; i < 5; i++) {
     for(int j = 0; j < 5; j++) {
       auto ball = sim->addSphere(0.5, 1);
-      ball->setPosition(i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5 - 2 * rb::params.initPenetration);
+      ball->setPosition(i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5 - 3 * rb::params.initPenetration);
       ball->setMaterial(sim->getMaterialKey("ball"));
       objectList.push_back(ball);
     }
