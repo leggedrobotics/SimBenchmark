@@ -30,21 +30,35 @@ World::World(SolverOption solverOption) : solverOption_(solverOption) {
       solver_ = new btMLCPSolver(mlcpSolver_);
       break;
     case SOLVER_MLCP_DANTZIG:
-      solver_ = new btMLCPSolver(new btDantzigSolver);
+      mlcpSolver_ = new btDantzigSolver;
+      solver_ = new btMLCPSolver(mlcpSolver_);
       break;
     case SOLVER_MLCP_LEMKE:
       mlcpSolver_ = new btLemkeSolver;
       solver_ = new btMLCPSolver(mlcpSolver_);
       break;
+    case SOLVER_MULTI_BODY:
+      solver_ = new btMultiBodyConstraintSolver;
     default:
       solver_ = new btSequentialImpulseConstraintSolver;
   }
 
   // world
-  dynamicsWorld_ = new btDiscreteDynamicsWorld(collisionDispatcher_,
-                                               broadphase_,
-                                               solver_,
-                                               collisionConfiguration_);
+  if(solverOption == SOLVER_MULTI_BODY) {
+    // multi body world
+    dynamicsWorld_ = new btMultiBodyDynamicsWorld(collisionDispatcher_,
+                                                  broadphase_,
+                                                  (btMultiBodyConstraintSolver* )solver_,
+                                                  collisionConfiguration_);
+  }
+  else {
+    // single body world
+    dynamicsWorld_ = new btDiscreteDynamicsWorld(collisionDispatcher_,
+                                                 broadphase_,
+                                                 solver_,
+                                                 collisionConfiguration_);
+  }
+
   dynamicsWorld_->setGravity(gravity_);
 
   // solver properties
@@ -138,6 +152,15 @@ bullet_sim::object::CheckerBoard *bullet_sim::World::addCheckerboard(double grid
   return checkerBoard;
 }
 
+object::ArticulatedSystem *World::addArticulatedSystem(std::string urdfPath,
+                                                       CollisionGroupType collisionGroup,
+                                                       CollisionGroupType collisionMask) {
+  object::ArticulatedSystem *articulatedSystem = new bullet_sim::object::ArticulatedSystem(urdfPath,
+                                                                                           (btMultiBodyDynamicsWorld* )dynamicsWorld_);
+  objectList_.push_back(articulatedSystem);
+  return articulatedSystem;
+}
+
 void bullet_sim::World::integrate(double dt) {
   // TODO substep
   // simulation step
@@ -178,7 +201,6 @@ void bullet_sim::World::setGravity(const btVector3 &gravity_) {
   World::gravity_ = gravity_;
   dynamicsWorld_->setGravity(gravity_);
 }
-
 void World::setERP(double erp, double erp2, double frictionErp) {
   dynamicsWorld_->getSolverInfo().m_erp = erp;
   dynamicsWorld_->getSolverInfo().m_erp2 = erp2;

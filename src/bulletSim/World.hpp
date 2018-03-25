@@ -11,12 +11,17 @@
 #include <BulletDynamics/MLCPSolvers/btSolveProjectedGaussSeidel.h>
 #include <BulletDynamics/MLCPSolvers/btDantzigSolver.h>
 #include <BulletDynamics/MLCPSolvers/btLemkeSolver.h>
+#include <BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h>
+#include <BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
 #include <Configure.hpp>
+#include <raiSim/configure.hpp>
 
+#include "bulletSim/object/Object.hpp"
 #include "bulletSim/object/Sphere.hpp"
 #include "bulletSim/object/Box.hpp"
 #include "bulletSim/object/Capsule.hpp"
 #include "bulletSim/object/CheckerBoard.hpp"
+#include "bulletSim/object/ArticulatedSystem/ArticulatedSystem.hpp"
 
 namespace bullet_sim {
 
@@ -25,7 +30,8 @@ enum SolverOption {
   SOLVER_NNCG,
   SOLVER_MLCP_PGS,
   SOLVER_MLCP_DANTZIG,
-  SOLVER_MLCP_LEMKE
+  SOLVER_MLCP_LEMKE,
+  SOLVER_MULTI_BODY
 };
 
 struct Single3DContactProblem {
@@ -51,6 +57,7 @@ class World {
                                         benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
   object::Capsule *addCapsule(double radius, double height, double mass,
                               benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
+  object::ArticulatedSystem *addArticulatedSystem(std::string urdfPath, CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
 
   void integrate(double dt);
 
@@ -75,7 +82,7 @@ class World {
   btMLCPSolverInterface* mlcpSolver_ = 0;
 
   // list
-  std::vector<object::SingleBodyObject*> objectList_;
+  std::vector<object::Object*> objectList_;
   std::vector<Single3DContactProblem> contactProblemList_;
 
 //  std::vector<int> colIdxToObjIdx_;

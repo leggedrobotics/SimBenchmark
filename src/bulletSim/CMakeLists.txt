@@ -7,18 +7,13 @@ set(CMAKE_CXX_FLAGS_RELEASE
 if(BENCHMARK_BULLET AND Bullet_FOUND)
     message(STATUS "Bullet installation was found in local path")
 
-    link_libraries(
-            BulletDynamics
-            Bullet3Common
-            BulletCollision
-            LinearMath
-    )
-
     set(BulletSim_SRCS
             World.hpp
             World.cpp
             World_RG.hpp
             World_RG.cpp
+            object/Object.hpp
+            object/Object.cpp
             object/SingleBodyObject.hpp
             object/SingleBodyObject.cpp
             object/Box.hpp
@@ -29,7 +24,20 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
             object/Sphere.cpp
             object/Capsule.hpp
             object/Capsule.cpp
+            object/ArticulatedSystem/ArticulatedSystem.hpp
+            object/ArticulatedSystem/ArticulatedSystem.cpp
+            object/ArticulatedSystem/URDF/MyMultiBodyCreator.h
+            object/ArticulatedSystem/URDF/MyMultiBodyCreator.cpp
+            object/ArticulatedSystem/URDF/URDFToBullet.h
+            object/ArticulatedSystem/URDF/URDFToBullet.cpp
             )
 
     add_library(BulletSimLib ${BulletSim_SRCS})
+    target_link_libraries(BulletSimLib
+            BulletDynamics
+            Bullet3Common
+            BulletCollision
+            LinearMath
+            BulletRobotics
+            )
 endif()

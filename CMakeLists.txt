@@ -18,7 +18,7 @@ endif()
 # options
 option(BENCHMARK_RAISIM "benchmark raiSim" ON)
 option(BENCHMARK_BULLET "benchmark Bullet" ON)
-option(BENCHMARK_ODE "benchmark ODE" ON)
+option(BENCHMARK_ODE "benchmark ODE" OFF)
 option(BENCHMARK_MUJOCO "benchmark MUJOCO" OFF)
 option(BENCHMARK_DART "benchmark DART" OFF)
 

@@ -1,4 +1,4 @@
-if(BENCHMARK_RAISIM AND raiSim_FOUND)
+if(BENCHMARK_RAISIM)
     # rolling
     add_executable(rollingRaiSim rollingRaiSim.cpp rolling.hpp)
     target_link_libraries(rollingRaiSim ${RAI_SIM_LINK} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES})
@@ -12,7 +12,7 @@ if(BENCHMARK_RAISIM AND raiSim_FOUND)
     target_link_libraries(thousandRaiSim ${RAI_SIM_LINK} ${Boost_LIBRARIES} ${YAML_CPP_LIBRARIES} )
 endif()
 
-if(BENCHMARK_BULLET AND Bullet_FOUND)
+if(BENCHMARK_BULLET)
     # rolling
     add_executable(rollingBulletSim rollingBulletSim.cpp rolling.hpp)
     target_link_libraries(rollingBulletSim ${BulletSimLink})
@@ -27,7 +27,6 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
 endif()
 
 if(BENCHMARK_ODE AND ode_FOUND)
-
     # rolling
     add_executable(rollingODESim rollingODESim.cpp rolling.hpp)
     target_link_libraries(rollingODESim ${ODESimLink})

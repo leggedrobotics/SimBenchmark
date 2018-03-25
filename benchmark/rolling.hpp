@@ -65,7 +65,6 @@ Params params;
 
 void loggerSetup(std::string path, std::string name) {
   // logger
-  ru::logger->setCreatePathDir(true);
   ru::logger->setLogPath(path);
   ru::logger->setLogFileName(name);
   ru::logger->setOptions(ru::ONEFILE_FOR_ONEDATA);
@@ -76,7 +75,6 @@ void loggerSetup(std::string path, std::string name) {
 
   // timer
   std::string timer = name + "timer";
-  ru::timer->setCreatePathDir(true);
   ru::timer->setLogPath(path);
   ru::timer->setLogFileName(timer);
 }

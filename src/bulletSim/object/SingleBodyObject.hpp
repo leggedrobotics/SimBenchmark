@@ -11,11 +11,12 @@
 #include <Eigen/Geometry>
 
 #include "base/SingleBodyObject.hpp"
+#include "Object.hpp"
 
 namespace bullet_sim {
 namespace object {
 
-class SingleBodyObject: public benchmark::object::SingleBodyObject {
+class SingleBodyObject: public benchmark::object::SingleBodyObject, public Object {
 
  public:
   SingleBodyObject(double mass);

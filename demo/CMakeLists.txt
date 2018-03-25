@@ -20,6 +20,9 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
     # stack
     add_executable(stackBulletSim stackBulletSim.cpp)
     target_link_libraries(stackBulletSim ${BulletSimLink})
+
+    add_executable(demoAnymalBulletSim demoAnymalBulletSim.cpp)
+    target_link_libraries(demoAnymalBulletSim ${BulletSimLink})
 endif()
 
 if(BENCHMARK_ODE AND ode_FOUND)

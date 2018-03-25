@@ -7,10 +7,6 @@ set(CMAKE_CXX_FLAGS_RELEASE
 if(BENCHMARK_ODE AND ode_FOUND)
     message(STATUS "ODE installation was found in local path")
 
-    link_libraries(
-            ode
-    )
-
     set(ODESim_SRCS
             World.hpp
             World.cpp
@@ -29,4 +25,7 @@ if(BENCHMARK_ODE AND ode_FOUND)
             )
 
     add_library(ODESimLib ${ODESim_SRCS})
+    target_link_libraries(ODESimLib
+            ode
+    )
 endif()

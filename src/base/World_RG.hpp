@@ -74,7 +74,6 @@ class World_RG {
   virtual void processGraphicalObject(rai_graphics::object::SingleBodyObject* go, int li);
   virtual void adjustTransparency(rai_graphics::object::SingleBodyObject* ob, bool hidable);
 
-//  World world_;
   int visualizerFlags_ = 0;
   StopWatch watch_, visualizerWatch_;
 
@@ -92,7 +91,7 @@ class World_RG {
   const int windowHeight_ = 600;
 
   std::vector<SingleBodyHandle> sbHandles_;
-//  std::vector<ArticulatedSystemHandle> asHandles_;
+  std::vector<ArticulatedSystemHandle> asHandles_;
   std::vector<object::SingleBodyObject *> framesAndCOMobj_;
 
   bool isReady_=false;
