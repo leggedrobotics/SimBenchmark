@@ -23,6 +23,9 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
 
     add_executable(demoAnymalBulletSim demoAnymalBulletSim.cpp)
     target_link_libraries(demoAnymalBulletSim ${BulletSimLink})
+
+    add_executable(demoMultibodyBulletSim demoMultibodyBulletSim.cpp)
+    target_link_libraries(demoMultibodyBulletSim ${BulletSimLink})
 endif()
 
 if(BENCHMARK_ODE AND ode_FOUND)

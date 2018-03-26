@@ -13,13 +13,18 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include <bulletSim/World.hpp>
+#include <bulletSim/World_RG.hpp>
 
 int main() {
 
-  bullet_sim::World world(bullet_sim::SOLVER_MULTI_BODY);
+  bullet_sim::World_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
 
-  world.addArticulatedSystem("../res/ANYmal/robot.urdf");
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1, benchmark::GRID);
+  auto anymal = sim.addArticulatedSystem("../res/ANYmal/robot.urdf");
+
+  sim.setGravity({0, 0, -9.8});
+  sim.cameraFollowObject(checkerboard, {5, 5, 15});
+  sim.loop(0.01);
 
   return 0;
 }

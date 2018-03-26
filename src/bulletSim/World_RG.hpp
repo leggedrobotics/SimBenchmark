@@ -9,8 +9,10 @@
 
 #include <raiGraphics/RAI_graphics.hpp>
 #include <raiSim/math.hpp>
+#include <bullet/btBulletCollisionCommon.h>
 
 #include "base/World_RG.hpp"
+#include "UserHandle.hpp"
 #include "Configure.hpp"
 #include "World.hpp"
 
@@ -30,6 +32,12 @@ class World_RG: public benchmark::World_RG {
   /* constructor for no visualization */
   World_RG(SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
   virtual ~World_RG();
+
+  /////////////////////////////////////
+  /// Visualization related methods ///
+  /////////////////////////////////////
+  virtual void visEnd() override ;
+  virtual void updateFrame() override ;
 
   //////////////////////////////////
   /// adding or removing objects ///
@@ -56,9 +64,9 @@ class World_RG: public benchmark::World_RG {
                                          double mass,
                                          benchmark::CollisionGroupType collisionGroup = 1,
                                          benchmark::CollisionGroupType collisionMask=-1) override ;
-  benchmark::ArticulatedSystemHandle addArticulatedSystem(std::string nm,
-                                                          CollisionGroupType collisionGroup = 1,
-                                                          CollisionGroupType collisionMask=-1) ;
+  ArticulatedSystemHandle addArticulatedSystem(std::string nm,
+                                               CollisionGroupType collisionGroup = 1,
+                                               CollisionGroupType collisionMask=-1) ;
 
   //////////////////////////
   /// simulation methods ///
@@ -72,6 +80,10 @@ class World_RG: public benchmark::World_RG {
 
   // solver type
   SolverOption solverOption_ = SOLVER_SEQUENTIAL_IMPULSE;
+
+  // list
+  std::vector<ArticulatedSystemHandle> asHandles_;
+
 
 };
 

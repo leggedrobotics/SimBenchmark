@@ -549,7 +549,7 @@ void ConvertURDF2BulletInternal(
 				}
 				{
 					B3_PROFILE("createCollisionObjectGraphicsInstance2");
-//					creation.createCollisionObjectGraphicsInstance2(urdfLinkIndex, col, color2, specularColor);
+					creation.createCollisionObjectGraphicsInstance2(urdfLinkIndex, col, color2, specularColor);
 				}
 				{
 					B3_PROFILE("convertLinkVisualShapes2");

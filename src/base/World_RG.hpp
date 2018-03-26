@@ -91,7 +91,6 @@ class World_RG {
   const int windowHeight_ = 600;
 
   std::vector<SingleBodyHandle> sbHandles_;
-  std::vector<ArticulatedSystemHandle> asHandles_;
   std::vector<object::SingleBodyObject *> framesAndCOMobj_;
 
   bool isReady_=false;

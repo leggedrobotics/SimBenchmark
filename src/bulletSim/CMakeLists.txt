@@ -12,6 +12,7 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
             World.cpp
             World_RG.hpp
             World_RG.cpp
+            UserHandle.hpp
             object/Object.hpp
             object/Object.cpp
             object/SingleBodyObject.hpp
@@ -30,6 +31,8 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
             object/ArticulatedSystem/URDF/MyMultiBodyCreator.cpp
             object/ArticulatedSystem/URDF/URDFToBullet.h
             object/ArticulatedSystem/URDF/URDFToBullet.cpp
+#            object/ArticulatedSystem/URDF/BulletUrdfImporter.h
+#            object/ArticulatedSystem/URDF/BulletUrdfImporter.cpp
             )
 
     add_library(BulletSimLib ${BulletSim_SRCS})

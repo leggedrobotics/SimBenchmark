@@ -6,11 +6,14 @@
 #define BULLETSIM_ARTICULATEDSYSTEM_HPP
 
 #include <string>
+#include <btBulletCollisionCommon.h>
 #include <BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
 #include <BulletDynamics/Featherstone/btMultiBody.h>
 
 #include "URDF/BulletUrdfImporter.h"
 #include "URDF/MyMultiBodyCreator.h"
+#include "URDF/UrdfParser.h"
+
 #include "base/ArticulatedSystem.hpp"
 #include "bulletSim/object/ArticulatedSystem/URDF/URDFToBullet.h"
 #include "bulletSim/object/Object.hpp"
@@ -25,9 +28,16 @@ class ArticulatedSystem: public Object, public benchmark::object::ArticulatedSys
 
   virtual ~ArticulatedSystem();
 
+  const std::vector<btCollisionShape *> &getCollisionShapes() const;
+
  private:
+//  void initVisObj();
+//  void initVisColObj();
 
   btMultiBody *multiBody;
+
+  // collision shapes
+  std::vector<btCollisionShape *> collisionShapes;
 
 };
 

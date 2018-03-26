@@ -39,8 +39,10 @@ World::World(SolverOption solverOption) : solverOption_(solverOption) {
       break;
     case SOLVER_MULTI_BODY:
       solver_ = new btMultiBodyConstraintSolver;
+      break;
     default:
       solver_ = new btSequentialImpulseConstraintSolver;
+      break;
   }
 
   // world
@@ -162,7 +164,6 @@ object::ArticulatedSystem *World::addArticulatedSystem(std::string urdfPath,
 }
 
 void bullet_sim::World::integrate(double dt) {
-  // TODO substep
   // simulation step
   dynamicsWorld_->stepSimulation(dt, 0);
 

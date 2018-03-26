@@ -220,7 +220,7 @@ void MyMultiBodyCreator::createCollisionObjectGraphicsInstance(int linkIndex, cl
 
 void MyMultiBodyCreator::createCollisionObjectGraphicsInstance2(int linkIndex, class btCollisionObject* col, const btVector4& colorRgba, const btVector3& specularColor)
 {
-//	createCollisionObjectGraphicsInstance(linkIndex,col,colorRgba);
+	createCollisionObjectGraphicsInstance(linkIndex,col,colorRgba);
 //	int graphicsInstanceId = col->getUserIndex();
 //	btVector3DoubleData speculard;
 //	specularColor.serializeDouble(speculard);
