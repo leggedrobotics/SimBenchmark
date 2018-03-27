@@ -275,7 +275,6 @@ void ConvertURDF2BulletInternal(
 		B3_PROFILE("convertLinkVisualShapes");
 //		graphicsIndex = u2b.convertLinkVisualShapes(urdfLinkIndex, pathPrefix, localInertialFrame);
 	}
-	
 
 
     if (compoundShape)

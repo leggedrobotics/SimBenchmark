@@ -2,8 +2,9 @@
 #define BULLET_URDF_IMPORTER_H 
 
 #include "URDFImporterInterface.h"
-
+#include "raiCommon/rai_utils.hpp"
 #include "UrdfRenderingInterface.h"
+#include "UrdfParser.h"
 
 struct BulletURDFTexture
 {
@@ -66,9 +67,8 @@ public:
     virtual bool getRootTransformInWorld(btTransform& rootTransformInWorld) const;
 	virtual void setRootTransformInWorld(const btTransform& rootTransformInWorld);
 
-    virtual int convertLinkVisualShapes(int linkIndex, const char* pathPrefix, const btTransform& inertialFrame) const;
-
-    virtual void convertLinkVisualShapes2(int linkIndex, int urdfIndex, const char* pathPrefix, const btTransform& inertialFrame, class btCollisionObject* colObj, int bodyUniqueId) const;
+//    virtual int convertLinkVisualShapes(int linkIndex, const char* pathPrefix, const btTransform& inertialFrame) const;
+//    virtual void convertLinkVisualShapes2(int linkIndex, int urdfIndex, const char* pathPrefix, const btTransform& inertialFrame, class btCollisionObject* colObj, int bodyUniqueId) const;
 
 	class btCollisionShape* convertURDFToCollisionShape(const struct UrdfCollision* collision, const char* urdfPathPrefix) const;
 
@@ -88,9 +88,9 @@ public:
 	virtual int getAllocatedTexture(int index) const;
 	
 	virtual void setEnableTinyRenderer(bool enable);
-	void convertURDFToVisualShapeInternal(const struct UrdfVisual* visual, const char* urdfPathPrefix, const class btTransform& visualTransform, btAlignedObjectArray<struct GLInstanceVertex>& verticesOut, btAlignedObjectArray<int>& indicesOut, btAlignedObjectArray<struct BulletURDFTexture>& texturesOut) const;
+//	void convertURDFToVisualShapeInternal(const struct UrdfVisual* visual, const char* urdfPathPrefix, const class btTransform& visualTransform, btAlignedObjectArray<struct GLInstanceVertex>& verticesOut, btAlignedObjectArray<int>& indicesOut, btAlignedObjectArray<struct BulletURDFTexture>& texturesOut) const;
 
-
+    std::vector<std::string> getMeshFilePath(int linkIndex);
 };
 
 

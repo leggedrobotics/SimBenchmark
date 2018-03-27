@@ -31,8 +31,10 @@ if(BENCHMARK_BULLET AND Bullet_FOUND)
             object/ArticulatedSystem/URDF/MyMultiBodyCreator.cpp
             object/ArticulatedSystem/URDF/URDFToBullet.h
             object/ArticulatedSystem/URDF/URDFToBullet.cpp
-#            object/ArticulatedSystem/URDF/BulletUrdfImporter.h
-#            object/ArticulatedSystem/URDF/BulletUrdfImporter.cpp
+            object/ArticulatedSystem/URDF/BulletUrdfImporter.h
+            object/ArticulatedSystem/URDF/BulletUrdfImporter.cpp
+            object/ArticulatedSystem/URDF/Utils/b3ResourcePath.h
+            object/ArticulatedSystem/URDF/Utils/b3ResourcePath.cpp
             )
 
     add_library(BulletSimLib ${BulletSim_SRCS})

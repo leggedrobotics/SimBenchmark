@@ -11,8 +11,8 @@ namespace object {
 
 ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world) {
 
-  BulletURDFImporter importer(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA);
-  bool loadOK = importer.loadURDF(urdfFile.c_str());
+  urdfImporter_ = new BulletURDFImporter(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA);
+  bool loadOK = urdfImporter_->loadURDF(urdfFile.c_str());
 
   if(loadOK) {
     MyMultiBodyCreator creator(0);
@@ -21,7 +21,7 @@ ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWo
     identityTrans.setIdentity();
     identityTrans.setOrigin({5, 5, 5});
 
-    ConvertURDF2Bullet2(importer, creator, identityTrans, world, true, importer.getPathPrefix());
+    ConvertURDF2Bullet2(*urdfImporter_, creator, identityTrans, world, true, urdfImporter_->getPathPrefix());
 
     multiBody_ = creator.getBulletMultiBody();
     initVisuals();
@@ -32,6 +32,8 @@ ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWo
 }
 
 ArticulatedSystem::~ArticulatedSystem() {
+  delete multiBody_;
+  delete urdfImporter_;
 }
 
 void ArticulatedSystem::initVisuals() {
@@ -45,11 +47,16 @@ void ArticulatedSystem::initVisuals() {
   // link
   for (int i = 0; i < multiBody_->getNumLinks(); i++) {
     btMultiBodyLinkCollider *linkCollider = multiBody_->getLinkCollider(i);
-    initVisualFromCollider(linkCollider, i + 1);
+
+    if(urdfImporter_->getMeshFilePath(i).size() > 0){
+      initVisualFromCollider(linkCollider, i + 1, urdfImporter_->getMeshFilePath(i)[0]);
+    }
+    else
+      initVisualFromCollider(linkCollider, i + 1);
   }
 }
 
-void ArticulatedSystem::initVisualFromCollider(btMultiBodyLinkCollider *linkCollider, int colliderId) {
+void ArticulatedSystem::initVisualFromCollider(btMultiBodyLinkCollider *linkCollider, int colliderId, std::string meshfile) {
 
   // orientation
   rai_sim::Mat<3, 3> mat;
@@ -89,7 +96,8 @@ void ArticulatedSystem::initVisualFromCollider(btMultiBodyLinkCollider *linkColl
 void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
                                                      rai_sim::Mat<3, 3> rotMat,
                                                      rai_sim::Vec<3> pos,
-                                                     int id) {
+                                                     int id,
+                                                     std::string meshfile) {
 
   // color
   rai_sim::Vec<4> color;
@@ -104,9 +112,15 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
                  ((btBoxShape *)col)->getHalfExtentsWithMargin().z() * 2.0,
                  0};
 
-      visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Box, color));
+      if(meshfile.empty()) {
+        visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Box, color));
+        visProps_.emplace_back(std::make_pair("", boxSize));
+      }
+      else {
+        visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Mesh, color));
+        visProps_.emplace_back(std::make_pair(meshfile, boxSize));
+      }
       visColObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Box));
-      visProps_.emplace_back(std::make_pair("", boxSize));
       visColProps_.emplace_back(std::make_pair("", boxSize));
       break;
     }
@@ -118,9 +132,15 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
                  0,
                  0};
 
-      visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Cylinder, color));
+      if(meshfile.empty()) {
+        visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Cylinder, color));
+        visProps_.emplace_back(std::make_pair("", cylSize));
+      }
+      else {
+        visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Mesh, color));
+        visProps_.emplace_back(std::make_pair(meshfile, cylSize));
+      }
       visColObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Cylinder));
-      visProps_.emplace_back(std::make_pair("", cylSize));
       visColProps_.emplace_back(std::make_pair("", cylSize));
       break;
     }
@@ -132,9 +152,15 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
                     0,
                     0};
 
-      visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Sphere, color));
+      if(meshfile.empty()) {
+        visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Sphere, color));
+        visProps_.emplace_back(std::make_pair("", sphereSize));
+      }
+      else {
+        visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Mesh, color));
+        visProps_.emplace_back(std::make_pair(meshfile, sphereSize));
+      }
       visColObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Sphere));
-      visProps_.emplace_back(std::make_pair("", sphereSize));
       visColProps_.emplace_back(std::make_pair("", sphereSize));
       break;
     }
@@ -146,9 +172,15 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
                  0,
                  0};
 
-      visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Cylinder, color));
+      if(meshfile.empty()) {
+        visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Cylinder, color));
+        visProps_.emplace_back(std::make_pair("", cylSize));
+      }
+      else {
+        visObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Mesh, color));
+        visProps_.emplace_back(std::make_pair(meshfile, cylSize));
+      }
       visColObj.emplace_back(std::make_tuple(rotMat, pos, id, benchmark::object::Shape::Cylinder));
-      visProps_.emplace_back(std::make_pair("", cylSize));
       visColProps_.emplace_back(std::make_pair("", cylSize));
       break;
     }
