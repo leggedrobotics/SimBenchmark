@@ -162,43 +162,41 @@ void World_RG::updateFrame() {
 
 //  TODO articulated system
   for (auto &as : asHandles_) {
-//    Vec<4> quat;
-//    Vec<3> pos, jointPos_W;
-//    Mat<3, 3> rot_WB, rotTemp;
+    rai_sim::Vec<4> quat;
+    rai_sim::Vec<3> pos;
+
+    // update visuals for articulated system
+    as->updateVisuals();
 
     if (showAlternateGraphicsIfexists) {
-//      /// update collision objects
-//      for (int i = 0; i < as->getVisColOb().size(); i++) {
-//        as.alternateVisual()[i]->setVisibility(true);
-//        int parentId = std::get<2>(as->getVisColOb()[i]);
-//        as->getBodyPose(parentId, rot_WB, jointPos_W);
-//        matvecmul(rot_WB, std::get<1>(as->getVisColOb()[i]), pos);
-//        as.alternateVisual()[i]->setPos(jointPos_W.v[0] + pos.v[0],
-//                                        jointPos_W.v[1] + pos.v[1],
-//                                        jointPos_W.v[2] + pos.v[2]);
-//        matmul(rot_WB, std::get<0>(as->getVisColOb()[i]), rotTemp);
-//        rotMatToQuat(rotTemp, quat);
-//        as.alternateVisual()[i]->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
-//        adjustTransparency(as.alternateVisual()[i], as.hidable);
-//      }
-//
-//      for (int i = 0; i < as->getVisOb().size(); i++)
-//        as.visual()[i]->setVisibility(false);
+      /// update collision objects
+      for (int i = 0; i < as->getVisColOb().size(); i++) {
+        as.alternateVisual()[i]->setVisibility(true);
+        pos = std::get<1>(as->getVisOb()[i]);
+        as.alternateVisual()[i]->setPos(
+            pos[0],
+            pos[1],
+            pos[2]);
+        rotMatToQuat(std::get<0>(as->getVisOb()[i]), quat);
+        as.alternateVisual()[i]->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
+        adjustTransparency(as.alternateVisual()[i], as.hidable);
+      }
+
+      for (int i = 0; i < as->getVisOb().size(); i++)
+        as.visual()[i]->setVisibility(false);
+
     } else {
       for (int i = 0; i < as->getVisOb().size(); i++) {
         as.visual()[i]->setVisibility(true);
         if (!as.visual()[i]->isVisible()) continue;
-        int parentId = std::get<2>(as->getVisOb()[i]);
-//        as->getBodyPose(parentId, rot_WB, jointPos_W);
-//        matvecmul(rot_WB, std::get<1>(as->getVisOb()[i]), pos);
+        pos = std::get<1>(as->getVisOb()[i]);
         as.visual()[i]->setPos(
-            std::get<1>(as->getVisOb()[i])[0],
-            std::get<1>(as->getVisOb()[i])[1],
-            std::get<1>(as->getVisOb()[i])[2]
+            pos[0],
+            pos[1],
+            pos[2]
         );
-//        matmul(rot_WB, std::get<0>(as->getVisOb()[i]), rotTemp);
-//        rotMatToQuat(rotTemp, quat);
-//        as.visual()[i]->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
+        rotMatToQuat(std::get<0>(as->getVisOb()[i]), quat);
+        as.visual()[i]->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
         adjustTransparency(as.visual()[i], as.hidable);
       }
       for (int i = 0; i < as->getVisColOb().size(); i++)

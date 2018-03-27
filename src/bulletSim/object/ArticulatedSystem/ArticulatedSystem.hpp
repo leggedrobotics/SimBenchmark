@@ -25,20 +25,19 @@ class ArticulatedSystem: public Object, public benchmark::object::ArticulatedSys
 
  public:
   ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world);
-
   virtual ~ArticulatedSystem();
 
-  const std::vector<btCollisionShape *> &getCollisionShapes() const;
+  void updateVisuals();
 
  private:
-//  void initVisObj();
-//  void initVisColObj();
+  void initVisuals();
+  void initVisualFromCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
+  void initVisualFromCollisionShape(btCollisionShape *collisionShape,
+                                    rai_sim::Mat<3, 3> rotMat,
+                                    rai_sim::Vec<3> pos,
+                                    int id);
 
-  btMultiBody *multiBody;
-
-  // collision shapes
-  std::vector<btCollisionShape *> collisionShapes;
-
+  btMultiBody *multiBody_;
 };
 
 } // object
