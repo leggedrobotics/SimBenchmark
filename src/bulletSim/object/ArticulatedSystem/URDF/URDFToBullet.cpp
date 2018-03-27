@@ -1,3 +1,7 @@
+/**
+ * Modified by Dongho Kang
+ * */
+
 #include <stdio.h>
 #include "LinearMath/btTransform.h"
 #include "BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h"

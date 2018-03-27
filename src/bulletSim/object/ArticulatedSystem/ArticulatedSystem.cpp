@@ -11,19 +11,19 @@ namespace object {
 
 ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world) {
 
-  BulletURDFImporter importer(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA);
-  bool loadOK = importer.loadURDF(urdfFile.c_str());
+  importer_ = new BulletURDFImporter(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA);
+  bool loadOK = importer_->loadURDF(urdfFile.c_str());
 
   if(loadOK) {
-    MyMultiBodyCreator creator(0);
+    creator_ = new MyMultiBodyCreator(0);
 
     btTransform identityTrans;
     identityTrans.setIdentity();
     identityTrans.setOrigin({0, 0, 5});
 
-    ConvertURDF2Bullet2(importer, creator, identityTrans, world, true, importer.getPathPrefix());
+    ConvertURDF2Bullet2(*importer_, *creator_, identityTrans, world, true, importer_->getPathPrefix());
 
-    multiBody_ = creator.getBulletMultiBody();
+    multiBody_ = creator_->getBulletMultiBody();
     initVisuals();
   }
   else {
@@ -32,6 +32,9 @@ ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWo
 }
 
 ArticulatedSystem::~ArticulatedSystem() {
+  delete importer_;
+  delete creator_;
+  delete multiBody_;
 }
 
 void ArticulatedSystem::updateVisuals() {
@@ -61,6 +64,9 @@ void ArticulatedSystem::initVisuals() {
   for (int i = 0; i < multiBody_->getNumLinks(); i++) {
     btMultiBodyLinkCollider *linkCollider = multiBody_->getLinkCollider(i);
     initVisualFromLinkCollider(linkCollider, i + 1);
+
+    if(importer_->getLinkMeshData(creator_->m_mb2urdfLink[i]).size() > 0)
+      RAIINFO(importer_->getLinkMeshData(creator_->m_mb2urdfLink[i])[0].meshFile_)
   }
 }
 
@@ -80,12 +86,6 @@ void ArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *link
                                       colliderId,
                                       compoundShape->getNumChildShapes());
     }
-//    else {
-//      initVisualFromCollisionShape(linkCollider->getCollisionShape(),
-//                                   linkCollider->getWorldTransform().getRotation(),
-//                                   linkCollider->getWorldTransform().getOrigin(),
-//                                   colliderId);
-//    }
   }
   else {
 

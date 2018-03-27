@@ -1,3 +1,6 @@
+/**
+ * Modified by Dongho Kang
+ * */
 
 #ifndef MY_MULTIBODY_CREATOR
 #define MY_MULTIBODY_CREATOR

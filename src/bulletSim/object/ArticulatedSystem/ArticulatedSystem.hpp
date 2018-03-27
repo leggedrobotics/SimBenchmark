@@ -12,10 +12,10 @@
 
 #include "URDF/BulletUrdfImporter.h"
 #include "URDF/MyMultiBodyCreator.h"
+#include "URDF/URDFToBullet.h"
 #include "URDF/UrdfParser.h"
 
 #include "base/ArticulatedSystem.hpp"
-#include "bulletSim/object/ArticulatedSystem/URDF/URDFToBullet.h"
 #include "bulletSim/object/Object.hpp"
 
 namespace bullet_sim {
@@ -43,6 +43,8 @@ class ArticulatedSystem: public Object, public benchmark::object::ArticulatedSys
                                     int id);
 
   btMultiBody *multiBody_;
+  BulletURDFImporter *importer_;
+  MyMultiBodyCreator *creator_;
 };
 
 } // object
