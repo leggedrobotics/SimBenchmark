@@ -172,12 +172,12 @@ void World_RG::updateFrame() {
       /// update collision objects
       for (int i = 0; i < as->getVisColOb().size(); i++) {
         as.alternateVisual()[i]->setVisibility(true);
-        pos = std::get<1>(as->getVisOb()[i]);
+        pos = std::get<1>(as->getVisColOb()[i]);
         as.alternateVisual()[i]->setPos(
             pos[0],
             pos[1],
             pos[2]);
-        rotMatToQuat(std::get<0>(as->getVisOb()[i]), quat);
+        rotMatToQuat(std::get<0>(as->getVisColOb()[i]), quat);
         as.alternateVisual()[i]->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
         adjustTransparency(as.alternateVisual()[i], as.hidable);
       }
