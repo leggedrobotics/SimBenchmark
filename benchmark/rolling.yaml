@@ -6,7 +6,7 @@ parent_diretory: rolling/
 options:
   erp_on: True
   force_direction: xy     # xy / y
-  dt: 0.01
+  dt: 0.1
 
 # simulation properties
 sim_properties:
@@ -32,5 +32,5 @@ constant:
   mu_ground: 0.5
   mu_ball: 1.0
   mu_box: 0.8
-  penentration0: 5e-8   # initial penetration
+  penentration0: 1e-5   # initial penetration
 ...
