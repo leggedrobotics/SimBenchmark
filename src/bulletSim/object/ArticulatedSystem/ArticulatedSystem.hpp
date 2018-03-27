@@ -31,10 +31,15 @@ class ArticulatedSystem: public Object, public benchmark::object::ArticulatedSys
 
  private:
   void initVisuals();
-  void initVisualFromCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
+  void initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
+  void initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
+                                       btQuaternion parentQuat,
+                                       btVector3 parentPos,
+                                       int id,
+                                       int numChild);
   void initVisualFromCollisionShape(btCollisionShape *collisionShape,
-                                    rai_sim::Mat<3, 3> rotMat,
-                                    rai_sim::Vec<3> pos,
+                                    btQuaternion quat,
+                                    btVector3 pos,
                                     int id);
 
   btMultiBody *multiBody_;
