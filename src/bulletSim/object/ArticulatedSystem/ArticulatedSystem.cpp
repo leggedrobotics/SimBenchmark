@@ -57,20 +57,92 @@ void ArticulatedSystem::initVisuals() {
   // base
   {
     btMultiBodyLinkCollider *baseCollider = multiBody_->getBaseCollider();
-    initVisualFromLinkCollider(baseCollider, 0);
+    initVisColObjFromLinkCollider(baseCollider, 0);
   }
 
   // link
   for (int i = 0; i < multiBody_->getNumLinks(); i++) {
     btMultiBodyLinkCollider *linkCollider = multiBody_->getLinkCollider(i);
-    initVisualFromLinkCollider(linkCollider, i + 1);
+    initVisColObjFromLinkCollider(linkCollider, i + 1);
 
-    if(importer_->getLinkMeshData(creator_->m_mb2urdfLink[i]).size() > 0)
-      RAIINFO(importer_->getLinkMeshData(creator_->m_mb2urdfLink[i])[0].meshFile_)
+    std::vector<URDFVisualData> visDataList = importer_->getLinkVisualData(creator_->m_mb2urdfLink[i]);
+    initVisObj(visDataList);
   }
 }
 
-void ArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId) {
+void ArticulatedSystem::initVisObj(std::vector<URDFVisualData> &data) {
+
+  rai_sim::Vec<4> color;
+  color = {1.0, 0, 0, 1.0};
+
+  for (int i = 0; i < data.size(); ++i) {
+    UrdfVisual &vis = data[i].visual;
+
+    // orientation
+    rai_sim::Mat<3, 3> mat;
+    btMatrix3x3 rotMat;
+    rotMat.setRotation(
+        data[i].linkTransform_.getRotation() * vis.m_linkLocalFrame.getRotation());
+    mat.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
+        rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
+        rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
+
+    // position
+    rai_sim::Vec<3> position;
+    btVector3 pos = data[i].linkTransform_.getOrigin() + vis.m_linkLocalFrame.getOrigin();
+    position = {pos.x(),
+                pos.y(),
+                pos.z()};
+
+    switch (vis.m_geometry.m_type) {
+      case URDF_GEOM_MESH:
+        rai_sim::Vec<4> scale;
+        scale = {
+            vis.m_geometry.m_meshScale.x(),
+            vis.m_geometry.m_meshScale.y(),
+            vis.m_geometry.m_meshScale.z(),
+            0
+        };
+        visObj.emplace_back(std::make_tuple(mat, position, 0, benchmark::object::Shape::Mesh, color));
+        visProps_.emplace_back(std::make_pair(vis.m_geometry.m_meshFileName, scale));
+        break;
+      case URDF_GEOM_BOX:
+        rai_sim::Vec<4> boxSize;
+        boxSize = {vis.m_geometry.m_boxSize.x(),
+                   vis.m_geometry.m_boxSize.y(),
+                   vis.m_geometry.m_boxSize.z(),
+                   0};
+        visObj.emplace_back(std::make_tuple(mat, position, 0, benchmark::object::Shape::Box, color));
+        visProps_.emplace_back(std::make_pair("", boxSize));
+        break;
+      case URDF_GEOM_CYLINDER:
+        rai_sim::Vec<4> cylSize;
+        boxSize = {vis.m_geometry.m_capsuleRadius,
+                   vis.m_geometry.m_capsuleHeight,
+                   0,
+                   0};
+        visObj.emplace_back(std::make_tuple(mat, position, 0, benchmark::object::Shape::Cylinder, color));
+        visProps_.emplace_back(std::make_pair("", cylSize));
+        break;
+      case URDF_GEOM_SPHERE:
+        rai_sim::Vec<4> sphereSize;
+        boxSize = {vis.m_geometry.m_sphereRadius,
+                   0,
+                   0,
+                   0};
+        visObj.emplace_back(std::make_tuple(mat, position, 0, benchmark::object::Shape::Sphere, color));
+        visProps_.emplace_back(std::make_pair("", sphereSize));
+        break;
+      case URDF_GEOM_CAPSULE:
+      case URDF_GEOM_PLANE:
+      case URDF_GEOM_UNKNOWN:
+      default:
+        break;
+    }
+  }
+}
+
+void ArticulatedSystem::initVisColObjFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId) {
 
   // shape
   if (linkCollider->getCollisionShape()->isCompound()) {
@@ -80,38 +152,38 @@ void ArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *link
         (btCompoundShape *) linkCollider->getCollisionShape();
 
     if(compoundShape->getNumChildShapes() > 0) {
-      initVisualFromCompoundChildList(compoundShape->getChildList(),
-                                      linkCollider->getWorldTransform().getRotation(),
-                                      linkCollider->getWorldTransform().getOrigin(),
-                                      colliderId,
-                                      compoundShape->getNumChildShapes());
+      initVisColObjFromCompoundChildList(compoundShape->getChildList(),
+                                         linkCollider->getWorldTransform().getRotation(),
+                                         linkCollider->getWorldTransform().getOrigin(),
+                                         colliderId,
+                                         compoundShape->getNumChildShapes());
     }
   }
   else {
 
     // single shape
-    initVisualFromCollisionShape(linkCollider->getCollisionShape(),
-                                 linkCollider->getWorldTransform().getRotation(),
-                                 linkCollider->getWorldTransform().getOrigin(),
-                                 colliderId);
+    initVisColObjFromCollisionShape(linkCollider->getCollisionShape(),
+                                    linkCollider->getWorldTransform().getRotation(),
+                                    linkCollider->getWorldTransform().getOrigin(),
+                                    colliderId);
   }
 }
-
-void ArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                                        btQuaternion parentQuat,
-                                                        btVector3 parentPos,
-                                                        int id,
-                                                        int numChild) {
+void ArticulatedSystem::initVisColObjFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
+                                                           btQuaternion parentQuat,
+                                                           btVector3 parentPos,
+                                                           int id,
+                                                           int numChild) {
   for (int i = 0; i < numChild; ++i) {
     btQuaternion childquat = parentQuat * compoundShapeChild[i].m_transform.getRotation();
     btVector3 childpos = parentPos + compoundShapeChild[i].m_transform.getOrigin();
-    initVisualFromCollisionShape(compoundShapeChild[i].m_childShape, childquat, childpos, id);
+    initVisColObjFromCollisionShape(compoundShapeChild[i].m_childShape, childquat, childpos, id);
   }
 }
-void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
-                                                     btQuaternion quat,
-                                                     btVector3 pos,
-                                                     int id) {
+
+void ArticulatedSystem::initVisColObjFromCollisionShape(btCollisionShape *col,
+                                                        btQuaternion quat,
+                                                        btVector3 pos,
+                                                        int id) {
 
   // orientation
   rai_sim::Mat<3, 3> mat;
@@ -138,9 +210,9 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
                  ((btBoxShape *)col)->getHalfExtentsWithMargin().z() * 2.0,
                  0};
 
-      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Box, color));
+//      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Box, color));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Box));
-      visProps_.emplace_back(std::make_pair("", boxSize));
+//      visProps_.emplace_back(std::make_pair("", boxSize));
       visColProps_.emplace_back(std::make_pair("", boxSize));
       break;
     }
@@ -152,9 +224,9 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
                  0,
                  0};
 
-      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Cylinder, color));
+//      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Cylinder, color));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Cylinder));
-      visProps_.emplace_back(std::make_pair("", cylSize));
+//      visProps_.emplace_back(std::make_pair("", cylSize));
       visColProps_.emplace_back(std::make_pair("", cylSize));
       break;
     }
@@ -166,9 +238,9 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
                     0,
                     0};
 
-      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Sphere, color));
+//      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Sphere, color));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Sphere));
-      visProps_.emplace_back(std::make_pair("", sphereSize));
+//      visProps_.emplace_back(std::make_pair("", sphereSize));
       visColProps_.emplace_back(std::make_pair("", sphereSize));
       break;
     }

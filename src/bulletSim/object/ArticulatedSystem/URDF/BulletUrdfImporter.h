@@ -18,11 +18,11 @@ struct BulletURDFTexture
   bool m_isCached;
 };
 
-struct URDFMeshData
+struct URDFVisualData
 {
   /// added by Dongho Kang
-  btTransform transform_;
-  std::string meshFile_;
+  btTransform linkTransform_;
+  UrdfVisual visual;
 };
 
 ///BulletURDFImporter can deal with URDF and (soon) SDF files
@@ -39,7 +39,7 @@ class BulletURDFImporter : public URDFImporterInterface
   virtual ~BulletURDFImporter();
 
   /// added by Dongho Kang
-  std::vector<URDFMeshData> getLinkMeshData(int linkIndex/*, const btTransform &inertialFrame*/) const;
+  std::vector<URDFVisualData> getLinkVisualData(int linkIndex/*, const btTransform &inertialFrame*/) const;
 
   virtual bool loadURDF(const char* fileName, bool forceFixedBase = false);
 

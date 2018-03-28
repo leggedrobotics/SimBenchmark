@@ -31,16 +31,18 @@ class ArticulatedSystem: public Object, public benchmark::object::ArticulatedSys
 
  private:
   void initVisuals();
-  void initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
-  void initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                       btQuaternion parentQuat,
-                                       btVector3 parentPos,
-                                       int id,
-                                       int numChild);
-  void initVisualFromCollisionShape(btCollisionShape *collisionShape,
-                                    btQuaternion quat,
-                                    btVector3 pos,
-                                    int id);
+
+  void initVisObj(std::vector<URDFVisualData> &data);
+  void initVisColObjFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
+  void initVisColObjFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
+                                          btQuaternion parentQuat,
+                                          btVector3 parentPos,
+                                          int id,
+                                          int numChild);
+  void initVisColObjFromCollisionShape(btCollisionShape *collisionShape,
+                                       btQuaternion quat,
+                                       btVector3 pos,
+                                       int id);
 
   btMultiBody *multiBody_;
   BulletURDFImporter *importer_;

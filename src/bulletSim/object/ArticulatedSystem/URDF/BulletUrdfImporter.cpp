@@ -716,10 +716,10 @@ int BulletURDFImporter::getAllocatedTexture(int index) const
   return m_data->m_allocatedTextures[index];
 }
 
-std::vector<URDFMeshData> BulletURDFImporter::getLinkMeshData(int linkIndex /*, const btTransform &inertialFrame*/) const {
-  int graphicsIndex = -1;
+std::vector<URDFVisualData> BulletURDFImporter::getLinkVisualData(int linkIndex /*, const btTransform &inertialFrame*/) const {
+
   btTransform startTrans; startTrans.setIdentity();
-  std::vector<URDFMeshData> meshDataList;
+  std::vector<URDFVisualData> visualDataList;
 
   const UrdfModel& model = m_data->m_urdfParser.getModel();
   UrdfLink* const* linkPtr = model.m_links.getAtIndex(linkIndex);
@@ -743,15 +743,13 @@ std::vector<URDFMeshData> BulletURDFImporter::getLinkMeshData(int linkIndex /*, 
         m_data->m_linkColors.insert(linkIndex,matCol);
       }
 
-      if(vis.m_geometry.m_type == URDF_GEOM_MESH) {
-        URDFMeshData meshData;
-        meshData.meshFile_ = vis.m_geometry.m_meshFileName;
-        meshDataList.push_back(meshData);
-//        convertURDFToVisualShapeInternal(&vis, pathPrefix, localInertiaFrame.inverse()*childTrans, vertices, indices,textures);
-      }
+      URDFVisualData visualData;
+      visualData.visual = vis;
+      visualData.linkTransform_ = link->m_inertia.m_linkLocalFrame.inverse();
+      visualDataList.push_back(visualData);
     }
   }
-  return meshDataList;
+  return visualDataList;
 }
 
 class btCompoundShape* BulletURDFImporter::convertLinkCollisionShapes(int linkIndex, const char* pathPrefix, const btTransform& localInertiaFrame) const
