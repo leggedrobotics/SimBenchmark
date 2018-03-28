@@ -66,11 +66,11 @@ void ArticulatedSystem::initVisuals() {
     initVisColObjFromLinkCollider(linkCollider, i + 1);
 
     std::vector<URDFVisualData> visDataList = importer_->getLinkVisualData(creator_->m_mb2urdfLink[i]);
-    initVisObj(visDataList);
+    initVisObj(multiBody_->getLink(i).m_cachedWorldTransform, visDataList);
   }
 }
 
-void ArticulatedSystem::initVisObj(std::vector<URDFVisualData> &data) {
+void ArticulatedSystem::initVisObj(btTransform linkTransform, std::vector<URDFVisualData> &data) {
 
   rai_sim::Vec<4> color;
   color = {1.0, 0, 0, 1.0};
@@ -82,14 +82,14 @@ void ArticulatedSystem::initVisObj(std::vector<URDFVisualData> &data) {
     rai_sim::Mat<3, 3> mat;
     btMatrix3x3 rotMat;
     rotMat.setRotation(
-        data[i].linkTransform_.getRotation() * vis.m_linkLocalFrame.getRotation());
+        linkTransform.getRotation() /* *vis.m_linkLocalFrame.getRotation()*/);
     mat.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
         rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
         rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
 
     // position
     rai_sim::Vec<3> position;
-    btVector3 pos = data[i].linkTransform_.getOrigin() + vis.m_linkLocalFrame.getOrigin();
+    btVector3 pos = linkTransform.getOrigin() /*+ vis.m_linkLocalFrame.getOrigin()*/;
     position = {pos.x(),
                 pos.y(),
                 pos.z()};
