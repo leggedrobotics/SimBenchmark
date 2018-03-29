@@ -1,9 +1,9 @@
 set(Benchmark_SRCS
-        base/UserHandle.hpp
-        base/World_RG.hpp
-        base/World_RG.cpp
-        base/SingleBodyObject.hpp
-        base/ArticulatedSystem.hpp
+        common/UserHandle.hpp
+        common/World_RG.hpp
+        common/World_RG.cpp
+        common/SingleBodyObject.hpp
+        common/ArticulatedSystem.hpp
         )
 
 add_library(BenchmarkLib ${Benchmark_SRCS})

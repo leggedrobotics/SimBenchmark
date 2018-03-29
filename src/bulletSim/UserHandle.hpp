@@ -6,7 +6,7 @@
 #define BULLETSIM_USERHANDLE_HPP
 
 #include <raiGraphics/RAI_graphics.hpp>
-#include <base/UserHandle.hpp>
+#include <common/UserHandle.hpp>
 
 #include "bulletSim/object/SingleBodyObject.hpp"
 #include "bulletSim/object/ArticulatedSystem/ArticulatedSystem.hpp"

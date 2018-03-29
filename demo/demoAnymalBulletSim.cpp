@@ -21,6 +21,10 @@ int main() {
 
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1, benchmark::GRID);
   auto anymal = sim.addArticulatedSystem("../res/ANYmal/robot.urdf");
+  anymal->setGeneralizedCoordinate(
+      {0, 0, 0.54,
+       1.0, 0.0, 0.0, 0.0,
+       0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8});
 
   sim.setGravity({0, 0, -9.8});
   sim.cameraFollowObject(checkerboard, {10, 10, 15});
