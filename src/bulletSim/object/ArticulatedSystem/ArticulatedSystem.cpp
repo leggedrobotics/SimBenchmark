@@ -129,18 +129,7 @@ void ArticulatedSystem::initVisuals() {
   // base
   {
     btMultiBodyLinkCollider *baseCollider = multiBody_->getBaseCollider();
-    initVisColObjFromLinkCollider(baseCollider, 0);
-
-    btTransform baseTransform;
-    baseTransform.setRotation(quatList[0]);
-    baseTransform.setOrigin(posList[0]);
-    std::vector<URDFVisualData> visDataList = importer_->getLinkVisualData(0);
-    initVisObj(baseTransform, visDataList);
-
-//    RAIINFO(visDataList[0].visual.m_geometry.m_meshFileName)
-//    RAIINFO(baseTransform.getOrigin().x()
-//                << baseTransform.getOrigin().y()
-//                << baseTransform.getOrigin().z())
+    initVisualFromLinkCollider(baseCollider, 0);
   }
 
   // link
@@ -245,59 +234,50 @@ void ArticulatedSystem::initVisColObjFromLinkCollider(btMultiBodyLinkCollider *l
         (btCompoundShape *) linkCollider->getCollisionShape();
 
     if(compoundShape->getNumChildShapes() > 0) {
-      initVisColObjFromCompoundChildList(compoundShape->getChildList(),
-                                         linkCollider->getWorldTransform(),
-                                         colliderId,
-                                         compoundShape->getNumChildShapes());
+      initVisualFromCompoundChildList(compoundShape->getChildList(),
+                                      linkCollider->getWorldTransform(),
+                                      colliderId,
+                                      compoundShape->getNumChildShapes());
     }
   }
   else {
 
     // single shape
-    initVisColObjFromCollisionShape(linkCollider->getCollisionShape(),
-                                    linkCollider->getWorldTransform().getRotation(),
-                                    linkCollider->getWorldTransform().getOrigin(),
-                                    colliderId);
+    initVisualFromCollisionShape(linkCollider->getCollisionShape(),
+                                 linkCollider->getWorldTransform(),
+                                 colliderId);
   }
 }
-void ArticulatedSystem::initVisColObjFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                                           btTransform parentTransform,
-                                                           int id,
-                                                           int numChild) {
 
+void ArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
+                                                        btTransform parentTransform,
+                                                        int id,
+                                                        int numChild) {
   for (int i = 0; i < numChild; ++i) {
-    btQuaternion childquat = (parentTransform * compoundShapeChild[i].m_transform).getRotation();
-    btVector3 childpos = (parentTransform * compoundShapeChild[i].m_transform).getOrigin();
-
-    initVisColObjFromCollisionShape(compoundShapeChild[i].m_childShape, childquat, childpos, id);
+    btTransform childTransform = parentTransform * compoundShapeChild[i].m_transform;
+    initVisualFromCollisionShape(compoundShapeChild[i].m_childShape, childTransform, id);
   }
 }
 
-void ArticulatedSystem::initVisColObjFromCollisionShape(btCollisionShape *col,
-                                                        btQuaternion quat,
-                                                        btVector3 pos,
-                                                        int id) {
+void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTransform transform, int id) {
 
   // orientation
   rai_sim::Mat<3, 3> mat;
   btMatrix3x3 rotMat;
-  rotMat.setRotation(quat);
+  rotMat.setRotation(transform.getRotation());
   mat.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
       rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
       rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
 
   // position
   rai_sim::Vec<3> position;
-  position = {pos.x(), pos.y(), pos.z()};
+  position = {transform.getOrigin().x(),
+              transform.getOrigin().y(),
+              transform.getOrigin().z()};
 
   // color
   rai_sim::Vec<4> color;
   color = {1.0, 0, 0, 1.0};
-
-  RAIINFO(pos.x()
-              << " / " << pos.y()
-              << " / " << pos.z())
-
 
   switch (col->getShapeType()) {
     case BOX_SHAPE_PROXYTYPE: {

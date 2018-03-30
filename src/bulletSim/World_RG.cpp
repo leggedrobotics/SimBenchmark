@@ -12,6 +12,7 @@ World_RG::World_RG(int windowWidth, int windowHeight, float cms, int flags, Solv
     benchmark::World_RG(windowWidth, windowHeight, cms, flags) {}
 
 World_RG::World_RG(SolverOption solverOption) :
+    solverOption_(solverOption),
     world_(solverOption),
     benchmark::World_RG() {}
 

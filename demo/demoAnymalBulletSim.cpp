@@ -39,7 +39,6 @@ int main() {
       1.0, 0, 0, 0,
       0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8;
 
-//  sim.loop(0.01);
   while(sim.visualizerLoop(0.005, 1.0)) {
     jointState = anymal->getGeneralizedCoordinate();
     jointVel = anymal->getGeneralizedVelocity();
