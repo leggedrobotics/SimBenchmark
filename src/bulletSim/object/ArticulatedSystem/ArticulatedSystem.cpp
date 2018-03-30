@@ -138,8 +138,7 @@ void ArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *link
 
     if(compoundShape->getNumChildShapes() > 0) {
       initVisualFromCompoundChildList(compoundShape->getChildList(),
-                                      linkCollider->getWorldTransform().getRotation(),
-                                      linkCollider->getWorldTransform().getOrigin(),
+                                      linkCollider->getWorldTransform(),
                                       colliderId,
                                       compoundShape->getNumChildShapes());
     }
@@ -154,40 +153,36 @@ void ArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *link
 
     // single shape
     initVisualFromCollisionShape(linkCollider->getCollisionShape(),
-                                 linkCollider->getWorldTransform().getRotation(),
-                                 linkCollider->getWorldTransform().getOrigin(),
+                                 linkCollider->getWorldTransform(),
                                  colliderId);
   }
 }
 
 void ArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                                        btQuaternion parentQuat,
-                                                        btVector3 parentPos,
+                                                        btTransform parentTransform,
                                                         int id,
                                                         int numChild) {
   for (int i = 0; i < numChild; ++i) {
-    btQuaternion childquat = parentQuat * compoundShapeChild[i].m_transform.getRotation();
-    btVector3 childpos = parentPos + compoundShapeChild[i].m_transform.getOrigin();
-    initVisualFromCollisionShape(compoundShapeChild[i].m_childShape, childquat, childpos, id);
+    btTransform childTransform = parentTransform * compoundShapeChild[i].m_transform;
+    initVisualFromCollisionShape(compoundShapeChild[i].m_childShape, childTransform, id);
   }
 }
 
-void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
-                                                     btQuaternion quat,
-                                                     btVector3 pos,
-                                                     int id) {
+void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTransform transform, int id) {
 
   // orientation
   rai_sim::Mat<3, 3> mat;
   btMatrix3x3 rotMat;
-  rotMat.setRotation(quat);
+  rotMat.setRotation(transform.getRotation());
   mat.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
       rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
       rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
 
   // position
   rai_sim::Vec<3> position;
-  position = {pos.x(), pos.y(), pos.z()};
+  position = {transform.getOrigin().x(),
+              transform.getOrigin().y(),
+              transform.getOrigin().z()};
 
   // color
   rai_sim::Vec<4> color;

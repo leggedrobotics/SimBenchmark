@@ -64,13 +64,11 @@ class ArticulatedSystem: public Object, public benchmark::object::ArticulatedSys
   void initVisuals();
   void initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
   void initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                       btQuaternion parentQuat,
-                                       btVector3 parentPos,
+                                       btTransform parentTransform,
                                        int id,
                                        int numChild);
   void initVisualFromCollisionShape(btCollisionShape *collisionShape,
-                                    btQuaternion quat,
-                                    btVector3 pos,
+                                    btTransform transform,
                                     int id);
 
   btMultiBodyDynamicsWorld *dynamicsWorld_;

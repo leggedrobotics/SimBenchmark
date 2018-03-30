@@ -22,10 +22,9 @@ int main() {
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1);
   auto anymal = sim.addArticulatedSystem("../res/ANYmal/robot.urdf");
   anymal->setGeneralizedCoordinate(
-      {5, 5, 0.54,
+      {5, 5, 0.6,
        1.0, 0.0, 0.0, 0.0,
        0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8});
-//  RAIINFO(anymal->getGeneralizedCoordinate())
   anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
@@ -40,7 +39,6 @@ int main() {
       1.0, 0, 0, 0,
       0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8;
 
-//  sim.loop(0.01);
   while(sim.visualizerLoop(0.005, 1.0)) {
     jointState = anymal->getGeneralizedCoordinate();
     jointVel = anymal->getGeneralizedVelocity();
