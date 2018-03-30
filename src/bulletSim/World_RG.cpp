@@ -170,7 +170,7 @@ void World_RG::updateFrame() {
     rai_sim::Vec<3> pos;
 
     // update visuals for articulated system
-//    as->updateVisuals();
+    as->updateVisuals();
 
     if (showAlternateGraphicsIfexists) {
       /// update collision objects
@@ -258,16 +258,16 @@ void World_RG::updateFrame() {
 //  }
 
   /// contact points
-//  if (gui_->getCustomToggleState(1)) {
-//    contactPointMarker_->mutexLock();
-//    contactPointMarker_->clearGhost();
-//    for (auto &pro: *world_.getCollisionProblem()) {
-//      Eigen::Vector3d pos = pro.point_;
-//      contactPointMarker_->addGhost(pos);
-//    }
-//    contactPointMarker_->mutexUnLock();
-//  } else
-//    contactPointMarker_->clearGhost();
+  if (gui_->getCustomToggleState(1)) {
+    contactPointMarker_->mutexLock();
+    contactPointMarker_->clearGhost();
+    for (auto &pro: *world_.getCollisionProblem()) {
+      Eigen::Vector3d pos = pro.point_;
+      contactPointMarker_->addGhost(pos);
+    }
+    contactPointMarker_->mutexUnLock();
+  } else
+    contactPointMarker_->clearGhost();
 
   /// contact forces
 //  if (gui_->getCustomToggleState(2)) {

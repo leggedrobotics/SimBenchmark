@@ -67,10 +67,9 @@ class ArticulatedSystem: public Object, public benchmark::object::ArticulatedSys
   void initVisObj(btTransform linkTransform, std::vector<URDFVisualData> &data);
   void initVisColObjFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
   void initVisColObjFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                          btQuaternion parentQuat,
-                                          btVector3 parentPos,
-                                          int id,
-                                          int numChild);
+                                            btTransform parentTransform,
+                                            int id,
+                                            int numChild);
   void initVisColObjFromCollisionShape(btCollisionShape *collisionShape,
                                        btQuaternion quat,
                                        btVector3 pos,

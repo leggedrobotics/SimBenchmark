@@ -22,10 +22,8 @@ ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWo
 
     ConvertURDF2Bullet2(*importer_, *creator_, identityTrans, world, true, importer_->getPathPrefix());
 
-    multiBody_ = creator.getBulletMultiBody();
-    init();
     multiBody_ = creator_->getBulletMultiBody();
-    initVisuals();
+    init();
   }
   else {
     RAIFATAL("failed to load URDF")
@@ -33,6 +31,9 @@ ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWo
 }
 
 ArticulatedSystem::~ArticulatedSystem() {
+
+  delete creator_;
+  delete importer_;
 
   // delete multibody
   delete multiBody_;
@@ -109,6 +110,16 @@ void ArticulatedSystem::updateVisuals() {
 
 void ArticulatedSystem::initVisuals() {
 
+  // pose of links (inertial)
+  btAlignedObjectArray<btQuaternion> quatList;
+  btAlignedObjectArray<btVector3> posList;
+  multiBody_->forwardKinematics(quatList, posList);
+
+  // pose of collision
+  btAlignedObjectArray<btQuaternion> colQuatList;
+  btAlignedObjectArray<btVector3> colPosList;
+  multiBody_->updateCollisionObjectWorldTransforms(colQuatList, colPosList);
+
   // reserve
   visObj.reserve(multiBody_->getNumLinks() + 1);
   visColObj.reserve(multiBody_->getNumLinks() + 1);
@@ -119,6 +130,17 @@ void ArticulatedSystem::initVisuals() {
   {
     btMultiBodyLinkCollider *baseCollider = multiBody_->getBaseCollider();
     initVisColObjFromLinkCollider(baseCollider, 0);
+
+    btTransform baseTransform;
+    baseTransform.setRotation(quatList[0]);
+    baseTransform.setOrigin(posList[0]);
+    std::vector<URDFVisualData> visDataList = importer_->getLinkVisualData(0);
+    initVisObj(baseTransform, visDataList);
+
+//    RAIINFO(visDataList[0].visual.m_geometry.m_meshFileName)
+//    RAIINFO(baseTransform.getOrigin().x()
+//                << baseTransform.getOrigin().y()
+//                << baseTransform.getOrigin().z())
   }
 
   // link
@@ -126,8 +148,18 @@ void ArticulatedSystem::initVisuals() {
     btMultiBodyLinkCollider *linkCollider = multiBody_->getLinkCollider(i);
     initVisColObjFromLinkCollider(linkCollider, i + 1);
 
+    btTransform linkTransform;
+    linkTransform.setRotation(quatList[i+1]);
+    linkTransform.setOrigin(posList[i+1]);
     std::vector<URDFVisualData> visDataList = importer_->getLinkVisualData(creator_->m_mb2urdfLink[i]);
-    initVisObj(multiBody_->getLink(i).m_cachedWorldTransform, visDataList);
+    initVisObj(linkTransform, visDataList);
+
+//    if(visDataList.size() > 0) {
+//      RAIINFO(visDataList[0].visual.m_geometry.m_meshFileName)
+//      RAIINFO(linkTransform.getOrigin().x() << " / "
+//                                            << linkTransform.getOrigin().y() << " / "
+//                                            << linkTransform.getOrigin().z())
+//    }
   }
 }
 
@@ -143,14 +175,14 @@ void ArticulatedSystem::initVisObj(btTransform linkTransform, std::vector<URDFVi
     rai_sim::Mat<3, 3> mat;
     btMatrix3x3 rotMat;
     rotMat.setRotation(
-        linkTransform.getRotation() /* *vis.m_linkLocalFrame.getRotation()*/);
+        linkTransform.getRotation() * vis.m_linkLocalFrame.getRotation());
     mat.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
         rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
         rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
 
     // position
     rai_sim::Vec<3> position;
-    btVector3 pos = linkTransform.getOrigin() /*+ vis.m_linkLocalFrame.getOrigin()*/;
+    btVector3 pos = linkTransform.getOrigin() + vis.m_linkLocalFrame.getOrigin();
     position = {pos.x(),
                 pos.y(),
                 pos.z()};
@@ -214,8 +246,7 @@ void ArticulatedSystem::initVisColObjFromLinkCollider(btMultiBodyLinkCollider *l
 
     if(compoundShape->getNumChildShapes() > 0) {
       initVisColObjFromCompoundChildList(compoundShape->getChildList(),
-                                         linkCollider->getWorldTransform().getRotation(),
-                                         linkCollider->getWorldTransform().getOrigin(),
+                                         linkCollider->getWorldTransform(),
                                          colliderId,
                                          compoundShape->getNumChildShapes());
     }
@@ -230,13 +261,14 @@ void ArticulatedSystem::initVisColObjFromLinkCollider(btMultiBodyLinkCollider *l
   }
 }
 void ArticulatedSystem::initVisColObjFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                                           btQuaternion parentQuat,
-                                                           btVector3 parentPos,
+                                                           btTransform parentTransform,
                                                            int id,
                                                            int numChild) {
+
   for (int i = 0; i < numChild; ++i) {
-    btQuaternion childquat = parentQuat * compoundShapeChild[i].m_transform.getRotation();
-    btVector3 childpos = parentPos + compoundShapeChild[i].m_transform.getOrigin();
+    btQuaternion childquat = (parentTransform * compoundShapeChild[i].m_transform).getRotation();
+    btVector3 childpos = (parentTransform * compoundShapeChild[i].m_transform).getOrigin();
+
     initVisColObjFromCollisionShape(compoundShapeChild[i].m_childShape, childquat, childpos, id);
   }
 }
@@ -261,6 +293,11 @@ void ArticulatedSystem::initVisColObjFromCollisionShape(btCollisionShape *col,
   // color
   rai_sim::Vec<4> color;
   color = {1.0, 0, 0, 1.0};
+
+  RAIINFO(pos.x()
+              << " / " << pos.y()
+              << " / " << pos.z())
+
 
   switch (col->getShapeType()) {
     case BOX_SHAPE_PROXYTYPE: {

@@ -19,17 +19,16 @@ int main() {
 
   bullet_sim::World_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
 
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1);
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1 /*, benchmark::GRID*/);
   auto anymal = sim.addArticulatedSystem("../res/ANYmal/robot.urdf");
   anymal->setGeneralizedCoordinate(
-      {5, 5, 0.54,
+      {5, 5, 0.6,
        1.0, 0.0, 0.0, 0.0,
        0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8});
-//  RAIINFO(anymal->getGeneralizedCoordinate())
   anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
-  sim.setGravity({0, 0, -9.8});
+//  sim.setGravity({0, 0, 0});
   sim.cameraFollowObject(checkerboard, {10, 10, 15});
 
   Eigen::VectorXd jointNominalConfig(19);
