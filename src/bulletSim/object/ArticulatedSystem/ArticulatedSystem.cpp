@@ -135,7 +135,7 @@ void ArticulatedSystem::initVisuals() {
   // link
   for (int i = 0; i < multiBody_->getNumLinks(); i++) {
     btMultiBodyLinkCollider *linkCollider = multiBody_->getLinkCollider(i);
-    initVisColObjFromLinkCollider(linkCollider, i + 1);
+    initVisualFromLinkCollider(linkCollider, i + 1);
 
     btTransform linkTransform;
     linkTransform.setRotation(quatList[i+1]);
@@ -224,7 +224,7 @@ void ArticulatedSystem::initVisObj(btTransform linkTransform, std::vector<URDFVi
   }
 }
 
-void ArticulatedSystem::initVisColObjFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId) {
+void ArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId) {
 
   // shape
   if (linkCollider->getCollisionShape()->isCompound()) {
