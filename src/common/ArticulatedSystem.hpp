@@ -58,6 +58,7 @@ class ArticulatedSystem {
 
   virtual const EigenVec getGeneralizedForce() = 0;
 
+  virtual int getDOF() = 0;
 
  public:
   // orientation, position, link_id, shape, color

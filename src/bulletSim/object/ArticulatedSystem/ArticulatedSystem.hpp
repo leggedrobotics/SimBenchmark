@@ -57,6 +57,7 @@ class ArticulatedSystem: public Object, public benchmark::object::ArticulatedSys
 
   virtual const EigenVec getGeneralizedForce() override;
 
+  virtual int getDOF() override ;
 
  private:
   void init();
@@ -72,14 +73,21 @@ class ArticulatedSystem: public Object, public benchmark::object::ArticulatedSys
                                     btVector3 pos,
                                     int id);
 
+  btMultiBodyDynamicsWorld *dynamicsWorld_;
   btMultiBody *multiBody_;
 
+  // generalized states, velocity, force
   rai_sim::VecDyn jointState_;
   rai_sim::VecDyn jointVel_;
+  rai_sim::VecDyn jointForce_;
+
   std::vector<int> movableLinkIdx_;
+
+  double maxJointTorque_ = 1000.0;
 
   int dof_ = 0;
   int stateDimension_ = 0;
+
   bool isFixed_ = true;
 };
 

@@ -10,7 +10,7 @@
 namespace bullet_sim {
 namespace object {
 
-ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world) {
+ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world): dynamicsWorld_(world) {
 
   BulletURDFImporter importer(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA);
   bool loadOK = importer.loadURDF(urdfFile.c_str());
@@ -32,6 +32,9 @@ ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWo
 }
 
 ArticulatedSystem::~ArticulatedSystem() {
+
+  // delete multibody
+  delete multiBody_;
 }
 
 void ArticulatedSystem::init() {
@@ -43,14 +46,16 @@ void ArticulatedSystem::init() {
   }
   else {
     isFixed_ = false;
-    dof_ = multiBody_->getNumDofs();
-    stateDimension_ = dof_ + 7;
+    dof_ = multiBody_->getNumDofs() + 6;
+    stateDimension_ = dof_ + 1;
   }
 
   jointState_.resize(stateDimension_);
   jointState_.setZero();
   jointVel_.resize(dof_);
   jointVel_.setZero();
+  jointForce_.resize(dof_);
+  jointForce_.setZero();
 
   // find movable links
   movableLinkIdx_.reserve(multiBody_->getNumDofs());
@@ -154,6 +159,7 @@ void ArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *link
                                  colliderId);
   }
 }
+
 void ArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
                                                         btQuaternion parentQuat,
                                                         btVector3 parentPos,
@@ -165,6 +171,7 @@ void ArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *co
     initVisualFromCollisionShape(compoundShapeChild[i].m_childShape, childquat, childpos, id);
   }
 }
+
 void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
                                                      btQuaternion quat,
                                                      btVector3 pos,
@@ -233,6 +240,7 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col,
       break;
   }
 }
+
 const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedCoordinate() {
   if (isFixed_) {
     // fixed body
@@ -258,31 +266,29 @@ const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedCoordinate() 
   }
   return jointState_.e();
 }
+
 const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedVelocity() {
   if (multiBody_->hasFixedBase()) {
     // fixed body
-    // TODO
-    RAIFATAL("fixed body is not yet implemented")
+    int i = 0;
+    for (int l: movableLinkIdx_) {
+      jointVel_[i++] = multiBody_->getJointVel(l);
+    }
   } else {
     // floating body
-    const int numStates = multiBody_->getNumLinks() + 7;
-    rai_sim::VecDyn velocity;
-    velocity.resize(numStates);
+    jointVel_[0] = multiBody_->getBaseVel().x();
+    jointVel_[1] = multiBody_->getBaseVel().y();
+    jointVel_[2] = multiBody_->getBaseVel().z();
+    jointVel_[3] = multiBody_->getBaseOmega().x();
+    jointVel_[4] = multiBody_->getBaseOmega().y();
+    jointVel_[5] = multiBody_->getBaseOmega().z();
 
-    velocity[0] = multiBody_->getBaseVel().x();
-    velocity[1] = multiBody_->getBaseVel().y();
-    velocity[2] = multiBody_->getBaseVel().z();
-    velocity[3] = multiBody_->getBaseOmega().x();
-    velocity[4] = multiBody_->getBaseOmega().x();
-    velocity[5] = multiBody_->getBaseOmega().y();
-    velocity[6] = multiBody_->getBaseOmega().z();
-
-    for (int i = 0; i < multiBody_->getNumLinks(); i++) {
-      velocity[i+7] = multiBody_->getJointPos(i);
+    int i = 6;
+    for (int l: movableLinkIdx_) {
+      jointVel_[i++] = multiBody_->getJointVel(l);
     }
-
-    return velocity.e();
   }
+  return jointVel_.e();
 }
 
 void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
@@ -294,8 +300,15 @@ void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointSta
     }
   } else {
     // floating
-    multiBody_->getBaseWorldTransform().setOrigin(btVector3(jointState[0], jointState[1], jointState[2]));
-    multiBody_->getBaseWorldTransform().setRotation(btQuaternion(jointState[3], jointState[4], jointState[5], jointState[6]));
+    multiBody_->setBasePos(btVector3(
+        jointState[0],
+        jointState[1],
+        jointState[2]));
+    multiBody_->setWorldToBaseRot(btQuaternion(
+        jointState[4],
+        jointState[5],
+        jointState[6],
+        jointState[3]));
 
     int i = 7;
     for (int l: movableLinkIdx_) {
@@ -303,9 +316,32 @@ void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointSta
     }
   }
 }
-void ArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
 
+void ArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
+  if(isFixed_) {
+    // fixed
+    int i = 0;
+    for (int l: movableLinkIdx_) {
+      multiBody_->setJointPos(l, jointVel[i++]);
+    }
+  } else {
+    // floating
+    multiBody_->setBaseVel(btVector3(
+        jointVel[0],
+        jointVel[1],
+        jointVel[2]));
+    multiBody_->setBaseOmega(btVector3(
+        jointVel[3],
+        jointVel[4],
+        jointVel[5]));
+
+    int i = 6;
+    for (int l: movableLinkIdx_) {
+      multiBody_->setJointPos(l, jointVel[i++]);
+    }
+  }
 }
+
 void ArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
   if(isFixed_) {
     // fixed
@@ -320,10 +356,10 @@ void ArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> j
         jointState.begin()[1],
         jointState.begin()[2]));
     multiBody_->setWorldToBaseRot(btQuaternion(
-        jointState.begin()[3],
         jointState.begin()[4],
         jointState.begin()[5],
-        jointState.begin()[6]));
+        jointState.begin()[6],
+        jointState.begin()[3]));
 
     int i = 7;
     for (int l: movableLinkIdx_) {
@@ -331,25 +367,115 @@ void ArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> j
     }
   }
 }
+
 void ArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+  if(isFixed_) {
+    // fixed
+    int i = 0;
+    for (int l: movableLinkIdx_) {
+      multiBody_->setJointPos(l, jointVel.begin()[i++]);
+    }
+  } else {
+    // floating
+    multiBody_->setBaseVel(btVector3(
+        jointVel.begin()[0],
+        jointVel.begin()[1],
+        jointVel.begin()[2]));
+    multiBody_->setBaseOmega(btVector3(
+        jointVel.begin()[3],
+        jointVel.begin()[4],
+        jointVel.begin()[5]));
 
+    int i = 6;
+    for (int l: movableLinkIdx_) {
+      multiBody_->setJointPos(l, jointVel.begin()[i++]);
+    }
+  }
 }
+
 const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedForce() {
-  multiBody_->getBaseForce();
-  rai_sim::VecDyn force;
-  return force.e();
-}
-void ArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
+  if (multiBody_->hasFixedBase()) {
+    // fixed body
+    int i = 0;
+    for (int l: movableLinkIdx_) {
+      jointForce_[i++] = multiBody_->getJointTorque(l);
+    }
+  } else {
+    // floating body
+    jointForce_[0] = multiBody_->getBaseForce().x();
+    jointForce_[1] = multiBody_->getBaseForce().y();
+    jointForce_[2] = multiBody_->getBaseForce().z();
+    jointForce_[3] = multiBody_->getBaseTorque().x();
+    jointForce_[4] = multiBody_->getBaseTorque().y();
+    jointForce_[5] = multiBody_->getBaseTorque().z();
 
+    int i = 6;
+    for (int l: movableLinkIdx_) {
+      jointForce_[i++] = multiBody_->getJointTorque(l);
+    }
+  }
 }
+
+void ArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
+  if(isFixed_) {
+    // fixed
+    int i = 0;
+    for (int l: movableLinkIdx_) {
+      multiBody_->addJointTorque(l, tau.begin()[i++]);
+    }
+  } else {
+    // floating
+    multiBody_->addBaseForce(btVector3(
+        tau.begin()[0],
+        tau.begin()[1],
+        tau.begin()[2]));
+    multiBody_->addBaseTorque(btVector3(
+        tau.begin()[3],
+        tau.begin()[4],
+        tau.begin()[5]));
+
+    int i = 6;
+    for (int l: movableLinkIdx_) {
+      multiBody_->addJointTorque(l, tau.begin()[i++]);
+    }
+  }
+}
+
+void ArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
+  if(isFixed_) {
+    // fixed
+    int i = 0;
+    for (int l: movableLinkIdx_) {
+      multiBody_->addJointTorque(l, tau[i++]);
+    }
+  } else {
+    // floating
+    multiBody_->addBaseForce(btVector3(
+        tau[0],
+        tau[1],
+        tau[2]));
+    multiBody_->addBaseTorque(btVector3(
+        tau[3],
+        tau[4],
+        tau[5]));
+
+    int i = 6;
+    for (int l: movableLinkIdx_) {
+      multiBody_->addJointTorque(l, tau[i++]);
+    }
+  }
+}
+
 void ArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
 
 }
+
 void ArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
 
 }
-void ArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
 
+int ArticulatedSystem::getDOF() {
+  return dof_;
 }
 
 } // object
