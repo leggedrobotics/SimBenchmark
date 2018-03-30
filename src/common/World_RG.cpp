@@ -139,7 +139,7 @@ void World_RG::cameraFollowObject(rai_graphics::object::SingleBodyObject *follow
 
 void World_RG::cameraFollowObject(SingleBodyHandle followingObject,
                                   Eigen::Vector3d relativePosition) {
-  followingObject.visual();
+  RAIFATAL_IF(!gui_, "visualizer is not running")
   cameraFollowObject(followingObject.visual()[0], relativePosition);
 }
 
