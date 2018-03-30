@@ -10,7 +10,7 @@
 #include <raiSim/math.hpp>
 #include <Eigen/Geometry>
 
-#include "base/SingleBodyObject.hpp"
+#include "common/SingleBodyObject.hpp"
 #include "Object.hpp"
 
 namespace bullet_sim {

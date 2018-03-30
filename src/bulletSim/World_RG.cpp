@@ -155,6 +155,7 @@ void World_RG::integrate(double dt) {
 void World_RG::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
 }
+
 void World_RG::setERP(double erp, double erp2, double frictionErp) {
   world_.setERP(erp, erp2, frictionErp);
 }
@@ -374,7 +375,6 @@ void World_RG::updateFrame() {
 //    }
 //  }
 }
-
 void World_RG::visEnd() {
   gui_->end();
   for (auto& obj: asHandles_) {

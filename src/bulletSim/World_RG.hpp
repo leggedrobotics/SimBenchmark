@@ -11,7 +11,7 @@
 #include <raiSim/math.hpp>
 #include <bullet/btBulletCollisionCommon.h>
 
-#include "base/World_RG.hpp"
+#include "common/World_RG.hpp"
 #include "UserHandle.hpp"
 #include "Configure.hpp"
 #include "World.hpp"
