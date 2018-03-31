@@ -7,8 +7,22 @@
 
 ROOT_DIR = "$PWD"
 
-sudo rm -rf $ROOT_DIR/lib
-mkdir $ROOT_DIR/lib
+raisim_flag=''
+bullet_flag=''
+ode_flag=''
+mujoco_flag=''
+
+while getopts 'rbom' flag; do
+  case "${flag}" in
+    r) raisim_flag='true'; echo "Install raisim" ;;
+    b) bullet_flag='true'; echo "Install Bullet" ;;
+    o) ode_flag='true'; echo "Install ODE" ;;
+    m) mujoco_flag='true'; echo "Install MuJoCo" ;;
+    *) error "Unexpected option ${flag}" ;;
+  esac
+done
+
+sudo rm -rf $ROOT_DIR/lib/*
 
 # check if git is installed
 if dpkg-query -W -f'${Status}' "git" 2>/dev/null | grep -q "ok installed"; then
@@ -40,7 +54,7 @@ sudo make install
 
 # install yaml-cpp
 echo "Installing yaml-cpp..."
-cd $$ROOT_DIR/lib
+cd $ROOT_DIR/lib
 git clone https://github.com/jbeder/yaml-cpp.git
 cd yaml-cpp
 sudo rm -rf build
@@ -49,5 +63,18 @@ cmake ../
 sudo make install
 
 # install raiSim (optional)
+if [ "$raisim_flag" == 'true' ]; then
+    echo "Installing raiSim..."
+fi
+
 # install bullet (optional)
+if [ "$bullet_flag" == 'true' ]; then
+    echo "Installing Bullet..."
+    cd $ROOT_DIR/lib
+    git clone https://github.com/bulletphysics/bullet3.git
+fi
+
 # install ode (optional)
+if [ "$ode_flag" == 'true' ]; then
+    echo "Installing ODE..."
+fi
