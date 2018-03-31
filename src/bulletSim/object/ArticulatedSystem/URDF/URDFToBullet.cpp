@@ -277,7 +277,7 @@ void ConvertURDF2BulletInternal(
 	int graphicsIndex;
 	{
 		B3_PROFILE("convertLinkVisualShapes");
-//		graphicsIndex = u2b.convertLinkVisualShapes(urdfLinkIndex, pathPrefix, localInertialFrame);
+		graphicsIndex = u2b.convertLinkVisualShapes(urdfLinkIndex, pathPrefix, localInertialFrame);
 	}
 
 

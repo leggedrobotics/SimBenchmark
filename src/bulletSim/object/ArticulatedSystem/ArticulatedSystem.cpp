@@ -138,8 +138,8 @@ void ArticulatedSystem::initVisuals() {
     initVisualFromLinkCollider(linkCollider, i + 1);
 
     btTransform linkTransform;
-    linkTransform.setRotation(quatList[i+1]);
-    linkTransform.setOrigin(posList[i+1]);
+      linkTransform.setRotation(quatList[multiBody_->getLink(i).m_parent+1]);
+      linkTransform.setOrigin(posList[multiBody_->getLink(i).m_parent+1]);
     std::vector<URDFVisualData> visDataList = importer_->getLinkVisualData(creator_->m_mb2urdfLink[i]);
     initVisObj(linkTransform, visDataList);
 
@@ -160,18 +160,26 @@ void ArticulatedSystem::initVisObj(btTransform linkTransform, std::vector<URDFVi
   for (int i = 0; i < data.size(); ++i) {
     UrdfVisual &vis = data[i].visual;
 
+    btTransform transform = linkTransform * vis.m_linkLocalFrame;
+
     // orientation
     rai_sim::Mat<3, 3> mat;
     btMatrix3x3 rotMat;
     rotMat.setRotation(
-        linkTransform.getRotation() * vis.m_linkLocalFrame.getRotation());
+        transform.getRotation());
     mat.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
         rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
         rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
 
+    RAIINFO(vis.m_geometry.m_meshFileName)
+    RAIINFO(vis.m_linkLocalFrame.getRotation().w()
+                << " , " << vis.m_linkLocalFrame.getRotation().x()
+                << " , " << vis.m_linkLocalFrame.getRotation().y()
+                << " , " << vis.m_linkLocalFrame.getRotation().z())
+
     // position
     rai_sim::Vec<3> position;
-    btVector3 pos = linkTransform.getOrigin() + vis.m_linkLocalFrame.getOrigin();
+    btVector3 pos = transform.getOrigin();
     position = {pos.x(),
                 pos.y(),
                 pos.z()};

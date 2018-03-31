@@ -41,6 +41,9 @@ class BulletURDFImporter : public URDFImporterInterface
   /// added by Dongho Kang
   std::vector<URDFVisualData> getLinkVisualData(int linkIndex/*, const btTransform &inertialFrame*/) const;
 
+  virtual int convertLinkVisualShapes(int linkIndex, const char* pathPrefix, const btTransform& inertialFrame) const;
+//    virtual void convertLinkVisualShapes2(int linkIndex, int urdfIndex, const char* pathPrefix, const btTransform& inertialFrame, class btCollisionObject* colObj, int bodyUniqueId) const;
+
   virtual bool loadURDF(const char* fileName, bool forceFixedBase = false);
 
   //warning: some quick test to load SDF: we 'activate' a model, so we can re-use URDF code path
@@ -78,9 +81,6 @@ class BulletURDFImporter : public URDFImporterInterface
 
   virtual bool getRootTransformInWorld(btTransform& rootTransformInWorld) const;
   virtual void setRootTransformInWorld(const btTransform& rootTransformInWorld);
-
-//    virtual int convertLinkVisualShapes(int linkIndex, const char* pathPrefix, const btTransform& inertialFrame) const;
-//    virtual void convertLinkVisualShapes2(int linkIndex, int urdfIndex, const char* pathPrefix, const btTransform& inertialFrame, class btCollisionObject* colObj, int bodyUniqueId) const;
 
   class btCollisionShape* convertURDFToCollisionShape(const struct UrdfCollision* collision, const char* urdfPathPrefix) const;
 

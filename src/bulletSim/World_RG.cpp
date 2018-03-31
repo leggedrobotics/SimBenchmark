@@ -171,7 +171,7 @@ void World_RG::updateFrame() {
     rai_sim::Vec<3> pos;
 
     // update visuals for articulated system
-    as->updateVisuals();
+//    as->updateVisuals();
 
     if (showAlternateGraphicsIfexists) {
       /// update collision objects

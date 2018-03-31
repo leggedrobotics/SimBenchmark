@@ -19,7 +19,7 @@ int main() {
 
   bullet_sim::World_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
 
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1 /*, benchmark::GRID*/);
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1 , benchmark::GRID);
   auto anymal = sim.addArticulatedSystem("../res/ANYmal/robot.urdf");
   anymal->setGeneralizedCoordinate(
       {5, 5, 0.6,
