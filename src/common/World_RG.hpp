@@ -6,7 +6,7 @@
 #define BENCHMARK_WORLD_RG_HPP
 
 #include <raiGraphics/RAI_graphics.hpp>
-#include <raiSim/math.hpp>
+#include "math.hpp"
 
 #include "Configure.hpp"
 #include "UserHandle.hpp"

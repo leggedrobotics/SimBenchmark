@@ -5,6 +5,8 @@
 #ifndef BENCHMARK_ARTICULATEDSYSTEM_HPP
 #define BENCHMARK_ARTICULATEDSYSTEM_HPP
 
+#include "math.hpp"
+
 namespace benchmark {
 namespace object {
 
@@ -23,11 +25,11 @@ class ArticulatedSystem {
   typedef Eigen::Map<Eigen::Matrix<double, -1, 1> > EigenVec;
   typedef Eigen::Map<Eigen::Matrix<double, -1, -1> > EigenMat;
 
-  std::vector<std::tuple<rai_sim::Mat<3, 3>, rai_sim::Vec<3>, int, Shape, rai_sim::Vec<4>>>& getVisOb() {
+  std::vector<std::tuple<Mat<3, 3>, Vec<3>, int, Shape, benchmark::Vec<4>>>& getVisOb() {
     return visObj;
   };
 
-  std::vector<std::tuple<rai_sim::Mat<3, 3>, rai_sim::Vec<3>, int, Shape>>& getVisColOb() {
+  std::vector<std::tuple<Mat<3, 3>, Vec<3>, int, Shape>>& getVisColOb() {
     return visColObj;
   };
 
@@ -62,10 +64,10 @@ class ArticulatedSystem {
 
  public:
   // orientation, position, link_id, shape, color
-  std::vector<std::tuple<rai_sim::Mat<3, 3>, rai_sim::Vec<3>, int, Shape>> visColObj;
-  std::vector<std::tuple<rai_sim::Mat<3, 3>, rai_sim::Vec<3>, int, Shape, rai_sim::Vec<4>>> visObj;
-  std::vector<std::pair<std::string, rai_sim::Vec<4>>> visProps_;
-  std::vector<std::pair<std::string, rai_sim::Vec<4>>> visColProps_;
+  std::vector<std::tuple<Mat<3, 3>, Vec<3>, int, Shape>> visColObj;
+  std::vector<std::tuple<Mat<3, 3>, Vec<3>, int, Shape, Vec<4>>> visObj;
+  std::vector<std::pair<std::string, Vec<4>>> visProps_;
+  std::vector<std::pair<std::string, Vec<4>>> visColProps_;
 
 };
 

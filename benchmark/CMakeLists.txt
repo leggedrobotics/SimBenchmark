@@ -26,7 +26,7 @@ if(BENCHMARK_BULLET)
     target_link_libraries(thousandBulletSim ${BulletSimLink})
 endif()
 
-if(BENCHMARK_ODE AND ode_FOUND)
+if(BENCHMARK_ODE)
     # rolling
     add_executable(rollingODESim rollingODESim.cpp rolling.hpp)
     target_link_libraries(rollingODESim ${ODESimLink})

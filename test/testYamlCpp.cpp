@@ -7,11 +7,9 @@
 
 int main() {
 
-  YAML::Node config = YAML::LoadFile("./benchmark/rolling.yaml");
+  YAML::Node config = YAML::LoadFile("../../benchmark/rolling.yaml");
 
-  std::cout << config["light_position"] << std::endl;
-
-  std::vector<double> vector = config["light_position"].as<std::vector<double>>();
+  std::cout << config["sim_properties"]["light_position"] << std::endl;
 
   return 0;
 }

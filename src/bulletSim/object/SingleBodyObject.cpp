@@ -25,12 +25,12 @@ const Eigen::Map<Eigen::Matrix<double, 4, 1>> bullet_sim::object::SingleBodyObje
   return quatTemp_.e();
 }
 
-void bullet_sim::object::SingleBodyObject::getQuaternion(rai_sim::Vec<4> &quat) {
+void bullet_sim::object::SingleBodyObject::getQuaternion(benchmark::Vec<4> &quat) {
   const btQuaternion &quaternion = rigidBody_->getWorldTransform().getRotation();
   quat = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
 }
 
-void bullet_sim::object::SingleBodyObject::getRotationMatrix(rai_sim::Mat<3, 3> &rotation) {
+void bullet_sim::object::SingleBodyObject::getRotationMatrix(benchmark::Mat<3, 3> &rotation) {
   const btMatrix3x3 &rotMat = rigidBody_->getWorldTransform().getBasis();
   rotation.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
       rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
@@ -70,7 +70,7 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObj
   return angVelTemp_.e();
 }
 
-void bullet_sim::object::SingleBodyObject::getPosition_W(rai_sim::Vec<3> &pos_w) {
+void bullet_sim::object::SingleBodyObject::getPosition_W(benchmark::Vec<3> &pos_w) {
   const btVector3 &position = rigidBody_->getWorldTransform().getOrigin();
   pos_w = {position.getX(), position.getY(), position.getZ()};
 }

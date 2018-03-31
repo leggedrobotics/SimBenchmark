@@ -25,14 +25,14 @@ class SingleBodyObject: public benchmark::object::SingleBodyObject, public Objec
   btRigidBody *getRigidBody() const;
 
   virtual const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion();
-  virtual void getQuaternion(rai_sim::Vec<4>& quat);
+  virtual void getQuaternion(benchmark::Vec<4>& quat);
   virtual const Eigen::Map<Eigen::Matrix<double, 3, 3> > getRotationMatrix();
-  virtual void getRotationMatrix(rai_sim::Mat<3,3>& rotation);
+  virtual void getRotationMatrix(benchmark::Mat<3,3>& rotation);
   virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getPosition();
   virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getComPosition();
   virtual  const Eigen::Map<Eigen::Matrix<double, 3, 1> > getLinearVelocity();
   virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getAngularVelocity();
-  virtual void getPosition_W(rai_sim::Vec<3>& pos_w);
+  virtual void getPosition_W(benchmark::Vec<3>& pos_w);
 
   virtual void setPosition(Eigen::Vector3d originPosition);
   virtual void setPosition(double x, double y, double z);
@@ -60,11 +60,11 @@ class SingleBodyObject: public benchmark::object::SingleBodyObject, public Objec
   btMotionState *motionState_;
 
   // pose and velocity
-  rai_sim::Vec<4> quatTemp_ = {1.0, 0.0, 0.0, 0.0};
-  rai_sim::Mat<3, 3> rotMatTemp_;
-  rai_sim::Vec<3> posTemp_ = {0.0, 0.0, 0.0};
-  rai_sim::Vec<3> linVelTemp_ = {0.0, 0.0, 0.0};
-  rai_sim::Vec<3> angVelTemp_ = {0.0, 0.0, 0.0};
+  benchmark::Vec<4> quatTemp_ = {1.0, 0.0, 0.0, 0.0};
+  benchmark::Mat<3, 3> rotMatTemp_;
+  benchmark::Vec<3> posTemp_ = {0.0, 0.0, 0.0};
+  benchmark::Vec<3> linVelTemp_ = {0.0, 0.0, 0.0};
+  benchmark::Vec<3> angVelTemp_ = {0.0, 0.0, 0.0};
 
   rai::RandomNumberGenerator<double> rn_;
 };

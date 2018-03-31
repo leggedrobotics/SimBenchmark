@@ -197,8 +197,8 @@ void World_RG::updateFrame() {
 //    }
 //  }
 
-  rai_sim::Vec<3> bodyPosition;
-  rai_sim::Vec<4> quat;
+  benchmark::Vec<3> bodyPosition;
+  benchmark::Vec<4> quat;
 
   for (auto sb : sbHandles_) {
     sb->getPosition_W(bodyPosition);

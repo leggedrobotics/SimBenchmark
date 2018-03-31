@@ -171,7 +171,7 @@ void ArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *co
 void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTransform transform, int id) {
 
   // orientation
-  rai_sim::Mat<3, 3> mat;
+  benchmark::Mat<3, 3> mat;
   btMatrix3x3 rotMat;
   rotMat.setRotation(transform.getRotation());
   mat.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
@@ -179,19 +179,19 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTr
       rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
 
   // position
-  rai_sim::Vec<3> position;
+  benchmark::Vec<3> position;
   position = {transform.getOrigin().x(),
               transform.getOrigin().y(),
               transform.getOrigin().z()};
 
   // color
-  rai_sim::Vec<4> color;
+  benchmark::Vec<4> color;
   color = {1.0, 0, 0, 1.0};
 
   switch (col->getShapeType()) {
     case BOX_SHAPE_PROXYTYPE: {
       // box (xlen, ylen, zlen)
-      rai_sim::Vec<4> boxSize;
+      benchmark::Vec<4> boxSize;
       boxSize = {((btBoxShape *)col)->getHalfExtentsWithMargin().x() * 2.0,
                  ((btBoxShape *)col)->getHalfExtentsWithMargin().y() * 2.0,
                  ((btBoxShape *)col)->getHalfExtentsWithMargin().z() * 2.0,
@@ -205,7 +205,7 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTr
     }
     case CYLINDER_SHAPE_PROXYTYPE: {
       // cylinder (rad, rad, height)
-      rai_sim::Vec<4> cylSize;
+      benchmark::Vec<4> cylSize;
       cylSize = {((btCylinderShapeZ *)col)->getHalfExtentsWithMargin().x(),
                  ((btCylinderShapeZ *)col)->getHalfExtentsWithMargin().z() * 2.0,
                  0,
@@ -219,7 +219,7 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTr
     }
     case SPHERE_SHAPE_PROXYTYPE: {
       // sphere
-      rai_sim::Vec<4> sphereSize;
+      benchmark::Vec<4> sphereSize;
       sphereSize = {((btSphereShape *)col)->getRadius(),
                     0,
                     0,

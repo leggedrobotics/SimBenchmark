@@ -78,3 +78,9 @@ fi
 if [ "$ode_flag" == 'true' ]; then
     echo "Installing ODE..."
 fi
+
+# install mujoco (optional)
+if [ "mujoco_flag" == 'true' ]; then
+    echo "Installing MuJoCo..."
+    wget https://www.roboti.us/download/mjpro150_linux.zip
+fi

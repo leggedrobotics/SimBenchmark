@@ -36,10 +36,6 @@ include_directories(${RAI_COMMON_INCLUDE_DIR})
 find_package(raiGraphicsOpengl CONFIG REQUIRED)
 include_directories(${RAI_GRAPHICS_OPENGL_INCLUDE_DIRS})
 
-# raiSim
-find_package(raiSim CONFIG REQUIRED)
-include_directories(${RAI_SIM_INCLUDE_DIR})
-
 # eigen
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
@@ -60,6 +56,10 @@ if(BENCHMARK_RAISIM)
     # set raiSim backend
     add_definitions(-DCOLLISION_BACKEND_ODE)        # ODE
     #    add_definitions(-DCOLLISION_BACKEND_BULLET)     # BULLET
+
+    # raiSim
+    find_package(raiSim CONFIG REQUIRED)
+    include_directories(${RAI_SIM_INCLUDE_DIR})
 endif()
 
 # bullet (optional)
@@ -119,9 +119,9 @@ endif()
 
 ## =========================== LINK ===========================
 set(BENCHMARK_LINK
+        BenchmarkLib
         ${Boost_LIBRARIES}
         ${YAML_CPP_LIBRARIES}
-        BenchmarkLib
         ${RAI_COMMON_LINK}
         ${RAI_GRAPHICS_OPENGL_LINK}
         )

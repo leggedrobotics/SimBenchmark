@@ -4,6 +4,7 @@ set(Benchmark_SRCS
         common/World_RG.cpp
         common/SingleBodyObject.hpp
         common/ArticulatedSystem.hpp
+        common/math.hpp
         )
 
 add_library(BenchmarkLib ${Benchmark_SRCS})

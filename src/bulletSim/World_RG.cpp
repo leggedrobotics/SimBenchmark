@@ -164,8 +164,8 @@ void World_RG::updateFrame() {
 
 //  TODO articulated system
   for (auto &as : asHandles_) {
-    rai_sim::Vec<4> quat;
-    rai_sim::Vec<3> pos;
+    benchmark::Vec<4> quat;
+    benchmark::Vec<3> pos;
 
     // update visuals for articulated system
     as->updateVisuals();
@@ -206,8 +206,8 @@ void World_RG::updateFrame() {
     }
   }
 
-  rai_sim::Vec<3> bodyPosition;
-  rai_sim::Vec<4> quat;
+  benchmark::Vec<3> bodyPosition;
+  benchmark::Vec<4> quat;
 
   for (auto sb : sbHandles_) {
     sb->getPosition_W(bodyPosition);

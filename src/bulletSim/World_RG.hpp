@@ -8,9 +8,9 @@
 #define RAI_COLLISION(x) (1<<(x))
 
 #include <raiGraphics/RAI_graphics.hpp>
-#include <raiSim/math.hpp>
 #include <bullet/btBulletCollisionCommon.h>
 
+#include "common/math.hpp"
 #include "common/World_RG.hpp"
 #include "UserHandle.hpp"
 #include "Configure.hpp"
