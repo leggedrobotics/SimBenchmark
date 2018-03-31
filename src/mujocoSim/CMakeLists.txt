@@ -23,4 +23,12 @@ if(BENCHMARK_MUJOCO)
             )
 
     add_library(MuJoCoSimLib ${MuJoCoSim_SRCS})
+    target_link_libraries(MuJoCoSimLib
+            ${glew}
+            ${glfw}
+            ${mujoco150}
+            ${mujoco150nogl}
+            GL
+            GLU
+            glut)
 endif()

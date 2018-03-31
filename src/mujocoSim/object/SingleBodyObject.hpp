@@ -9,7 +9,7 @@
 #include <raiSim/math.hpp>
 #include <mujoco.h>
 
-#include "base/SingleBodyObject.hpp"
+#include "common/SingleBodyObject.hpp"
 
 namespace mujoco_sim {
 namespace object {

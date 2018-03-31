@@ -19,7 +19,7 @@ endif()
 option(BENCHMARK_RAISIM "benchmark raiSim" ON)
 option(BENCHMARK_BULLET "benchmark Bullet" ON)
 option(BENCHMARK_ODE "benchmark ODE" OFF)
-option(BENCHMARK_MUJOCO "benchmark MUJOCO" OFF)
+option(BENCHMARK_MUJOCO "benchmark MUJOCO" ON)
 option(BENCHMARK_DART "benchmark DART" OFF)
 
 ## =========================== LINK DIRECTORIES ===========================
@@ -89,16 +89,22 @@ endif()
 if(BENCHMARK_MUJOCO)
     message(STATUS "Benchmark MUJOCO")
 
-    include_directories(mjpro150/include)
+    include_directories(lib/mjpro150/include)
     # mujoco shared libraries
-    find_library(glew NAMES glew PATHS mjpro150/bin)
-    find_library(glewegl NAMES glewegl PATHS mjpro150/bin)
-    find_library(glewosmesa NAMES glewosmesa PATHS mjpro150/bin)
-    find_library(glfw NAMES glfw libglfw.so.3 PATHS mjpro150/bin)
-    find_library(mujoco150 NAMES mujoco150 PATHS mjpro150/bin)
-    find_library(mujoco150nogl NAMES mujoco150nogl PATHS mjpro150/bin)
+    find_library(glew NAMES glew
+            PATHS lib/mjpro150/bin)
+    find_library(glewegl NAMES glewegl
+            PATHS lib/mjpro150/bin)
+    find_library(glewosmesa NAMES glewosmesa
+            PATHS lib/mjpro150/bin)
+    find_library(glfw NAMES glfw libglfw.so.3
+            PATHS lib/mjpro150/bin)
+    find_library(mujoco150 NAMES mujoco150
+            PATHS lib/mjpro150/bin)
+    find_library(mujoco150nogl NAMES mujoco150nogl
+            PATHS lib/mjpro150/bin)
     # mujoco keyfile
-    file(COPY mjpro150/mjkey.txt
+    file(COPY lib/mjpro150/mjkey.txt
             DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
@@ -136,13 +142,6 @@ endif()
 
 if(BENCHMARK_MUJOCO)
     set(MuJoCoSimLink
-            ${glew}
-            ${glfw}
-            ${mujoco150}
-            ${mujoco150nogl}
-            GL
-            GLU
-            glut
             MuJoCoSimLib
             ${BENCHMARK_LINK}
             )

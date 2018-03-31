@@ -7,7 +7,7 @@
 
 #include <raiGraphics/RAI_graphics.hpp>
 
-#include "base/World_RG.hpp"
+#include "common/World_RG.hpp"
 #include "World.hpp"
 
 namespace mujoco_sim {
