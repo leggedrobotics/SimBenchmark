@@ -64,6 +64,11 @@ class World_RG: public benchmark::World_RG {
                                          double mass,
                                          benchmark::CollisionGroupType collisionGroup = 1,
                                          benchmark::CollisionGroupType collisionMask=-1) override ;
+  benchmark::SingleBodyHandle addCylinder(double radius,
+                                          double height,
+                                          double mass,
+                                          benchmark::CollisionGroupType collisionGroup = 1,
+                                          benchmark::CollisionGroupType collisionMask=-1) override ;
   ArticulatedSystemHandle addArticulatedSystem(std::string nm,
                                                benchmark::CollisionGroupType collisionGroup = 1,
                                                benchmark::CollisionGroupType collisionMask=-1) ;

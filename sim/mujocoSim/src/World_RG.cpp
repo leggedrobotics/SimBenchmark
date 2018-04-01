@@ -112,6 +112,15 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addCapsule(double radius,
   return handle;
 }
 
+benchmark::SingleBodyHandle mujoco_sim::World_RG::addCylinder(double radius,
+                                                              double height,
+                                                              double mass,
+                                                              benchmark::CollisionGroupType collisionGroup,
+                                                              benchmark::CollisionGroupType collisionMask) {
+  benchmark::SingleBodyHandle handle(, {}, {});
+  return handle;
+}
+
 void mujoco_sim::World_RG::integrate(double dt) {
   world_.integrate(dt);
 }
@@ -123,9 +132,9 @@ void mujoco_sim::World_RG::setGravity(Eigen::Vector3d gravity) {
 }
 
 void mujoco_sim::World_RG::setERP(double erp, double erp2, double frictionErp) {}
-
 benchmark::SingleBodyHandle mujoco_sim::World_RG::getSingleBodyHandle(int index) {
   if(index > sbHandles_.size())
     RAIFATAL("get singlebody handle failed. invalid index");
   return sbHandles_[index];
 }
+

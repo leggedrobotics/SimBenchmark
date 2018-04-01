@@ -77,6 +77,19 @@ benchmark::SingleBodyHandle World_RG::addCapsule(double radius,
   return handle;
 }
 
+benchmark::SingleBodyHandle World_RG::addCylinder(double radius,
+                                                  double height,
+                                                  double mass,
+                                                  benchmark::CollisionGroupType collisionGroup,
+                                                  benchmark::CollisionGroupType collisionMask) {
+  benchmark::SingleBodyHandle handle(
+      world_.addCylinder(radius, height, mass, collisionGroup, collisionMask), {}, {});
+  if(gui_) handle.visual().push_back(new rai_graphics::object::Cylinder(radius, height, true));
+  processSingleBody(handle);
+  return handle;
+
+}
+
 ArticulatedSystemHandle World_RG::addArticulatedSystem(std::string nm,
                                                        benchmark::CollisionGroupType collisionGroup,
                                                        benchmark::CollisionGroupType collisionMask) {
@@ -157,7 +170,6 @@ void World_RG::setGravity(Eigen::Vector3d gravity) {
 void World_RG::setERP(double erp, double erp2, double frictionErp) {
   world_.setERP(erp, erp2, frictionErp);
 }
-
 void World_RG::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
@@ -256,16 +268,16 @@ void World_RG::updateFrame() {
 //  }
 
   /// contact points
-//  if (gui_->getCustomToggleState(1)) {
-//    contactPointMarker_->mutexLock();
-//    contactPointMarker_->clearGhost();
-//    for (auto &pro: *world_.getCollisionProblem()) {
-//      Eigen::Vector3d pos = pro.point_;
-//      contactPointMarker_->addGhost(pos);
-//    }
-//    contactPointMarker_->mutexUnLock();
-//  } else
-//    contactPointMarker_->clearGhost();
+  if (gui_->getCustomToggleState(1)) {
+    contactPointMarker_->mutexLock();
+    contactPointMarker_->clearGhost();
+    for (auto &pro: *world_.getCollisionProblem()) {
+      Eigen::Vector3d pos = pro.point_;
+      contactPointMarker_->addGhost(pos);
+    }
+    contactPointMarker_->mutexUnLock();
+  } else
+    contactPointMarker_->clearGhost();
 
   /// contact forces
 //  if (gui_->getCustomToggleState(2)) {

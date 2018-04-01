@@ -11,7 +11,7 @@
 namespace benchmark {
 namespace object {
 
-class SingleBodyObject {
+class SingleBodyObjectInterface {
 
  public:
   virtual const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion() = 0;

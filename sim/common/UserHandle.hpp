@@ -7,7 +7,7 @@
 
 #include <raiGraphics/RAI_graphics.hpp>
 
-#include "SingleBodyObject.hpp"
+#include "SingleBodyObjectInterface.hpp"
 #include "ArticulatedSystem.hpp"
 
 namespace benchmark {
@@ -66,7 +66,7 @@ class UserWireHandle : public UserHandle<S> {
   }
 };
 
-typedef benchmark::UserObjectHandle<benchmark::object::SingleBodyObject> SingleBodyHandle;
+typedef benchmark::UserObjectHandle<benchmark::object::SingleBodyObjectInterface> SingleBodyHandle;
 typedef benchmark::UserObjectHandle<benchmark::object::ArticulatedSystem> ArticulatedSystemHandle;
 
 //typedef UserObjectHandle<bullet_sim::object::Compound> CompoundHandle;

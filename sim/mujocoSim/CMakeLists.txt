@@ -29,21 +29,24 @@ file(INSTALL ${MUJOCO_LIB_DIR}/model
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 # source
+include_directories(src)
+
 set(MUJOCO_SIM_SRC
-        World.cpp
-        World.hpp
-        World_RG.cpp
-        World_RG.hpp
-        object/SingleBodyObject.cpp
-        object/SingleBodyObject.hpp
-        object/Sphere.cpp
-        object/Sphere.hpp
-        object/Box.cpp
-        object/Box.hpp
-        object/Capsule.cpp
-        object/Capsule.hpp
-        object/CheckerBoard.cpp
-        object/CheckerBoard.hpp
+        src/World.cpp
+        src/World.hpp
+        src/World_RG.cpp
+        src/World_RG.hpp
+        src/UserHandle.hpp
+        src/object/SingleBodyObjectInterface.cpp
+        src/object/SingleBodyObject.hpp
+        src/object/Sphere.cpp
+        src/object/Sphere.hpp
+        src/object/Box.cpp
+        src/object/Box.hpp
+        src/object/Capsule.cpp
+        src/object/Capsule.hpp
+        src/object/CheckerBoard.cpp
+        src/object/CheckerBoard.hpp
         )
 
 # library
@@ -64,3 +67,4 @@ set(MUJOCO_SIM_LINK
 
 # subdirectory
 add_subdirectory(test)
+add_subdirectory(demo)

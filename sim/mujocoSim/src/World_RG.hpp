@@ -9,6 +9,7 @@
 
 #include "common/World_RG.hpp"
 #include "World.hpp"
+#include "UserHandle.hpp"
 
 namespace mujoco_sim {
 
@@ -56,6 +57,11 @@ class World_RG: public benchmark::World_RG {
                                      double mass,
                                      benchmark::CollisionGroupType collisionGroup = 1,
                                      benchmark::CollisionGroupType collisionMask = -1) override ;
+  benchmark::SingleBodyHandle addCylinder(double radius, 
+                                          double height, 
+                                          double mass, 
+                                          benchmark::CollisionGroupType collisionGroup = 1, 
+                                          benchmark::CollisionGroupType collisionMask=-1) override ;
   benchmark::SingleBodyHandle addCheckerboard(double gridSize,
                                               double xLength,
                                               double yLength,

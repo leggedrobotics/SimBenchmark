@@ -1,5 +1,5 @@
-add_executable(stackBulletSim stackBulletSim.cpp)
-target_link_libraries(stackBulletSim ${BULLET_SIM_LINK})
+add_executable(BtStackDemo StackDemo.cpp)
+target_link_libraries(BtStackDemo ${BULLET_SIM_LINK})
 
-add_executable(demoAnymalBulletSim demoAnymalBulletSim.cpp)
-target_link_libraries(demoAnymalBulletSim ${BULLET_SIM_LINK})
+add_executable(BtAnymalDemo AnymalDemo.cpp)
+target_link_libraries(BtAnymalDemo ${BULLET_SIM_LINK})

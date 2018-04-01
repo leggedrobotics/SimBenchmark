@@ -25,11 +25,11 @@ class ArticulatedSystem {
   typedef Eigen::Map<Eigen::Matrix<double, -1, 1> > EigenVec;
   typedef Eigen::Map<Eigen::Matrix<double, -1, -1> > EigenMat;
 
-  std::vector<std::tuple<Mat<3, 3>, Vec<3>, int, Shape, benchmark::Vec<4>>>& getVisOb() {
+  std::vector<std::tuple<benchmark::Mat<3, 3>, benchmark::Vec<3>, int, Shape, benchmark::Vec<4>>>& getVisOb() {
     return visObj;
   };
 
-  std::vector<std::tuple<Mat<3, 3>, Vec<3>, int, Shape>>& getVisColOb() {
+  std::vector<std::tuple<benchmark::Mat<3, 3>, benchmark::Vec<3>, int, Shape>>& getVisColOb() {
     return visColObj;
   };
 
@@ -64,10 +64,10 @@ class ArticulatedSystem {
 
  public:
   // orientation, position, link_id, shape, color
-  std::vector<std::tuple<Mat<3, 3>, Vec<3>, int, Shape>> visColObj;
-  std::vector<std::tuple<Mat<3, 3>, Vec<3>, int, Shape, Vec<4>>> visObj;
-  std::vector<std::pair<std::string, Vec<4>>> visProps_;
-  std::vector<std::pair<std::string, Vec<4>>> visColProps_;
+  std::vector<std::tuple<benchmark::Mat<3, 3>, benchmark::Vec<3>, int, Shape>> visColObj;
+  std::vector<std::tuple<benchmark::Mat<3, 3>, benchmark::Vec<3>, int, Shape, benchmark::Vec<4>>> visObj;
+  std::vector<std::pair<std::string, benchmark::Vec<4>>> visProps_;
+  std::vector<std::pair<std::string, benchmark::Vec<4>>> visColProps_;
 
 };
 

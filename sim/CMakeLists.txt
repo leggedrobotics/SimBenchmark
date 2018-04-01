@@ -2,7 +2,8 @@ set(Benchmark_SRCS
         common/UserHandle.hpp
         common/World_RG.hpp
         common/World_RG.cpp
-        common/SingleBodyObject.hpp
+        common/WorldInterface.hpp
+        common/SingleBodyObjectInterface.hpp
         common/ArticulatedSystem.hpp
         common/math.hpp
         )

@@ -13,14 +13,17 @@
 #include <BulletDynamics/MLCPSolvers/btLemkeSolver.h>
 #include <BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h>
 #include <BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
+#include <common/WorldInterface.hpp>
 
 #include "common/Configure.hpp"
+#include "common/WorldInterface.hpp"
 
 #include "object/Object.hpp"
+#include "object/CheckerBoard.hpp"
 #include "object/Sphere.hpp"
+#include "object/Cylinder.hpp"
 #include "object/Box.hpp"
 #include "object/Capsule.hpp"
-#include "object/CheckerBoard.hpp"
 #include "object/ArticulatedSystem/ArticulatedSystem.hpp"
 
 namespace bullet_sim {
@@ -43,21 +46,24 @@ struct Single3DContactProblem {
   Eigen::Vector3d normal_;
 };
 
-class World {
+class World: public benchmark::WorldInterface {
 
  public:
   explicit World(SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
   virtual ~World();
 
-  object::Sphere *addSphere(double radius, double mass,
-                            benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) ;
-  object::Box *addBox(double xLength, double yLength, double zLength, double mass,
-                      benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) ;
   object::CheckerBoard *addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
-                                        benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
+                                        benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) override;
+  object::Sphere *addSphere(double radius, double mass,
+                            benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) override ;
+  object::Box *addBox(double xLength, double yLength, double zLength, double mass,
+                      benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) override ;
   object::Capsule *addCapsule(double radius, double height, double mass,
-                              benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
-  object::ArticulatedSystem *addArticulatedSystem(std::string urdfPath, benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
+                              benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) override ;
+  object::Cylinder *addCylinder(double radius, double height, double mass,
+                                benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) override ;
+  object::ArticulatedSystem *addArticulatedSystem(std::string urdfPath,
+                                                  benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
 
   void integrate(double dt);
 

@@ -9,12 +9,12 @@
 #include <mujoco.h>
 
 #include "common/math.hpp"
-#include "common/SingleBodyObject.hpp"
+#include "common/SingleBodyObjectInterface.hpp"
 
 namespace mujoco_sim {
 namespace object {
 
-class SingleBodyObject: public benchmark::object::SingleBodyObject {
+class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
 
  public:
   SingleBodyObject(mjData *data,

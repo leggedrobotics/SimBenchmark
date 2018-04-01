@@ -33,6 +33,8 @@ set(BULLET_SIM_SRC
         src/object/Sphere.cpp
         src/object/Capsule.hpp
         src/object/Capsule.cpp
+        src/object/Cylinder.hpp
+        src/object/Cylinder.cpp
         src/object/ArticulatedSystem/ArticulatedSystem.hpp
         src/object/ArticulatedSystem/ArticulatedSystem.cpp
         src/object/ArticulatedSystem/URDF/MyMultiBodyCreator.h

@@ -7,7 +7,7 @@
 
 #include <mujoco.h>
 
-#include "Configure.hpp"
+#include "common/Configure.hpp"
 #include "object/Sphere.hpp"
 #include "object/Box.hpp"
 #include "object/Capsule.hpp"

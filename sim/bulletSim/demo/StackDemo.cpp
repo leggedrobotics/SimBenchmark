@@ -21,18 +21,18 @@ int main() {
   // add objects
   auto checkerboard = sim.addCheckerboard(5.0, 10.0, 10.0, 0.1);
 
-  Object object = CAPSULE;
+  Object object = BALL;
   switch(object) {
     case BOX:
     {
       auto box1 = sim.addBox(1, 1, 1, 1);
-      box1->setPosition(0, 0, 0.5);
+      box1->setPosition(0, 0, 0.6);
       auto box2 = sim.addBox(1, 1, 1, 1);
-      box2->setPosition(5, 0, 1.5);
+      box2->setPosition(0, 0, 1.7);
       auto box3 = sim.addBox(1, 1, 1, 1);
-      box3->setPosition(0, 5, 2.5);
+      box3->setPosition(0, 0, 2.8);
       auto box4 = sim.addBox(1, 1, 1, 1);
-      box4->setPosition(5, 5, 3.5);
+      box4->setPosition(0, 0, 3.9);
       break;
     }
     case BALL:
@@ -50,13 +50,13 @@ int main() {
     case CAPSULE:
     {
       auto capsule1 = sim.addCapsule(0.25, 0.5, 1);
-      capsule1->setPosition(0, 0, 0.5);
+      capsule1->setPosition(-2.5, -2.5, 0.5);
       auto capsule2 = sim.addCapsule(0.25, 0.5, 1);
-      capsule2->setPosition(5, 0, 1.5);
+      capsule2->setPosition(-2.5, 2.5, 1.5);
       auto capsule3 = sim.addCapsule(0.25, 0.5, 1);
-      capsule3->setPosition(0, 5, 2.5);
+      capsule3->setPosition(2.5, -2.5, 2.5);
       auto capsule4 = sim.addCapsule(0.25, 0.5, 1);
-      capsule4->setPosition(5, 5, 3.5);
+      capsule4->setPosition(2.5, 2.5, 3.5);
       break;
     }
   }
@@ -64,7 +64,7 @@ int main() {
   double dt = 0.01;  // (sec)
 
   // camera relative position
-  sim.cameraFollowObject(checkerboard, {10, 0, 5});
+  sim.cameraFollowObject(checkerboard, {10, 0, 20});
 
   // simulation loop
   // press 'q' key to quit
