@@ -7,9 +7,9 @@
 
 #include <btBulletCollisionCommon.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
-#include <raiSim/math.hpp>
 #include <Eigen/Geometry>
 
+#include "common/math.hpp"
 #include "common/SingleBodyObject.hpp"
 #include "Object.hpp"
 

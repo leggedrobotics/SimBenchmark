@@ -2,9 +2,6 @@
 // Created by kangd on 25.03.18.
 //
 
-#include <raiSim/math.hpp>
-#include <BulletDynamics/Featherstone/btMultiBodyLinkCollider.h>
-#include <SharedMemoryPublic.h>
 #include "ArticulatedSystem.hpp"
 
 namespace bullet_sim {

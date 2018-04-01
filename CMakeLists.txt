@@ -49,19 +49,6 @@ find_package( Boost COMPONENTS system filesystem program_options REQUIRED )
 include_directories( ${Boost_INCLUDE_DIR} )
 link_directories(${Boost_LIBRARY_DIRS})
 
-# raisim (optional)
-if(BENCHMARK_RAISIM)
-    message(STATUS "Benchmark raiSim")
-
-    # set raiSim backend
-    add_definitions(-DCOLLISION_BACKEND_ODE)        # ODE
-    #    add_definitions(-DCOLLISION_BACKEND_BULLET)     # BULLET
-
-    # raiSim
-    find_package(raiSim CONFIG REQUIRED)
-    include_directories(${RAI_SIM_INCLUDE_DIR})
-endif()
-
 # ode (optional)
 if(BENCHMARK_ODE)
     message(STATUS "Benchmark ODE")

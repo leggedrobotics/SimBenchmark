@@ -13,8 +13,8 @@
 #include <BulletDynamics/MLCPSolvers/btLemkeSolver.h>
 #include <BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h>
 #include <BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
-#include <Configure.hpp>
-#include <raiSim/configure.hpp>
+
+#include "common/Configure.hpp"
 
 #include "object/Object.hpp"
 #include "object/Sphere.hpp"
@@ -57,7 +57,7 @@ class World {
                                         benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
   object::Capsule *addCapsule(double radius, double height, double mass,
                               benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
-  object::ArticulatedSystem *addArticulatedSystem(std::string urdfPath, CollisionGroupType collisionGroup=1, CollisionGroupType collisionMask=-1);
+  object::ArticulatedSystem *addArticulatedSystem(std::string urdfPath, benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
 
   void integrate(double dt);
 

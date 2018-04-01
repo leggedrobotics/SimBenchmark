@@ -78,8 +78,8 @@ benchmark::SingleBodyHandle World_RG::addCapsule(double radius,
 }
 
 ArticulatedSystemHandle World_RG::addArticulatedSystem(std::string nm,
-                                                       CollisionGroupType collisionGroup,
-                                                       CollisionGroupType collisionMask) {
+                                                       benchmark::CollisionGroupType collisionGroup,
+                                                       benchmark::CollisionGroupType collisionMask) {
   if(solverOption_ != bullet_sim::SOLVER_MULTI_BODY)
     RAIFATAL("cannot simulate articulated system on non-multibody world")
 

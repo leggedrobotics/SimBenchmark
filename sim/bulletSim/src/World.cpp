@@ -155,8 +155,8 @@ bullet_sim::object::CheckerBoard *bullet_sim::World::addCheckerboard(double grid
 }
 
 object::ArticulatedSystem *World::addArticulatedSystem(std::string urdfPath,
-                                                       CollisionGroupType collisionGroup,
-                                                       CollisionGroupType collisionMask) {
+                                                       benchmark::CollisionGroupType collisionGroup,
+                                                       benchmark::CollisionGroupType collisionMask) {
   object::ArticulatedSystem *articulatedSystem = new bullet_sim::object::ArticulatedSystem(urdfPath,
                                                                                            (btMultiBodyDynamicsWorld* )dynamicsWorld_);
   objectList_.push_back(articulatedSystem);

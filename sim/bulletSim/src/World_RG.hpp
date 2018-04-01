@@ -12,8 +12,8 @@
 
 #include "common/math.hpp"
 #include "common/World_RG.hpp"
+#include "common/Configure.hpp"
 #include "UserHandle.hpp"
-#include "Configure.hpp"
 #include "World.hpp"
 
 namespace bullet_sim {
@@ -65,8 +65,8 @@ class World_RG: public benchmark::World_RG {
                                          benchmark::CollisionGroupType collisionGroup = 1,
                                          benchmark::CollisionGroupType collisionMask=-1) override ;
   ArticulatedSystemHandle addArticulatedSystem(std::string nm,
-                                               CollisionGroupType collisionGroup = 1,
-                                               CollisionGroupType collisionMask=-1) ;
+                                               benchmark::CollisionGroupType collisionGroup = 1,
+                                               benchmark::CollisionGroupType collisionMask=-1) ;
 
   //////////////////////////
   /// simulation methods ///

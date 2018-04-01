@@ -10,6 +10,7 @@ set(Benchmark_SRCS
 add_library(BenchmarkLib ${Benchmark_SRCS})
 
 if(BENCHMARK_RAISIM)
+    message(STATUS "Benchmark raiSim")
     add_subdirectory(raiSim)
 endif(BENCHMARK_RAISIM)
 

@@ -10,6 +10,7 @@
 #include <BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
 #include <BulletDynamics/Featherstone/btMultiBody.h>
 #include <BulletDynamics/Featherstone/btMultiBodyLink.h>
+#include <BulletDynamics/Featherstone/btMultiBodyLinkCollider.h>
 
 #include "URDF/BulletUrdfImporter.h"
 #include "URDF/MyMultiBodyCreator.h"
