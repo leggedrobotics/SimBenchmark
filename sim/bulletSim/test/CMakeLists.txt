@@ -1,0 +1,2 @@
+add_executable(testBullet testBullet.cpp)
+target_link_libraries(testBullet BulletCollision BulletDynamics LinearMath)

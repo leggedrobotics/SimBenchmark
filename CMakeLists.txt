@@ -62,18 +62,6 @@ if(BENCHMARK_RAISIM)
     include_directories(${RAI_SIM_INCLUDE_DIR})
 endif()
 
-# bullet (optional)
-if(BENCHMARK_BULLET)
-    message(STATUS "Benchmark Bullet")
-
-    # bullet double precision
-    add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
-
-    find_package(Bullet CONFIG REQUIRED)
-    include_directories(${BULLET_ROOT_DIR}/${BULLET_INCLUDE_DIR})
-    link_directories(${BULLET_ROOT_DIR}/${BULLET_LIBRARY_DIRS})
-endif()
-
 # ode (optional)
 if(BENCHMARK_ODE)
     message(STATUS "Benchmark ODE")
@@ -83,29 +71,6 @@ if(BENCHMARK_ODE)
 
     find_package(ode CONFIG REQUIRED)
     include_directories(${ODE_INCLUDE_DIRS})
-endif()
-
-# mujoco (optional)
-if(BENCHMARK_MUJOCO)
-    message(STATUS "Benchmark MUJOCO")
-
-    include_directories(lib/mjpro150/include)
-    # mujoco shared libraries
-    find_library(glew NAMES glew
-            PATHS lib/mjpro150/bin)
-    find_library(glewegl NAMES glewegl
-            PATHS lib/mjpro150/bin)
-    find_library(glewosmesa NAMES glewosmesa
-            PATHS lib/mjpro150/bin)
-    find_library(glfw NAMES glfw libglfw.so.3
-            PATHS lib/mjpro150/bin)
-    find_library(mujoco150 NAMES mujoco150
-            PATHS lib/mjpro150/bin)
-    find_library(mujoco150nogl NAMES mujoco150nogl
-            PATHS lib/mjpro150/bin)
-    # mujoco keyfile
-    file(COPY lib/mjpro150/mjkey.txt
-            DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
 # dart (optional)
@@ -126,43 +91,14 @@ set(BENCHMARK_LINK
         ${RAI_GRAPHICS_OPENGL_LINK}
         )
 
-if(BENCHMARK_BULLET AND Bullet_FOUND)
-    set(BulletSimLink
-            BulletSimLib
-            ${BENCHMARK_LINK}
-            )
-endif()
-
-if(BENCHMARK_ODE AND ode_FOUND)
-    set(ODESimLink
-            ODESimLib
-            ${BENCHMARK_LINK}
-            )
-endif()
-
-if(BENCHMARK_MUJOCO)
-    set(MuJoCoSimLink
-            MuJoCoSimLib
-            ${BENCHMARK_LINK}
-            )
-endif()
-
-if(BENCHMARK_DART)
-    set(DartSimLink
-            DartSimLib
-            ${BENCHMARK_LINK}
-            )
-endif()
-
 ## =========================== FILES ===========================
-include_directories(src)
-add_subdirectory(src)
+include_directories(sim)
+add_subdirectory(sim)
 
 # raiSim
 if(BENCHMARK_RAISIM AND raiSim_FOUND)
     message(STATUS "raiSim installation was found in local path")
 endif()
 
-add_subdirectory(test)
-add_subdirectory(demo)
-add_subdirectory(benchmark)
+#add_subdirectory(test)
+#add_subdirectory(benchmark)

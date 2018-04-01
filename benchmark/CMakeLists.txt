@@ -28,7 +28,7 @@ endif()
 
 if(BENCHMARK_ODE)
     # rolling
-    add_executable(rollingODESim rollingODESim.cpp rolling.hpp)
+    add_executable(rollingODESim rolling.hpp)
     target_link_libraries(rollingODESim ${ODESimLink})
 
     # bounce
