@@ -13,10 +13,9 @@
 #include <BulletDynamics/MLCPSolvers/btLemkeSolver.h>
 #include <BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h>
 #include <BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
-#include <common/WorldInterface.hpp>
 
 #include "common/Configure.hpp"
-#include "common/WorldInterface.hpp"
+#include "common/interface/WorldInterface.hpp"
 
 #include "object/Object.hpp"
 #include "object/CheckerBoard.hpp"

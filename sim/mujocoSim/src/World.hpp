@@ -8,7 +8,7 @@
 #include <mujoco.h>
 
 #include "common/Configure.hpp"
-#include "common/WorldInterface.hpp"
+#include "common/interface/WorldInterface.hpp"
 
 #include "object/Sphere.hpp"
 #include "object/Box.hpp"

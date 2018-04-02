@@ -10,7 +10,7 @@
 #include <common/UserHandle.hpp>
 
 #include "common/math.hpp"
-#include "common/SingleBodyObjectInterface.hpp"
+#include "common/interface/SingleBodyObjectInterface.hpp"
 
 namespace mujoco_sim {
 namespace object {
@@ -58,7 +58,11 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
   /// ===================================
 
   mjtNum *getGeomPosition();
+  mjtNum *getGeomRotMat();
   mjtNum *getBodyComPosition();
+
+  mjtNum *getBodyLinearVelocity();
+  mjtNum *getBodyAngularVelocity();
 
  protected:
   int bodyID_ = 0;    // body id in world

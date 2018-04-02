@@ -10,7 +10,7 @@
 #include <Eigen/Geometry>
 
 #include "common/math.hpp"
-#include "common/SingleBodyObjectInterface.hpp"
+#include "common/interface/SingleBodyObjectInterface.hpp"
 #include "Object.hpp"
 
 namespace bullet_sim {

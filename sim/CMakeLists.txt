@@ -2,10 +2,10 @@ set(Benchmark_SRCS
         common/UserHandle.hpp
         common/World_RG.hpp
         common/World_RG.cpp
-        common/WorldInterface.hpp
-        common/SingleBodyObjectInterface.hpp
-        common/ArticulatedSystem.hpp
         common/math.hpp
+#        common/interface/ArticulatedSystemInterface.hpp
+#        common/interface/WorldInterface.hpp
+#        common/interface/SingleBodyObjectInterface.hpp
         )
 
 add_library(BenchmarkLib ${Benchmark_SRCS})

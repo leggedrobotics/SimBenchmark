@@ -5,7 +5,7 @@
 #ifndef BENCHMARK_ARTICULATEDSYSTEM_HPP
 #define BENCHMARK_ARTICULATEDSYSTEM_HPP
 
-#include "math.hpp"
+#include "../math.hpp"
 
 namespace benchmark {
 namespace object {
@@ -19,7 +19,7 @@ enum class Shape {
   Cone
 };
 
-class ArticulatedSystem {
+class ArticulatedSystemInterface {
 
  public:
   typedef Eigen::Map<Eigen::Matrix<double, -1, 1> > EigenVec;

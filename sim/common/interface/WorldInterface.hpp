@@ -6,7 +6,7 @@
 #define BENCHMARK_WORLDINTERFACE_HPP
 
 #include "SingleBodyObjectInterface.hpp"
-#include "Configure.hpp"
+#include "../Configure.hpp"
 
 namespace benchmark {
 

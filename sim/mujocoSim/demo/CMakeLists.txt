@@ -1,2 +1,2 @@
-add_executable(MjcDemo demoMuJoCoSim.cpp)
-target_link_libraries(MjcDemo ${MUJOCO_SIM_LINK})
+add_executable(MjcSimulationDemo demoMuJoCoSim.cpp)
+target_link_libraries(MjcSimulationDemo ${MUJOCO_SIM_LINK})

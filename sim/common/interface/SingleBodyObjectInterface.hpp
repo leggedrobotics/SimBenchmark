@@ -6,7 +6,7 @@
 #define BENCHMARK_SINGLEBODYOBJECT_HPP
 
 #include <Eigen/Geometry>
-#include "math.hpp"
+#include "../math.hpp"
 
 namespace benchmark {
 namespace object {

@@ -12,11 +12,12 @@
 #include <BulletDynamics/Featherstone/btMultiBodyLink.h>
 #include <BulletDynamics/Featherstone/btMultiBodyLinkCollider.h>
 
+#include "common/interface/ArticulatedSystemInterface.hpp"
+
 #include "URDF/BulletUrdfImporter.h"
 #include "URDF/MyMultiBodyCreator.h"
 #include "URDF/UrdfParser.h"
 
-#include "common/ArticulatedSystem.hpp"
 #include "object/ArticulatedSystem/URDF/URDFToBullet.h"
 #include "object/Object.hpp"
 
@@ -24,7 +25,7 @@ namespace bullet_sim {
 namespace object {
 
 class ArticulatedSystem: public bullet_sim::object::Object,
-                         public benchmark::object::ArticulatedSystem {
+                         public benchmark::object::ArticulatedSystemInterface {
 
  public:
   ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world);

@@ -1,2 +1,2 @@
-add_executable(testBullet testBullet.cpp)
-target_link_libraries(testBullet BulletCollision BulletDynamics LinearMath)
+add_executable(BtSimulationTest testBullet.cpp)
+target_link_libraries(BtSimulationTest BulletCollision BulletDynamics LinearMath)
