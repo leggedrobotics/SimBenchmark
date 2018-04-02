@@ -7,6 +7,7 @@
 
 #include <Eigen/Geometry>
 #include <mujoco.h>
+#include <common/UserHandle.hpp>
 
 #include "common/math.hpp"
 #include "common/SingleBodyObjectInterface.hpp"

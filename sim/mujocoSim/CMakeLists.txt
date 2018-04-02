@@ -37,7 +37,7 @@ set(MUJOCO_SIM_SRC
         src/World_RG.cpp
         src/World_RG.hpp
         src/UserHandle.hpp
-        src/object/SingleBodyObjectInterface.cpp
+        src/object/SingleBodyObject.cpp
         src/object/SingleBodyObject.hpp
         src/object/Sphere.cpp
         src/object/Sphere.hpp
@@ -47,7 +47,8 @@ set(MUJOCO_SIM_SRC
         src/object/Capsule.hpp
         src/object/CheckerBoard.cpp
         src/object/CheckerBoard.hpp
-        )
+        src/object/Cylinder.cpp
+        src/object/Cylinder.hpp)
 
 # library
 add_library(MUJOCO_SIM_LIB ${MUJOCO_SIM_SRC})

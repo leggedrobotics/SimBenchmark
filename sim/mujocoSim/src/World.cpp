@@ -70,10 +70,9 @@ void mujoco_sim::World::integrate(double dt) {
 
 object::Sphere *World::addSphere(double radius,
                                  double mass,
-                                 int objectID,
                                  benchmark::CollisionGroupType collisionGroup,
                                  benchmark::CollisionGroupType collisionMask) {
-  object::Sphere *sphere = new object::Sphere(radius, mass, worldData_, worldModel_, objectID);
+  object::Sphere *sphere = new object::Sphere(radius, mass, worldData_, worldModel_, objectList_.size());
   objectList_.push_back(sphere);
   return sphere;
 }
@@ -82,10 +81,9 @@ object::Box *World::addBox(double xLength,
                            double yLength,
                            double zLength,
                            double mass,
-                           int objectID,
                            benchmark::CollisionGroupType collisionGroup,
                            benchmark::CollisionGroupType collisionMask) {
-  object::Box *box = new object::Box(xLength, yLength, zLength, worldData_, worldModel_, objectID);
+  object::Box *box = new object::Box(xLength, yLength, zLength, worldData_, worldModel_, objectList_.size());
   objectList_.push_back(box);
   return box;
 }
@@ -94,10 +92,9 @@ object::CheckerBoard *World::addCheckerboard(double gridSize,
                                              double xLength,
                                              double yLength,
                                              double reflectanceI,
-                                             int objectID,
                                              benchmark::CollisionGroupType collisionGroup,
                                              benchmark::CollisionGroupType collisionMask) {
-  object::CheckerBoard *checkerBoard = new object::CheckerBoard(xLength, yLength, worldData_, worldModel_, objectID);
+  object::CheckerBoard *checkerBoard = new object::CheckerBoard(xLength, yLength, worldData_, worldModel_, objectList_.size());
   objectList_.push_back(checkerBoard);
   return checkerBoard;
 }
@@ -105,12 +102,21 @@ object::CheckerBoard *World::addCheckerboard(double gridSize,
 object::Capsule *World::addCapsule(double radius,
                                    double height,
                                    double mass,
-                                   int objectID,
                                    benchmark::CollisionGroupType collisionGroup,
                                    benchmark::CollisionGroupType collisionMask) {
-  object::Capsule *capsule = new object::Capsule(radius, height, worldData_, worldModel_, objectID);
+  object::Capsule *capsule = new object::Capsule(radius, height, worldData_, worldModel_, objectList_.size());
   objectList_.push_back(capsule);
   return capsule;
+}
+
+object::Cylinder *World::addCylinder(double radius,
+                                     double height,
+                                     double mass,
+                                     benchmark::CollisionGroupType collisionGroup,
+                                     benchmark::CollisionGroupType collisionMask) {
+  object::Cylinder *cylinder = new object::Cylinder(radius, height, worldData_, worldModel_, objectList_.size());
+  objectList_.push_back(cylinder);
+  return cylinder;
 }
 
 } // mujoco_sim

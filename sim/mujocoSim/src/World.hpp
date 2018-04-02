@@ -8,10 +8,13 @@
 #include <mujoco.h>
 
 #include "common/Configure.hpp"
+#include "common/WorldInterface.hpp"
+
 #include "object/Sphere.hpp"
 #include "object/Box.hpp"
 #include "object/Capsule.hpp"
 #include "object/CheckerBoard.hpp"
+#include "object/Cylinder.hpp"
 
 namespace mujoco_sim {
 
@@ -21,7 +24,7 @@ enum SolverOption {
   SOLVER_NEWTON
 };
 
-class World {
+class World: public benchmark::WorldInterface {
 
  public:
   World(const char *modelPath,
@@ -31,29 +34,30 @@ class World {
 
   object::Sphere *addSphere(double radius,
                               double mass,
-                              int objectID,
                               benchmark::CollisionGroupType collisionGroup,
-                              benchmark::CollisionGroupType collisionMask);
+                              benchmark::CollisionGroupType collisionMask) override;
   object::Box *addBox(double xLength,
                         double yLength,
                         double zLength,
                         double mass,
-                        int objectID,
                         benchmark::CollisionGroupType collisionGroup,
-                        benchmark::CollisionGroupType collisionMask);
+                        benchmark::CollisionGroupType collisionMask) override;
   object::CheckerBoard *addCheckerboard(double gridSize,
                                           double xLength,
                                           double yLength,
                                           double reflectanceI,
-                                          int objectID,
                                           benchmark::CollisionGroupType collisionGroup,
-                                          benchmark::CollisionGroupType collisionMask);
+                                          benchmark::CollisionGroupType collisionMask) override;
   object::Capsule *addCapsule(double radius,
+                              double height,
+                              double mass,
+                              benchmark::CollisionGroupType collisionGroup,
+                              benchmark::CollisionGroupType collisionMask) override ;
+  object::Cylinder *addCylinder(double radius,
                                 double height,
                                 double mass,
-                                int objectID,
-                                benchmark::CollisionGroupType collisionGroup,
-                                benchmark::CollisionGroupType collisionMask);
+                                benchmark::CollisionGroupType collisionGroup=1,
+                                benchmark::CollisionGroupType collisionMask=-1) override ;
 
   mjModel *getWorldModel() const;
   mjData *getWorldData() const;

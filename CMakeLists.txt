@@ -82,10 +82,8 @@ set(BENCHMARK_LINK
 include_directories(sim)
 add_subdirectory(sim)
 
-# raiSim
-if(BENCHMARK_RAISIM AND raiSim_FOUND)
-    message(STATUS "raiSim installation was found in local path")
-endif()
+file(INSTALL ${CMAKE_SOURCE_DIR}/res
+        DESTINATION ${CMAKE_BINARY_DIR})
 
 #add_subdirectory(test)
 #add_subdirectory(benchmark)

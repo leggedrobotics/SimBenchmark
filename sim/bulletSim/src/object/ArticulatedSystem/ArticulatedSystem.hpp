@@ -23,7 +23,8 @@
 namespace bullet_sim {
 namespace object {
 
-class ArticulatedSystem: public Object, public benchmark::object::ArticulatedSystem {
+class ArticulatedSystem: public bullet_sim::object::Object,
+                         public benchmark::object::ArticulatedSystem {
 
  public:
   ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world);

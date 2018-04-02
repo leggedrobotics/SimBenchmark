@@ -76,9 +76,6 @@ class World_RG: public benchmark::World_RG {
                                          benchmark::CollisionGroupType collisionMask=-1) override ;
 
   mujoco_sim::World world_;
-
-  // object index
-  int objectIndex_ = 0;
 };
 
 } // mujoco_sim
