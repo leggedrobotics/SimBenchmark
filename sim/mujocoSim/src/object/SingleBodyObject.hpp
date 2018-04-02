@@ -19,8 +19,9 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
 
  public:
   SingleBodyObject(mjData *data,
-                   mjModel *model,
-                   int objectID);
+                     mjModel *model,
+                     int bodyId,
+                     int geomId);
 
   const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion() override ;
   void getQuaternion(benchmark::Vec<4>& quat) override ;
@@ -36,6 +37,9 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
   void setExternalTorque(Eigen::Vector3d torque) override ;
 
  private:
+
+  /// deprecated overrided functions
+  /// ===================================
   void setPosition(Eigen::Vector3d originPosition) override ;
   void setPosition(double x, double y, double z) override ;
   void setOrientation(Eigen::Quaterniond quaternion) override ;
@@ -51,9 +55,14 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
   void setFrictionCoefficient(double friction) override ;
 
   bool isVisualizeFramesAndCom() const override ;
+  /// ===================================
+
+  mjtNum *getGeomPosition();
+  mjtNum *getBodyComPosition();
 
  protected:
-  int objectID_ = 0;
+  int bodyID_ = 0;    // body id in world
+  int geomID_ = 0;    // geometry id in body
 
   mjData* worldData_;
   mjModel* worldModel_;

@@ -32,32 +32,33 @@ class World: public benchmark::WorldInterface {
           SolverOption solverOption);
   virtual ~World();
 
+  /// note: use last two parameters as bodyId and geomId rather than collisionGroup and collisionMask
   object::Sphere *addSphere(double radius,
-                              double mass,
-                              benchmark::CollisionGroupType collisionGroup,
-                              benchmark::CollisionGroupType collisionMask) override;
+                            double mass,
+                            int bodyId,
+                            int geomId) override ;
   object::Box *addBox(double xLength,
-                        double yLength,
-                        double zLength,
-                        double mass,
-                        benchmark::CollisionGroupType collisionGroup,
-                        benchmark::CollisionGroupType collisionMask) override;
+                      double yLength,
+                      double zLength,
+                      double mass,
+                      int bodyId,
+                      int geomId) override;
   object::CheckerBoard *addCheckerboard(double gridSize,
-                                          double xLength,
-                                          double yLength,
-                                          double reflectanceI,
-                                          benchmark::CollisionGroupType collisionGroup,
-                                          benchmark::CollisionGroupType collisionMask) override;
+                                        double xLength,
+                                        double yLength,
+                                        double reflectanceI,
+                                        int bodyId,
+                                        int geomId) override;
   object::Capsule *addCapsule(double radius,
                               double height,
                               double mass,
-                              benchmark::CollisionGroupType collisionGroup,
-                              benchmark::CollisionGroupType collisionMask) override ;
+                              int bodyId,
+                              int geomId) override;
   object::Cylinder *addCylinder(double radius,
                                 double height,
                                 double mass,
-                                benchmark::CollisionGroupType collisionGroup=1,
-                                benchmark::CollisionGroupType collisionMask=-1) override ;
+                                int bodyId,
+                                int geomId) override;
 
   mjModel *getWorldModel() const;
   mjData *getWorldData() const;
@@ -65,6 +66,7 @@ class World: public benchmark::WorldInterface {
   void integrate(double dt);
 
  private:
+
   mjModel *worldModel_;
   mjData *worldData_;
 

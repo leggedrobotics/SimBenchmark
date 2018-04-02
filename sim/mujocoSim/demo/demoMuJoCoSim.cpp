@@ -9,7 +9,7 @@ int main() {
   mujoco_sim::World_RG sim(800,
                            600,
                            0.5,
-                           "../../../res/mujoco/test.xml",
+                           "../../../res/ANYmal/robot.urdf",
                            "../mjkey.txt",
                            benchmark::NO_BACKGROUND,
                            mujoco_sim::SOLVER_NEWTON);

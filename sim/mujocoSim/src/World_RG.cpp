@@ -33,7 +33,6 @@ void mujoco_sim::World_RG::initFromModel() {
 
   // make objects
   for(int i = 0; i < model->nbody; i++) {
-    RAIINFO(model->body_parentid[i])
     const int geomNumInBody = model->body_geomnum[i];
     const int geomAddrInBody = model->body_geomadr[i];
 
@@ -46,27 +45,27 @@ void mujoco_sim::World_RG::initFromModel() {
       switch (geomType) {
         case mjGEOM_PLANE: {
           // geomsize = (xlength, ylength, gridsize)
-          addCheckerboard(geomSize[2], geomSize[0], geomSize[1], 0.1);
+          addCheckerboard(geomSize[2], geomSize[0], geomSize[1], 0.1, i, j);
           break;
         }
         case mjGEOM_SPHERE: {
-          // geomsize = radius
-          addSphere(geomSize[0], MJC_MASS_FROM_XML);
+          // geomsize = radius_
+          addSphere(geomSize[0], MJC_MASS_FROM_XML, i, j);
           break;
         }
         case mjGEOM_CAPSULE: {
-          // geomsize = (radius, height * 0.5)
-          addCapsule(geomSize[0], geomSize[1] * 2, MJC_MASS_FROM_XML);
+          // geomsize = (radius_, height * 0.5)
+          addCapsule(geomSize[0], geomSize[1] * 2, MJC_MASS_FROM_XML, i, j);
           break;
         }
         case mjGEOM_BOX: {
           // geomsize = (xlength, ylength, zlength)
-          addBox(geomSize[0] * 2, geomSize[1] * 2, geomSize[2] * 2, MJC_MASS_FROM_XML);
+          addBox(geomSize[0] * 2, geomSize[1] * 2, geomSize[2] * 2, MJC_MASS_FROM_XML, i, j);
           break;
         }
         case mjGEOM_CYLINDER: {
-          // geomsize = (radius, height * 0.5)
-          addCylinder(geomSize[0], geomSize[1] * 2, MJC_MASS_FROM_XML);
+          // geomsize = (radius_, height * 0.5)
+          addCylinder(geomSize[0], geomSize[1] * 2, MJC_MASS_FROM_XML, i, j);
           break;
         }
         case mjGEOM_ELLIPSOID: {
@@ -91,9 +90,9 @@ mujoco_sim::World_RG::~World_RG() {
 
 benchmark::SingleBodyHandle mujoco_sim::World_RG::addSphere(double radius,
                                                             double mass,
-                                                            benchmark::CollisionGroupType collisionGroup,
-                                                            benchmark::CollisionGroupType collisionMask) {
-  benchmark::SingleBodyHandle handle(world_.addSphere(radius, mass, collisionGroup, collisionMask), {}, {});
+                                                            int bodyId,
+                                                            int geomId) {
+  benchmark::SingleBodyHandle handle(world_.addSphere(radius, mass, bodyId, geomId), {}, {});
   if(gui_) handle.visual().push_back(new rai_graphics::object::Sphere(radius, true));
   processSingleBody(handle);
   return handle;
@@ -103,9 +102,9 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addBox(double xLength,
                                                          double yLength,
                                                          double zLength,
                                                          double mass,
-                                                         benchmark::CollisionGroupType collisionGroup,
-                                                         benchmark::CollisionGroupType collisionMask) {
-  benchmark::SingleBodyHandle handle(world_.addBox(xLength, yLength, zLength, mass, collisionGroup, collisionMask), {}, {});
+                                                         int bodyId,
+                                                         int geomId) {
+  benchmark::SingleBodyHandle handle(world_.addBox(xLength, yLength, zLength, mass, bodyId, geomId), {}, {});
   if(gui_) handle.visual().push_back(new rai_graphics::object::Box(xLength, yLength, zLength, true));
   processSingleBody(handle);
   return handle;
@@ -115,10 +114,10 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addCheckerboard(double gridSiz
                                                                   double xLength,
                                                                   double yLength,
                                                                   double reflectanceI,
-                                                                  benchmark::CollisionGroupType collisionGroup,
-                                                                  benchmark::CollisionGroupType collisionMask,
+                                                                  int bodyId,
+                                                                  int geomId,
                                                                   int flags) {
-  benchmark::SingleBodyHandle handle(world_.addCheckerboard(gridSize, xLength, yLength, reflectanceI, collisionGroup, collisionMask), {}, {});
+  benchmark::SingleBodyHandle handle(world_.addCheckerboard(gridSize, xLength, yLength, reflectanceI, bodyId, geomId), {}, {});
   handle.hidable = false;
   if(gui_) {
     handle.visual().push_back(new rai_graphics::object::CheckerBoard(gridSize, xLength, yLength, reflectanceI));
@@ -132,9 +131,9 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addCheckerboard(double gridSiz
 benchmark::SingleBodyHandle mujoco_sim::World_RG::addCapsule(double radius,
                                                              double height,
                                                              double mass,
-                                                             benchmark::CollisionGroupType collisionGroup,
-                                                             benchmark::CollisionGroupType collisionMask) {
-  benchmark::SingleBodyHandle handle(world_.addCapsule(radius, height, mass, collisionGroup, collisionMask), {}, {});
+                                                             int bodyId,
+                                                             int geomid) {
+  benchmark::SingleBodyHandle handle(world_.addCapsule(radius, height, mass, bodyId, geomid), {}, {});
   if(gui_) handle.visual().push_back(new rai_graphics::object::Capsule(radius, height, true));
   processSingleBody(handle);
   return handle;
@@ -143,9 +142,9 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addCapsule(double radius,
 benchmark::SingleBodyHandle mujoco_sim::World_RG::addCylinder(double radius,
                                                               double height,
                                                               double mass,
-                                                              benchmark::CollisionGroupType collisionGroup,
-                                                              benchmark::CollisionGroupType collisionMask) {
-  benchmark::SingleBodyHandle handle(world_.addCylinder(radius, height, mass, collisionGroup, collisionMask), {}, {});
+                                                              int bodyId,
+                                                              int geomId) {
+  benchmark::SingleBodyHandle handle(world_.addCylinder(radius, height, mass, bodyId, geomId), {}, {});
   if(gui_) handle.visual().push_back(new rai_graphics::object::Cylinder(radius, height, true));
   processSingleBody(handle);
   return handle;

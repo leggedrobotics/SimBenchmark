@@ -4,5 +4,5 @@
 
 #include "Capsule.hpp"
 
-mujoco_sim::object::Capsule::Capsule(double radius, double height, mjData *data, mjModel *model, int objectID)
-    : SingleBodyObject(data, model, objectID) {}
+mujoco_sim::object::Capsule::Capsule(double radius, double height, mjData *data, mjModel *model, int bodyId, int geomId)
+    : SingleBodyObject(data, model, bodyId, geomId), radius_(radius), height_(height) {}

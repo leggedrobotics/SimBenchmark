@@ -13,7 +13,12 @@ namespace object {
 class Sphere: public SingleBodyObject {
 
  public:
-  Sphere(double radius, double mass, mjData *data, mjModel *model, int objectID);
+  Sphere(double radius,
+           double mass,
+           mjData *data,
+           mjModel *model,
+           int bodyId,
+           int geomId);
 
  private:
   double radius_;

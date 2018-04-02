@@ -16,7 +16,7 @@ if type == 1
     output = sprintf('%dspheres.xml', number_one_dim^3);
     
     % size
-    radius = 0.5;
+    radius_ = 0.5;
     gap = 1.1;
     perturb = 0.001;
     
@@ -25,7 +25,7 @@ if type == 1
     
     % object geometry
     text = strcat(text, ...
-        sprintf('\t\t\t<geom type="sphere" material="geom" rgba=".9 .1 .1 1" size="%f"/>\\n', radius));
+        sprintf('\t\t\t<geom type="sphere" material="geom" rgba=".9 .1 .1 1" size="%f"/>\\n', radius_));
     text = strcat(text, fileread('mujoco-xml-template/template_body.txt'));
     text = strcat(text, sprintf('\\n'));
 elseif type == 2
@@ -53,7 +53,7 @@ elseif type == 3
     output = sprintf('%dcapsules.xml', number_one_dim^3);
     
     % size
-    radius = 0.2;
+    radius_ = 0.2;
     height = 0.6;
     gap = 1.1;
     perturb = 0.001;
@@ -64,7 +64,7 @@ elseif type == 3
     % object geometry
     text = strcat(text, ...
         sprintf('\t\t\t<geom type="capsule" material="geom" rgba=".9 .1 .1 1" size="%f %f"/>\\n', ...
-        radius, height * 0.5));
+        radius_, height * 0.5));
     text = strcat(text, fileread('mujoco-xml-template/template_body.txt'));
     text = strcat(text, sprintf('\\n'));
 end
