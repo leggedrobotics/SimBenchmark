@@ -11,7 +11,11 @@ SingleBodyObject::SingleBodyObject(mjData *data,
                                    mjModel *model,
                                    int bodyId,
                                    int geomId)
-    : worldData_(data), worldModel_(model), bodyID_(bodyId), geomID_(geomId) {}
+    : worldData_(data), worldModel_(model), bodyID_(bodyId), geomID_(geomId) {
+
+  // init physical properties
+  setGeomFriction({0.8, 0, 0});
+}
 
 const Eigen::Map<Eigen::Matrix<double, 4, 1>> SingleBodyObject::getQuaternion() {
   mjtNum *rotMat = getGeomRotMat();
@@ -112,12 +116,23 @@ mjtNum *SingleBodyObject::getBodyAngularVelocity() {
   return worldData_->cvel + 6 * bodyID_;
 }
 
+/// friction for (slide, spin, roll)
+void SingleBodyObject::setGeomFriction(benchmark::Vec<3> friction) {
+  int geomIndex = worldModel_->body_geomadr[bodyID_] + geomID_;
+  worldModel_->geom_friction[3 * geomIndex] = friction[0];
+  worldModel_->geom_friction[3 * geomIndex + 1] = friction[1];
+  worldModel_->geom_friction[3 * geomIndex + 2] = friction[2];
+}
+
+void SingleBodyObject::setFrictionCoefficient(double friction) {
+  setGeomFriction({friction, 0, 0});
+}
+
 /// deprecated
 /// ===================================================================
 void SingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
 
 }
-
 void SingleBodyObject::setPosition(double x, double y, double z) {
 
 }
@@ -142,14 +157,11 @@ void SingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Matrix3d r
 void SingleBodyObject::setVelocity(Eigen::Vector3d linearVelocity, Eigen::Vector3d angularVelocity) {
 
 }
+
 void SingleBodyObject::setVelocity(double dx, double dy, double dz, double wx, double wy, double wz) {
 
 }
 void SingleBodyObject::setRestitutionCoefficient(double restitution) {
-
-}
-
-void SingleBodyObject::setFrictionCoefficient(double friction) {
 
 }
 

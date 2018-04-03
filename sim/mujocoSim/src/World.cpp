@@ -39,6 +39,12 @@ mujoco_sim::World::World(const char *modelPath,
 
   // make data corresponding to model
   worldData_ = mj_makeData(worldModel_);
+  simOption_ = &worldModel_->opt;
+
+  // init simulation option
+  simOption_->gravity[0] = 0;
+  simOption_->gravity[1] = 0;
+  simOption_->gravity[2] = -9.8;
 
   // init variables
   dof_ = worldModel_->nv;
@@ -234,6 +240,12 @@ void World::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel
     generalizedCoordinate_[i] = genco[i];
     worldData_->qpos[i] = generalizedCoordinate_[i];
   }
+}
+
+void World::setGravity(const benchmark::Vec<3> &gravity) {
+  simOption_->gravity[0] = gravity[0];
+  simOption_->gravity[1] = gravity[1];
+  simOption_->gravity[2] = gravity[2];
 }
 
 } // mujoco_sim

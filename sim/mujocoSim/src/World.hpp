@@ -63,6 +63,8 @@ class World: public benchmark::WorldInterface {
                                 int bodyId,
                                 int geomId) override;
 
+  void setGravity(const benchmark::Vec<3> &gravity) override ;
+
   const EigenVec getGeneralizedCoordinate();
 
   const EigenVec getGeneralizedVelocity();
@@ -103,6 +105,7 @@ class World: public benchmark::WorldInterface {
 
   mjModel *worldModel_;
   mjData *worldData_;
+  mjOption *simOption_;
 
   // list
   std::vector<object::SingleBodyObject*> objectList_;

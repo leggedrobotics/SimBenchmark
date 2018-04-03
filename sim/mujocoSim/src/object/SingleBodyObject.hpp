@@ -36,6 +36,7 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
   void setExternalForce(Eigen::Vector3d force) override ;
   void setExternalTorque(Eigen::Vector3d torque) override ;
 
+  void setFrictionCoefficient(double friction) override ;
  private:
 
   /// deprecated overrided functions
@@ -52,7 +53,6 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
   void setVelocity(double dx, double dy, double dz, double wx, double wy, double wz) override ;
 
   void setRestitutionCoefficient(double restitution) override ;
-  void setFrictionCoefficient(double friction) override ;
 
   bool isVisualizeFramesAndCom() const override ;
   /// ===================================
@@ -63,6 +63,8 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
 
   mjtNum *getBodyLinearVelocity();
   mjtNum *getBodyAngularVelocity();
+
+  void setGeomFriction(benchmark::Vec<3> friction);
 
  protected:
   int bodyID_ = 0;    // body id in world
