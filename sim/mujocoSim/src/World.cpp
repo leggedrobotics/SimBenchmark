@@ -44,7 +44,7 @@ mujoco_sim::World::World(const char *modelPath,
   // init simulation option
   simOption_->gravity[0] = 0;
   simOption_->gravity[1] = 0;
-  simOption_->gravity[2] = -9.8;
+  simOption_->gravity[2] = -9.81;
 
   // init variables
   dof_ = worldModel_->nv;

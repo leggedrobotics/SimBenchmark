@@ -7,15 +7,24 @@ bullet_flag=''
 ode_flag=''
 mujoco_flag=''
 
-while getopts 'rbom' flag; do
-  case "${flag}" in
-    r) raisim_flag='true'; echo "Install raisim" ;;
-    b) bullet_flag='true'; echo "Install Bullet" ;;
-    o) ode_flag='true'; echo "Install ODE" ;;
-    m) mujoco_flag='true'; echo "Install MuJoCo" ;;
-    *) error "Unexpected option ${flag}" ;;
-  esac
-done
+# sim bench logo
+echo "------------------------------------------------------------------------------"
+echo "     _______. __  .___  ___. .______    _______ .__   __.   ______  __    __  "
+echo "    /       ||  | |   \/   | |   _  \  |   ____||  \ |  |  /      ||  |  |  | "
+echo "   |   (----'|  | |  \  /  | |  |_)  | |  |__   |   \|  | |  ,----'|  |__|  | "
+echo "    \   \    |  | |  |\/|  | |   _  <  |   __|  |  . '  | |  |     |   __   | "
+echo ".----)   |   |  | |  |  |  | |  |_)  | |  |____ |  |\   | |  '----.|  |  |  | "
+echo "|_______/    |__| |__|  |__| |______/  |_______||__| \__|  \______||__|  |__| "
+echo "                                                                              "
+echo "------------------------------------------------------------------------------"
+
+echo "Do you want to install and benchmark Bullet Physics [y/n]?"
+read answer
+echo "Do you want to install and benchmark ODE [y/n]?"
+read answer
+echo "Do you want to install and benchmark MuJoCo [y/n]?"
+read answer
+echo "Do you want to install and benchmark DART [y/n]?"
 
 sudo rm -rf $ROOT_DIR/lib/*
 

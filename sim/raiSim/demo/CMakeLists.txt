@@ -3,8 +3,8 @@ add_executable(stackRaiSim stackRaiSim.cpp)
 target_link_libraries(stackRaiSim ${RAI_SIM_LINK})
 
 # anymal
-add_executable(anymalRaiSim anymalRaiSim.cpp)
-target_link_libraries(anymalRaiSim ${RAI_SIM_LINK})
+add_executable(RaiAnymalDemo AnymalDemo.cpp)
+target_link_libraries(RaiAnymalDemo ${RAI_SIM_LINK})
 
 # collision anymal
 add_executable(collisionAnymalRaiSim collisionAnymalRaiSim.cpp)
