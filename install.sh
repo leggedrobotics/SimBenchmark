@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-## options
-# -ODE
-# -Bullet
-# -raiSim
-
 ROOT_DIR = "$PWD"
 
 raisim_flag=''
@@ -50,7 +45,7 @@ cd raigraphics_opengl
 sudo rm -rf build
 mkdir build && cd build
 cmake ../
-sudo make install
+sudo make install -j4
 
 # install yaml-cpp
 echo "Installing yaml-cpp..."
@@ -60,11 +55,12 @@ cd yaml-cpp
 sudo rm -rf build
 mkdir build && cd build
 cmake ../
-sudo make install
+sudo make install -j4
 
 # install raiSim (optional)
 if [ "$raisim_flag" == 'true' ]; then
     echo "Installing raiSim..."
+    echo "raiSim is currently only available for raiSim developers."
 fi
 
 # install bullet (optional)
@@ -72,15 +68,28 @@ if [ "$bullet_flag" == 'true' ]; then
     echo "Installing Bullet..."
     cd $ROOT_DIR/lib
     git clone https://github.com/bulletphysics/bullet3.git
+    mkdir build && cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -DUSE_DOUBLE_PRECISION=ON ../
+    sudo make install -j4
 fi
 
 # install ode (optional)
 if [ "$ode_flag" == 'true' ]; then
-    echo "Installing ODE..."
+    echo "Installing ODE... (0.15.2 version)"
+    cd $ROOT_DIR/lib
+    wget https://bitbucket.org/odedevs/ode/downloads/ode-0.15.2.tar.gz
 fi
 
 # install mujoco (optional)
 if [ "mujoco_flag" == 'true' ]; then
-    echo "Installing MuJoCo..."
+    echo "Installing MuJoCo... (1.50 version)"
     wget https://www.roboti.us/download/mjpro150_linux.zip
 fi
+
+# bulid
+mkdir $ROOT_DIR/build & cd $ROOT_DIR/build
+cmake -DCMAKE_BUILD_TYPE=Release ../
+make -j4
+
+# finished
+cd $ROOT_DIR

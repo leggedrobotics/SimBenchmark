@@ -18,6 +18,9 @@
 
 namespace mujoco_sim {
 
+typedef Eigen::Map<Eigen::Matrix<double, -1, 1> > EigenVec;
+typedef Eigen::Map<Eigen::Matrix<double, -1, -1> > EigenMat;
+
 enum SolverOption {
   SOLVER_PGS,
   SOLVER_CG,
@@ -60,6 +63,37 @@ class World: public benchmark::WorldInterface {
                                 int bodyId,
                                 int geomId) override;
 
+  const EigenVec getGeneralizedCoordinate();
+
+  const EigenVec getGeneralizedVelocity();
+
+  /* For floating-base robots, [linearPosition_W, baseRationInQuaternion, joint Angles]
+   * For fixed-base robot, [joint angles]
+   * The dimension is the DOF+1 for floating-based, and DOF for fixed based. (obtained by getDOF())*/
+  void setGeneralizedCoordinate(const Eigen::VectorXd &jointState);
+
+  /* For floating-base robots, [linearVelocity_W, angularVelocity_W, jointVelocity]
+   * The dimension is the same as dof (obtained with getDOF)*/
+  void setGeneralizedVelocity(const Eigen::VectorXd &jointVel);
+
+  void setGeneralizedCoordinate(std::initializer_list<double> jointState);
+
+  void setGeneralizedVelocity(std::initializer_list<double> jointVel);
+
+  void setGeneralizedForce(std::initializer_list<double> tau);
+
+  void setGeneralizedForce(const Eigen::VectorXd &tau);
+
+  void getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel);
+
+  void setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel);
+
+  const EigenVec getGeneralizedForce();
+
+  int getDOF();
+
+  int getGeneralizedCoordinateDim();
+
   mjModel *getWorldModel() const;
   mjData *getWorldData() const;
 
@@ -73,6 +107,15 @@ class World: public benchmark::WorldInterface {
   // list
   std::vector<object::SingleBodyObject*> objectList_;
 
+  // generalized coordinate
+  benchmark::VecDyn generalizedCoordinate_;
+  benchmark::VecDyn generalizedVelocity_;
+  benchmark::VecDyn generalizedForce;
+
+  // dim
+  int dof_ = 0;
+  int dimGenCoord_ = 0;
+  int numActuators_ = 0;
 };
 
 } // mujoco_sim

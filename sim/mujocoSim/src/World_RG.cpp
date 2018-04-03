@@ -166,4 +166,43 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::getSingleBodyHandle(int index)
   RAIFATAL("get singlebody handle failed. invalid index");
   return sbHandles_[index];
 }
+const mujoco_sim::EigenVec mujoco_sim::World_RG::getGeneralizedCoordinate() {
+  return world_.getGeneralizedCoordinate();
+}
+const mujoco_sim::EigenVec mujoco_sim::World_RG::getGeneralizedVelocity() {
+  return world_.getGeneralizedVelocity();
+}
+void mujoco_sim::World_RG::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
+  world_.setGeneralizedCoordinate(jointState);
+}
+void mujoco_sim::World_RG::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
+  world_.setGeneralizedVelocity(jointVel);
+}
+void mujoco_sim::World_RG::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
+  world_.setGeneralizedCoordinate(jointState);
+}
+void mujoco_sim::World_RG::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+  world_.setGeneralizedVelocity(jointVel);
+}
+void mujoco_sim::World_RG::setGeneralizedForce(std::initializer_list<double> tau) {
+  world_.setGeneralizedForce(tau);
+}
+void mujoco_sim::World_RG::setGeneralizedForce(const Eigen::VectorXd &tau) {
+  world_.setGeneralizedForce(tau);
+}
+void mujoco_sim::World_RG::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
+  world_.getState(genco, genvel);
+}
+void mujoco_sim::World_RG::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
+  world_.setState(genco, genvel);
+}
+const mujoco_sim::EigenVec mujoco_sim::World_RG::getGeneralizedForce() {
+  return world_.getGeneralizedForce();
+}
+int mujoco_sim::World_RG::getDOF() {
+  return world_.getDOF();
+}
+int mujoco_sim::World_RG::getGeneralizedCoordinateDim() {
+  return world_.getGeneralizedCoordinateDim();
+}
 

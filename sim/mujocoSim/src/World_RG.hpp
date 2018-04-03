@@ -32,6 +32,37 @@ class World_RG: public benchmark::World_RG {
            mujoco_sim::SolverOption solverOption);
   virtual ~World_RG();
 
+  const EigenVec getGeneralizedCoordinate();
+
+  const EigenVec getGeneralizedVelocity();
+
+  /* For floating-base robots, [linearPosition_W, baseRationInQuaternion, joint Angles]
+   * For fixed-base robot, [joint angles]
+   * The dimension is the DOF+1 for floating-based, and DOF for fixed based. (obtained by getDOF())*/
+  void setGeneralizedCoordinate(const Eigen::VectorXd &jointState);
+
+  /* For floating-base robots, [linearVelocity_W, angularVelocity_W, jointVelocity]
+   * The dimension is the same as dof (obtained with getDOF)*/
+  void setGeneralizedVelocity(const Eigen::VectorXd &jointVel);
+
+  void setGeneralizedCoordinate(std::initializer_list<double> jointState);
+
+  void setGeneralizedVelocity(std::initializer_list<double> jointVel);
+
+  void setGeneralizedForce(std::initializer_list<double> tau);
+
+  void setGeneralizedForce(const Eigen::VectorXd &tau);
+
+  void getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel);
+
+  void setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel);
+
+  const EigenVec getGeneralizedForce();
+
+  int getDOF();
+
+  int getGeneralizedCoordinateDim();
+
   //////////////////////////
   /// simulation methods ///
   //////////////////////////

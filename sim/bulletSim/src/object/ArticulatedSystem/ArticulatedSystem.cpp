@@ -459,11 +459,11 @@ void ArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
 }
 
 void ArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
-
+  RAIINFO("not implemented yet")
 }
 
 void ArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
-
+  RAIINFO("not implemented yet")
 }
 
 int ArticulatedSystem::getDOF() {

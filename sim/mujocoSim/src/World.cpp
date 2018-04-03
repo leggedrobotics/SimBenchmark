@@ -39,6 +39,16 @@ mujoco_sim::World::World(const char *modelPath,
 
   // make data corresponding to model
   worldData_ = mj_makeData(worldModel_);
+
+  // init variables
+  dof_ = worldModel_->nv;
+  numActuators_ = worldModel_->na;
+  dimGenCoord_ = worldModel_->nq;
+
+  generalizedCoordinate_.resize(dimGenCoord_);
+  generalizedCoordinate_.setZero();
+  generalizedVelocity_.resize(dof_);
+  generalizedVelocity_.setZero();
 }
 
 mujoco_sim::World::~World() {
@@ -118,6 +128,99 @@ object::Cylinder *World::addCylinder(double radius,
   object::Cylinder *cylinder = new object::Cylinder(radius, height, worldData_, worldModel_, bodyId, geomId);
   objectList_.push_back(cylinder);
   return cylinder;
+}
+
+int World::getDOF() {
+  return dof_;
+}
+
+int World::getGeneralizedCoordinateDim() {
+  return dimGenCoord_;
+}
+
+const EigenVec World::getGeneralizedCoordinate() {
+  for(int i = 0; i < dimGenCoord_; i++)
+    generalizedCoordinate_[i] = worldData_->qpos[i];
+  return generalizedCoordinate_.e();
+}
+
+const EigenVec World::getGeneralizedVelocity() {
+  for(int i = 0; i < dof_; i++)
+    generalizedVelocity_[i] = worldData_->qvel[i];
+  return generalizedVelocity_.e();
+}
+
+void World::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
+  RAIFATAL_IF(jointState.size() != dimGenCoord_, "invalid generalized coordinate input")
+  for(int i = 0; i < dimGenCoord_; i++) {
+    generalizedCoordinate_[i] = jointState[i];
+    worldData_->qpos[i] = jointState[i];
+  }
+}
+
+void World::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
+  RAIFATAL_IF(jointState.size() != dimGenCoord_, "invalid generalized coordinate input")
+  for(int i = 0; i < dimGenCoord_; i++) {
+    generalizedCoordinate_[i] = jointState.begin()[i];
+    worldData_->qpos[i] = jointState.begin()[i];
+  }
+}
+
+void World::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
+  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
+  for(int i = 0; i < dof_; i++) {
+    generalizedVelocity_[i] = jointVel[i];
+    worldData_->qvel[i] = jointVel[i];
+  }
+}
+
+void World::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
+  for(int i = 0; i < dof_; i++) {
+    generalizedVelocity_[i] = jointVel.begin()[i];
+    worldData_->qvel[i] = jointVel.begin()[i];
+  }
+}
+
+void World::setGeneralizedForce(std::initializer_list<double> tau) {
+
+}
+
+void World::setGeneralizedForce(const Eigen::VectorXd &tau) {
+
+}
+
+void World::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
+  RAIFATAL_IF(genco.size() != dimGenCoord_, "invalid generalized coordinate input")
+  RAIFATAL_IF(genvel.size() != dof_, "invalid generalized velocity input")
+
+  for(int i = 0; i < dof_; i++) {
+    generalizedVelocity_[i] = worldData_->qvel[i];
+    genvel[i] = generalizedVelocity_[i];
+  }
+
+  for(int i = 0; i < dof_; i++) {
+    generalizedCoordinate_[i] = worldData_->qpos[i];
+    genco[i] = generalizedCoordinate_[i];
+  }
+}
+void World::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
+  RAIFATAL_IF(genco.size() != dimGenCoord_, "invalid generalized coordinate input")
+  RAIFATAL_IF(genvel.size() != dof_, "invalid generalized velocity input")
+
+  for(int i = 0; i < dof_; i++) {
+    generalizedVelocity_[i] = genvel[i];
+    worldData_->qvel[i] = generalizedVelocity_[i];
+  }
+
+  for(int i = 0; i < dof_; i++) {
+    generalizedCoordinate_[i] = genco[i];
+    worldData_->qpos[i] = generalizedCoordinate_[i];
+  }
+}
+
+const EigenVec World::getGeneralizedForce() {
+  return generalizedForce.e();
 }
 
 } // mujoco_sim

@@ -15,7 +15,7 @@ link_directories(${BULLET_ROOT_DIR}/${BULLET_LIBRARY_DIRS})
 # source
 include_directories(src)
 
-set(BULLET_SIM_SRC
+set(BtSimSrc
         src/World.hpp
         src/World.cpp
         src/World_RG.hpp
@@ -46,8 +46,8 @@ set(BULLET_SIM_SRC
         )
 
 # library
-add_library(BULLET_SIM_LIB ${BULLET_SIM_SRC})
-target_link_libraries(BULLET_SIM_LIB
+add_library(BtSimLib ${BtSimSrc})
+target_link_libraries(BtSimLib
         BulletDynamics
         Bullet3Common
         BulletCollision
@@ -57,7 +57,7 @@ target_link_libraries(BULLET_SIM_LIB
 
 # link
 set(BULLET_SIM_LINK
-        BULLET_SIM_LIB
+        BtSimLib
         ${BENCHMARK_LINK}
         )
 

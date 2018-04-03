@@ -31,7 +31,7 @@ file(INSTALL ${MUJOCO_LIB_DIR}/model
 # source
 include_directories(src)
 
-set(MUJOCO_SIM_SRC
+set(MjcSimSrc
         src/World.cpp
         src/World.hpp
         src/World_RG.cpp
@@ -51,8 +51,8 @@ set(MUJOCO_SIM_SRC
         src/object/Cylinder.hpp)
 
 # library
-add_library(MUJOCO_SIM_LIB ${MUJOCO_SIM_SRC})
-target_link_libraries(MUJOCO_SIM_LIB
+add_library(MjcSimLib ${MjcSimSrc})
+target_link_libraries(MjcSimLib
         ${glew}
         ${glfw}
         ${mujoco150}
@@ -62,7 +62,7 @@ target_link_libraries(MUJOCO_SIM_LIB
         glut)
 
 set(MUJOCO_SIM_LINK
-        MUJOCO_SIM_LIB
+        MjcSimLib
         ${BENCHMARK_LINK}
         )
 
