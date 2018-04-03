@@ -1,0 +1,1 @@
+ANYmal files in ```res/mujoco``` directory is modification of ANYmal/robot.urdf for Mujoco.

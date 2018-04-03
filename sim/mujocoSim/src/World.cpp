@@ -49,6 +49,8 @@ mujoco_sim::World::World(const char *modelPath,
   generalizedCoordinate_.setZero();
   generalizedVelocity_.resize(dof_);
   generalizedVelocity_.setZero();
+  generalizedForce_.resize(dof_);
+  generalizedForce_.setZero();
 }
 
 mujoco_sim::World::~World() {
@@ -150,6 +152,13 @@ const EigenVec World::getGeneralizedVelocity() {
   return generalizedVelocity_.e();
 }
 
+const EigenVec World::getGeneralizedForce() {
+  for(int i = 0; i < dof_; i++) {
+    generalizedForce_[i] = worldData_->qfrc_applied[i];
+  }
+  return generalizedForce_.e();
+}
+
 void World::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
   RAIFATAL_IF(jointState.size() != dimGenCoord_, "invalid generalized coordinate input")
   for(int i = 0; i < dimGenCoord_; i++) {
@@ -183,13 +192,20 @@ void World::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
 }
 
 void World::setGeneralizedForce(std::initializer_list<double> tau) {
-
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
+  for(int i = 0; i < dof_; i++) {
+    generalizedForce_[i] = tau.begin()[i];
+    worldData_->qfrc_applied[i] = tau.begin()[i];
+  }
 }
 
 void World::setGeneralizedForce(const Eigen::VectorXd &tau) {
-
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
+  for(int i = 0; i < dof_; i++) {
+    generalizedForce_[i] = tau[i];
+    worldData_->qfrc_applied[i] = tau[i];
+  }
 }
-
 void World::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
   RAIFATAL_IF(genco.size() != dimGenCoord_, "invalid generalized coordinate input")
   RAIFATAL_IF(genvel.size() != dof_, "invalid generalized velocity input")
@@ -204,6 +220,7 @@ void World::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
     genco[i] = generalizedCoordinate_[i];
   }
 }
+
 void World::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
   RAIFATAL_IF(genco.size() != dimGenCoord_, "invalid generalized coordinate input")
   RAIFATAL_IF(genvel.size() != dof_, "invalid generalized velocity input")
@@ -217,10 +234,6 @@ void World::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel
     generalizedCoordinate_[i] = genco[i];
     worldData_->qpos[i] = generalizedCoordinate_[i];
   }
-}
-
-const EigenVec World::getGeneralizedForce() {
-  return generalizedForce.e();
 }
 
 } // mujoco_sim

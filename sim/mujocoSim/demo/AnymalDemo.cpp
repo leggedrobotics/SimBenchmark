@@ -9,24 +9,38 @@ int main() {
   mujoco_sim::World_RG sim(800,
                            600,
                            0.5,
-                           "../../../res/ANYmal/robot.urdf",
+                           "../../../res/mujoco/ANYmal/robot.urdf",
                            "../mjkey.txt",
                            benchmark::NO_BACKGROUND,
                            mujoco_sim::SOLVER_NEWTON);
   sim.cameraFollowObject(sim.getSingleBodyHandle(0), {10, 0, 5});
+
+  sim.setGeneralizedCoordinate(
+      {0, 0, 0.6,
+       1.0, 0.0, 0.0, 0.0,
+       0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8});
+  sim.setGeneralizedVelocity(Eigen::VectorXd::Zero(sim.getDOF()));
+  sim.setGeneralizedForce(Eigen::VectorXd::Zero(sim.getDOF()));
 
   // run simulation for 10 seconds
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
   const double kp = 40.0, kd = 1.0;
 
-  jointNominalConfig << 5, 5, 0,
+  jointNominalConfig << 0, 0, 0,
       1.0, 0, 0, 0,
       0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8;
 
-  RAIINFO(sim.getDOF());
-  RAIINFO(sim.getGeneralizedCoordinateDim());
+  while(sim.visualizerLoop(0.005, 1.0)) {
+    jointState = sim.getGeneralizedCoordinate();
+    jointVel = sim.getGeneralizedVelocity();
+    jointForce = sim.getGeneralizedForce();
 
-  sim.loop(0.01, 1.0);
+    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
+    jointForce.head(6).setZero();
+    sim.setGeneralizedForce(jointForce);
+    sim.integrate(0.005);
+  }
+
   return 0;
 }

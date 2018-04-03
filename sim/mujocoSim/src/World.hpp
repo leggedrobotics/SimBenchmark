@@ -110,7 +110,7 @@ class World: public benchmark::WorldInterface {
   // generalized coordinate
   benchmark::VecDyn generalizedCoordinate_;
   benchmark::VecDyn generalizedVelocity_;
-  benchmark::VecDyn generalizedForce;
+  benchmark::VecDyn generalizedForce_;
 
   // dim
   int dof_ = 0;
