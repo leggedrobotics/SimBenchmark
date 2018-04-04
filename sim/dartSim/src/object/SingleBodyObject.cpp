@@ -16,13 +16,13 @@ SingleBodyObject::~SingleBodyObject() {
 const Eigen::Map<Eigen::Matrix<double, 4, 1>> dart_sim::object::SingleBodyObject::getQuaternion() {
   return Eigen::Map<Eigen::Matrix<double, 4, 1>>(nullptr);
 }
-void dart_sim::object::SingleBodyObject::getQuaternion(rai_sim::Vec<4> &quat) {
+void dart_sim::object::SingleBodyObject::getQuaternion(benchmark::Vec<4> &quat) {
 
 }
 const Eigen::Map<Eigen::Matrix<double, 3, 3> > dart_sim::object::SingleBodyObject::getRotationMatrix() {
   return Eigen::Map<Eigen::Matrix<double, 3, 3>>(nullptr);
 }
-void dart_sim::object::SingleBodyObject::getRotationMatrix(rai_sim::Mat<3, 3> &rotation) {
+void dart_sim::object::SingleBodyObject::getRotationMatrix(benchmark::Mat<3, 3> &rotation) {
 
 }
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObject::getPosition() {
@@ -38,7 +38,7 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObjec
   return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
 }
 
-void dart_sim::object::SingleBodyObject::getPosition_W(rai_sim::Vec<3> &pos_w) {
+void dart_sim::object::SingleBodyObject::getPosition_W(benchmark::Vec<3> &pos_w) {
   Eigen::Vector6d positions = skeletonPtr_->getJoint(0)->getPositions();
   pos_w = {positions[3], positions[4], positions[5]};
 }

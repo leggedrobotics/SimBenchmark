@@ -4,28 +4,45 @@ set(CMAKE_CXX_FLAGS_DEBUG
 set(CMAKE_CXX_FLAGS_RELEASE
         "${CMAKE_CXX_FLAGS_RELEASE} -Wl,--no-as-needed -O3 -mtune=native")
 
-if(BENCHMARK_DART AND DART_FOUND)
-    message(STATUS "DART installation was found in local path")
+# dart (optional)
+find_package(DART CONFIG REQUIRED)
+include_directories(${DART_INCLUDE_DIRS})
 
-    set(DartSim_SRCS
-            World.cpp
-            World.hpp
-            World_RG.cpp
-            World_RG.hpp
-            object/SingleBodyObject.cpp
-            object/SingleBodyObject.hpp
-            object/Sphere.cpp
-            object/Sphere.hpp
-            object/Box.cpp
-            object/Box.hpp
-            object/Capsule.cpp
-            object/Capsule.hpp
-            object/CheckerBoard.cpp
-            object/CheckerBoard.hpp)
+# source
+include_directories(src)
 
-    add_library(DartSimLib ${DartSim_SRCS})
-    target_link_libraries(DartSimLib
-            ${DART_LIBRARIES}
-    )
+set(DartSim_SRCS
+        src/World.cpp
+        src/World.hpp
+        src/World_RG.cpp
+        src/World_RG.hpp
+        src/UserHandle.hpp
+        src/object/SingleBodyObject.cpp
+        src/object/SingleBodyObject.hpp
+        src/object/Sphere.cpp
+        src/object/Sphere.hpp
+        src/object/Box.cpp
+        src/object/Box.hpp
+        src/object/Capsule.cpp
+        src/object/Capsule.hpp
+        src/object/CheckerBoard.cpp
+        src/object/CheckerBoard.hpp
+        src/object/Object.cpp
+        src/object/Object.hpp
+        src/object/Cylinder.cpp
+        src/object/Cylinder.hpp)
 
-endif()
+# library
+add_library(DartSimLib ${DartSim_SRCS})
+target_link_libraries(DartSimLib
+        ${DART_LIBRARIES}
+        )
+
+# link
+set(DartSimLink
+        DartSimLib
+        ${BENCHMARK_LINK}
+        )
+
+# sub-directories
+add_subdirectory(demo)

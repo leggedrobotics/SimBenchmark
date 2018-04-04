@@ -5,11 +5,11 @@
 #ifndef DARTSIM_WORLD_HPP
 #define DARTSIM_WORLD_HPP
 
-#include <Configure.hpp>
-#include <dartSim/object/Sphere.hpp>
-#include <dartSim/object/Box.hpp>
-#include <dartSim/object/CheckerBoard.hpp>
-#include <dartSim/object/Capsule.hpp>
+#include "common/Configure.hpp"
+#include "object/Sphere.hpp"
+#include "object/Box.hpp"
+#include "object/CheckerBoard.hpp"
+#include "object/Capsule.hpp"
 
 namespace dart_sim {
 

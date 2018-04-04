@@ -32,5 +32,6 @@ if(BENCHMARK_MUJOCO)
 endif(BENCHMARK_MUJOCO)
 
 if(BENCHMARK_DART)
+    message(STATUS "Benchmark DART")
     add_subdirectory(dartSim)
 endif(BENCHMARK_DART)

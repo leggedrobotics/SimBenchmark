@@ -98,4 +98,11 @@ void World_RG::setERP(double erp, double erp2, double frictionErp) {
 
 }
 
+benchmark::SingleBodyHandle World_RG::addCylinder(double radius,
+                                                  double height,
+                                                  double mass,
+                                                  benchmark::CollisionGroupType collisionGroup,
+                                                  benchmark::CollisionGroupType collisionMask) {
+}
+
 } // dart_sim

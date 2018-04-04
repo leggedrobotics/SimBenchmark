@@ -1,0 +1,2 @@
+add_executable(DartZeroGravityDemo ZeroGravityDemo.cpp)
+target_link_libraries(DartZeroGravityDemo ${DartSimLink})

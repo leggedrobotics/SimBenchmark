@@ -2,7 +2,7 @@
 // Created by kangd on 20.03.18.
 //
 
-#include <dartSim/World_RG.hpp>
+#include <World_RG.hpp>
 
 int main() {
 
@@ -43,7 +43,9 @@ int main() {
       auto block = dartSim.addBox(shortLen, longLen, heightLen, 1.0);
 
 //      block.visual()[0]->setColor({1.0, 0, 0});
-      block->setPosition(0, longLen * i - longLen * 5, heightLen * j - heightLen * 10);
+      block->setPosition(0,
+                         (longLen + 0.1) * i - (longLen + 0.1) * 5,
+                         (heightLen + 0.1) * j - (heightLen + 0.1) * 10);
 
       objectPtrList.push_back(block);
     }

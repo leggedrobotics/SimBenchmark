@@ -155,9 +155,7 @@ void mujoco_sim::World_RG::integrate(double dt) {
 }
 
 void mujoco_sim::World_RG::setGravity(Eigen::Vector3d gravity) {
-  world_.getWorldModel()->opt.gravity[0] = gravity[0];
-  world_.getWorldModel()->opt.gravity[1] = gravity[1];
-  world_.getWorldModel()->opt.gravity[2] = gravity[2];
+  world_.setGravity({gravity[0], gravity[1], gravity[2]});
 }
 
 void mujoco_sim::World_RG::setERP(double erp, double erp2, double frictionErp) {}
@@ -204,5 +202,9 @@ int mujoco_sim::World_RG::getDOF() {
 }
 int mujoco_sim::World_RG::getGeneralizedCoordinateDim() {
   return world_.getGeneralizedCoordinateDim();
+}
+
+int mujoco_sim::World_RG::getWorldNumContacts() {
+  return world_.getWorldNumContacts();
 }
 

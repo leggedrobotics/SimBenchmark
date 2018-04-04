@@ -5,7 +5,7 @@
 #ifndef DARTSIM_WORLD_RG_HPP
 #define DARTSIM_WORLD_RG_HPP
 
-#include "base/World_RG.hpp"
+#include "common/World_RG.hpp"
 #include "World.hpp"
 
 namespace dart_sim {
@@ -48,6 +48,12 @@ class World_RG: public benchmark::World_RG {
                                          double mass,
                                          benchmark::CollisionGroupType collisionGroup = 1,
                                          benchmark::CollisionGroupType collisionMask=-1) override ;
+  benchmark::SingleBodyHandle addCylinder(double radius,
+                                          double height,
+                                          double mass,
+                                          benchmark::CollisionGroupType collisionGroup = 1,
+                                          benchmark::CollisionGroupType collisionMask=-1) override ;
+
 
   //////////////////////////
   /// simulation methods ///

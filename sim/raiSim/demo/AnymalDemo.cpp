@@ -50,19 +50,19 @@ int main() {
 #endif
     raiSim.integrate1(0.01);
 
-//    jointState = anymal->getGeneralizedCoordinate();
-//    jointVel = anymal->getGeneralizedVelocity();
-//    jointForce = anymal->getGeneralizedForce();
-//
-//    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-//    jointForce.head(6).setZero();
+    jointState = anymal->getGeneralizedCoordinate();
+    jointVel = anymal->getGeneralizedVelocity();
+    jointForce = anymal->getGeneralizedForce();
+
+    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
+    jointForce.head(6).setZero();
     anymal->setGeneralizedForce(jointForce);
 
     raiSim.integrate2(0.01);
   }
 
 #ifdef SIM_TIME_MODE
-  std::cout<<"time taken for 100k steps "<< watch.measure()<<"s \n";
+  std::cout<<"time taken for 10k steps "<< watch.measure()<<"s \n";
 #endif
 
   return 0;

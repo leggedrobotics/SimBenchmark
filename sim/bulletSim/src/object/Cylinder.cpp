@@ -7,7 +7,7 @@
 namespace bullet_sim {
 namespace object {
 
-Cylinder::Cylinder(float radius, float height, float mass): SingleBodyObject(mass) {
+Cylinder::Cylinder(double radius, double height, double mass): SingleBodyObject(mass) {
 
   // collision shape
   collisionShape_ = new btCylinderShapeZ(btVector3(radius,

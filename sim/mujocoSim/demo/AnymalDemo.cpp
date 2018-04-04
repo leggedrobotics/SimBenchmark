@@ -5,7 +5,7 @@
 #include "World_RG.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
-//#define SIM_TIME_MODE
+#define SIM_TIME_MODE
 
 int main() {
 
@@ -34,6 +34,8 @@ int main() {
   // run simulation for 10 seconds
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
+
+  // TODO check why kp should be 400?
   const double kp = 400.0, kd = 1.0;
 
   jointNominalConfig << 0, 0, 0,
@@ -47,13 +49,13 @@ int main() {
 #else
   while(sim.visualizerLoop(0.005, 1.0)) {
 #endif
-//    jointState = sim.getGeneralizedCoordinate();
-//    jointVel = sim.getGeneralizedVelocity();
-//    jointForce = sim.getGeneralizedForce();
-//
-//    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-//    jointForce.head(6).setZero();
-//    sim.setGeneralizedForce(jointForce);
+    jointState = sim.getGeneralizedCoordinate();
+    jointVel = sim.getGeneralizedVelocity();
+    jointForce = sim.getGeneralizedForce();
+
+    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
+    jointForce.head(6).setZero();
+    sim.setGeneralizedForce(jointForce);
     sim.integrate(0.005);
   }
 

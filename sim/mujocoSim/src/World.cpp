@@ -248,4 +248,8 @@ void World::setGravity(const benchmark::Vec<3> &gravity) {
   simOption_->gravity[2] = gravity[2];
 }
 
+int World::getWorldNumContacts() {
+  return worldData_->ncon;
+}
+
 } // mujoco_sim

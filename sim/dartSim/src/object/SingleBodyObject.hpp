@@ -6,12 +6,17 @@
 #define DARTSIM_SINGLEBODYOBJECT_HPP
 
 #include <dart/dart.hpp>
-#include <base/SingleBodyObject.hpp>
+
+#include "common/math.hpp"
+#include "common/interface/SingleBodyObjectInterface.hpp"
+
+#include "Object.hpp"
 
 namespace dart_sim {
 namespace object {
 
-class SingleBodyObject: public benchmark::object::SingleBodyObject {
+class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
+                        public dart_sim::object::Object {
 
  public:
   explicit SingleBodyObject(double mass);
@@ -20,14 +25,14 @@ class SingleBodyObject: public benchmark::object::SingleBodyObject {
   const dart::dynamics::SkeletonPtr &getSkeletonPtr() const;
 
   virtual const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion();
-  virtual void getQuaternion(rai_sim::Vec<4>& quat);
+  virtual void getQuaternion(benchmark::Vec<4>& quat);
   virtual const Eigen::Map<Eigen::Matrix<double, 3, 3> > getRotationMatrix();
-  virtual void getRotationMatrix(rai_sim::Mat<3,3>& rotation);
+  virtual void getRotationMatrix(benchmark::Mat<3,3>& rotation);
   virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getPosition();
   virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getComPosition();
   virtual  const Eigen::Map<Eigen::Matrix<double, 3, 1> > getLinearVelocity();
   virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getAngularVelocity();
-  virtual void getPosition_W(rai_sim::Vec<3>& pos_w);
+  virtual void getPosition_W(benchmark::Vec<3>& pos_w);
 
   virtual void setPosition(Eigen::Vector3d originPosition);
   virtual void setPosition(double x, double y, double z);
@@ -52,10 +57,6 @@ class SingleBodyObject: public benchmark::object::SingleBodyObject {
   dart::dynamics::ShapePtr shapePtr_;
 
   double mass_;
-
-
-
-
 
 };
 

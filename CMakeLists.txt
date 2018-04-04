@@ -20,7 +20,7 @@ option(BENCHMARK_RAISIM "benchmark raiSim" ON)
 option(BENCHMARK_BULLET "benchmark Bullet" ON)
 option(BENCHMARK_ODE "benchmark ODE" OFF)
 option(BENCHMARK_MUJOCO "benchmark MUJOCO" ON)
-option(BENCHMARK_DART "benchmark DART" OFF)
+option(BENCHMARK_DART "benchmark DART" ON)
 
 ## =========================== LINK DIRECTORIES ===========================
 link_directories(/usr/local/lib)
@@ -59,15 +59,6 @@ if(BENCHMARK_ODE)
     find_package(ode CONFIG REQUIRED)
     include_directories(${ODE_INCLUDE_DIRS})
 endif()
-
-# dart (optional)
-if(BENCHMARK_DART)
-    message(STATUS "Benchmark DART")
-
-    find_package(DART CONFIG REQUIRED)
-    include_directories(${DART_INCLUDE_DIRS})
-endif()
-
 
 ## =========================== LINK ===========================
 set(BENCHMARK_LINK

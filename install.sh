@@ -18,6 +18,7 @@ echo "|_______/    |__| |__|  |__| |______/  |_______||__| \__|  \______||__|  |
 echo "                                                                              "
 echo "------------------------------------------------------------------------------"
 
+# select sim engines
 echo "Do you want to install and benchmark Bullet Physics [y/n]?"
 read answer
 echo "Do you want to install and benchmark ODE [y/n]?"
@@ -25,15 +26,19 @@ read answer
 echo "Do you want to install and benchmark MuJoCo [y/n]?"
 read answer
 echo "Do you want to install and benchmark DART [y/n]?"
+read answer
 
+# install dependencies
+echo "Install dependencies..."
 sudo rm -rf $ROOT_DIR/lib/*
 
 # check if git is installed
+echo "Check if git is installed."
 if dpkg-query -W -f'${Status}' "git" 2>/dev/null | grep -q "ok installed"; then
     echo "git is installed."
 else
     echo "git is not installed. stop installing benchmark"
-    exit
+    exit 1
 fi
 
 # install raiCommon
@@ -92,7 +97,10 @@ fi
 # install mujoco (optional)
 if [ "mujoco_flag" == 'true' ]; then
     echo "Installing MuJoCo... (1.50 version)"
+    cd $ROOT_DIR/lib
+    unzip mjpro150_linux.zip
     wget https://www.roboti.us/download/mjpro150_linux.zip
+    rm mjpro150_linux.zip
 fi
 
 # bulid
@@ -102,3 +110,5 @@ make -j4
 
 # finished
 cd $ROOT_DIR
+
+echo "Put mjkey.txt file into lib/mjpro150"
