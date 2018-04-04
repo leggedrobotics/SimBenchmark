@@ -64,7 +64,7 @@ class World: public benchmark::WorldInterface {
   object::ArticulatedSystem *addArticulatedSystem(std::string urdfPath,
                                                   benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
 
-  void integrate(double dt);
+  void integrate(double dt) override ;
 
   const std::vector<Single3DContactProblem> *getCollisionProblem() const;
 

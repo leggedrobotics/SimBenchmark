@@ -52,6 +52,17 @@ benchmark::SingleBodyHandle World_RG::addCapsule(double radius,
   return handle;
 }
 
+benchmark::SingleBodyHandle World_RG::addCylinder(double radius,
+                                                  double height,
+                                                  double mass,
+                                                  benchmark::CollisionGroupType collisionGroup,
+                                                  benchmark::CollisionGroupType collisionMask) {
+  benchmark::SingleBodyHandle handle(world_.addCylinder(radius, height, mass, collisionGroup, collisionMask), {}, {});
+  if(gui_) handle.visual().push_back(new rai_graphics::object::Cylinder(radius, height, true));
+  processSingleBody(handle);
+  return handle;
+}
+
 benchmark::SingleBodyHandle World_RG::addCheckerboard(double gridSize,
                                                       double xLength,
                                                       double yLength,
@@ -71,7 +82,7 @@ benchmark::SingleBodyHandle World_RG::addCheckerboard(double gridSize,
 }
 
 void World_RG::setGravity(Eigen::Vector3d gravity) {
-  world_.setGravity(gravity);
+  world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
 }
 
 void World_RG::setTimeStep(double timeStep) {
@@ -89,20 +100,15 @@ void World_RG::loop(double realTimeFactor) {
 }
 
 void World_RG::loop(double dt, double realTimeFactor) {
+  RAIFATAL("use setTimeStep(double dt) + loop(double realTimeFactor) instead")
 }
 
 void World_RG::integrate(double dt) {
+  RAIFATAL("use setTimeStep(double dt) + integrate() instead")
 }
 
 void World_RG::setERP(double erp, double erp2, double frictionErp) {
 
-}
-
-benchmark::SingleBodyHandle World_RG::addCylinder(double radius,
-                                                  double height,
-                                                  double mass,
-                                                  benchmark::CollisionGroupType collisionGroup,
-                                                  benchmark::CollisionGroupType collisionMask) {
 }
 
 } // dart_sim
