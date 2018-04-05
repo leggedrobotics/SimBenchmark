@@ -47,12 +47,12 @@ void ArticulatedSystem::init() {
     stateDimension_ = dof_ + 1;
   }
 
-  jointState_.resize(stateDimension_);
-  jointState_.setZero();
-  jointVel_.resize(dof_);
-  jointVel_.setZero();
-  jointForce_.resize(dof_);
-  jointForce_.setZero();
+  genCoordinate_.resize(stateDimension_);
+  genCoordinate_.setZero();
+  genVelocity_.resize(dof_);
+  genVelocity_.setZero();
+  genForce_.resize(dof_);
+  genForce_.setZero();
 
   // find movable links
   movableLinkIdx_.reserve(multiBody_->getNumDofs());
@@ -238,25 +238,25 @@ const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedCoordinate() 
     // fixed body
     int i = 0;
     for (int l: movableLinkIdx_) {
-      jointState_[i++] = multiBody_->getJointPos(l);
+      genCoordinate_[i++] = multiBody_->getJointPos(l);
     }
   }
   else {
     // floating body
-    jointState_[0] = multiBody_->getBaseWorldTransform().getOrigin().x();
-    jointState_[1] = multiBody_->getBaseWorldTransform().getOrigin().y();
-    jointState_[2] = multiBody_->getBaseWorldTransform().getOrigin().z();
-    jointState_[3] = multiBody_->getBaseWorldTransform().getRotation().w();
-    jointState_[4] = multiBody_->getBaseWorldTransform().getRotation().x();
-    jointState_[5] = multiBody_->getBaseWorldTransform().getRotation().y();
-    jointState_[6] = multiBody_->getBaseWorldTransform().getRotation().z();
+    genCoordinate_[0] = multiBody_->getBaseWorldTransform().getOrigin().x();
+    genCoordinate_[1] = multiBody_->getBaseWorldTransform().getOrigin().y();
+    genCoordinate_[2] = multiBody_->getBaseWorldTransform().getOrigin().z();
+    genCoordinate_[3] = multiBody_->getBaseWorldTransform().getRotation().w();
+    genCoordinate_[4] = multiBody_->getBaseWorldTransform().getRotation().x();
+    genCoordinate_[5] = multiBody_->getBaseWorldTransform().getRotation().y();
+    genCoordinate_[6] = multiBody_->getBaseWorldTransform().getRotation().z();
 
     int i = 7;
     for (int l: movableLinkIdx_) {
-      jointState_[i++] = multiBody_->getJointPos(l);
+      genCoordinate_[i++] = multiBody_->getJointPos(l);
     }
   }
-  return jointState_.e();
+  return genCoordinate_.e();
 }
 
 const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedVelocity() {
@@ -264,23 +264,23 @@ const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedVelocity() {
     // fixed body
     int i = 0;
     for (int l: movableLinkIdx_) {
-      jointVel_[i++] = multiBody_->getJointVel(l);
+      genVelocity_[i++] = multiBody_->getJointVel(l);
     }
   } else {
     // floating body
-    jointVel_[0] = multiBody_->getBaseVel().x();
-    jointVel_[1] = multiBody_->getBaseVel().y();
-    jointVel_[2] = multiBody_->getBaseVel().z();
-    jointVel_[3] = multiBody_->getBaseOmega().x();
-    jointVel_[4] = multiBody_->getBaseOmega().y();
-    jointVel_[5] = multiBody_->getBaseOmega().z();
+    genVelocity_[0] = multiBody_->getBaseVel().x();
+    genVelocity_[1] = multiBody_->getBaseVel().y();
+    genVelocity_[2] = multiBody_->getBaseVel().z();
+    genVelocity_[3] = multiBody_->getBaseOmega().x();
+    genVelocity_[4] = multiBody_->getBaseOmega().y();
+    genVelocity_[5] = multiBody_->getBaseOmega().z();
 
     int i = 6;
     for (int l: movableLinkIdx_) {
-      jointVel_[i++] = multiBody_->getJointVel(l);
+      genVelocity_[i++] = multiBody_->getJointVel(l);
     }
   }
-  return jointVel_.e();
+  return genVelocity_.e();
 }
 
 void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
@@ -390,20 +390,20 @@ const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedForce() {
     // fixed body
     int i = 0;
     for (int l: movableLinkIdx_) {
-      jointForce_[i++] = multiBody_->getJointTorque(l);
+      genForce_[i++] = multiBody_->getJointTorque(l);
     }
   } else {
     // floating body
-    jointForce_[0] = multiBody_->getBaseForce().x();
-    jointForce_[1] = multiBody_->getBaseForce().y();
-    jointForce_[2] = multiBody_->getBaseForce().z();
-    jointForce_[3] = multiBody_->getBaseTorque().x();
-    jointForce_[4] = multiBody_->getBaseTorque().y();
-    jointForce_[5] = multiBody_->getBaseTorque().z();
+    genForce_[0] = multiBody_->getBaseForce().x();
+    genForce_[1] = multiBody_->getBaseForce().y();
+    genForce_[2] = multiBody_->getBaseForce().z();
+    genForce_[3] = multiBody_->getBaseTorque().x();
+    genForce_[4] = multiBody_->getBaseTorque().y();
+    genForce_[5] = multiBody_->getBaseTorque().z();
 
     int i = 6;
     for (int l: movableLinkIdx_) {
-      jointForce_[i++] = multiBody_->getJointTorque(l);
+      genForce_[i++] = multiBody_->getJointTorque(l);
     }
   }
 }

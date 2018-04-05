@@ -9,13 +9,18 @@ namespace object {
 
 ArticulatedSystem::ArticulatedSystem(std::string urdfFile) {
 
-//  dart::utils::DartLoader urdfLoader;
-//  skeletonPtr_ = urdfLoader.parseSkeleton(urdfFile);
+  dart::utils::DartLoader urdfLoader;
+  skeletonPtr_ = urdfLoader.parseSkeleton(urdfFile);
+
+  if(!skeletonPtr_)
+    RAIFATAL("cannot load articulated system from URDF")
 
   dof_ = (int)skeletonPtr_->getNumDofs();
 
-  generalizedVelocity_.resize(dof_);
-  generalizedVelocity_.setZero();
+  genVelocity_.resize(dof_);
+  genVelocity_.setZero();
+  genForce_.resize(dof_);
+  genForce_.setZero();
 }
 
 ArticulatedSystem::~ArticulatedSystem() {
@@ -25,25 +30,25 @@ ArticulatedSystem::~ArticulatedSystem() {
 const benchmark::object::ArticulatedSystemInterface::EigenVec ArticulatedSystem::getGeneralizedCoordinate() {
   Eigen::VectorXd pos = skeletonPtr_->getPositions();
   for(int i = 0; i < dof_; i++) {
-    generalizedCoordinate_[i] = pos[i];
+    genCoordinate_[i] = pos[i];
   }
-  return generalizedCoordinate_.e();
+  return genCoordinate_.e();
 }
 
 const benchmark::object::ArticulatedSystemInterface::EigenVec ArticulatedSystem::getGeneralizedVelocity() {
   Eigen::VectorXd vel = skeletonPtr_->getVelocities();
   for(int i = 0; i < dof_; i++) {
-    generalizedVelocity_[i] = vel[i];
+    genVelocity_[i] = vel[i];
   }
-  return generalizedVelocity_.e();
+  return genVelocity_.e();
 }
 
 const benchmark::object::ArticulatedSystemInterface::EigenVec ArticulatedSystem::getGeneralizedForce() {
   Eigen::VectorXd force = skeletonPtr_->getForces();
   for(int i = 0; i < dof_; i++) {
-    generalizedForce_[i] = force[i];
+    genForce_[i] = force[i];
   }
-  return generalizedForce_.e();
+  return genForce_.e();
 }
 
 void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {

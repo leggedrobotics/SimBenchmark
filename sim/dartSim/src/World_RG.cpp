@@ -81,6 +81,19 @@ benchmark::SingleBodyHandle World_RG::addCheckerboard(double gridSize,
   return handle;
 }
 
+ArticulatedSystemHandle World_RG::addArticulatedSystem(std::string nm,
+                                                       benchmark::CollisionGroupType collisionGroup,
+                                                       benchmark::CollisionGroupType collisionMask) {
+  ArticulatedSystemHandle handle(
+      world_.addArticulatedSystem(nm, collisionGroup, collisionMask), {}, {});
+  if(!gui_) {
+    asHandles_.push_back(handle);
+    return handle;
+  }
+  asHandles_.push_back(handle);
+  return handle;
+}
+
 void World_RG::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
 }
@@ -106,7 +119,6 @@ void World_RG::loop(double dt, double realTimeFactor) {
 void World_RG::integrate(double dt) {
   RAIFATAL("use setTimeStep(double dt) + integrate() instead")
 }
-
 void World_RG::setERP(double erp, double erp2, double frictionErp) {
 
 }

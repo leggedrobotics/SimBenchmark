@@ -6,6 +6,7 @@
 #define DARTSIM_WORLD_RG_HPP
 
 #include "common/World_RG.hpp"
+#include "UserHandle.hpp"
 #include "World.hpp"
 
 namespace dart_sim {
@@ -30,12 +31,14 @@ class World_RG: public benchmark::World_RG {
                                         double mass,
                                         benchmark::CollisionGroupType collisionGroup = 1,
                                         benchmark::CollisionGroupType collisionMask=-1) override ;
+
   benchmark::SingleBodyHandle addBox(double xLength,
                                      double yLength,
                                      double zLength,
                                      double mass,
                                      benchmark::CollisionGroupType collisionGroup = 1,
                                      benchmark::CollisionGroupType collisionMask = -1) override ;
+
   benchmark::SingleBodyHandle addCheckerboard(double gridSize,
                                               double xLength,
                                               double yLength,
@@ -43,16 +46,22 @@ class World_RG: public benchmark::World_RG {
                                               benchmark::CollisionGroupType collisionGroup = 1,
                                               benchmark::CollisionGroupType collisionMask = -1,
                                               int flags = 0) override ;
+
   benchmark::SingleBodyHandle addCapsule(double radius,
                                          double height,
                                          double mass,
                                          benchmark::CollisionGroupType collisionGroup = 1,
                                          benchmark::CollisionGroupType collisionMask=-1) override ;
+
   benchmark::SingleBodyHandle addCylinder(double radius,
                                           double height,
                                           double mass,
                                           benchmark::CollisionGroupType collisionGroup = 1,
                                           benchmark::CollisionGroupType collisionMask=-1) override ;
+
+  ArticulatedSystemHandle addArticulatedSystem(std::string nm,
+                                               benchmark::CollisionGroupType collisionGroup = 1,
+                                               benchmark::CollisionGroupType collisionMask=-1) ;
 
 
   //////////////////////////
@@ -75,6 +84,9 @@ class World_RG: public benchmark::World_RG {
 
   // solver type
 //  SolverOption solverOption_ = SOLVER_SEQUENTIAL_IMPULSE;
+
+  // list
+  std::vector<ArticulatedSystemHandle> asHandles_;
 
 };
 

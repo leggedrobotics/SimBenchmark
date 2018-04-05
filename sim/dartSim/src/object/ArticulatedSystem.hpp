@@ -52,9 +52,6 @@ class ArticulatedSystem: public Object,
   virtual int getDOF() override ;
 
  private:
-  benchmark::VecDyn generalizedCoordinate_;
-  benchmark::VecDyn generalizedVelocity_;
-  benchmark::VecDyn generalizedForce_;
 
 };
 

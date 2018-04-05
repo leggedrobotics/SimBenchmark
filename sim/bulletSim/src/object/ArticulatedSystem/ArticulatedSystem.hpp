@@ -77,13 +77,7 @@ class ArticulatedSystem: public bullet_sim::object::Object,
   btMultiBodyDynamicsWorld *dynamicsWorld_;
   btMultiBody *multiBody_;
 
-  // generalized states, velocity, force
-  benchmark::VecDyn jointState_;
-  benchmark::VecDyn jointVel_;
-  benchmark::VecDyn jointForce_;
-
   std::vector<int> movableLinkIdx_;
-
   double maxJointTorque_ = 1000.0;
 
   bool isFixed_ = true;

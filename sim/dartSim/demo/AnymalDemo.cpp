@@ -16,7 +16,7 @@ int main() {
 #endif
 
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1);
-  auto anymal = sim.addArticulatedSystem("../../../res/ANYmal/robot.urdf");
+  auto anymal = sim.addArticulatedSystem("/home/kangd/git/benchmark/cmake-build-debug/res/ANYmal/robot.urdf");
   anymal->setGeneralizedCoordinate(
       {5, 5, 0.6,
        1.0, 0.0, 0.0, 0.0,
@@ -34,27 +34,27 @@ int main() {
       1.0, 0, 0, 0,
       0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8;
 
-#ifdef SIM_TIME_MODE
-  StopWatch watch;
-  watch.start();
-  for(int i = 0; i < 10000; i++) {
-#else
-    sim.cameraFollowObject(checkerboard, {10, 10, 15});
-  while(sim.visualizerLoop(0.005, 1.0)) {
-#endif
-    jointState = anymal->getGeneralizedCoordinate();
-    jointVel = anymal->getGeneralizedVelocity();
-    jointForce = anymal->getGeneralizedForce();
-
-    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-    jointForce.head(6).setZero();
-    anymal->setGeneralizedForce(jointForce);
-    sim.integrate(0.005);
-  }
-
-#ifdef SIM_TIME_MODE
-  std::cout<<"time taken for 10k steps "<< watch.measure()<<"s \n";
-#endif
+//#ifdef SIM_TIME_MODE
+//  StopWatch watch;
+//  watch.start();
+//  for(int i = 0; i < 10000; i++) {
+//#else
+//    sim.cameraFollowObject(checkerboard, {10, 10, 15});
+//  while(sim.visualizerLoop(0.005, 1.0)) {
+//#endif
+//    jointState = anymal->getGeneralizedCoordinate();
+//    jointVel = anymal->getGeneralizedVelocity();
+//    jointForce = anymal->getGeneralizedForce();
+//
+//    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
+//    jointForce.head(6).setZero();
+//    anymal->setGeneralizedForce(jointForce);
+//    sim.integrate(0.005);
+//  }
+//
+//#ifdef SIM_TIME_MODE
+//  std::cout<<"time taken for 10k steps "<< watch.measure()<<"s \n";
+//#endif
 
   return 0;
 }

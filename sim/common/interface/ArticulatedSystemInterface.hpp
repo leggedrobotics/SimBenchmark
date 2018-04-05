@@ -73,6 +73,11 @@ class ArticulatedSystemInterface {
   int dof_ = 0;
   int stateDimension_ = 0;
 
+  // generalized states, velocity, force
+  benchmark::VecDyn genCoordinate_;
+  benchmark::VecDyn genVelocity_;
+  benchmark::VecDyn genForce_;
+
 };
 
 } // object

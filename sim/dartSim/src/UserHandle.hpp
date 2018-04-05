@@ -9,9 +9,9 @@
 #include <common/UserHandle.hpp>
 
 #include "object/SingleBodyObject.hpp"
-#include "object/ArticulatedSystem/ArticulatedSystem.hpp"
+#include "object/ArticulatedSystem.hpp"
 
-namespace bullet_sim {
+namespace dart_sim {
 
 typedef benchmark::UserObjectHandle<dart_sim::object::SingleBodyObject> SingleBodyHandle;
 typedef benchmark::UserObjectHandle<dart_sim::object::ArticulatedSystem> ArticulatedSystemHandle;
