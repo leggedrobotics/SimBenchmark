@@ -115,10 +115,6 @@ bool dart_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {
   return false;
 }
 
-const dart::dynamics::SkeletonPtr &SingleBodyObject::getSkeletonPtr() const {
-  return skeletonPtr_;
-}
-
 } // object
 } // dart_sim
 

@@ -13,6 +13,7 @@
 #include "object/CheckerBoard.hpp"
 #include "object/Cylinder.hpp"
 #include "object/Capsule.hpp"
+#include "object/ArticulatedSystem.hpp"
 
 namespace dart_sim {
 
@@ -53,6 +54,11 @@ class World: benchmark::WorldInterface {
                                 benchmark::CollisionGroupType collisionGroup=1,
                                 benchmark::CollisionGroupType collisionMask=-1) override ;
 
+  object::ArticulatedSystem *addArticulatedSystem(std::string urdfPath,
+                                                  benchmark::CollisionGroupType collisionGroup=1,
+                                                  benchmark::CollisionGroupType collisionMask=-1);
+
+
   void integrate();
 
 //  const std::vector<Single3DContactProblem> *getCollisionProblem() const;
@@ -71,7 +77,7 @@ class World: benchmark::WorldInterface {
   double timeStep_ = 0.01;
 
   // list
-  std::vector<object::SingleBodyObject*> objectList_;
+  std::vector<object::Object*> objectList_;
 
 };
 

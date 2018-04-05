@@ -1,5 +1,5 @@
 //
-// Created by kangd on 11.02.18.
+// Created by kangd on 04.04.18.
 //
 
 #include <World_RG.hpp>
@@ -10,7 +10,7 @@
 int main() {
 
 #ifdef SIM_TIME_MODE
-  bullet_sim::World_RG sim(bullet_sim::SOLVER_MULTI_BODY);
+  dart_sim::World_RG sim;
 #else
   bullet_sim::World_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
 #endif
@@ -58,3 +58,4 @@ int main() {
 
   return 0;
 }
+

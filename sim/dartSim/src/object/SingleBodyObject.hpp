@@ -22,8 +22,6 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   explicit SingleBodyObject(double mass);
   virtual ~SingleBodyObject();
 
-  const dart::dynamics::SkeletonPtr &getSkeletonPtr() const;
-
   virtual const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion();
   virtual void getQuaternion(benchmark::Vec<4>& quat);
   virtual const Eigen::Map<Eigen::Matrix<double, 3, 3> > getRotationMatrix();
@@ -53,7 +51,6 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   virtual bool isVisualizeFramesAndCom() const;
 
  protected:
-  dart::dynamics::SkeletonPtr skeletonPtr_;
   dart::dynamics::ShapePtr shapePtr_;
 
   double mass_;

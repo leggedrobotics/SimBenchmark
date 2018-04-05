@@ -86,9 +86,6 @@ class ArticulatedSystem: public bullet_sim::object::Object,
 
   double maxJointTorque_ = 1000.0;
 
-  int dof_ = 0;
-  int stateDimension_ = 0;
-
   bool isFixed_ = true;
 };
 

@@ -69,6 +69,10 @@ class ArticulatedSystemInterface {
   std::vector<std::pair<std::string, benchmark::Vec<4>>> visProps_;
   std::vector<std::pair<std::string, benchmark::Vec<4>>> visColProps_;
 
+ protected:
+  int dof_ = 0;
+  int stateDimension_ = 0;
+
 };
 
 } // object

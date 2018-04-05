@@ -39,6 +39,7 @@ class WorldInterface {
                                                          CollisionGroupType collisionGroup=1,
                                                          CollisionGroupType collisionMask=-1) = 0;
 
+
   virtual void setGravity(const benchmark::Vec<3> &gravity) = 0;
 
   virtual void integrate(double dt) = 0;

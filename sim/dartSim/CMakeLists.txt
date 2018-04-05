@@ -30,7 +30,9 @@ set(DartSim_SRCS
         src/object/Object.cpp
         src/object/Object.hpp
         src/object/Cylinder.cpp
-        src/object/Cylinder.hpp src/object/ArticulatedSystem.cpp src/object/ArticulatedSystem.hpp)
+        src/object/Cylinder.hpp
+        src/object/ArticulatedSystem.cpp
+        src/object/ArticulatedSystem.hpp)
 
 # library
 add_library(DartSimLib ${DartSim_SRCS})

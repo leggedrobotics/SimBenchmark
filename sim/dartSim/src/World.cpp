@@ -72,6 +72,15 @@ object::Cylinder *World::addCylinder(double radius,
   return cylinder;
 }
 
+object::ArticulatedSystem *World::addArticulatedSystem(std::string urdfPath,
+                                                       benchmark::CollisionGroupType collisionGroup,
+                                                       benchmark::CollisionGroupType collisionMask) {
+  auto *robot = new dart_sim::object::ArticulatedSystem(urdfPath);
+  dynamicsWorld_->addSkeleton(robot->getSkeletonPtr());
+  objectList_.push_back(robot);
+  return robot;
+}
+
 void World::setGravity(const benchmark::Vec<3> &gravity) {
   gravity_[0] = gravity[0];
   gravity_[1] = gravity[1];
