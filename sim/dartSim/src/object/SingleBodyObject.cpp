@@ -26,7 +26,9 @@ void dart_sim::object::SingleBodyObject::getRotationMatrix(benchmark::Mat<3, 3> 
 
 }
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObject::getPosition() {
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
+  benchmark::Vec<3> pos;
+  pos.e() = getBodyPosition();
+  return pos.e();
 }
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObject::getComPosition() {
   return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
@@ -39,8 +41,8 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObjec
 }
 
 void dart_sim::object::SingleBodyObject::getPosition_W(benchmark::Vec<3> &pos_w) {
-  Eigen::Vector6d positions = skeletonPtr_->getJoint(0)->getPositions();
-  pos_w = {positions[3], positions[4], positions[5]};
+  Eigen::Vector3d position = getBodyPosition();
+  pos_w = {position[0], position[1], position[2]};
 }
 
 void dart_sim::object::SingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
@@ -59,9 +61,16 @@ void dart_sim::object::SingleBodyObject::setPosition(double x, double y, double 
 
   skeletonPtr_->getJoint(0)->setPositions(positions);
 }
-void dart_sim::object::SingleBodyObject::setOrientation(Eigen::Quaterniond quaternion) {
 
+void dart_sim::object::SingleBodyObject::setOrientation(Eigen::Quaterniond quaternion) {
+  Eigen::Isometry3d tf;
+  tf.setIdentity();
+  tf.rotate(quaternion);
+
+  Eigen::Vector6d positions = dart::dynamics::FreeJoint::convertToPositions(tf);
+  skeletonPtr_->getJoint(0)->setPositions(positions);
 }
+
 void dart_sim::object::SingleBodyObject::setOrientation(double w, double x, double y, double z) {
 
 }
@@ -113,6 +122,11 @@ void SingleBodyObject::setOrientationRandom() {
 }
 bool dart_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {
   return false;
+}
+
+Eigen::Vector3d SingleBodyObject::getBodyPosition() {
+  Eigen::Vector6d positions = bodyPtr_->getParentJoint()->getPositions();
+  return {positions[3], positions[4], positions[5]};
 }
 
 } // object

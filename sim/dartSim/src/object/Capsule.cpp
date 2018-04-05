@@ -27,6 +27,7 @@ Capsule::Capsule(double radius, double height, double mass): SingleBodyObject(ma
       dart::dynamics::CollisionAspect,
       dart::dynamics::DynamicsAspect>(shapePtr_);
 
+  bodyPtr_ = pair.second;
 }
 } // object
 } // dart_sim

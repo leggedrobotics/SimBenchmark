@@ -28,6 +28,7 @@ Sphere::Sphere(double radius, double mass): SingleBodyObject(mass) {
       dart::dynamics::CollisionAspect,
       dart::dynamics::DynamicsAspect>(shapePtr_);
 
+  bodyPtr_ = pair.second;
 }
 
 } // object

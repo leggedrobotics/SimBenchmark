@@ -284,6 +284,8 @@ const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedVelocity() {
 }
 
 void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
+  RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
+
   if(isFixed_) {
     // fixed
     int i = 0;
@@ -310,6 +312,8 @@ void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointSta
 }
 
 void ArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
+  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
+
   if(isFixed_) {
     // fixed
     int i = 0;
@@ -335,6 +339,8 @@ void ArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) 
 }
 
 void ArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
+  RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
+
   if(isFixed_) {
     // fixed
     int i = 0;
@@ -361,6 +367,8 @@ void ArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> j
 }
 
 void ArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
+
   if(isFixed_) {
     // fixed
     int i = 0;
@@ -409,6 +417,8 @@ const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedForce() {
 }
 
 void ArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
+
   if(isFixed_) {
     // fixed
     int i = 0;
@@ -434,6 +444,8 @@ void ArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
 }
 
 void ArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
+
   if(isFixed_) {
     // fixed
     int i = 0;

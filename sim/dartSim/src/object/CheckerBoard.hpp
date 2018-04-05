@@ -15,6 +15,7 @@ class CheckerBoard: public SingleBodyObject {
  public:
   CheckerBoard(double xLength, double yLength);
 
+  Eigen::Vector3d getBodyPosition() override ;
 };
 
 } // object

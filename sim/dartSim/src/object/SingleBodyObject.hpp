@@ -51,7 +51,10 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   virtual bool isVisualizeFramesAndCom() const;
 
  protected:
+  virtual Eigen::Vector3d getBodyPosition();
+
   dart::dynamics::ShapePtr shapePtr_;
+  dart::dynamics::BodyNodePtr bodyPtr_;
 
   double mass_;
 

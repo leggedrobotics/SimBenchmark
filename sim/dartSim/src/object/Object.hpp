@@ -13,6 +13,8 @@ namespace object {
 class Object {
 
  public:
+  virtual ~Object();
+
   const dart::dynamics::SkeletonPtr &getSkeletonPtr() const;
 
  protected:

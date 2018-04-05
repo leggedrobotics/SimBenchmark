@@ -24,4 +24,5 @@ dart_sim::object::Cylinder::Cylinder(double radius, double height, double mass):
       dart::dynamics::CollisionAspect,
       dart::dynamics::DynamicsAspect>(shapePtr_);
 
+  bodyPtr_ = pair.second;
 }

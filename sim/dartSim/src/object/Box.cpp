@@ -27,6 +27,8 @@ Box::Box(double xlength, double ylength, double zlength, double mass): SingleBod
   auto shapeNode = pair.second->createShapeNodeWith<
       dart::dynamics::CollisionAspect,
       dart::dynamics::DynamicsAspect>(shapePtr_);
+
+  bodyPtr_ = pair.second;
 }
 
 } // object

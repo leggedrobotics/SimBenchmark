@@ -18,10 +18,15 @@ dart_sim::object::CheckerBoard::CheckerBoard(double xLength, double yLength): Si
   jointProp.mName = "ground_joint";
   jointProp.mT_ParentBodyToJoint = T;
 
-  auto pair = skeletonPtr_->createJointAndBodyNodePair<dart::dynamics::FreeJoint>(
+  auto pair = skeletonPtr_->createJointAndBodyNodePair<dart::dynamics::WeldJoint>(
       nullptr, jointProp, bodyProp);
   auto shapeNode = pair.second->createShapeNodeWith<
       dart::dynamics::CollisionAspect,
       dart::dynamics::DynamicsAspect>(shapePtr_);
 
+  bodyPtr_ = pair.second;
+}
+
+Eigen::Vector3d dart_sim::object::CheckerBoard::getBodyPosition() {
+  return {0, 0, 0};
 }

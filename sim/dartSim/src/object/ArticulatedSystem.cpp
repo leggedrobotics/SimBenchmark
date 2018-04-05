@@ -54,26 +54,49 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec ArticulatedSystem:
 void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
 
 }
-void ArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
 
-}
 void ArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
 
 }
+
+void ArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
+  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
+  skeletonPtr_->setVelocities(jointVel);
+  for(int i = 0; i < dof_; i++) {
+    genVelocity_[i] = jointVel[i];
+  }
+}
+
 void ArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
-
+  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
+  for(int i = 0; i < dof_; i++) {
+    genVelocity_[i] = jointVel.begin()[i];
+    skeletonPtr_->setVelocity(i, jointVel.begin()[i]);
+  }
 }
+
 void ArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
-
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
+  for(int i = 0; i < dof_; i++) {
+    genForce_[i] = tau.begin()[i];
+    skeletonPtr_->setForce(i, tau.begin()[i]);
+  }
 }
-void ArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
 
-}
-void ArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
-
-}
 void ArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
+  skeletonPtr_->setForces(tau);
+  for(int i = 0; i < dof_; i++) {
+    genForce_[i] = tau[i];
+  }
+}
 
+void ArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
+  RAIINFO("not implemented yet")
+}
+
+void ArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
+  RAIINFO("not implemented yet")
 }
 
 int ArticulatedSystem::getDOF() {
