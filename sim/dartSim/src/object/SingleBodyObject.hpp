@@ -52,6 +52,12 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
 
  protected:
   virtual Eigen::Vector3d getBodyPosition();
+  virtual Eigen::Quaterniond getBodyQuaternion();
+  virtual Eigen::Matrix3d getBodyRotationMatrix();
+  
+  virtual void setBodyPosition(const Eigen::Vector3d &position);
+  virtual void setBodyQuaternion(Eigen::Quaterniond &quaternion);
+  virtual void setBodyRotationMatrix(Eigen::Matrix3d rotation);
 
   dart::dynamics::ShapePtr shapePtr_;
   dart::dynamics::BodyNodePtr bodyPtr_;

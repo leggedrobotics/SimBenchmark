@@ -18,6 +18,8 @@ int main() {
   auto ball = sim.addSphere(0.5, 10.0);
 //  ball.visual()[0]->setColor({1.0, 1.0, 0.0});
   ball->setPosition(0.0, 0.0, 10);
+  RAIINFO(ball->getPosition())
+  RAIINFO(ball->getRotationMatrix())
 
   // simulation loop
   // press 'q' key to quit
