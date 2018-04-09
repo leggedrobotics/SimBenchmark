@@ -39,6 +39,7 @@ class World: benchmark::WorldInterface {
                                         double xLength,
                                         double yLength,
                                         double reflectanceI,
+                                        bo::CheckerboardShape shape = bo::BOX_SHAPE,
                                         benchmark::CollisionGroupType collisionGroup=1,
                                         benchmark::CollisionGroupType collisionMask=-1) override ;
 
@@ -63,6 +64,7 @@ class World: benchmark::WorldInterface {
 
 //  const std::vector<Single3DContactProblem> *getCollisionProblem() const;
   void setGravity(const benchmark::Vec<3> &gravity) override ;
+  int getNumObject() override ;
 
   void setTimeStep(double timeStep);
 //  void setERP(double erp, double erp2, double frictionErp);

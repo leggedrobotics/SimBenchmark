@@ -46,32 +46,40 @@ class World_RG: public benchmark::World_RG {
                                         double mass,
                                         benchmark::CollisionGroupType collisionGroup = 1,
                                         benchmark::CollisionGroupType collisionMask=-1) override ;
+
   benchmark::SingleBodyHandle addBox(double xLength,
                                      double yLength,
                                      double zLength,
                                      double mass,
                                      benchmark::CollisionGroupType collisionGroup = 1,
                                      benchmark::CollisionGroupType collisionMask = -1) override ;
+
   benchmark::SingleBodyHandle addCheckerboard(double gridSize,
                                               double xLength,
                                               double yLength,
                                               double reflectanceI,
+                                              bo::CheckerboardShape shape = bo::PLANE_SHAPE,
                                               benchmark::CollisionGroupType collisionGroup = 1,
                                               benchmark::CollisionGroupType collisionMask = -1,
                                               int flags = 0) override ;
+
   benchmark::SingleBodyHandle addCapsule(double radius,
                                          double height,
                                          double mass,
                                          benchmark::CollisionGroupType collisionGroup = 1,
                                          benchmark::CollisionGroupType collisionMask=-1) override ;
+
   benchmark::SingleBodyHandle addCylinder(double radius,
                                           double height,
                                           double mass,
                                           benchmark::CollisionGroupType collisionGroup = 1,
                                           benchmark::CollisionGroupType collisionMask=-1) override ;
+
   ArticulatedSystemHandle addArticulatedSystem(std::string nm,
                                                benchmark::CollisionGroupType collisionGroup = 1,
                                                benchmark::CollisionGroupType collisionMask=-1) ;
+
+  int getNumObject() override ;
 
   //////////////////////////
   /// simulation methods ///

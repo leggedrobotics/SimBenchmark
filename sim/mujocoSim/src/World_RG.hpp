@@ -39,6 +39,7 @@ class World_RG: public benchmark::World_RG {
 
   benchmark::SingleBodyHandle getSingleBodyHandle(int index);
   int getWorldNumContacts();
+  int getNumObject() override ;
 
   void setGravity(Eigen::Vector3d gravity) override ;
 
@@ -98,6 +99,7 @@ class World_RG: public benchmark::World_RG {
                                               double xLength,
                                               double yLength,
                                               double reflectanceI,
+                                              bo::CheckerboardShape shape,
                                               int bodyId,
                                               int geomId,
                                               int flags = 0) override ;

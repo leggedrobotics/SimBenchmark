@@ -3,30 +3,37 @@
 //
 
 #include "CheckerBoard.hpp"
-dart_sim::object::CheckerBoard::CheckerBoard(double xLength, double yLength): SingleBodyObject(0) {
 
+dart_sim::object::CheckerBoard::CheckerBoard(double xLength, double yLength, benchmark::object::CheckerboardShape shape, int id)
+    : SingleBodyObject(0, id) {
+
+  if(shape == benchmark::object::PLANE_SHAPE)
+    RAIFATAL("plane shape ground is not supported")
+
+  // skeleton
   skeletonPtr_ = dart::dynamics::Skeleton::create();
-  shapePtr_ = dart::dynamics::ShapePtr(new dart::dynamics::PlaneShape(
-      Eigen::Vector3d(0, 0, 1), Eigen::Vector3d(0, 0, 0)));
 
+  // props
   dart::dynamics::BodyNode::Properties bodyProp;
   bodyProp.mName = "ground_link";
 
-  Eigen::Isometry3d T = Eigen::Isometry3d::Identity();
-
   dart::dynamics::FreeJoint::Properties jointProp;
   jointProp.mName = "ground_joint";
-  jointProp.mT_ParentBodyToJoint = T;
 
+  // body
   auto pair = skeletonPtr_->createJointAndBodyNodePair<dart::dynamics::WeldJoint>(
       nullptr, jointProp, bodyProp);
-  auto shapeNode = pair.second->createShapeNodeWith<
+  bodyPtr_ = pair.second;
+
+  // shape
+  shapePtr_ = std::make_shared<dart::dynamics::BoxShape>(Eigen::Vector3d(xLength, yLength, 10));
+  auto shapeNode = bodyPtr_->createShapeNodeWith<
       dart::dynamics::CollisionAspect,
       dart::dynamics::DynamicsAspect>(shapePtr_);
 
-  bodyPtr_ = pair.second;
+  // position
+  Eigen::Isometry3d tf(Eigen::Isometry3d::Identity());
+  tf.translation() = Eigen::Vector3d(0, 0, -5);
+  bodyPtr_->getParentJoint()->setTransformFromParentBodyNode(tf);
 }
 
-Eigen::Vector3d dart_sim::object::CheckerBoard::getBodyPosition() {
-  return {0, 0, 0};
-}

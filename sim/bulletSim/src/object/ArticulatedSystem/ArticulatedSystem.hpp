@@ -62,6 +62,8 @@ class ArticulatedSystem: public bullet_sim::object::Object,
 
   virtual int getDOF() override ;
 
+  virtual void setColor(Eigen::Vector4d color) override ;
+
  private:
   void init();
   void initVisuals();

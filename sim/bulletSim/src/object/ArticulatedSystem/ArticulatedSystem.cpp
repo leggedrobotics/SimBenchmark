@@ -139,12 +139,6 @@ void ArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *link
                                       colliderId,
                                       compoundShape->getNumChildShapes());
     }
-//    else {
-//      initVisualFromCollisionShape(linkCollider->getCollisionShape(),
-//                                   linkCollider->getWorldTransform().getRotation(),
-//                                   linkCollider->getWorldTransform().getOrigin(),
-//                                   colliderId);
-//    }
   }
   else {
 
@@ -181,10 +175,6 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTr
               transform.getOrigin().y(),
               transform.getOrigin().z()};
 
-  // color
-  benchmark::Vec<4> color;
-  color = {1.0, 0, 0, 1.0};
-
   switch (col->getShapeType()) {
     case BOX_SHAPE_PROXYTYPE: {
       // box (xlen, ylen, zlen)
@@ -194,7 +184,7 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTr
                  ((btBoxShape *)col)->getHalfExtentsWithMargin().z() * 2.0,
                  0};
 
-      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Box, color));
+      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Box, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Box));
       visProps_.emplace_back(std::make_pair("", boxSize));
       visColProps_.emplace_back(std::make_pair("", boxSize));
@@ -208,7 +198,7 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTr
                  0,
                  0};
 
-      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Cylinder, color));
+      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Cylinder, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Cylinder));
       visProps_.emplace_back(std::make_pair("", cylSize));
       visColProps_.emplace_back(std::make_pair("", cylSize));
@@ -222,7 +212,7 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTr
                     0,
                     0};
 
-      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Sphere, color));
+      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Sphere, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Sphere));
       visProps_.emplace_back(std::make_pair("", sphereSize));
       visColProps_.emplace_back(std::make_pair("", sphereSize));
@@ -480,6 +470,15 @@ void ArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::Vect
 
 int ArticulatedSystem::getDOF() {
   return dof_;
+}
+
+void ArticulatedSystem::setColor(Eigen::Vector4d color) {
+  color_ = {
+      color[0], color[1], color[2], color[3]};
+
+  for(int i = 0; i < visObj.size(); i++) {
+    std::get<4>(visObj[i]) = color_;
+  }
 }
 
 } // object

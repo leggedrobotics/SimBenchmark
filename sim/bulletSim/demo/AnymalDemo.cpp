@@ -5,20 +5,22 @@
 #include <World_RG.hpp>
 #include "raiCommon/utils/StopWatch.hpp"
 
-#define SIM_TIME_MODE
+//#define SIM_TIME_MODE
+#define VIDEO_SAVE_MODE
 
 int main() {
 
-#ifdef SIM_TIME_MODE
+#if defined(SIM_TIME_MODE)
   bullet_sim::World_RG sim(bullet_sim::SOLVER_MULTI_BODY);
 #else
   bullet_sim::World_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
 #endif
 
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1);
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
   auto anymal = sim.addArticulatedSystem("../../../res/ANYmal/robot.urdf");
+  anymal->setColor({1, 0, 0, 1});
   anymal->setGeneralizedCoordinate(
-      {5, 5, 0.6,
+      {0, 0, 0.54,
        1.0, 0.0, 0.0, 0.0,
        0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8});
   anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
@@ -30,17 +32,20 @@ int main() {
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
   const double kp = 40.0, kd = 1.0;
 
-  jointNominalConfig << 5, 5, 0,
+  jointNominalConfig << 0, 0, 0,
       1.0, 0, 0, 0,
       0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8;
 
-#ifdef SIM_TIME_MODE
+#if defined(SIM_TIME_MODE)
   StopWatch watch;
   watch.start();
   for(int i = 0; i < 10000; i++) {
 #else
-    sim.cameraFollowObject(checkerboard, {10, 10, 15});
-  while(sim.visualizerLoop(0.005, 1.0)) {
+#if defined(VIDEO_SAVE_MODE)
+  sim.startRecordingVideo("/tmp", "btAnymal");
+#endif
+  sim.cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
+  for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
 #endif
     jointState = anymal->getGeneralizedCoordinate();
     jointVel = anymal->getGeneralizedVelocity();
@@ -52,8 +57,10 @@ int main() {
     sim.integrate(0.005);
   }
 
-#ifdef SIM_TIME_MODE
+#if defined(SIM_TIME_MODE)
   std::cout<<"time taken for 10k steps "<< watch.measure()<<"s \n";
+#elif defined(VIDEO_SAVE_MODE)
+  sim.stopRecordingVideo();
 #endif
 
   return 0;

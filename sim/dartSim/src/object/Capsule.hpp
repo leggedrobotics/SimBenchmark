@@ -13,7 +13,7 @@ namespace object {
 class Capsule: public SingleBodyObject {
 
  public:
-  Capsule(double radius, double height, double mass);
+  Capsule(double radius, double height, double mass, int id);
 
 };
 

@@ -51,6 +51,8 @@ class ArticulatedSystem: public Object,
 
   virtual int getDOF() override ;
 
+  virtual void setColor(Eigen::Vector4d color)  override ;
+
  private:
 
 };

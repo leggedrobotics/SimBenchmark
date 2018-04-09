@@ -13,7 +13,7 @@ ArticulatedSystem::ArticulatedSystem(std::string urdfFile) {
   skeletonPtr_ = urdfLoader.parseSkeleton(urdfFile);
 
   if(!skeletonPtr_)
-    RAIFATAL("cannot load articulated system from URDF")
+  RAIFATAL("cannot load articulated system from URDF")
 
   dof_ = (int)skeletonPtr_->getNumDofs();
 
@@ -101,6 +101,11 @@ void ArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::Vect
 
 int ArticulatedSystem::getDOF() {
   return dof_;
+}
+
+void ArticulatedSystem::setColor(Eigen::Vector4d color) {
+  color_ = {
+      color[0], color[1], color[2], color[3]};
 }
 
 } // object

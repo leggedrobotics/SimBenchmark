@@ -146,9 +146,10 @@ bullet_sim::object::CheckerBoard *bullet_sim::World::addCheckerboard(double grid
                                                                      double xLength,
                                                                      double yLength,
                                                                      double reflectanceI,
+                                                                     bo::CheckerboardShape shape,
                                                                      benchmark::CollisionGroupType collisionGroup,
                                                                      benchmark::CollisionGroupType collisionMask) {
-  auto *checkerBoard = new bullet_sim::object::CheckerBoard(xLength, yLength);
+  auto *checkerBoard = new bullet_sim::object::CheckerBoard(xLength, yLength, shape);
   dynamicsWorld_->addRigidBody(checkerBoard->getRigidBody(), collisionGroup, collisionMask);
   objectList_.push_back(checkerBoard);
   return checkerBoard;
@@ -220,6 +221,10 @@ void World::setERP(double erp, double erp2, double frictionErp) {
   dynamicsWorld_->getSolverInfo().m_erp = erp;
   dynamicsWorld_->getSolverInfo().m_erp2 = erp2;
   dynamicsWorld_->getSolverInfo().m_frictionERP = frictionErp;
+}
+
+int World::getNumObject() {
+  objectList_.size();
 }
 
 } // bullet_sim

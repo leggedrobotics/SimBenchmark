@@ -7,44 +7,47 @@
 namespace dart_sim {
 namespace object {
 
-dart_sim::object::SingleBodyObject::SingleBodyObject(double mass): mass_(mass) {
+dart_sim::object::SingleBodyObject::SingleBodyObject(double mass, int id) : mass_(mass), id_(id) {
+  tf_.setIdentity();
 }
 
 SingleBodyObject::~SingleBodyObject() {
 }
 
 const Eigen::Map<Eigen::Matrix<double, 4, 1>> dart_sim::object::SingleBodyObject::getQuaternion() {
-  Eigen::Quaterniond quaternion = getBodyQuaternion();
-  benchmark::Vec<4> quat;
-  quat = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
-  return quat.e();
+  updateTransform();
+  Eigen::Quaterniond quaterniond(tf_.rotation());
+  quat_ = {quaterniond.w(), quaterniond.x(), quaterniond.y(), quaterniond.z()};
+  return quat_.e();
 }
 
 void dart_sim::object::SingleBodyObject::getQuaternion(benchmark::Vec<4> &quat) {
-  Eigen::Quaterniond quaternion = getBodyQuaternion();
-  quat = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
+  updateTransform();
+  Eigen::Quaterniond quaterniond(tf_.rotation());
+  quat_ = {quaterniond.w(), quaterniond.x(), quaterniond.y(), quaterniond.z()};
+  quat = quat_;
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 3> > dart_sim::object::SingleBodyObject::getRotationMatrix() {
-  Eigen::Matrix3d rotMat = getBodyRotationMatrix();
-  benchmark::Mat<3,3> rotation;
-  rotation.e() = rotMat;
-  return rotation.e();
+  updateTransform();
+  rotMat_.e() = Eigen::Matrix3d(tf_.rotation());
+  return rotMat_.e();
 }
 
 void dart_sim::object::SingleBodyObject::getRotationMatrix(benchmark::Mat<3, 3> &rotation) {
-  Eigen::Matrix3d rotMat = getBodyRotationMatrix();
-  rotation.e() = rotMat;
+  updateTransform();
+  rotMat_.e() = Eigen::Matrix3d(tf_.rotation());
+  rotation = rotMat_;
 }
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObject::getPosition() {
-  benchmark::Vec<3> pos;
-  pos.e() = getBodyPosition();
-  return pos.e();
+  updateTransform();
+  pos_.e() = tf_.translation();
+  return pos_.e();
 }
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObject::getComPosition() {
-  benchmark::Vec<3> pos;
-  pos.e() = getBodyPosition();
-  return pos.e();
+  updateTransform();
+  pos_.e() = tf_.translation();
+  return pos_.e();
 }
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObject::getLinearVelocity() {
   return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
@@ -54,16 +57,17 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObjec
 }
 
 void dart_sim::object::SingleBodyObject::getPosition_W(benchmark::Vec<3> &pos_w) {
-  Eigen::Vector3d position = getBodyPosition();
-  pos_w = {position[0], position[1], position[2]};
+  updateTransform();
+  pos_.e() = tf_.translation();
+  pos_w = {pos_[0], pos_[1], pos_[2]};
 }
 
 void dart_sim::object::SingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
-  setBodyPosition(originPosition);
+  setBodyPosition({originPosition.x(), originPosition.y(), originPosition.z()});
 }
+
 void dart_sim::object::SingleBodyObject::setPosition(double x, double y, double z) {
-  Eigen::Vector3d positions(x, y, z);
-  setBodyPosition(positions);
+  setBodyPosition({x, y, z});
 }
 
 void dart_sim::object::SingleBodyObject::setOrientation(Eigen::Quaterniond quaternion) {
@@ -137,33 +141,23 @@ bool dart_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {
   return false;
 }
 
-Eigen::Vector3d SingleBodyObject::getBodyPosition() {
-  Eigen::Isometry3d tf = bodyPtr_->getParentJoint()->getRelativeTransform();
-  return tf.translation();
+void SingleBodyObject::updateTransform() {
+  tf_ = bodyPtr_->getParentJoint()->getRelativeTransform();
 }
 
-Eigen::Quaterniond SingleBodyObject::getBodyQuaternion() {
-  Eigen::Isometry3d tf = bodyPtr_->getParentJoint()->getRelativeTransform();
-  return Eigen::Quaterniond(tf.rotation());
-}
-
-Eigen::Matrix3d SingleBodyObject::getBodyRotationMatrix() {
-  Eigen::Isometry3d tf = bodyPtr_->getParentJoint()->getRelativeTransform();
-  return tf.rotation();
-}
-
-void SingleBodyObject::setBodyPosition(const Eigen::Vector3d &position) {
-  Eigen::Isometry3d tf = Eigen::Isometry3d::Identity();
-  tf.translate(position);
+void SingleBodyObject::setBodyPosition(benchmark::Vec<3> position) {
+  tf_.translation() = Eigen::Vector3d(position[0], position[1], position[2]);
 
   dart::dynamics::FreeJoint::setTransform(
       bodyPtr_->getParentJoint(),
-      tf,
+      tf_,
       dart::dynamics::Frame::World()
   );
 }
+
 void SingleBodyObject::setBodyQuaternion(Eigen::Quaterniond &quaternion) {
   Eigen::Isometry3d tf = Eigen::Isometry3d::Identity();
+  tf.translate(tf_.translation());
   tf.rotate(quaternion);
 
   dart::dynamics::FreeJoint::setTransform(
@@ -175,6 +169,7 @@ void SingleBodyObject::setBodyQuaternion(Eigen::Quaterniond &quaternion) {
 
 void SingleBodyObject::setBodyRotationMatrix(Eigen::Matrix3d rotation) {
   Eigen::Isometry3d tf = Eigen::Isometry3d::Identity();
+  tf.translation() = tf_.translation();
   tf.rotate(rotation);
 
   dart::dynamics::FreeJoint::setTransform(

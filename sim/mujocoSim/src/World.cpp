@@ -110,8 +110,11 @@ object::CheckerBoard *World::addCheckerboard(double gridSize,
                                              double xLength,
                                              double yLength,
                                              double reflectanceI,
+                                             bo::CheckerboardShape shape,
                                              int bodyId,
                                              int geomId) {
+  RAIFATAL_IF(shape == bo::BOX_SHAPE, "box shape ground is not supported")
+
   object::CheckerBoard *checkerBoard =
       new object::CheckerBoard(xLength, yLength, worldData_, worldModel_, bodyId, geomId);
   objectList_.push_back(checkerBoard);
@@ -250,6 +253,10 @@ void World::setGravity(const benchmark::Vec<3> &gravity) {
 
 int World::getWorldNumContacts() {
   return worldData_->ncon;
+}
+
+int World::getNumObject() {
+  return objectList_.size();
 }
 
 } // mujoco_sim

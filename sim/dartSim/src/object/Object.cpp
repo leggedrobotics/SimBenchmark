@@ -8,6 +8,6 @@
 dart_sim::object::Object::~Object() {
 }
 
-const std::shared_ptr <dart::dynamics::Skeleton> &dart_sim::object::Object::getSkeletonPtr() const {
+const std::shared_ptr <dart::dynamics::Skeleton> &dart_sim::object::Object::getSkeletonPtr() {
   return skeletonPtr_;
 }

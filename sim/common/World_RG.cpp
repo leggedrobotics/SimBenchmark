@@ -393,4 +393,12 @@ void World_RG::adjustTransparency(rai_graphics::object::SingleBodyObject *ob, bo
     ob->setTransparency(1.0);
 }
 
+void World_RG::startRecordingVideo(std::string dir, std::string fileName) {
+  gui_->savingSnapshots(dir, fileName);
+}
+
+void World_RG::stopRecordingVideo() {
+  gui_->images2Video();
+}
+
 } // benchmark

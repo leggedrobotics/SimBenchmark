@@ -40,23 +40,28 @@ class World: public benchmark::WorldInterface {
                             double mass,
                             int bodyId,
                             int geomId) override ;
+
   object::Box *addBox(double xLength,
                       double yLength,
                       double zLength,
                       double mass,
                       int bodyId,
                       int geomId) override;
+
   object::CheckerBoard *addCheckerboard(double gridSize,
                                         double xLength,
                                         double yLength,
                                         double reflectanceI,
+                                        bo::CheckerboardShape shape,
                                         int bodyId,
                                         int geomId) override;
+
   object::Capsule *addCapsule(double radius,
                               double height,
                               double mass,
                               int bodyId,
                               int geomId) override;
+
   object::Cylinder *addCylinder(double radius,
                                 double height,
                                 double mass,
@@ -68,6 +73,7 @@ class World: public benchmark::WorldInterface {
   mjModel *getWorldModel() const;
   mjData *getWorldData() const;
   int getWorldNumContacts();
+  int getNumObject() override ;
 
   void integrate(double dt);
 

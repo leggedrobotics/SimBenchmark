@@ -67,14 +67,15 @@ benchmark::SingleBodyHandle World_RG::addCheckerboard(double gridSize,
                                                       double xLength,
                                                       double yLength,
                                                       double reflectanceI,
+                                                      bo::CheckerboardShape shape,
                                                       benchmark::CollisionGroupType collisionGroup,
                                                       benchmark::CollisionGroupType collisionMask,
                                                       int flags) {
-  benchmark::SingleBodyHandle handle(world_.addCheckerboard(gridSize, xLength, yLength, reflectanceI, collisionGroup, collisionMask), {}, {});
+  benchmark::SingleBodyHandle handle(world_.addCheckerboard(gridSize, xLength, yLength, reflectanceI, shape, collisionGroup, collisionMask), {}, {});
   handle.hidable = false;
   if(gui_) {
     handle.visual().push_back(new rai_graphics::object::CheckerBoard(gridSize, xLength, yLength, reflectanceI));
-    static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0])->gridMode = flags & benchmark::GRID;
+    static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0])->gridMode = flags & bo::GRID;
     gui_->addCheckerBoard(static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0]));
   }
   sbHandles_.push_back(handle);
@@ -121,6 +122,10 @@ void World_RG::integrate(double dt) {
 }
 void World_RG::setERP(double erp, double erp2, double frictionErp) {
 
+}
+
+int World_RG::getNumObject() {
+  return world_.getNumObject();
 }
 
 } // dart_sim

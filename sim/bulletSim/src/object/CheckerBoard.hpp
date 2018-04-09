@@ -5,15 +5,19 @@
 #ifndef BULLETSIM_CHECKERBOARD_HPP
 #define BULLETSIM_CHECKERBOARD_HPP
 
+#include "common/interface/CheckerboardInterface.hpp"
 #include "SingleBodyObject.hpp"
+
+namespace bo = benchmark::object;
 
 namespace bullet_sim {
 namespace object {
 
-class CheckerBoard: public SingleBodyObject {
+class CheckerBoard: public SingleBodyObject,
+                    public bo::CheckerboardInterface {
 
  public:
-  CheckerBoard(double xLength, double yLength);
+  CheckerBoard(double xLength, double yLength, bo::CheckerboardShape shape = bo::PLANE_SHAPE);
 
 };
 

@@ -50,15 +50,16 @@ benchmark::SingleBodyHandle World_RG::addCheckerboard(double gridSize,
                                                       double xLength,
                                                       double yLength,
                                                       double reflectanceI,
+                                                      bo::CheckerboardShape shape,
                                                       benchmark::CollisionGroupType collisionGroup,
                                                       benchmark::CollisionGroupType collisionMask,
                                                       int flags) {
   benchmark::SingleBodyHandle handle(
-      world_.addCheckerboard(gridSize, xLength, yLength, reflectanceI, collisionGroup, collisionMask), {}, {});
+      world_.addCheckerboard(gridSize, xLength, yLength, reflectanceI, shape, collisionGroup, collisionMask), {}, {});
   handle.hidable = false;
   if(gui_) {
     handle.visual().push_back(new rai_graphics::object::CheckerBoard(gridSize, xLength, yLength, reflectanceI));
-    static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0])->gridMode = flags & benchmark::GRID;
+    static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0])->gridMode = flags & bo::GRID;
     gui_->addCheckerBoard(static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0]));
   }
   sbHandles_.push_back(handle);
@@ -178,6 +179,7 @@ void World_RG::updateFrame() {
   for (auto &as : asHandles_) {
     benchmark::Vec<4> quat;
     benchmark::Vec<3> pos;
+    benchmark::Vec<4> color;
 
     // update visuals for articulated system
     as->updateVisuals();
@@ -204,6 +206,7 @@ void World_RG::updateFrame() {
         as.visual()[i]->setVisibility(true);
         if (!as.visual()[i]->isVisible()) continue;
         pos = std::get<1>(as->getVisOb()[i]);
+        color = std::get<4>(as->getVisOb()[i]);
         as.visual()[i]->setPos(
             pos[0],
             pos[1],
@@ -211,6 +214,10 @@ void World_RG::updateFrame() {
         );
         rotMatToQuat(std::get<0>(as->getVisOb()[i]), quat);
         as.visual()[i]->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
+        as.visual()[i]->setColor({float(color[0]),
+                                  float(color[1]),
+                                  float(color[2])});
+        as.visual()[i]->setTransparency(float(color[3]));
         adjustTransparency(as.visual()[i], as.hidable);
       }
       for (int i = 0; i < as->getVisColOb().size(); i++)
@@ -402,6 +409,10 @@ void World_RG::visEnd() {
   }
 
   isEnded_ = true;
+}
+
+int World_RG::getNumObject() {
+  return world_.getNumObject();
 }
 
 } // bullet_sim

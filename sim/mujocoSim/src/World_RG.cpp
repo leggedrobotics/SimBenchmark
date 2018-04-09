@@ -45,7 +45,7 @@ void mujoco_sim::World_RG::initFromModel() {
       switch (geomType) {
         case mjGEOM_PLANE: {
           // geomsize = (xlength, ylength, gridsize)
-          addCheckerboard(geomSize[2], geomSize[0], geomSize[1], 0.1, i, j);
+          addCheckerboard(geomSize[2], geomSize[0], geomSize[1], 0.1, bo::PLANE_SHAPE, i, j, bo::GRID);
           break;
         }
         case mjGEOM_SPHERE: {
@@ -114,14 +114,15 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addCheckerboard(double gridSiz
                                                                   double xLength,
                                                                   double yLength,
                                                                   double reflectanceI,
+                                                                  bo::CheckerboardShape shape,
                                                                   int bodyId,
                                                                   int geomId,
                                                                   int flags) {
-  benchmark::SingleBodyHandle handle(world_.addCheckerboard(gridSize, xLength, yLength, reflectanceI, bodyId, geomId), {}, {});
+  benchmark::SingleBodyHandle handle(world_.addCheckerboard(gridSize, xLength, yLength, reflectanceI, shape, bodyId, geomId), {}, {});
   handle.hidable = false;
   if(gui_) {
     handle.visual().push_back(new rai_graphics::object::CheckerBoard(gridSize, xLength, yLength, reflectanceI));
-    static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0])->gridMode = flags & benchmark::GRID;
+    static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0])->gridMode = flags & bo::GRID;
     gui_->addCheckerBoard(static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0]));
   }
   sbHandles_.push_back(handle);
@@ -206,5 +207,8 @@ int mujoco_sim::World_RG::getGeneralizedCoordinateDim() {
 
 int mujoco_sim::World_RG::getWorldNumContacts() {
   return world_.getWorldNumContacts();
+}
+int mujoco_sim::World_RG::getNumObject() {
+  return world_.getNumObject();
 }
 

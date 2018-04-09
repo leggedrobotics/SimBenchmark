@@ -43,6 +43,7 @@ class World_RG: public benchmark::World_RG {
                                               double xLength,
                                               double yLength,
                                               double reflectanceI,
+                                              bo::CheckerboardShape shape = bo::BOX_SHAPE,
                                               benchmark::CollisionGroupType collisionGroup = 1,
                                               benchmark::CollisionGroupType collisionMask = -1,
                                               int flags = 0) override ;
@@ -63,6 +64,7 @@ class World_RG: public benchmark::World_RG {
                                                benchmark::CollisionGroupType collisionGroup = 1,
                                                benchmark::CollisionGroupType collisionMask=-1) ;
 
+  int getNumObject() override ;
 
   //////////////////////////
   /// simulation methods ///

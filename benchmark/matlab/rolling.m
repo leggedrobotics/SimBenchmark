@@ -18,7 +18,7 @@ yaml_path = '../rolling.yaml';
 mkdir(plot_path);
 
 %% options
-save_subplots = false;
+save_subplots = false;s
 
 % always plot raisim
 plot_options = struct(...

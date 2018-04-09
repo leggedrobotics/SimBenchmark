@@ -7,19 +7,18 @@
 
 #include <raiGraphics/RAI_graphics.hpp>
 #include "math.hpp"
-
 #include "Configure.hpp"
 #include "UserHandle.hpp"
+
+#include "interface/CheckerboardInterface.hpp"
+
+namespace bo = benchmark::object;
 
 namespace benchmark {
 
 enum VisualizerOption {
   NO_BACKGROUND = 1<<(1),
   DISABLE_INTERACTION = 1<<(2)
-};
-
-enum CheckerBoardOption {
-  GRID = 1<<(1),
 };
 
 class World_RG {
@@ -47,13 +46,21 @@ class World_RG {
   virtual void setLightPosition(float x, float y, float z);
   virtual bool visualizerLoop(double dt, double realTimeFactor = 1.0);
   virtual void updateFrame();
+  virtual void startRecordingVideo(std::string dir, std::string fileName);
+  virtual void stopRecordingVideo();
 
   //////////////////////////////////
   /// adding or removing objects ///
   //////////World////////////////////////
-  virtual SingleBodyHandle addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
-                                           benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask = -1,
+  virtual SingleBodyHandle addCheckerboard(double gridSize,
+                                           double xLength,
+                                           double yLength,
+                                           double reflectanceI,
+                                           bo::CheckerboardShape shape = bo::PLANE_SHAPE,
+                                           benchmark::CollisionGroupType collisionGroup = 1,
+                                           benchmark::CollisionGroupType collisionMask = -1,
                                            int flags = 0) = 0;
+
   virtual SingleBodyHandle addSphere(double radius, double mass,
                                      benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask=-1) = 0;
   virtual SingleBodyHandle addBox(double xLength, double yLength, double zLength, double mass,
@@ -62,6 +69,8 @@ class World_RG {
                                        benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask=-1) = 0;
   virtual SingleBodyHandle addCapsule(double radius, double height, double mass,
                                       benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask=-1) = 0;
+
+  virtual int getNumObject() = 0;
 
   //////////////////////////
   /// simulation methods ///

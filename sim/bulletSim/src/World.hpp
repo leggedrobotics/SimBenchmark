@@ -51,18 +51,41 @@ class World: public benchmark::WorldInterface {
   explicit World(SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
   virtual ~World();
 
-  object::CheckerBoard *addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
-                                        benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) override;
-  object::Sphere *addSphere(double radius, double mass,
-                            benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) override ;
-  object::Box *addBox(double xLength, double yLength, double zLength, double mass,
-                      benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) override ;
-  object::Capsule *addCapsule(double radius, double height, double mass,
-                              benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) override ;
-  object::Cylinder *addCylinder(double radius, double height, double mass,
-                                benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1) override ;
+  object::CheckerBoard *addCheckerboard(double gridSize,
+                                        double xLength,
+                                        double yLength,
+                                        double reflectanceI,
+                                        bo::CheckerboardShape shape = bo::PLANE_SHAPE,
+                                        benchmark::CollisionGroupType collisionGroup=1,
+                                        benchmark::CollisionGroupType collisionMask=-1) override;
+
+  object::Sphere *addSphere(double radius,
+                            double mass,
+                            benchmark::CollisionGroupType collisionGroup=1,
+                            benchmark::CollisionGroupType collisionMask=-1) override ;
+
+  object::Box *addBox(double xLength,
+                      double yLength,
+                      double zLength,
+                      double mass,
+                      benchmark::CollisionGroupType collisionGroup=1,
+                      benchmark::CollisionGroupType collisionMask=-1) override ;
+
+  object::Capsule *addCapsule(double radius,
+                              double height,
+                              double mass,
+                              benchmark::CollisionGroupType collisionGroup=1,
+                              benchmark::CollisionGroupType collisionMask=-1) override ;
+
+  object::Cylinder *addCylinder(double radius,
+                                double height,
+                                double mass,
+                                benchmark::CollisionGroupType collisionGroup=1,
+                                benchmark::CollisionGroupType collisionMask=-1) override ;
+
   object::ArticulatedSystem *addArticulatedSystem(std::string urdfPath,
-                                                  benchmark::CollisionGroupType collisionGroup=1, benchmark::CollisionGroupType collisionMask=-1);
+                                                  benchmark::CollisionGroupType collisionGroup=1,
+                                                  benchmark::CollisionGroupType collisionMask=-1);
 
   void integrate(double dt) override ;
 
@@ -71,6 +94,8 @@ class World: public benchmark::WorldInterface {
   void setGravity(const benchmark::Vec<3> &gravity) override ;
 
   void setERP(double erp, double erp2, double frictionErp);
+
+  int getNumObject() override ;
 
  private:
 

@@ -4,25 +4,35 @@
 
 #include "Cylinder.hpp"
 
-dart_sim::object::Cylinder::Cylinder(double radius, double height, double mass): SingleBodyObject(mass) {
+dart_sim::object::Cylinder::Cylinder(double radius,
+                                     double height,
+                                     double mass,
+                                     int id) : SingleBodyObject(mass, id) {
+  // skeleton
   skeletonPtr_ = dart::dynamics::Skeleton::create();
-  shapePtr_ = dart::dynamics::ShapePtr(new dart::dynamics::CylinderShape(radius, height));
 
+  // props
   dart::dynamics::BodyNode::Properties bodyProp;
-  bodyProp.mName = "cylinder_link";
-  bodyProp.mInertia.setMass(mass);
-
-  Eigen::Isometry3d T = Eigen::Isometry3d::Identity();
+  bodyProp.mName = std::to_string(id) + "_link";
 
   dart::dynamics::FreeJoint::Properties jointProp;
-  jointProp.mName = "box_joint";
-  jointProp.mT_ParentBodyToJoint = T;
+  jointProp.mName = std::to_string(id) + "_joint";
 
+  // body
   auto pair = skeletonPtr_->createJointAndBodyNodePair<dart::dynamics::FreeJoint>(
       nullptr, jointProp, bodyProp);
-  auto shapeNode = pair.second->createShapeNodeWith<
+  bodyPtr_ = pair.second;
+
+  // shape
+  shapePtr_ = std::make_shared<dart::dynamics::CylinderShape>(
+      radius, height);
+  auto shapeNode = bodyPtr_->createShapeNodeWith<
       dart::dynamics::CollisionAspect,
       dart::dynamics::DynamicsAspect>(shapePtr_);
 
-  bodyPtr_ = pair.second;
+  // inertia
+  dart::dynamics::Inertia inertia;
+  inertia.setMass(mass);
+  inertia.setMoment(shapePtr_->computeInertia(mass));
+  bodyPtr_->setInertia(inertia);
 }

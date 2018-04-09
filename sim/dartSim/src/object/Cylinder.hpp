@@ -13,7 +13,10 @@ namespace object {
 class Cylinder: public SingleBodyObject {
 
  public:
-  Cylinder(double radius, double height, double mass);
+  Cylinder(double radius,
+             double height,
+             double mass,
+             int id);
 
 };
 

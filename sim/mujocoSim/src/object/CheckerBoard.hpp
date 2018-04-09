@@ -5,12 +5,16 @@
 #ifndef MUJOCOSIM_CHECKERBOARD_HPP
 #define MUJOCOSIM_CHECKERBOARD_HPP
 
+#include "common/interface/CheckerboardInterface.hpp"
 #include "SingleBodyObject.hpp"
+
+namespace bo = benchmark::object;
 
 namespace mujoco_sim {
 namespace object {
 
-class CheckerBoard: public SingleBodyObject {
+class CheckerBoard: public SingleBodyObject,
+                    public bo::CheckerboardInterface {
 
  public:
   CheckerBoard(double xLength,

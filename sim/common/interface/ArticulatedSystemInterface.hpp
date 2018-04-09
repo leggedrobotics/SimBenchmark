@@ -62,6 +62,9 @@ class ArticulatedSystemInterface {
 
   virtual int getDOF() = 0;
 
+  /// r, g, b, alpha
+  virtual void setColor(Eigen::Vector4d color) = 0;
+
  public:
   // orientation, position, link_id, shape, color
   std::vector<std::tuple<benchmark::Mat<3, 3>, benchmark::Vec<3>, int, Shape>> visColObj;
@@ -77,6 +80,9 @@ class ArticulatedSystemInterface {
   benchmark::VecDyn genCoordinate_;
   benchmark::VecDyn genVelocity_;
   benchmark::VecDyn genForce_;
+
+  // color
+  benchmark::Vec<4> color_ = {1.0, 1.0, 1.0, 1.0};
 
 };
 

@@ -12,14 +12,26 @@ int main() {
   sim.setLightPosition(30, 0, 10);
 
   // checkerboard
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1);
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1);
 
   // ball
   auto ball = sim.addSphere(0.5, 10.0);
-//  ball.visual()[0]->setColor({1.0, 1.0, 0.0});
+  ball.visual()[0]->setColor({1.0, 0.0, 0.0});
   ball->setPosition(0.0, 0.0, 10);
   RAIINFO(ball->getPosition())
-  RAIINFO(ball->getRotationMatrix())
+
+  auto box = sim.addBox(0.5, 0.5, 0.5, 10.0);
+  box.visual()[0]->setColor({0.0, 1.0, 0.0});
+  box->setPosition({0.0, 10.0, 10});
+  box->setOrientation(0.9239, 0.3827, 0, 0);
+  RAIINFO(box->getPosition())
+
+//  auto cylinder = sim.addCylinder(0.5, 1.0, 10.0);
+//  cylinder.visual()[0]->setColor({0.0, 0.0, 1.0});
+//  cylinder->setPosition(10.0, 0.0, 10);
+//  RAIINFO(cylinder->getPosition())
+
+  sim.cameraFollowObject(checkerboard, {5, 0, 5});
 
   // simulation loop
   // press 'q' key to quit

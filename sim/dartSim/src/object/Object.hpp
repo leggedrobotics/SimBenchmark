@@ -15,7 +15,7 @@ class Object {
  public:
   virtual ~Object();
 
-  const dart::dynamics::SkeletonPtr &getSkeletonPtr() const;
+  const virtual dart::dynamics::SkeletonPtr &getSkeletonPtr();
 
  protected:
   dart::dynamics::SkeletonPtr skeletonPtr_;
