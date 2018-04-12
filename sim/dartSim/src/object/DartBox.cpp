@@ -2,12 +2,12 @@
 // Created by kangd on 19.03.18.
 //
 
-#include "Sphere.hpp"
+#include "DartBox.hpp"
 
 namespace dart_sim {
 namespace object {
 
-Sphere::Sphere(double radius, double mass, int id) : SingleBodyObject(mass, id) {
+DartBox::DartBox(double xlength, double ylength, double zlength, double mass, int id) : DartSingleBodyObject(mass, id) {
 
   // skeleton
   skeletonPtr_ = dart::dynamics::Skeleton::create();
@@ -25,7 +25,7 @@ Sphere::Sphere(double radius, double mass, int id) : SingleBodyObject(mass, id) 
   bodyPtr_ = pair.second;
 
   // shape
-  shapePtr_ = std::make_shared<dart::dynamics::SphereShape>(radius);
+  shapePtr_ = std::make_shared<dart::dynamics::BoxShape>(Eigen::Vector3d(xlength, ylength, zlength));
   auto shapeNode = bodyPtr_->createShapeNodeWith<
       dart::dynamics::CollisionAspect,
       dart::dynamics::DynamicsAspect>(shapePtr_);

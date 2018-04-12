@@ -1,14 +1,13 @@
 //
-// Created by kangd on 19.03.18.
+// Created by kangd on 04.04.18.
 //
 
-#include "Box.hpp"
+#include "DartCylinder.hpp"
 
-namespace dart_sim {
-namespace object {
-
-Box::Box(double xlength, double ylength, double zlength, double mass, int id) : SingleBodyObject(mass, id) {
-
+dart_sim::object::DartCylinder::DartCylinder(double radius,
+                                     double height,
+                                     double mass,
+                                     int id) : DartSingleBodyObject(mass, id) {
   // skeleton
   skeletonPtr_ = dart::dynamics::Skeleton::create();
 
@@ -25,7 +24,8 @@ Box::Box(double xlength, double ylength, double zlength, double mass, int id) : 
   bodyPtr_ = pair.second;
 
   // shape
-  shapePtr_ = std::make_shared<dart::dynamics::BoxShape>(Eigen::Vector3d(xlength, ylength, zlength));
+  shapePtr_ = std::make_shared<dart::dynamics::CylinderShape>(
+      radius, height);
   auto shapeNode = bodyPtr_->createShapeNodeWith<
       dart::dynamics::CollisionAspect,
       dart::dynamics::DynamicsAspect>(shapePtr_);
@@ -36,6 +36,3 @@ Box::Box(double xlength, double ylength, double zlength, double mass, int id) : 
   inertia.setMoment(shapePtr_->computeInertia(mass));
   bodyPtr_->setInertia(inertia);
 }
-
-} // object
-} // dart_sim

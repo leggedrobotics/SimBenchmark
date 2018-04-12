@@ -5,15 +5,15 @@
 #ifndef DARTSIM_SPHERE_HPP
 #define DARTSIM_SPHERE_HPP
 
-#include "SingleBodyObject.hpp"
+#include "DartSingleBodyObject.hpp"
 
 namespace dart_sim {
 namespace object {
 
-class Sphere: public SingleBodyObject {
+class DartSphere: public DartSingleBodyObject {
 
  public:
-  Sphere(double radius, double mass, int id);
+  DartSphere(double radius, double mass, int id);
 
 };
 

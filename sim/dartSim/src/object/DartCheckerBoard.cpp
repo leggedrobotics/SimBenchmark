@@ -2,10 +2,10 @@
 // Created by kangd on 19.03.18.
 //
 
-#include "CheckerBoard.hpp"
+#include "DartCheckerBoard.hpp"
 
-dart_sim::object::CheckerBoard::CheckerBoard(double xLength, double yLength, benchmark::object::CheckerboardShape shape, int id)
-    : SingleBodyObject(0, id) {
+dart_sim::object::DartCheckerBoard::DartCheckerBoard(double xLength, double yLength, benchmark::object::CheckerboardShape shape, int id)
+    : DartSingleBodyObject(0, id) {
 
   if(shape == benchmark::object::PLANE_SHAPE)
     RAIFATAL("plane shape ground is not supported")

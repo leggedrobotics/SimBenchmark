@@ -2,7 +2,7 @@
 // Created by kangd on 04.04.18.
 //
 
-#include <World_RG.hpp>
+#include <DartWorld_RG.hpp>
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define SIM_TIME_MODE
@@ -17,7 +17,7 @@ int main() {
 #ifdef SIM_TIME_MODE
   dart_sim::World_RG sim;
 #else
-  dart_sim::World_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
+  dart_sim::DartWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 #endif
 
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);

@@ -11,17 +11,17 @@
 
 #include "common/interface/ArticulatedSystemInterface.hpp"
 
-#include "Object.hpp"
+#include "DartObject.hpp"
 
 namespace dart_sim {
 namespace object {
 
-class ArticulatedSystem: public Object,
-                         public benchmark::object::ArticulatedSystemInterface {
+class DartArticulatedSystem: public DartObject,
+                             public benchmark::object::ArticulatedSystemInterface {
 
  public:
-  ArticulatedSystem(std::string urdfFile);
-  virtual ~ArticulatedSystem();
+  DartArticulatedSystem(std::string urdfFile);
+  virtual ~DartArticulatedSystem();
 
   void updateVisuals();
 

@@ -5,15 +5,15 @@
 #ifndef DARTSIM_CAPSULE_HPP
 #define DARTSIM_CAPSULE_HPP
 
-#include "SingleBodyObject.hpp"
+#include "DartSingleBodyObject.hpp"
 
 namespace dart_sim {
 namespace object {
 
-class Capsule: public SingleBodyObject {
+class DartCapsule: public DartSingleBodyObject {
 
  public:
-  Capsule(double radius, double height, double mass, int id);
+  DartCapsule(double radius, double height, double mass, int id);
 
 };
 

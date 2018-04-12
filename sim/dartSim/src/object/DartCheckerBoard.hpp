@@ -6,16 +6,16 @@
 #define DARTSIM_CHECKERBOARD_HPP
 
 #include "common/interface/CheckerboardInterface.hpp"
-#include "SingleBodyObject.hpp"
+#include "DartSingleBodyObject.hpp"
 
 namespace dart_sim {
 namespace object {
 
-class CheckerBoard: public SingleBodyObject,
-                    public benchmark::object::CheckerboardInterface {
+class DartCheckerBoard: public DartSingleBodyObject,
+                        public benchmark::object::CheckerboardInterface {
 
  public:
-  CheckerBoard(double xLength, double yLength, benchmark::object::CheckerboardShape shape, int id);
+  DartCheckerBoard(double xLength, double yLength, benchmark::object::CheckerboardShape shape, int id);
 
 };
 

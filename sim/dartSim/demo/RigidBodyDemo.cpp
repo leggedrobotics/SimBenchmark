@@ -2,11 +2,11 @@
 // Created by kangd on 05.04.18.
 //
 
-#include <World_RG.hpp>
+#include <DartWorld_RG.hpp>
 
 int main() {
 
-  dart_sim::World_RG sim(800, 600, 0.5);
+  dart_sim::DartWorld_RG sim(800, 600, 0.5);
 
 //  sim.setGravity({0,0,0});
   sim.setLightPosition(30, 0, 10);

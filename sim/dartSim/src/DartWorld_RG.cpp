@@ -2,19 +2,19 @@
 // Created by kangd on 16.03.18.
 //
 
-#include "World_RG.hpp"
+#include "DartWorld_RG.hpp"
 
 namespace dart_sim {
 
-World_RG::World_RG(int windowWidth, int windowHeight, float cms, int flags) :
+DartWorld_RG::DartWorld_RG(int windowWidth, int windowHeight, float cms, int flags) :
     world_(),
     benchmark::World_RG(windowWidth, windowHeight, cms, flags) {}
 
-World_RG::World_RG() :
+DartWorld_RG::DartWorld_RG() :
     world_(),
     benchmark::World_RG() {}
 
-benchmark::SingleBodyHandle World_RG::addSphere(double radius,
+benchmark::SingleBodyHandle DartWorld_RG::addSphere(double radius,
                                                 double mass,
                                                 benchmark::CollisionGroupType collisionGroup,
                                                 benchmark::CollisionGroupType collisionMask) {
@@ -24,7 +24,7 @@ benchmark::SingleBodyHandle World_RG::addSphere(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle World_RG::addBox(double xLength,
+benchmark::SingleBodyHandle DartWorld_RG::addBox(double xLength,
                                              double yLength,
                                              double zLength,
                                              double mass,
@@ -36,12 +36,12 @@ benchmark::SingleBodyHandle World_RG::addBox(double xLength,
   return handle;
 }
 
-World_RG::~World_RG() {
+DartWorld_RG::~DartWorld_RG() {
   if(!isEnded_ && isReady_)
     visEnd();
 }
 
-benchmark::SingleBodyHandle World_RG::addCapsule(double radius,
+benchmark::SingleBodyHandle DartWorld_RG::addCapsule(double radius,
                                                  double height,
                                                  double mass,
                                                  benchmark::CollisionGroupType collisionGroup,
@@ -52,7 +52,7 @@ benchmark::SingleBodyHandle World_RG::addCapsule(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle World_RG::addCylinder(double radius,
+benchmark::SingleBodyHandle DartWorld_RG::addCylinder(double radius,
                                                   double height,
                                                   double mass,
                                                   benchmark::CollisionGroupType collisionGroup,
@@ -63,7 +63,7 @@ benchmark::SingleBodyHandle World_RG::addCylinder(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle World_RG::addCheckerboard(double gridSize,
+benchmark::SingleBodyHandle DartWorld_RG::addCheckerboard(double gridSize,
                                                       double xLength,
                                                       double yLength,
                                                       double reflectanceI,
@@ -82,7 +82,7 @@ benchmark::SingleBodyHandle World_RG::addCheckerboard(double gridSize,
   return handle;
 }
 
-ArticulatedSystemHandle World_RG::addArticulatedSystem(std::string nm,
+ArticulatedSystemHandle DartWorld_RG::addArticulatedSystem(std::string nm,
                                                        benchmark::CollisionGroupType collisionGroup,
                                                        benchmark::CollisionGroupType collisionMask) {
   ArticulatedSystemHandle handle(
@@ -148,40 +148,40 @@ ArticulatedSystemHandle World_RG::addArticulatedSystem(std::string nm,
   return handle;
 }
 
-void World_RG::setGravity(Eigen::Vector3d gravity) {
+void DartWorld_RG::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
 }
 
-void World_RG::setTimeStep(double timeStep) {
+void DartWorld_RG::setTimeStep(double timeStep) {
   timeStep_ = timeStep;
   world_.setTimeStep(timeStep);
 }
 
-void World_RG::integrate() {
+void DartWorld_RG::integrate() {
   world_.integrate();
 }
 
-void World_RG::loop(double realTimeFactor) {
+void DartWorld_RG::loop(double realTimeFactor) {
   while (visualizerLoop(timeStep_, realTimeFactor))
     integrate();
 }
 
-void World_RG::loop(double dt, double realTimeFactor) {
+void DartWorld_RG::loop(double dt, double realTimeFactor) {
   RAIFATAL("use setTimeStep(double dt) + loop(double realTimeFactor) instead")
 }
 
-void World_RG::integrate(double dt) {
+void DartWorld_RG::integrate(double dt) {
   RAIFATAL("use setTimeStep(double dt) + integrate() instead")
 }
-void World_RG::setERP(double erp, double erp2, double frictionErp) {
+void DartWorld_RG::setERP(double erp, double erp2, double frictionErp) {
 
 }
 
-int World_RG::getNumObject() {
+int DartWorld_RG::getNumObject() {
   return world_.getNumObject();
 }
 
-void World_RG::updateFrame() {
+void DartWorld_RG::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
 

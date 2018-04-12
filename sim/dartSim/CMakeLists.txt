@@ -12,27 +12,27 @@ include_directories(${DART_INCLUDE_DIRS})
 include_directories(src)
 
 set(DartSim_SRCS
-        src/World.cpp
-        src/World.hpp
-        src/World_RG.cpp
-        src/World_RG.hpp
+        src/DartWorld.cpp
+        src/DartWorld.hpp
+        src/DartWorld_RG.cpp
+        src/DartWorld_RG.hpp
         src/UserHandle.hpp
-        src/object/SingleBodyObject.cpp
-        src/object/SingleBodyObject.hpp
-        src/object/Sphere.cpp
-        src/object/Sphere.hpp
-        src/object/Box.cpp
-        src/object/Box.hpp
-        src/object/Capsule.cpp
-        src/object/Capsule.hpp
-        src/object/CheckerBoard.cpp
-        src/object/CheckerBoard.hpp
-        src/object/Object.cpp
-        src/object/Object.hpp
-        src/object/Cylinder.cpp
-        src/object/Cylinder.hpp
-        src/object/ArticulatedSystem.cpp
-        src/object/ArticulatedSystem.hpp)
+        src/object/DartSingleBodyObject.cpp
+        src/object/DartSingleBodyObject.hpp
+        src/object/DartSphere.cpp
+        src/object/DartSphere.hpp
+        src/object/DartBox.cpp
+        src/object/DartBox.hpp
+        src/object/DartCapsule.cpp
+        src/object/DartCapsule.hpp
+        src/object/DartCheckerBoard.cpp
+        src/object/DartCheckerBoard.hpp
+        src/object/DartObject.cpp
+        src/object/DartObject.hpp
+        src/object/DartCylinder.cpp
+        src/object/DartCylinder.hpp
+        src/object/DartArticulatedSystem.cpp
+        src/object/DartArticulatedSystem.hpp)
 
 # library
 add_library(DartSimLib ${DartSim_SRCS})

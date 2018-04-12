@@ -2,92 +2,92 @@
 // Created by kangd on 19.03.18.
 //
 
-#include "SingleBodyObject.hpp"
+#include "DartSingleBodyObject.hpp"
 
 namespace dart_sim {
 namespace object {
 
-dart_sim::object::SingleBodyObject::SingleBodyObject(double mass, int id) : mass_(mass), id_(id) {
+dart_sim::object::DartSingleBodyObject::DartSingleBodyObject(double mass, int id) : mass_(mass), id_(id) {
 }
 
-SingleBodyObject::~SingleBodyObject() {
+DartSingleBodyObject::~DartSingleBodyObject() {
 }
 
-const Eigen::Map<Eigen::Matrix<double, 4, 1>> dart_sim::object::SingleBodyObject::getQuaternion() {
+const Eigen::Map<Eigen::Matrix<double, 4, 1>> dart_sim::object::DartSingleBodyObject::getQuaternion() {
   dartTf2States();
   return quat_.e();
 }
 
-void dart_sim::object::SingleBodyObject::getQuaternion(benchmark::Vec<4> &quat) {
+void dart_sim::object::DartSingleBodyObject::getQuaternion(benchmark::Vec<4> &quat) {
   dartTf2States();
   quat = quat_;
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 3> > dart_sim::object::SingleBodyObject::getRotationMatrix() {
+const Eigen::Map<Eigen::Matrix<double, 3, 3> > dart_sim::object::DartSingleBodyObject::getRotationMatrix() {
   dartTf2States();
   return rotMat_.e();
 }
 
-void dart_sim::object::SingleBodyObject::getRotationMatrix(benchmark::Mat<3, 3> &rotation) {
+void dart_sim::object::DartSingleBodyObject::getRotationMatrix(benchmark::Mat<3, 3> &rotation) {
   dartTf2States();
   rotation = rotMat_;
 }
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObject::getPosition() {
+const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::DartSingleBodyObject::getPosition() {
   dartTf2States();
   return pos_.e();
 }
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObject::getComPosition() {
+const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::DartSingleBodyObject::getComPosition() {
   dartTf2States();
   return pos_.e();
 }
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObject::getLinearVelocity() {
+const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::DartSingleBodyObject::getLinearVelocity() {
   return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
 }
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::SingleBodyObject::getAngularVelocity() {
+const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::DartSingleBodyObject::getAngularVelocity() {
   return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
 }
 
-void dart_sim::object::SingleBodyObject::getPosition_W(benchmark::Vec<3> &pos_w) {
+void dart_sim::object::DartSingleBodyObject::getPosition_W(benchmark::Vec<3> &pos_w) {
   dartTf2States();
   pos_w = {pos_[0], pos_[1], pos_[2]};
 }
 
-void dart_sim::object::SingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
+void dart_sim::object::DartSingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
   pos_ = {originPosition[0], originPosition[1], originPosition[2]};
   states2DartTf();
 }
 
-void dart_sim::object::SingleBodyObject::setPosition(double x, double y, double z) {
+void dart_sim::object::DartSingleBodyObject::setPosition(double x, double y, double z) {
   pos_ = {x, y, z};
   states2DartTf();
 }
 
-void dart_sim::object::SingleBodyObject::setOrientation(Eigen::Quaterniond quaternion) {
+void dart_sim::object::DartSingleBodyObject::setOrientation(Eigen::Quaterniond quaternion) {
   quat_ = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
   states2DartTf();
 }
 
-void dart_sim::object::SingleBodyObject::setOrientation(Eigen::Matrix3d rotationMatrix) {
+void dart_sim::object::DartSingleBodyObject::setOrientation(Eigen::Matrix3d rotationMatrix) {
   Eigen::Quaterniond quaternion(rotationMatrix);
   quat_ = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
   states2DartTf();
 }
 
-void dart_sim::object::SingleBodyObject::setOrientation(double w, double x, double y, double z) {
+void dart_sim::object::DartSingleBodyObject::setOrientation(double w, double x, double y, double z) {
   Eigen::Quaterniond quaternion = {w, x, y, z};
   quat_ = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
   states2DartTf();
 }
 
-void dart_sim::object::SingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Quaterniond quaternion) {
+void dart_sim::object::DartSingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Quaterniond quaternion) {
   RAIFATAL("not implemented yet")
 }
 
-void dart_sim::object::SingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Matrix3d rotationMatrix) {
+void dart_sim::object::DartSingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Matrix3d rotationMatrix) {
   RAIFATAL("not implemented yet")
 }
 
-void dart_sim::object::SingleBodyObject::setVelocity(Eigen::Vector3d linearVelocity, Eigen::Vector3d angularVelocity) {
+void dart_sim::object::DartSingleBodyObject::setVelocity(Eigen::Vector3d linearVelocity, Eigen::Vector3d angularVelocity) {
   Eigen::Vector6d velocity(Eigen::Vector6d::Zero());
   velocity[0] = angularVelocity.x();
   velocity[1] = angularVelocity.y();
@@ -99,7 +99,7 @@ void dart_sim::object::SingleBodyObject::setVelocity(Eigen::Vector3d linearVeloc
   bodyPtr_->getParentJoint()->setVelocities(velocity);
 }
 
-void dart_sim::object::SingleBodyObject::setVelocity(double dx, double dy, double dz, double wx, double wy, double wz) {
+void dart_sim::object::DartSingleBodyObject::setVelocity(double dx, double dy, double dz, double wx, double wy, double wz) {
   Eigen::Vector6d velocity(Eigen::Vector6d::Zero());
   velocity[0] = wx;
   velocity[1] = wy;
@@ -111,32 +111,32 @@ void dart_sim::object::SingleBodyObject::setVelocity(double dx, double dy, doubl
   bodyPtr_->getParentJoint()->setVelocities(velocity);
 }
 
-void dart_sim::object::SingleBodyObject::setExternalForce(Eigen::Vector3d force) {
+void dart_sim::object::DartSingleBodyObject::setExternalForce(Eigen::Vector3d force) {
   RAIFATAL("not implemented yet")
 }
 
-void dart_sim::object::SingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
+void dart_sim::object::DartSingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
   RAIFATAL("not implemented yet")
 }
 
-void dart_sim::object::SingleBodyObject::setRestitutionCoefficient(double restitution) {
+void dart_sim::object::DartSingleBodyObject::setRestitutionCoefficient(double restitution) {
   RAIFATAL("not implemented yet")
 }
 
-void dart_sim::object::SingleBodyObject::setFrictionCoefficient(double friction) {
+void dart_sim::object::DartSingleBodyObject::setFrictionCoefficient(double friction) {
   RAIFATAL("not implemented yet")
 }
 
-void SingleBodyObject::setOrientationRandom() {
+void DartSingleBodyObject::setOrientationRandom() {
   RAIFATAL("not implemented yet")
 }
 
-bool dart_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {
+bool dart_sim::object::DartSingleBodyObject::isVisualizeFramesAndCom() const {
   RAIFATAL("not implemented yet")
   return false;
 }
 
-void SingleBodyObject::dartTf2States() {
+void DartSingleBodyObject::dartTf2States() {
   Eigen::Isometry3d tf = bodyPtr_->getParentJoint()->getRelativeTransform();
   pos_ = {tf.translation().x(), tf.translation().y(), tf.translation().z()};
   Eigen::Quaterniond quaternion(tf.rotation());
@@ -145,7 +145,7 @@ void SingleBodyObject::dartTf2States() {
   rotMat_.e() = rotationMatrix;
 }
 
-void SingleBodyObject::states2DartTf() {
+void DartSingleBodyObject::states2DartTf() {
   Eigen::Isometry3d tf = Eigen::Isometry3d::Identity();
   tf.translation()[0] = pos_[0];
   tf.translation()[1] = pos_[1];

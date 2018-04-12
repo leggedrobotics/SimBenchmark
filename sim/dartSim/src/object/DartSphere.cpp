@@ -2,12 +2,13 @@
 // Created by kangd on 19.03.18.
 //
 
-#include "Capsule.hpp"
+#include "DartSphere.hpp"
 
 namespace dart_sim {
 namespace object {
 
-Capsule::Capsule(double radius, double height, double mass, int id) : SingleBodyObject(mass, id) {
+DartSphere::DartSphere(double radius, double mass, int id) : DartSingleBodyObject(mass, id) {
+
   // skeleton
   skeletonPtr_ = dart::dynamics::Skeleton::create();
 
@@ -24,8 +25,7 @@ Capsule::Capsule(double radius, double height, double mass, int id) : SingleBody
   bodyPtr_ = pair.second;
 
   // shape
-  shapePtr_ = std::make_shared<dart::dynamics::CapsuleShape>(
-      radius, height);
+  shapePtr_ = std::make_shared<dart::dynamics::SphereShape>(radius);
   auto shapeNode = bodyPtr_->createShapeNodeWith<
       dart::dynamics::CollisionAspect,
       dart::dynamics::DynamicsAspect>(shapePtr_);
@@ -36,5 +36,6 @@ Capsule::Capsule(double radius, double height, double mass, int id) : SingleBody
   inertia.setMoment(shapePtr_->computeInertia(mass));
   bodyPtr_->setInertia(inertia);
 }
+
 } // object
 } // dart_sim

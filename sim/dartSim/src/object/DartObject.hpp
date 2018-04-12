@@ -10,10 +10,10 @@
 namespace dart_sim {
 namespace object {
 
-class Object {
+class DartObject {
 
  public:
-  virtual ~Object();
+  virtual ~DartObject();
 
   const virtual dart::dynamics::SkeletonPtr &getSkeletonPtr();
 

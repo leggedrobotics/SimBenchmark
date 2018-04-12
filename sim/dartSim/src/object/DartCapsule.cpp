@@ -1,13 +1,13 @@
 //
-// Created by kangd on 04.04.18.
+// Created by kangd on 19.03.18.
 //
 
-#include "Cylinder.hpp"
+#include "DartCapsule.hpp"
 
-dart_sim::object::Cylinder::Cylinder(double radius,
-                                     double height,
-                                     double mass,
-                                     int id) : SingleBodyObject(mass, id) {
+namespace dart_sim {
+namespace object {
+
+DartCapsule::DartCapsule(double radius, double height, double mass, int id) : DartSingleBodyObject(mass, id) {
   // skeleton
   skeletonPtr_ = dart::dynamics::Skeleton::create();
 
@@ -24,7 +24,7 @@ dart_sim::object::Cylinder::Cylinder(double radius,
   bodyPtr_ = pair.second;
 
   // shape
-  shapePtr_ = std::make_shared<dart::dynamics::CylinderShape>(
+  shapePtr_ = std::make_shared<dart::dynamics::CapsuleShape>(
       radius, height);
   auto shapeNode = bodyPtr_->createShapeNodeWith<
       dart::dynamics::CollisionAspect,
@@ -36,3 +36,5 @@ dart_sim::object::Cylinder::Cylinder(double radius,
   inertia.setMoment(shapePtr_->computeInertia(mass));
   bodyPtr_->setInertia(inertia);
 }
+} // object
+} // dart_sim

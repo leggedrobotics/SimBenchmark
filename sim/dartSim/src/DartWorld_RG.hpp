@@ -7,22 +7,22 @@
 
 #include "common/World_RG.hpp"
 #include "UserHandle.hpp"
-#include "World.hpp"
+#include "DartWorld.hpp"
 
 namespace dart_sim {
 
-class World_RG: public benchmark::World_RG {
+class DartWorld_RG: public benchmark::World_RG {
 
  public:
   /* constructor for visualization */
-  World_RG(int windowWidth,
-           int windowHeight,
-           float cms,
-           int flags = 0);
+  DartWorld_RG(int windowWidth,
+               int windowHeight,
+               float cms,
+               int flags = 0);
 
   /* constructor for no visualization */
-  World_RG();
-  virtual ~World_RG();
+  DartWorld_RG();
+  virtual ~DartWorld_RG();
 
   /////////////////////////////////////
   /// Visualization related methods ///
@@ -85,7 +85,7 @@ class World_RG: public benchmark::World_RG {
   void setERP(double erp, double erp2, double frictionErp) override ;
   virtual void integrate(double dt) override ;
 
-  dart_sim::World world_;
+  dart_sim::DartWorld world_;
 
   double timeStep_ = 0.01;
 

@@ -5,15 +5,15 @@
 #ifndef DARTSIM_BOX_HPP
 #define DARTSIM_BOX_HPP
 
-#include "SingleBodyObject.hpp"
+#include "DartSingleBodyObject.hpp"
 
 namespace dart_sim {
 namespace object {
 
-class Box: public SingleBodyObject {
+class DartBox: public DartSingleBodyObject {
 
  public:
-  Box(double xlength, double ylength, double zlength, double mass, int id);
+  DartBox(double xlength, double ylength, double zlength, double mass, int id);
 
 };
 

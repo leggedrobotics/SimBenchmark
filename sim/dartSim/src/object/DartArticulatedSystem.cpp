@@ -2,12 +2,12 @@
 // Created by kangd on 04.04.18.
 //
 
-#include "ArticulatedSystem.hpp"
+#include "DartArticulatedSystem.hpp"
 
 namespace dart_sim {
 namespace object {
 
-ArticulatedSystem::ArticulatedSystem(std::string urdfFile) {
+DartArticulatedSystem::DartArticulatedSystem(std::string urdfFile) {
 
   dart::utils::DartLoader urdfLoader;
   skeletonPtr_ = urdfLoader.parseSkeleton(urdfFile);
@@ -17,11 +17,11 @@ ArticulatedSystem::ArticulatedSystem(std::string urdfFile) {
   init();
 }
 
-ArticulatedSystem::~ArticulatedSystem() {
+DartArticulatedSystem::~DartArticulatedSystem() {
 
 }
 
-void ArticulatedSystem::init() {
+void DartArticulatedSystem::init() {
 
   dof_ = (int)skeletonPtr_->getNumDofs();
 
@@ -47,7 +47,7 @@ void ArticulatedSystem::init() {
   initVisual(skeletonPtr_->getRootBodyNode());
 }
 
-void ArticulatedSystem::updateVisuals() {
+void DartArticulatedSystem::updateVisuals() {
   visObj.clear();
   visColObj.clear();
   visProps_.clear();
@@ -56,7 +56,7 @@ void ArticulatedSystem::updateVisuals() {
   initVisual(skeletonPtr_->getRootBodyNode());
 }
 
-void ArticulatedSystem::initVisual(dart::dynamics::BodyNode *body) {
+void DartArticulatedSystem::initVisual(dart::dynamics::BodyNode *body) {
 
   for(int i = 0; i < body->getNumShapeNodesWith<dart::dynamics::CollisionAspect>(); i++) {
 
@@ -128,7 +128,7 @@ void ArticulatedSystem::initVisual(dart::dynamics::BodyNode *body) {
   }
 }
 
-const benchmark::object::ArticulatedSystemInterface::EigenVec ArticulatedSystem::getGeneralizedCoordinate() {
+const benchmark::object::ArticulatedSystemInterface::EigenVec DartArticulatedSystem::getGeneralizedCoordinate() {
   Eigen::VectorXd pos = skeletonPtr_->getPositions();
   // TODO floating base
   for(int i = 0; i < dof_; i++) {
@@ -137,7 +137,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec ArticulatedSystem:
   return genCoordinate_.e();
 }
 
-const benchmark::object::ArticulatedSystemInterface::EigenVec ArticulatedSystem::getGeneralizedVelocity() {
+const benchmark::object::ArticulatedSystemInterface::EigenVec DartArticulatedSystem::getGeneralizedVelocity() {
   Eigen::VectorXd vel = skeletonPtr_->getVelocities();
   for(int i = 0; i < dof_; i++) {
     genVelocity_[i] = vel[i];
@@ -145,7 +145,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec ArticulatedSystem:
   return genVelocity_.e();
 }
 
-const benchmark::object::ArticulatedSystemInterface::EigenVec ArticulatedSystem::getGeneralizedForce() {
+const benchmark::object::ArticulatedSystemInterface::EigenVec DartArticulatedSystem::getGeneralizedForce() {
   Eigen::VectorXd force = skeletonPtr_->getForces();
   for(int i = 0; i < dof_; i++) {
     genForce_[i] = force[i];
@@ -153,7 +153,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec ArticulatedSystem:
   return genForce_.e();
 }
 
-void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
+void DartArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
   RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
   if(isFixed_){
     // fixed base
@@ -188,7 +188,7 @@ void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointSta
   }
 }
 
-void ArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
+void DartArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
   RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
   if(isFixed_){
     // fixed base
@@ -223,7 +223,7 @@ void ArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> j
   }
 }
 
-void ArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
+void DartArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
   skeletonPtr_->setVelocities(jointVel);
   for(int i = 0; i < dof_; i++) {
@@ -231,7 +231,7 @@ void ArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) 
   }
 }
 
-void ArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+void DartArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
   for(int i = 0; i < dof_; i++) {
     genVelocity_[i] = jointVel.begin()[i];
@@ -239,7 +239,7 @@ void ArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> joi
   }
 }
 
-void ArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
+void DartArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
   RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
   for(int i = 0; i < dof_; i++) {
     genForce_[i] = tau.begin()[i];
@@ -247,7 +247,7 @@ void ArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
   }
 }
 
-void ArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
+void DartArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
   RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
   skeletonPtr_->setForces(tau);
   for(int i = 0; i < dof_; i++) {
@@ -255,16 +255,16 @@ void ArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
   }
 }
 
-void ArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
+void DartArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
   RAIINFO("not implemented yet")
 }
-void ArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
+void DartArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
   RAIINFO("not implemented yet")
 }
-int ArticulatedSystem::getDOF() {
+int DartArticulatedSystem::getDOF() {
   return dof_;
 }
-void ArticulatedSystem::setColor(Eigen::Vector4d color) {
+void DartArticulatedSystem::setColor(Eigen::Vector4d color) {
   color_ = {
       color[0], color[1], color[2], color[3]};
 }

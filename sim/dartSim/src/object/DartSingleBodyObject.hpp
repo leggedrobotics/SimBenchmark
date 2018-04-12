@@ -10,17 +10,17 @@
 #include "common/math.hpp"
 #include "common/interface/SingleBodyObjectInterface.hpp"
 
-#include "Object.hpp"
+#include "DartObject.hpp"
 
 namespace dart_sim {
 namespace object {
 
-class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
-                        public dart_sim::object::Object {
+class DartSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
+                            public dart_sim::object::DartObject {
 
  public:
-  explicit SingleBodyObject(double mass, int id);
-  virtual ~SingleBodyObject();
+  explicit DartSingleBodyObject(double mass, int id);
+  virtual ~DartSingleBodyObject();
 
   virtual const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion() override ;
   virtual void getQuaternion(benchmark::Vec<4>& quat) override ;
