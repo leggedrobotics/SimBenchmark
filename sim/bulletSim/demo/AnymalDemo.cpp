@@ -2,7 +2,7 @@
 // Created by kangd on 11.02.18.
 //
 
-#include <World_RG.hpp>
+#include <BtWorld_RG.hpp>
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define SIM_TIME_MODE
@@ -18,7 +18,7 @@ int main() {
 #if defined(SIM_TIME_MODE)
   bullet_sim::World_RG sim(bullet_sim::SOLVER_MULTI_BODY);
 #else
-  bullet_sim::World_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
+  bullet_sim::BtWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
 #endif
 
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);

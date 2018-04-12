@@ -5,15 +5,15 @@
 #ifndef BULLETSIM_CAPSULE_HPP
 #define BULLETSIM_CAPSULE_HPP
 
-#include "SingleBodyObject.hpp"
+#include "BtSingleBodyObject.hpp"
 
 namespace bullet_sim {
 namespace object {
 
-class Capsule: public SingleBodyObject {
+class BtCapsule: public BtSingleBodyObject {
 
  public:
-  Capsule(double radius, double height, double mass);
+  BtCapsule(double radius, double height, double mass);
 
 };
 

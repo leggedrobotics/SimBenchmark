@@ -11,18 +11,18 @@
 
 #include "common/math.hpp"
 #include "common/interface/SingleBodyObjectInterface.hpp"
-#include "Object.hpp"
+#include "BtObject.hpp"
 
 namespace bullet_sim {
 namespace object {
 
-class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
-                        public bullet_sim::object::Object
+class BtSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
+                        public bullet_sim::object::BtObject
 {
 
  public:
-  SingleBodyObject(double mass);
-  virtual ~SingleBodyObject();
+  BtSingleBodyObject(double mass);
+  virtual ~BtSingleBodyObject();
 
   btRigidBody *getRigidBody() const;
 

@@ -5,15 +5,15 @@
 #ifndef BULLETSIM_CYLINDER_HPP
 #define BULLETSIM_CYLINDER_HPP
 
-#include "SingleBodyObject.hpp"
+#include "BtSingleBodyObject.hpp"
 
 namespace bullet_sim {
 namespace object {
 
-class Cylinder: public SingleBodyObject {
+class BtCylinder: public BtSingleBodyObject {
 
  public:
-  Cylinder(double radius, double height, double mass);
+  BtCylinder(double radius, double height, double mass);
 
 };
 

@@ -14,24 +14,24 @@
 #include "common/World_RG.hpp"
 #include "common/Configure.hpp"
 #include "UserHandle.hpp"
-#include "World.hpp"
+#include "BtWorld.hpp"
 
 namespace bullet_sim {
 
-class World_RG: public benchmark::World_RG {
+class BtWorld_RG: public benchmark::World_RG {
 
  public:
 
   /* constructor for visualization */
-  World_RG(int windowWidth,
+  BtWorld_RG(int windowWidth,
            int windowHeight,
            float cms,
            int flags = 0,
            SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
 
   /* constructor for no visualization */
-  World_RG(SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
-  virtual ~World_RG();
+  BtWorld_RG(SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
+  virtual ~BtWorld_RG();
 
   /////////////////////////////////////
   /// Visualization related methods ///
@@ -89,7 +89,7 @@ class World_RG: public benchmark::World_RG {
   void setERP(double erp, double erp2, double frictionErp) override ;
 
  private:
-  bullet_sim::World world_;
+  bullet_sim::BtWorld world_;
 
   // solver type
   SolverOption solverOption_ = SOLVER_SEQUENTIAL_IMPULSE;

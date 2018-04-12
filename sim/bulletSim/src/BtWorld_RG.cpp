@@ -2,26 +2,26 @@
 // Created by kangd on 10.02.18.
 //
 
-#include "World_RG.hpp"
+#include "BtWorld_RG.hpp"
 
 namespace bullet_sim {
 
-World_RG::World_RG(int windowWidth, int windowHeight, float cms, int flags, SolverOption solverOption) :
+BtWorld_RG::BtWorld_RG(int windowWidth, int windowHeight, float cms, int flags, SolverOption solverOption) :
     solverOption_(solverOption),
     world_(solverOption),
     benchmark::World_RG(windowWidth, windowHeight, cms, flags) {}
 
-World_RG::World_RG(SolverOption solverOption) :
+BtWorld_RG::BtWorld_RG(SolverOption solverOption) :
     solverOption_(solverOption),
     world_(solverOption),
     benchmark::World_RG() {}
 
-World_RG::~World_RG() {
+BtWorld_RG::~BtWorld_RG() {
   if(!isEnded_ && isReady_)
     visEnd();
 }
 
-benchmark::SingleBodyHandle World_RG::addBox(double xLength,
+benchmark::SingleBodyHandle BtWorld_RG::addBox(double xLength,
                                              double yLength,
                                              double zLength,
                                              double mass,
@@ -35,7 +35,7 @@ benchmark::SingleBodyHandle World_RG::addBox(double xLength,
   return handle;
 }
 
-benchmark::SingleBodyHandle World_RG::addSphere(double radius,
+benchmark::SingleBodyHandle BtWorld_RG::addSphere(double radius,
                                                 double mass,
                                                 benchmark::CollisionGroupType collisionGroup,
                                                 benchmark::CollisionGroupType collisionMask) {
@@ -46,7 +46,7 @@ benchmark::SingleBodyHandle World_RG::addSphere(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle World_RG::addCheckerboard(double gridSize,
+benchmark::SingleBodyHandle BtWorld_RG::addCheckerboard(double gridSize,
                                                       double xLength,
                                                       double yLength,
                                                       double reflectanceI,
@@ -66,7 +66,7 @@ benchmark::SingleBodyHandle World_RG::addCheckerboard(double gridSize,
   return handle;
 }
 
-benchmark::SingleBodyHandle World_RG::addCapsule(double radius,
+benchmark::SingleBodyHandle BtWorld_RG::addCapsule(double radius,
                                                  double height,
                                                  double mass,
                                                  benchmark::CollisionGroupType collisionGroup,
@@ -78,7 +78,7 @@ benchmark::SingleBodyHandle World_RG::addCapsule(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle World_RG::addCylinder(double radius,
+benchmark::SingleBodyHandle BtWorld_RG::addCylinder(double radius,
                                                   double height,
                                                   double mass,
                                                   benchmark::CollisionGroupType collisionGroup,
@@ -91,7 +91,7 @@ benchmark::SingleBodyHandle World_RG::addCylinder(double radius,
 
 }
 
-ArticulatedSystemHandle World_RG::addArticulatedSystem(std::string nm,
+ArticulatedSystemHandle BtWorld_RG::addArticulatedSystem(std::string nm,
                                                        benchmark::CollisionGroupType collisionGroup,
                                                        benchmark::CollisionGroupType collisionMask) {
   if(solverOption_ != bullet_sim::SOLVER_MULTI_BODY)
@@ -160,18 +160,18 @@ ArticulatedSystemHandle World_RG::addArticulatedSystem(std::string nm,
   return handle;
 }
 
-void World_RG::integrate(double dt) {
+void BtWorld_RG::integrate(double dt) {
   world_.integrate(dt);
 }
 
-void World_RG::setGravity(Eigen::Vector3d gravity) {
+void BtWorld_RG::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
 }
 
-void World_RG::setERP(double erp, double erp2, double frictionErp) {
+void BtWorld_RG::setERP(double erp, double erp2, double frictionErp) {
   world_.setERP(erp, erp2, frictionErp);
 }
-void World_RG::updateFrame() {
+void BtWorld_RG::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
 
@@ -392,7 +392,7 @@ void World_RG::updateFrame() {
 //    }
 //  }
 }
-void World_RG::visEnd() {
+void BtWorld_RG::visEnd() {
   gui_->end();
   for (auto& obj: asHandles_) {
     for (auto go: obj.visual())
@@ -411,7 +411,7 @@ void World_RG::visEnd() {
   isEnded_ = true;
 }
 
-int World_RG::getNumObject() {
+int BtWorld_RG::getNumObject() {
   return world_.getNumObject();
 }
 

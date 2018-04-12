@@ -2,11 +2,11 @@
 // Created by kangd on 10.02.18.
 //
 
-#include "World.hpp"
+#include "BtWorld.hpp"
 
 namespace bullet_sim {
 
-World::World(SolverOption solverOption) : solverOption_(solverOption) {
+BtWorld::BtWorld(SolverOption solverOption) : solverOption_(solverOption) {
 
   // broadphase
   broadphase_ = new btDbvtBroadphase();
@@ -90,7 +90,7 @@ World::World(SolverOption solverOption) : solverOption_(solverOption) {
 
 }
 
-World::~World() {
+BtWorld::~BtWorld() {
 
   // remove world
   delete dynamicsWorld_;
@@ -109,73 +109,73 @@ World::~World() {
     delete ob;
 }
 
-bullet_sim::object::Sphere *bullet_sim::World::addSphere(double radius,
+bullet_sim::object::BtSphere *bullet_sim::BtWorld::addSphere(double radius,
                                                          double mass,
                                                          benchmark::CollisionGroupType collisionGroup,
                                                          benchmark::CollisionGroupType collisionMask) {
-  auto *sphere = new bullet_sim::object::Sphere(radius, mass);
+  auto *sphere = new bullet_sim::object::BtSphere(radius, mass);
   dynamicsWorld_->addRigidBody(sphere->getRigidBody(), collisionGroup, collisionMask);
   objectList_.push_back(sphere);
   return sphere;
 }
 
-bullet_sim::object::Box *bullet_sim::World::addBox(double xLength,
+bullet_sim::object::BtBox *bullet_sim::BtWorld::addBox(double xLength,
                                                    double yLength,
                                                    double zLength,
                                                    double mass,
                                                    benchmark::CollisionGroupType collisionGroup,
                                                    benchmark::CollisionGroupType collisionMask) {
-  auto *box = new bullet_sim::object::Box(xLength, yLength, zLength, mass);
+  auto *box = new bullet_sim::object::BtBox(xLength, yLength, zLength, mass);
   dynamicsWorld_->addRigidBody(box->getRigidBody(), collisionGroup, collisionMask);
   objectList_.push_back(box);
   return box;
 }
 
-bullet_sim::object::Capsule *World::addCapsule(double radius,
+bullet_sim::object::BtCapsule *BtWorld::addCapsule(double radius,
                                                double height,
                                                double mass,
                                                benchmark::CollisionGroupType collisionGroup,
                                                benchmark::CollisionGroupType collisionMask) {
-  auto *capsule = new bullet_sim::object::Capsule(radius, height, mass);
+  auto *capsule = new bullet_sim::object::BtCapsule(radius, height, mass);
   dynamicsWorld_->addRigidBody(capsule->getRigidBody(), collisionGroup, collisionMask);
   objectList_.push_back(capsule);
   return capsule;
 }
 
-bullet_sim::object::CheckerBoard *bullet_sim::World::addCheckerboard(double gridSize,
+bullet_sim::object::BtCheckerBoard *bullet_sim::BtWorld::addCheckerboard(double gridSize,
                                                                      double xLength,
                                                                      double yLength,
                                                                      double reflectanceI,
                                                                      bo::CheckerboardShape shape,
                                                                      benchmark::CollisionGroupType collisionGroup,
                                                                      benchmark::CollisionGroupType collisionMask) {
-  auto *checkerBoard = new bullet_sim::object::CheckerBoard(xLength, yLength, shape);
+  auto *checkerBoard = new bullet_sim::object::BtCheckerBoard(xLength, yLength, shape);
   dynamicsWorld_->addRigidBody(checkerBoard->getRigidBody(), collisionGroup, collisionMask);
   objectList_.push_back(checkerBoard);
   return checkerBoard;
 }
 
-bullet_sim::object::Cylinder *bullet_sim::World::addCylinder(double radius,
+bullet_sim::object::BtCylinder *bullet_sim::BtWorld::addCylinder(double radius,
                                                              double height,
                                                              double mass,
                                                              benchmark::CollisionGroupType collisionGroup,
                                                              benchmark::CollisionGroupType collisionMask) {
-  auto *cylinder = new bullet_sim::object::Cylinder(radius, height, mass);
+  auto *cylinder = new bullet_sim::object::BtCylinder(radius, height, mass);
   dynamicsWorld_->addRigidBody(cylinder->getRigidBody(), collisionGroup, collisionMask);
   objectList_.push_back(cylinder);
   return cylinder;
 }
 
-object::ArticulatedSystem *World::addArticulatedSystem(std::string urdfPath,
+object::BtArticulatedSystem *BtWorld::addArticulatedSystem(std::string urdfPath,
                                                        benchmark::CollisionGroupType collisionGroup,
                                                        benchmark::CollisionGroupType collisionMask) {
-  object::ArticulatedSystem *articulatedSystem = new bullet_sim::object::ArticulatedSystem(urdfPath,
+  object::BtArticulatedSystem *articulatedSystem = new bullet_sim::object::BtArticulatedSystem(urdfPath,
                                                                                            (btMultiBodyDynamicsWorld* )dynamicsWorld_);
   objectList_.push_back(articulatedSystem);
   return articulatedSystem;
 }
 
-void bullet_sim::World::integrate(double dt) {
+void bullet_sim::BtWorld::integrate(double dt) {
   // simulation step
   dynamicsWorld_->stepSimulation(dt, 0);
 
@@ -206,24 +206,24 @@ void bullet_sim::World::integrate(double dt) {
   }
 }
 
-const std::vector<Single3DContactProblem> *World::getCollisionProblem() const {
+const std::vector<Single3DContactProblem> *BtWorld::getCollisionProblem() const {
   return &contactProblemList_;
 }
 
-void bullet_sim::World::setGravity(const benchmark::Vec<3> &gravity) {
+void bullet_sim::BtWorld::setGravity(const benchmark::Vec<3> &gravity) {
   gravity_ = {gravity[0],
               gravity[1],
               gravity[2]};
   dynamicsWorld_->setGravity(gravity_);
 }
 
-void World::setERP(double erp, double erp2, double frictionErp) {
+void BtWorld::setERP(double erp, double erp2, double frictionErp) {
   dynamicsWorld_->getSolverInfo().m_erp = erp;
   dynamicsWorld_->getSolverInfo().m_erp2 = erp2;
   dynamicsWorld_->getSolverInfo().m_frictionERP = frictionErp;
 }
 
-int World::getNumObject() {
+int BtWorld::getNumObject() {
   objectList_.size();
 }
 

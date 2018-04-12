@@ -16,27 +16,27 @@ link_directories(${BULLET_ROOT_DIR}/${BULLET_LIBRARY_DIRS})
 include_directories(src)
 
 set(BtSimSrc
-        src/World.hpp
-        src/World.cpp
-        src/World_RG.hpp
-        src/World_RG.cpp
+        src/BtWorld.hpp
+        src/BtWorld.cpp
+        src/BtWorld_RG.hpp
+        src/BtWorld_RG.cpp
         src/UserHandle.hpp
-        src/object/Object.hpp
-        src/object/Object.cpp
-        src/object/SingleBodyObject.hpp
-        src/object/SingleBodyObject.cpp
-        src/object/Box.hpp
-        src/object/Box.cpp
-        src/object/CheckerBoard.hpp
-        src/object/CheckerBoard.cpp
-        src/object/Sphere.hpp
-        src/object/Sphere.cpp
-        src/object/Capsule.hpp
-        src/object/Capsule.cpp
-        src/object/Cylinder.hpp
-        src/object/Cylinder.cpp
-        src/object/ArticulatedSystem/ArticulatedSystem.hpp
-        src/object/ArticulatedSystem/ArticulatedSystem.cpp
+        src/object/BtObject.hpp
+        src/object/BtObject.cpp
+        src/object/BtSingleBodyObject.hpp
+        src/object/BtSingleBodyObject.cpp
+        src/object/BtBox.hpp
+        src/object/BtBox.cpp
+        src/object/BtCheckerBoard.hpp
+        src/object/BtCheckerBoard.cpp
+        src/object/BtSphere.hpp
+        src/object/BtSphere.cpp
+        src/object/BtCapsule.hpp
+        src/object/BtCapsule.cpp
+        src/object/BtCylinder.hpp
+        src/object/BtCylinder.cpp
+        src/object/ArticulatedSystem/BtArticulatedSystem.hpp
+        src/object/ArticulatedSystem/BtArticulatedSystem.cpp
         src/object/ArticulatedSystem/URDF/MyMultiBodyCreator.h
         src/object/ArticulatedSystem/URDF/MyMultiBodyCreator.cpp
         src/object/ArticulatedSystem/URDF/URDFToBullet.h

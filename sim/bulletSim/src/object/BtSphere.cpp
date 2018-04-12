@@ -1,12 +1,13 @@
 //
-// Created by kangd on 15.02.18.
+// Created by kangd on 13.02.18.
 //
 
-#include "Capsule.hpp"
-bullet_sim::object::Capsule::Capsule(double radius, double height, double mass) : SingleBodyObject(mass) {
+#include "BtSphere.hpp"
 
-  // collision shape
-  collisionShape_ = new btCapsuleShapeZ(radius, height);
+bullet_sim::object::BtSphere::BtSphere(double radius, double mass) : BtSingleBodyObject(mass) {
+
+// collision shape
+  collisionShape_ = new btSphereShape(radius);
 
   // position and orientation
   btTransform transform;
@@ -22,5 +23,4 @@ bullet_sim::object::Capsule::Capsule(double radius, double height, double mass) 
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState_, collisionShape_, localInertia);
   rigidBody_ = new btRigidBody(rbInfo);
   rigidBody_->setFlags(BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY);
-
 }

@@ -2,7 +2,7 @@
 // Created by kangd on 25.03.18.
 //
 
-#include "Object.hpp"
+#include "BtObject.hpp"
 
 namespace bullet_sim {
 namespace object {

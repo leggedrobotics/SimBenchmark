@@ -2,12 +2,12 @@
 // Created by kangd on 25.03.18.
 //
 
-#include "ArticulatedSystem.hpp"
+#include "BtArticulatedSystem.hpp"
 
 namespace bullet_sim {
 namespace object {
 
-ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world): dynamicsWorld_(world) {
+BtArticulatedSystem::BtArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world): dynamicsWorld_(world) {
 
   BulletURDFImporter importer(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA);
   bool loadOK = importer.loadURDF(urdfFile.c_str());
@@ -28,13 +28,13 @@ ArticulatedSystem::ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWo
   }
 }
 
-ArticulatedSystem::~ArticulatedSystem() {
+BtArticulatedSystem::~BtArticulatedSystem() {
 
   // delete multibody
   delete multiBody_;
 }
 
-void ArticulatedSystem::init() {
+void BtArticulatedSystem::init() {
 
   if(multiBody_->hasFixedBase()) {
     isFixed_ = true;
@@ -94,7 +94,7 @@ void ArticulatedSystem::init() {
   initVisuals();
 }
 
-void ArticulatedSystem::updateVisuals() {
+void BtArticulatedSystem::updateVisuals() {
   visObj.clear();
   visColObj.clear();
   visProps_.clear();
@@ -103,7 +103,7 @@ void ArticulatedSystem::updateVisuals() {
   initVisuals();
 }
 
-void ArticulatedSystem::initVisuals() {
+void BtArticulatedSystem::initVisuals() {
 
   // reserve
   visObj.reserve(multiBody_->getNumLinks() + 1);
@@ -124,7 +124,7 @@ void ArticulatedSystem::initVisuals() {
   }
 }
 
-void ArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId) {
+void BtArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId) {
 
   // shape
   if (linkCollider->getCollisionShape()->isCompound()) {
@@ -149,7 +149,7 @@ void ArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *link
   }
 }
 
-void ArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
+void BtArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
                                                         btTransform parentTransform,
                                                         int id,
                                                         int numChild) {
@@ -159,7 +159,7 @@ void ArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *co
   }
 }
 
-void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTransform transform, int id) {
+void BtArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTransform transform, int id) {
 
   // orientation
   benchmark::Mat<3, 3> mat;
@@ -223,7 +223,7 @@ void ArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, btTr
   }
 }
 
-const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedCoordinate() {
+const BtArticulatedSystem::EigenVec BtArticulatedSystem::getGeneralizedCoordinate() {
   if (isFixed_) {
     // fixed body
     int i = 0;
@@ -249,7 +249,7 @@ const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedCoordinate() 
   return genCoordinate_.e();
 }
 
-const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedVelocity() {
+const BtArticulatedSystem::EigenVec BtArticulatedSystem::getGeneralizedVelocity() {
   if (multiBody_->hasFixedBase()) {
     // fixed body
     int i = 0;
@@ -273,7 +273,7 @@ const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedVelocity() {
   return genVelocity_.e();
 }
 
-void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
+void BtArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
   RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
 
   if(isFixed_) {
@@ -301,7 +301,7 @@ void ArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointSta
   }
 }
 
-void ArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
+void BtArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
 
   if(isFixed_) {
@@ -328,7 +328,7 @@ void ArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) 
   }
 }
 
-void ArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
+void BtArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
   RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
 
   if(isFixed_) {
@@ -356,7 +356,7 @@ void ArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> j
   }
 }
 
-void ArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+void BtArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
 
   if(isFixed_) {
@@ -383,7 +383,7 @@ void ArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> joi
   }
 }
 
-const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedForce() {
+const BtArticulatedSystem::EigenVec BtArticulatedSystem::getGeneralizedForce() {
   if (multiBody_->hasFixedBase()) {
     // fixed body
     int i = 0;
@@ -406,7 +406,7 @@ const ArticulatedSystem::EigenVec ArticulatedSystem::getGeneralizedForce() {
   }
 }
 
-void ArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
+void BtArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
   RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
 
   if(isFixed_) {
@@ -433,7 +433,7 @@ void ArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
   }
 }
 
-void ArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
+void BtArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
   RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
 
   if(isFixed_) {
@@ -460,19 +460,19 @@ void ArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
   }
 }
 
-void ArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
+void BtArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
   RAIINFO("not implemented yet")
 }
 
-void ArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
+void BtArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
   RAIINFO("not implemented yet")
 }
 
-int ArticulatedSystem::getDOF() {
+int BtArticulatedSystem::getDOF() {
   return dof_;
 }
 
-void ArticulatedSystem::setColor(Eigen::Vector4d color) {
+void BtArticulatedSystem::setColor(Eigen::Vector4d color) {
   color_ = {
       color[0], color[1], color[2], color[3]};
 

@@ -5,15 +5,15 @@
 #ifndef BULLETSIM_SPHERE_HPP
 #define BULLETSIM_SPHERE_HPP
 
-#include "SingleBodyObject.hpp"
+#include "BtSingleBodyObject.hpp"
 
 namespace bullet_sim {
 namespace object {
 
-class Sphere: public SingleBodyObject {
+class BtSphere: public BtSingleBodyObject {
 
  public:
-  Sphere(double radius, double mass);
+  BtSphere(double radius, double mass);
 
 };
 

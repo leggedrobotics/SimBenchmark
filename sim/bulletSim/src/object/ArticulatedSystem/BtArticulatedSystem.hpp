@@ -19,17 +19,17 @@
 #include "URDF/UrdfParser.h"
 
 #include "object/ArticulatedSystem/URDF/URDFToBullet.h"
-#include "object/Object.hpp"
+#include "object/BtObject.hpp"
 
 namespace bullet_sim {
 namespace object {
 
-class ArticulatedSystem: public bullet_sim::object::Object,
+class BtArticulatedSystem: public bullet_sim::object::BtObject,
                          public benchmark::object::ArticulatedSystemInterface {
 
  public:
-  ArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world);
-  virtual ~ArticulatedSystem();
+  BtArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world);
+  virtual ~BtArticulatedSystem();
 
   void updateVisuals();
 

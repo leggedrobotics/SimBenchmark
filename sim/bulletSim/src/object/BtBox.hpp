@@ -5,15 +5,15 @@
 #ifndef BULLETSIM_BOX_HPP
 #define BULLETSIM_BOX_HPP
 
-#include "SingleBodyObject.hpp"
+#include "BtSingleBodyObject.hpp"
 
 namespace bullet_sim {
 namespace object {
 
-class Box: public SingleBodyObject {
+class BtBox: public BtSingleBodyObject {
 
  public:
-  Box(double xlength, double ylength, double zlength, double mass);
+  BtBox(double xlength, double ylength, double zlength, double mass);
 
 };
 

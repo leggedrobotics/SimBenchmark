@@ -2,10 +2,10 @@
 // Created by kangd on 10.02.18.
 //
 
-#include "CheckerBoard.hpp"
+#include "BtCheckerBoard.hpp"
 
-bullet_sim::object::CheckerBoard::CheckerBoard(double xLength, double yLength, bo::CheckerboardShape shape)
-    : SingleBodyObject(0) {
+bullet_sim::object::BtCheckerBoard::BtCheckerBoard(double xLength, double yLength, bo::CheckerboardShape shape)
+    : BtSingleBodyObject(0) {
 
   // position and orientation
   btTransform transform;

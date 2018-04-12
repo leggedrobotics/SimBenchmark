@@ -1,15 +1,18 @@
 //
-// Created by kangd on 09.02.18.
+// Created by kangd on 01.04.18.
 //
 
-#include <object/Box.hpp>
+#include "BtCylinder.hpp"
 
-bullet_sim::object::Box::Box(double xlength, double ylength, double zlength, double mass) : SingleBodyObject(mass) {
+namespace bullet_sim {
+namespace object {
+
+BtCylinder::BtCylinder(double radius, double height, double mass): BtSingleBodyObject(mass) {
 
   // collision shape
-  collisionShape_ = new btBoxShape(btVector3(.5 * xlength,
-                                    .5 * ylength,
-                                    .5 * zlength));
+  collisionShape_ = new btCylinderShapeZ(btVector3(radius,
+                                                   radius,
+                                                   height * 0.5));
 
   // position and orientation
   btTransform transform;
@@ -25,4 +28,9 @@ bullet_sim::object::Box::Box(double xlength, double ylength, double zlength, dou
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState_, collisionShape_, localInertia);
   rigidBody_ = new btRigidBody(rbInfo);
   rigidBody_->setFlags(BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY);
+
 }
+
+
+} // object
+} // bullet_sim

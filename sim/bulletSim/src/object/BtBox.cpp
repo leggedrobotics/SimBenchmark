@@ -1,13 +1,15 @@
 //
-// Created by kangd on 13.02.18.
+// Created by kangd on 09.02.18.
 //
 
-#include "Sphere.hpp"
+#include <object/BtBox.hpp>
 
-bullet_sim::object::Sphere::Sphere(double radius, double mass) : SingleBodyObject(mass) {
+bullet_sim::object::BtBox::BtBox(double xlength, double ylength, double zlength, double mass) : BtSingleBodyObject(mass) {
 
-// collision shape
-  collisionShape_ = new btSphereShape(radius);
+  // collision shape
+  collisionShape_ = new btBoxShape(btVector3(.5 * xlength,
+                                    .5 * ylength,
+                                    .5 * zlength));
 
   // position and orientation
   btTransform transform;

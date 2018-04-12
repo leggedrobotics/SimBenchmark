@@ -1,18 +1,12 @@
 //
-// Created by kangd on 01.04.18.
+// Created by kangd on 15.02.18.
 //
 
-#include "Cylinder.hpp"
-
-namespace bullet_sim {
-namespace object {
-
-Cylinder::Cylinder(double radius, double height, double mass): SingleBodyObject(mass) {
+#include "BtCapsule.hpp"
+bullet_sim::object::BtCapsule::BtCapsule(double radius, double height, double mass) : BtSingleBodyObject(mass) {
 
   // collision shape
-  collisionShape_ = new btCylinderShapeZ(btVector3(radius,
-                                                   radius,
-                                                   height * 0.5));
+  collisionShape_ = new btCapsuleShapeZ(radius, height);
 
   // position and orientation
   btTransform transform;
@@ -30,7 +24,3 @@ Cylinder::Cylinder(double radius, double height, double mass): SingleBodyObject(
   rigidBody_->setFlags(BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY);
 
 }
-
-
-} // object
-} // bullet_sim

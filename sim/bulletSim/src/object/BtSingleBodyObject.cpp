@@ -2,42 +2,42 @@
 // Created by kangd on 10.02.18.
 //
 
-#include "SingleBodyObject.hpp"
+#include "BtSingleBodyObject.hpp"
 
-bullet_sim::object::SingleBodyObject::SingleBodyObject(double mass) : mass_(mass) {
+bullet_sim::object::BtSingleBodyObject::BtSingleBodyObject(double mass) : mass_(mass) {
 
 }
 
-bullet_sim::object::SingleBodyObject::~SingleBodyObject() {
+bullet_sim::object::BtSingleBodyObject::~BtSingleBodyObject() {
   delete rigidBody_;
   delete motionState_;
   delete collisionShape_;
 }
 
 
-bool bullet_sim::object::SingleBodyObject::isVisualizeFramesAndCom() const {
+bool bullet_sim::object::BtSingleBodyObject::isVisualizeFramesAndCom() const {
   return visualizeFramesAndCom_;
 }
 
-const Eigen::Map<Eigen::Matrix<double, 4, 1>> bullet_sim::object::SingleBodyObject::getQuaternion() {
+const Eigen::Map<Eigen::Matrix<double, 4, 1>> bullet_sim::object::BtSingleBodyObject::getQuaternion() {
   const btQuaternion &quaternion = rigidBody_->getWorldTransform().getRotation();
   quatTemp_ = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
   return quatTemp_.e();
 }
 
-void bullet_sim::object::SingleBodyObject::getQuaternion(benchmark::Vec<4> &quat) {
+void bullet_sim::object::BtSingleBodyObject::getQuaternion(benchmark::Vec<4> &quat) {
   const btQuaternion &quaternion = rigidBody_->getWorldTransform().getRotation();
   quat = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
 }
 
-void bullet_sim::object::SingleBodyObject::getRotationMatrix(benchmark::Mat<3, 3> &rotation) {
+void bullet_sim::object::BtSingleBodyObject::getRotationMatrix(benchmark::Mat<3, 3> &rotation) {
   const btMatrix3x3 &rotMat = rigidBody_->getWorldTransform().getBasis();
   rotation.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
       rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
       rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 3> > bullet_sim::object::SingleBodyObject::getRotationMatrix() {
+const Eigen::Map<Eigen::Matrix<double, 3, 3> > bullet_sim::object::BtSingleBodyObject::getRotationMatrix() {
   const btMatrix3x3 &rotMat = rigidBody_->getWorldTransform().getBasis();
   rotMatTemp_.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
       rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
@@ -45,82 +45,82 @@ const Eigen::Map<Eigen::Matrix<double, 3, 3> > bullet_sim::object::SingleBodyObj
   return rotMatTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getPosition() {
+const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::BtSingleBodyObject::getPosition() {
   const btVector3 &position = rigidBody_->getWorldTransform().getOrigin();
   posTemp_ = {position.x(), position.y(), position.z()};
   return posTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getComPosition() {
+const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::BtSingleBodyObject::getComPosition() {
   const btVector3 &position = rigidBody_->getWorldTransform().getOrigin();
   posTemp_ = {position.x(), position.y(), position.z()};
   RAIWARN("check if COM = body origin!");
   return posTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getLinearVelocity() {
+const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::BtSingleBodyObject::getLinearVelocity() {
   const btVector3 &linearVelocity = rigidBody_->getLinearVelocity();
   linVelTemp_ = {linearVelocity.x(), linearVelocity.y(), linearVelocity.z()};
   return linVelTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::SingleBodyObject::getAngularVelocity() {
+const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::BtSingleBodyObject::getAngularVelocity() {
   const btVector3 &angularVelocity = rigidBody_->getAngularVelocity();
   angVelTemp_ = {angularVelocity.x(), angularVelocity.y(), angularVelocity.z()};
   return angVelTemp_.e();
 }
 
-void bullet_sim::object::SingleBodyObject::getPosition_W(benchmark::Vec<3> &pos_w) {
+void bullet_sim::object::BtSingleBodyObject::getPosition_W(benchmark::Vec<3> &pos_w) {
   const btVector3 &position = rigidBody_->getWorldTransform().getOrigin();
   pos_w = {position.getX(), position.getY(), position.getZ()};
 }
 
-void bullet_sim::object::SingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
+void bullet_sim::object::BtSingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
   rigidBody_->getWorldTransform().setOrigin(btVector3(originPosition[0],
                                                       originPosition[1],
                                                       originPosition[2]));
 }
 
-void bullet_sim::object::SingleBodyObject::setPosition(double x, double y, double z) {
+void bullet_sim::object::BtSingleBodyObject::setPosition(double x, double y, double z) {
   rigidBody_->getWorldTransform().setOrigin(btVector3(x, y, z));
 }
 
-void bullet_sim::object::SingleBodyObject::setOrientation(Eigen::Quaterniond quaternion) {
+void bullet_sim::object::BtSingleBodyObject::setOrientation(Eigen::Quaterniond quaternion) {
   setOrientation(quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z());
 }
 
-void bullet_sim::object::SingleBodyObject::setOrientation(Eigen::Matrix3d rotationMatrix) {
+void bullet_sim::object::BtSingleBodyObject::setOrientation(Eigen::Matrix3d rotationMatrix) {
   Eigen::Quaterniond quaternion(rotationMatrix);
   setOrientation(quaternion);
 }
 
-void bullet_sim::object::SingleBodyObject::setOrientation(double w, double x, double y, double z) {
+void bullet_sim::object::BtSingleBodyObject::setOrientation(double w, double x, double y, double z) {
   rigidBody_->getWorldTransform().setRotation(btQuaternion(x, y, z, w));
 }
 
-void bullet_sim::object::SingleBodyObject::setOrientationRandom() {
+void bullet_sim::object::BtSingleBodyObject::setOrientationRandom() {
   Eigen::Vector4d quat(rn_.sampleUniform(), rn_.sampleUniform(), rn_.sampleUniform(), rn_.sampleUniform());
   quat /= quat.norm();
   setOrientation(quat(0), quat(1), quat(2), quat(3));
 }
 
-void bullet_sim::object::SingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Quaterniond quaternion) {
+void bullet_sim::object::BtSingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Quaterniond quaternion) {
   setPosition(originPosition);
   setOrientation(quaternion);
 }
 
-void bullet_sim::object::SingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Matrix3d rotationMatrix) {
+void bullet_sim::object::BtSingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Matrix3d rotationMatrix) {
   setPosition(originPosition);
   setOrientation(rotationMatrix);
 }
 
-void bullet_sim::object::SingleBodyObject::setVelocity(Eigen::Vector3d linearVelocity,
+void bullet_sim::object::BtSingleBodyObject::setVelocity(Eigen::Vector3d linearVelocity,
                                                        Eigen::Vector3d angularVelocity) {
   setVelocity(linearVelocity[0], linearVelocity[1], linearVelocity[2],
               angularVelocity[0], angularVelocity[1], angularVelocity[2]);
 }
 
-void bullet_sim::object::SingleBodyObject::setVelocity(double dx,
+void bullet_sim::object::BtSingleBodyObject::setVelocity(double dx,
                                                        double dy,
                                                        double dz,
                                                        double wx,
@@ -129,20 +129,20 @@ void bullet_sim::object::SingleBodyObject::setVelocity(double dx,
   rigidBody_->setLinearVelocity(btVector3(dx, dy, dz));
   rigidBody_->setAngularVelocity(btVector3(wx, wy, wz));
 }
-btRigidBody *bullet_sim::object::SingleBodyObject::getRigidBody() const {
+btRigidBody *bullet_sim::object::BtSingleBodyObject::getRigidBody() const {
   return rigidBody_;
 }
-void bullet_sim::object::SingleBodyObject::setRestitutionCoefficient(double restitution) {
+void bullet_sim::object::BtSingleBodyObject::setRestitutionCoefficient(double restitution) {
   rigidBody_->setRestitution(restitution);
 }
 
-void bullet_sim::object::SingleBodyObject::setFrictionCoefficient(double friction) {
+void bullet_sim::object::BtSingleBodyObject::setFrictionCoefficient(double friction) {
   rigidBody_->setFriction(friction);
 }
 
-void bullet_sim::object::SingleBodyObject::setExternalForce(Eigen::Vector3d force) {
+void bullet_sim::object::BtSingleBodyObject::setExternalForce(Eigen::Vector3d force) {
   rigidBody_->applyCentralForce(btVector3(force[0], force[1], force[2]));
 }
-void bullet_sim::object::SingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
+void bullet_sim::object::BtSingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
   rigidBody_->applyTorque(btVector3(torque[0], torque[1], torque[2]));
 }

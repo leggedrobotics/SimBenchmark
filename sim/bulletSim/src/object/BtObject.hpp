@@ -8,7 +8,7 @@
 namespace bullet_sim {
 namespace object {
 
-class Object {
+class BtObject {
 
 };
 

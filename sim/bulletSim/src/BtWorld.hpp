@@ -17,13 +17,13 @@
 #include "common/Configure.hpp"
 #include "common/interface/WorldInterface.hpp"
 
-#include "object/Object.hpp"
-#include "object/CheckerBoard.hpp"
-#include "object/Sphere.hpp"
-#include "object/Cylinder.hpp"
-#include "object/Box.hpp"
-#include "object/Capsule.hpp"
-#include "object/ArticulatedSystem/ArticulatedSystem.hpp"
+#include "object/BtObject.hpp"
+#include "object/BtCheckerBoard.hpp"
+#include "object/BtSphere.hpp"
+#include "object/BtCylinder.hpp"
+#include "object/BtBox.hpp"
+#include "object/BtCapsule.hpp"
+#include "object/ArticulatedSystem/BtArticulatedSystem.hpp"
 
 namespace bullet_sim {
 
@@ -45,13 +45,13 @@ struct Single3DContactProblem {
   Eigen::Vector3d normal_;
 };
 
-class World: public benchmark::WorldInterface {
+class BtWorld: public benchmark::WorldInterface {
 
  public:
-  explicit World(SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
-  virtual ~World();
+  explicit BtWorld(SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
+  virtual ~BtWorld();
 
-  object::CheckerBoard *addCheckerboard(double gridSize,
+  object::BtCheckerBoard *addCheckerboard(double gridSize,
                                         double xLength,
                                         double yLength,
                                         double reflectanceI,
@@ -59,31 +59,31 @@ class World: public benchmark::WorldInterface {
                                         benchmark::CollisionGroupType collisionGroup=1,
                                         benchmark::CollisionGroupType collisionMask=-1) override;
 
-  object::Sphere *addSphere(double radius,
+  object::BtSphere *addSphere(double radius,
                             double mass,
                             benchmark::CollisionGroupType collisionGroup=1,
                             benchmark::CollisionGroupType collisionMask=-1) override ;
 
-  object::Box *addBox(double xLength,
+  object::BtBox *addBox(double xLength,
                       double yLength,
                       double zLength,
                       double mass,
                       benchmark::CollisionGroupType collisionGroup=1,
                       benchmark::CollisionGroupType collisionMask=-1) override ;
 
-  object::Capsule *addCapsule(double radius,
+  object::BtCapsule *addCapsule(double radius,
                               double height,
                               double mass,
                               benchmark::CollisionGroupType collisionGroup=1,
                               benchmark::CollisionGroupType collisionMask=-1) override ;
 
-  object::Cylinder *addCylinder(double radius,
+  object::BtCylinder *addCylinder(double radius,
                                 double height,
                                 double mass,
                                 benchmark::CollisionGroupType collisionGroup=1,
                                 benchmark::CollisionGroupType collisionMask=-1) override ;
 
-  object::ArticulatedSystem *addArticulatedSystem(std::string urdfPath,
+  object::BtArticulatedSystem *addArticulatedSystem(std::string urdfPath,
                                                   benchmark::CollisionGroupType collisionGroup=1,
                                                   benchmark::CollisionGroupType collisionMask=-1);
 
@@ -114,7 +114,7 @@ class World: public benchmark::WorldInterface {
   btMLCPSolverInterface* mlcpSolver_ = 0;
 
   // list
-  std::vector<object::Object*> objectList_;
+  std::vector<object::BtObject*> objectList_;
   std::vector<Single3DContactProblem> contactProblemList_;
 
 //  std::vector<int> colIdxToObjIdx_;
