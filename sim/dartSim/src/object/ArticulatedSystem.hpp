@@ -6,6 +6,7 @@
 #define DARTSIM_ARTICULATEDSYSTEM_HPP
 
 #include <dart/dart.hpp>
+#include <dart/math/Geometry.hpp>
 #include <dart/utils/urdf/DartLoader.hpp>
 
 #include "common/interface/ArticulatedSystemInterface.hpp"
@@ -21,6 +22,8 @@ class ArticulatedSystem: public Object,
  public:
   ArticulatedSystem(std::string urdfFile);
   virtual ~ArticulatedSystem();
+
+  void updateVisuals();
 
   virtual const EigenVec getGeneralizedCoordinate() override;
 
@@ -54,6 +57,8 @@ class ArticulatedSystem: public Object,
   virtual void setColor(Eigen::Vector4d color)  override ;
 
  private:
+  void init();
+  void initVisual(dart::dynamics::BodyNode *body);
 
 };
 

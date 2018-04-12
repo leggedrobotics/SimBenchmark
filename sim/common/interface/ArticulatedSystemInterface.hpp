@@ -73,9 +73,6 @@ class ArticulatedSystemInterface {
   std::vector<std::pair<std::string, benchmark::Vec<4>>> visColProps_;
 
  protected:
-  int dof_ = 0;
-  int stateDimension_ = 0;
-
   // generalized states, velocity, force
   benchmark::VecDyn genCoordinate_;
   benchmark::VecDyn genVelocity_;
@@ -84,6 +81,9 @@ class ArticulatedSystemInterface {
   // color
   benchmark::Vec<4> color_ = {1.0, 1.0, 1.0, 1.0};
 
+  int dof_ = 0;
+  int stateDimension_ = 0;
+  bool isFixed_ = true;
 };
 
 } // object

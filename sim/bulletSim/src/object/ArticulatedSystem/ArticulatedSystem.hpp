@@ -81,8 +81,6 @@ class ArticulatedSystem: public bullet_sim::object::Object,
 
   std::vector<int> movableLinkIdx_;
   double maxJointTorque_ = 1000.0;
-
-  bool isFixed_ = true;
 };
 
 } // object

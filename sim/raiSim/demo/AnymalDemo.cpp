@@ -5,7 +5,7 @@
 #include <raiSim/World_RG.hpp>
 
 //#define SIM_TIME_MODE
-#define VIDEO_SAVE_MODE
+//#define VIDEO_SAVE_MODE
 
 int main() {
 
@@ -48,13 +48,15 @@ int main() {
 #if defined(SIM_TIME_MODE)
   StopWatch watch;
   watch.start();
-  for(int i = 0; i < 10000; i++) {
+  for(int i = 0; i < 50000; i++) {
 #else
-    #if defined(VIDEO_SAVE_MODE)
-  sim.startRecordingVideo("/tmp", "raiAnymal");
-#endif
   sim.cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
+#if defined(VIDEO_SAVE_MODE)
+  sim.startRecordingVideo("/tmp", "raiAnymal");
   for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
+#else
+    while(sim.visualizerLoop(0.005, 1.0)) {
+#endif
 #endif
     sim.integrate1(0.005);
 
@@ -70,7 +72,7 @@ int main() {
   }
 
 #if defined(SIM_TIME_MODE)
-  std::cout<<"time taken for 10k steps "<< watch.measure()<<"s \n";
+  std::cout<<"time taken for 50k steps "<< watch.measure()<<"s \n";
 #elif defined(VIDEO_SAVE_MODE)
   sim.stopRecordingVideo();
 #endif

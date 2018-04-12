@@ -24,6 +24,11 @@ class World_RG: public benchmark::World_RG {
   World_RG();
   virtual ~World_RG();
 
+  /////////////////////////////////////
+  /// Visualization related methods ///
+  /////////////////////////////////////
+  virtual void updateFrame() override ;
+
   //////////////////////////////////
   /// adding or removing objects ///
   //////////World////////////////////////

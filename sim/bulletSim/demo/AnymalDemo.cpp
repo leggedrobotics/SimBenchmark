@@ -6,9 +6,14 @@
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define SIM_TIME_MODE
-#define VIDEO_SAVE_MODE
+//#define VIDEO_SAVE_MODE
 
 int main() {
+
+  std::string urdfPath(__FILE__);
+  while (urdfPath.back() != '/')
+    urdfPath.erase(urdfPath.size() - 1, 1);
+  urdfPath += "../../../res/ANYmal/robot.urdf";
 
 #if defined(SIM_TIME_MODE)
   bullet_sim::World_RG sim(bullet_sim::SOLVER_MULTI_BODY);
@@ -17,12 +22,12 @@ int main() {
 #endif
 
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
-  auto anymal = sim.addArticulatedSystem("../../../res/ANYmal/robot.urdf");
+  auto anymal = sim.addArticulatedSystem(urdfPath);
   anymal->setColor({1, 0, 0, 1});
   anymal->setGeneralizedCoordinate(
-      {0, 0, 0.54,
+      {0, 0, 0.5,
        1.0, 0.0, 0.0, 0.0,
-       0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8});
+       0.0, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8});
   anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
@@ -39,13 +44,15 @@ int main() {
 #if defined(SIM_TIME_MODE)
   StopWatch watch;
   watch.start();
-  for(int i = 0; i < 10000; i++) {
+  for(int i = 0; i < 50000; i++) {
 #else
+    sim.cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
 #if defined(VIDEO_SAVE_MODE)
   sim.startRecordingVideo("/tmp", "btAnymal");
-#endif
-  sim.cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
   for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
+#else
+    while(sim.visualizerLoop(0.005, 1.0)) {
+#endif
 #endif
     jointState = anymal->getGeneralizedCoordinate();
     jointVel = anymal->getGeneralizedVelocity();
@@ -58,7 +65,7 @@ int main() {
   }
 
 #if defined(SIM_TIME_MODE)
-  std::cout<<"time taken for 10k steps "<< watch.measure()<<"s \n";
+  std::cout<<"time taken for 50k steps "<< watch.measure()<<"s \n";
 #elif defined(VIDEO_SAVE_MODE)
   sim.stopRecordingVideo();
 #endif

@@ -51,11 +51,8 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   virtual bool isVisualizeFramesAndCom() const override ;
 
  protected:
-  virtual void updateTransform();
-
-  virtual void setBodyPosition(benchmark::Vec<3> position);
-  virtual void setBodyQuaternion(Eigen::Quaterniond &quaternion);
-  virtual void setBodyRotationMatrix(Eigen::Matrix3d rotation);
+  virtual void dartTf2States();
+  virtual void states2DartTf();
 
   dart::dynamics::ShapePtr shapePtr_;
   dart::dynamics::BodyNodePtr bodyPtr_;
@@ -66,8 +63,6 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   benchmark::Vec<3> pos_ = {0.0, 0.0, 0.0};
   benchmark::Vec<3> linVelTemp_ = {0.0, 0.0, 0.0};
   benchmark::Vec<3> angVelTemp_ = {0.0, 0.0, 0.0};
-
-  Eigen::Isometry3d tf_;
 
   double mass_;
   int id_;

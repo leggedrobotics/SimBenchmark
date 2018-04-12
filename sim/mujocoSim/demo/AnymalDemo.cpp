@@ -2,26 +2,65 @@
 // Created by kangd on 18.02.18.
 //
 
+#include <boost/program_options.hpp>
+
 #include "World_RG.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
-//#define SIM_TIME_MODE
+#define SIM_TIME_MODE
 #define VIDEO_SAVE_MODE
 
-int main() {
+namespace po = boost::program_options;
+
+int main(int argc, const char* argv[]) {
+
+  // argument input
+  po::options_description desc("generic");
+  desc.add_options()
+      ("solver", po::value<std::string>(), "contact solver (pgs / cg / newton)")
+      ;
+
+  po::variables_map vm;
+  po::store(po::parse_command_line(argc, argv, desc), vm);
+
+  mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS;
+  if(vm.count("solver")) {
+    if(vm["solver"].as<std::string>().compare("pgs") == 0) {
+      solverOption = mujoco_sim::SOLVER_PGS;
+    }
+    else if(vm["solver"].as<std::string>().compare("cg") == 0) {
+      solverOption = mujoco_sim::SOLVER_CG;
+    }
+    else if(vm["solver"].as<std::string>().compare("newton") == 0) {
+      solverOption = mujoco_sim::SOLVER_NEWTON;
+    } else {
+      RAIFATAL("invalid solver option")
+    }
+  }
+
+  // file path
+  std::string urdfPath(__FILE__);
+  while (urdfPath.back() != '/')
+    urdfPath.erase(urdfPath.size() - 1, 1);
+  urdfPath += "../../../res/mujoco/ANYmal/robot.urdf";
+
+  std::string keyPath(__FILE__);
+  while (keyPath.back() != '/')
+    keyPath.erase(keyPath.size() - 1, 1);
+  keyPath += "../../../lib/mjpro150/mjkey.txt";
 
 #if defined(SIM_TIME_MODE)
-  mujoco_sim::World_RG sim("../../../res/mujoco/ANYmal/robot.urdf",
-                           "../mjkey.txt",
-                           mujoco_sim::SOLVER_PGS);
+  mujoco_sim::World_RG sim(urdfPath.c_str(),
+                           keyPath.c_str(),
+                           solverOption);
 #else
   mujoco_sim::World_RG sim(800,
                            600,
                            0.5,
-                           "../../../res/mujoco/ANYmal/robot.urdf",
-                           "../mjkey.txt",
+                           urdfPath.c_str(),
+                           keyPath.c_str(),
                            benchmark::NO_BACKGROUND,
-                           mujoco_sim::SOLVER_PGS);
+                           solverOption);
   sim.cameraFollowObject(sim.getSingleBodyHandle(sim.getNumObject()-1), {1.0, 1.0, 1.0});
 
   // set color
@@ -43,7 +82,7 @@ int main() {
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
 
   // TODO why kp should be 400 for mjc?
-  const double kp = 40.0, kd = 1.0;
+  const double kp = 400.0, kd = 1.0;
 
   jointNominalConfig << 0, 0, 0,
       1.0, 0, 0, 0,
@@ -52,7 +91,7 @@ int main() {
 #if defined(SIM_TIME_MODE)
   StopWatch watch;
   watch.start();
-  for(int i = 0; i < 10000; i++) {
+  for(int i = 0; i < 50000; i++) {
 #else
 #if defined(VIDEO_SAVE_MODE)
   sim.startRecordingVideo("/tmp", "mjcAnymal");
@@ -70,10 +109,9 @@ int main() {
   }
 
 #if defined(SIM_TIME_MODE)
-  std::cout<<"time taken for 10k steps "<<watch.measure()<<"s \n";
+  std::cout<<"time taken for 50k steps "<<watch.measure()<<"s \n";
 #elif defined(VIDEO_SAVE_MODE)
   sim.stopRecordingVideo();
 #endif
-
   return 0;
 }
