@@ -8,8 +8,6 @@ dart_sim::object::DartCylinder::DartCylinder(double radius,
                                      double height,
                                      double mass,
                                      int id) : DartSingleBodyObject(mass, id) {
-  // skeleton
-  skeletonPtr_ = dart::dynamics::Skeleton::create();
 
   // props
   dart::dynamics::BodyNode::Properties bodyProp;

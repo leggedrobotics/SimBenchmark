@@ -10,9 +10,6 @@ dart_sim::object::DartCheckerBoard::DartCheckerBoard(double xLength, double yLen
   if(shape == benchmark::object::PLANE_SHAPE)
     RAIFATAL("plane shape ground is not supported")
 
-  // skeleton
-  skeletonPtr_ = dart::dynamics::Skeleton::create();
-
   // props
   dart::dynamics::BodyNode::Properties bodyProp;
   bodyProp.mName = "ground_link";

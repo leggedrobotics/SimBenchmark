@@ -9,9 +9,6 @@ namespace object {
 
 DartSphere::DartSphere(double radius, double mass, int id) : DartSingleBodyObject(mass, id) {
 
-  // skeleton
-  skeletonPtr_ = dart::dynamics::Skeleton::create();
-
   // props
   dart::dynamics::BodyNode::Properties bodyProp;
   bodyProp.mName = std::to_string(id) + "_link";

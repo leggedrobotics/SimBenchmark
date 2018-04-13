@@ -43,7 +43,7 @@ object::DartCapsule *DartWorld::addCapsule(double radius,
                                    double mass,
                                    benchmark::CollisionGroupType collisionGroup,
                                    benchmark::CollisionGroupType collisionMask) {
-  auto *capsule = new dart_sim::object::DartCapsule(radius, height, mass, 0);
+  auto *capsule = new dart_sim::object::DartCapsule(radius, height, mass, objectList_.size());
   dynamicsWorld_->addSkeleton(capsule->getSkeletonPtr());
   objectList_.push_back(capsule);
   return capsule;
@@ -67,7 +67,7 @@ object::DartCylinder *DartWorld::addCylinder(double radius,
                                      double mass,
                                      benchmark::CollisionGroupType collisionGroup,
                                      benchmark::CollisionGroupType collisionMask) {
-  auto *cylinder = new dart_sim::object::DartCylinder(radius, height, mass, 0);
+  auto *cylinder = new dart_sim::object::DartCylinder(radius, height, mass, objectList_.size());
   dynamicsWorld_->addSkeleton(cylinder->getSkeletonPtr());
   objectList_.push_back(cylinder);
   return cylinder;

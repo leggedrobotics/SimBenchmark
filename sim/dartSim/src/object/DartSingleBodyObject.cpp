@@ -8,6 +8,7 @@ namespace dart_sim {
 namespace object {
 
 dart_sim::object::DartSingleBodyObject::DartSingleBodyObject(double mass, int id) : mass_(mass), id_(id) {
+  skeletonPtr_ = dart::dynamics::Skeleton::create(std::to_string(id) + "_skel");
 }
 
 DartSingleBodyObject::~DartSingleBodyObject() {
