@@ -51,8 +51,14 @@ class DartSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   virtual bool isVisualizeFramesAndCom() const override ;
 
  protected:
-  virtual void dartTf2States();
-  virtual void states2DartTf();
+
+  virtual void setBodyPosition(Eigen::Vector3d pos);
+  virtual void setBodyQuaternion(Eigen::Quaterniond quat);
+  virtual void setBodyRotationMatrix(Eigen::Matrix3d rotationMatrix);
+
+  virtual void updateBodyPosition();
+  virtual void updateBodyQuaternion();
+  virtual void updateBodyRotationMatrix();
 
   dart::dynamics::ShapePtr shapePtr_;
   dart::dynamics::BodyNodePtr bodyPtr_;
