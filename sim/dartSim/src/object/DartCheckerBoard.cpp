@@ -26,7 +26,13 @@ dart_sim::object::DartCheckerBoard::DartCheckerBoard(double xLength, double yLen
   bodyPtr_ = pair.second;
 
   // shape
-  shapePtr_ = std::make_shared<dart::dynamics::BoxShape>(Eigen::Vector3d(xLength, yLength, 10));
+  if(shape == benchmark::object::BOX_SHAPE) {
+    shapePtr_ = std::make_shared<dart::dynamics::BoxShape>(Eigen::Vector3d(xLength, yLength, 10));
+  }
+  else if(shape == benchmark::object::PLANE_SHAPE) {
+    shapePtr_ = std::make_shared<dart::dynamics::PlaneShape>(Eigen::Vector3d(0, 0, 1), 0);
+  }
+
   auto shapeNode = bodyPtr_->createShapeNodeWith<
       dart::dynamics::CollisionAspect,
       dart::dynamics::DynamicsAspect>(shapePtr_);

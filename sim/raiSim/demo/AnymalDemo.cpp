@@ -32,9 +32,11 @@ int main() {
 
   auto anymal = sim.addArticulatedSystem(urdfPath);
   anymal->setGeneralizedCoordinate({0, 0, 0.54,
-                                    1.0, 0.0, 0.0, 0.0, 0.03, 0.4,
-                                    -0.8, -0.03, 0.4, -0.8, 0.03, -0.4,
-                                    0.8, -0.03, -0.4, 0.8});
+                                    1.0, 0.0, 0.0, 0.0,
+                                    0.03, 0.4, -0.8,
+                                    -0.03, 0.4, -0.8,
+                                    0.03, -0.4, 0.8,
+                                    -0.03, -0.4, 0.8});
   anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 

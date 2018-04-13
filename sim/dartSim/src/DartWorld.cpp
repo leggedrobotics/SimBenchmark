@@ -56,8 +56,6 @@ object::DartCheckerBoard *DartWorld::addCheckerboard(double gridSize,
                                              bo::CheckerboardShape shape,
                                              benchmark::CollisionGroupType collisionGroup,
                                              benchmark::CollisionGroupType collisionMask) {
-  RAIFATAL_IF(shape == bo::PLANE_SHAPE, "plane shape ground is not supported")
-
   auto *checkerBoard = new dart_sim::object::DartCheckerBoard(xLength, yLength, shape, objectList_.size());
   dynamicsWorld_->addSkeleton(checkerBoard->getSkeletonPtr());
   objectList_.push_back(checkerBoard);
