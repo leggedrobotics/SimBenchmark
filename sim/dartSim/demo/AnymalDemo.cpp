@@ -15,7 +15,7 @@ int main() {
   urdfPath += "../../../res/ANYmal/robot.urdf";
 
 #ifdef SIM_TIME_MODE
-  dart_sim::World_RG sim;
+  dart_sim::DartWorld_RG sim;
 #else
   dart_sim::DartWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 #endif
@@ -23,7 +23,7 @@ int main() {
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   auto anymal = sim.addArticulatedSystem(urdfPath);
   anymal->setGeneralizedCoordinate(
-      {0, 0, 5.4,
+      {0, 0, 1.0,
        1.0, 0.0, 0.0, 0.0,
        0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8});
   anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
@@ -59,7 +59,7 @@ int main() {
   }
 
 #ifdef SIM_TIME_MODE
-  std::cout<<"time taken for 10k steps "<< watch.measure()<<"s \n";
+  std::cout << "time taken for 50k steps " << watch.measure() << "s \n";
 #endif
 
   return 0;

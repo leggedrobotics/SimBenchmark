@@ -58,6 +58,79 @@ void DartArticulatedSystem::updateVisuals() {
 
 void DartArticulatedSystem::initVisual(dart::dynamics::BodyNode *body) {
 
+  /// visual node
+  for(int i = 0; i < body->getNumShapeNodesWith<dart::dynamics::VisualAspect>(); i++) {
+
+    // shape
+    dart::dynamics::ShapeNodePtr shapeNodePtr =
+        body->getShapeNodesWith<dart::dynamics::VisualAspect>()[i];
+    dart::dynamics::ShapePtr shape = shapeNodePtr->getShape();
+
+    Eigen::Isometry3d tf = shapeNodePtr->getWorldTransform();
+
+    // orientation
+    benchmark::Mat<3, 3> mat;
+    Eigen::Matrix3d rotMat = tf.linear();
+    mat.e() = rotMat;
+
+    // position
+    benchmark::Vec<3> position = {tf.translation().x(),
+                                  tf.translation().y(),
+                                  tf.translation().z()};
+
+    if(shape->is<dart::dynamics::BoxShape>()) {
+      // box
+      Eigen::Vector3d size = std::static_pointer_cast<dart::dynamics::BoxShape>(shape)->getSize();
+      benchmark::Vec<4> boxSize;
+      boxSize = {
+          size[0], size[1], size[2]
+      };
+
+      visObj.emplace_back(std::make_tuple(mat, position, i, benchmark::object::Shape::Box, color_));
+      visProps_.emplace_back(std::make_pair("", boxSize));
+    }
+    else if(shape->is<dart::dynamics::SphereShape>()) {
+      // sphere
+      double radius = std::static_pointer_cast<dart::dynamics::SphereShape>(shape)->getRadius();
+      benchmark::Vec<4> sphereSize;
+      sphereSize = {
+          radius, 0, 0
+      };
+
+      visObj.emplace_back(std::make_tuple(mat, position, i, benchmark::object::Shape::Sphere, color_));
+      visProps_.emplace_back(std::make_pair("", sphereSize));
+    }
+    else if(shape->is<dart::dynamics::CylinderShape>()) {
+      // cylinder
+      double radius = std::static_pointer_cast<dart::dynamics::CylinderShape>(shape)->getRadius();
+      double height = std::static_pointer_cast<dart::dynamics::CylinderShape>(shape)->getHeight();
+      benchmark::Vec<4> cylSize;
+      cylSize = {
+          radius, height, 0
+      };
+
+      visObj.emplace_back(std::make_tuple(mat, position, i, benchmark::object::Shape::Cylinder, color_));
+      visProps_.emplace_back(std::make_pair("", cylSize));
+    }
+    else if(shape->is<dart::dynamics::MeshShape>()) {
+      // mesh
+      Eigen::Vector3d scale = std::static_pointer_cast<dart::dynamics::MeshShape>(shape)->getScale();
+      std::string meshPath = std::static_pointer_cast<dart::dynamics::MeshShape>(shape)->getMeshPath();
+      benchmark::Vec<4> meshSize;
+      meshSize = {
+          scale[0], scale[1], scale[2]
+      };
+
+      visObj.emplace_back(std::make_tuple(mat, position, i, benchmark::object::Shape::Mesh, color_));
+      visProps_.emplace_back(std::make_pair(meshPath, meshSize));
+    }
+    else {
+      // else
+      RAIFATAL("not supported shape")
+    }
+  }
+
+  /// collision node
   for(int i = 0; i < body->getNumShapeNodesWith<dart::dynamics::CollisionAspect>(); i++) {
 
     // shape
@@ -85,9 +158,7 @@ void DartArticulatedSystem::initVisual(dart::dynamics::BodyNode *body) {
           size[0], size[1], size[2]
       };
 
-      visObj.emplace_back(std::make_tuple(mat, position, i, benchmark::object::Shape::Box, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, i, benchmark::object::Shape::Box));
-      visProps_.emplace_back(std::make_pair("", boxSize));
       visColProps_.emplace_back(std::make_pair("", boxSize));
     }
     else if(shape->is<dart::dynamics::SphereShape>()) {
@@ -98,9 +169,7 @@ void DartArticulatedSystem::initVisual(dart::dynamics::BodyNode *body) {
           radius, 0, 0
       };
 
-      visObj.emplace_back(std::make_tuple(mat, position, i, benchmark::object::Shape::Sphere, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, i, benchmark::object::Shape::Sphere));
-      visProps_.emplace_back(std::make_pair("", sphereSize));
       visColProps_.emplace_back(std::make_pair("", sphereSize));
     }
     else if(shape->is<dart::dynamics::CylinderShape>()) {
@@ -112,9 +181,7 @@ void DartArticulatedSystem::initVisual(dart::dynamics::BodyNode *body) {
           radius, height, 0
       };
 
-      visObj.emplace_back(std::make_tuple(mat, position, i, benchmark::object::Shape::Cylinder, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, i, benchmark::object::Shape::Cylinder));
-      visProps_.emplace_back(std::make_pair("", cylSize));
       visColProps_.emplace_back(std::make_pair("", cylSize));
     }
     else {
@@ -130,11 +197,32 @@ void DartArticulatedSystem::initVisual(dart::dynamics::BodyNode *body) {
 
 const benchmark::object::ArticulatedSystemInterface::EigenVec DartArticulatedSystem::getGeneralizedCoordinate() {
   Eigen::VectorXd pos = skeletonPtr_->getPositions();
-  // TODO floating base
-  for(int i = 0; i < dof_; i++) {
-    genCoordinate_[i] = pos[i];
+  if(isFixed_){
+    // fixed base
+    for(int i = 0; i < stateDimension_; i++) {
+      genCoordinate_[i] = pos[i];
+    }
+    return genCoordinate_.e();
+  } else  {
+    // floating base
+    Eigen::Quaterniond quaternion = dart::math::expToQuat(Eigen::Vector3d(pos[0], pos[1], pos[2]));
+
+    // rotation
+    genCoordinate_[3] = quaternion.w();
+    genCoordinate_[4] = quaternion.x();
+    genCoordinate_[5] = quaternion.y();
+    genCoordinate_[6] = quaternion.z();
+
+    // position
+    genCoordinate_[0] = pos[3];
+    genCoordinate_[1] = pos[4];
+    genCoordinate_[2] = pos[5];
+
+    for(int i = 7; i < stateDimension_; i++) {
+      genCoordinate_[i] = pos[i-1];
+    }
+    return genCoordinate_.e();
   }
-  return genCoordinate_.e();
 }
 
 const benchmark::object::ArticulatedSystemInterface::EigenVec DartArticulatedSystem::getGeneralizedVelocity() {
