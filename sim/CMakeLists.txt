@@ -23,6 +23,7 @@ if(BENCHMARK_BULLET)
 endif(BENCHMARK_BULLET)
 
 if(BENCHMARK_ODE)
+    message(STATUS "Benchmark ODE")
     add_subdirectory(odeSim)
 endif(BENCHMARK_ODE)
 

@@ -2,16 +2,16 @@
 // Created by kangd on 15.02.18.
 //
 
-#include "Capsule.hpp"
+#include "OdeCapsule.hpp"
 
-ode_sim::object::Capsule::Capsule(double radius,
+ode_sim::object::OdeCapsule::OdeCapsule(double radius,
                                   double height,
                                   double mass,
                                   dWorldID worldID,
                                   dSpaceID spaceID,
                                   benchmark::CollisionGroupType collisionGroup,
                                   benchmark::CollisionGroupType collisionMask)
-    : SingleBodyObject(worldID, spaceID) {
+    : OdeSingleBodyObject(worldID, spaceID) {
 
 
   // body

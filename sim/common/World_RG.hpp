@@ -61,14 +61,29 @@ class World_RG {
                                            benchmark::CollisionGroupType collisionMask = -1,
                                            int flags = 0) = 0;
 
-  virtual SingleBodyHandle addSphere(double radius, double mass,
-                                     benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask=-1) = 0;
-  virtual SingleBodyHandle addBox(double xLength, double yLength, double zLength, double mass,
-                                  benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask = -1) = 0;
-  virtual SingleBodyHandle addCylinder(double radius, double height, double mass,
-                                       benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask=-1) = 0;
-  virtual SingleBodyHandle addCapsule(double radius, double height, double mass,
-                                      benchmark::CollisionGroupType collisionGroup = 1, benchmark::CollisionGroupType collisionMask=-1) = 0;
+  virtual SingleBodyHandle addSphere(double radius,
+                                     double mass,
+                                     benchmark::CollisionGroupType collisionGroup = 1,
+                                     benchmark::CollisionGroupType collisionMask=-1) = 0;
+
+  virtual SingleBodyHandle addBox(double xLength,
+                                  double yLength,
+                                  double zLength,
+                                  double mass,
+                                  benchmark::CollisionGroupType collisionGroup = 1,
+                                  benchmark::CollisionGroupType collisionMask = -1) = 0;
+
+  virtual SingleBodyHandle addCylinder(double radius,
+                                       double height,
+                                       double mass,
+                                       benchmark::CollisionGroupType collisionGroup = 1,
+                                       benchmark::CollisionGroupType collisionMask=-1) = 0;
+
+  virtual SingleBodyHandle addCapsule(double radius,
+                                      double height,
+                                      double mass,
+                                      benchmark::CollisionGroupType collisionGroup = 1,
+                                      benchmark::CollisionGroupType collisionMask=-1) = 0;
 
   virtual int getNumObject() = 0;
 

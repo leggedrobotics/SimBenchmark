@@ -2,10 +2,9 @@
 // Created by kangd on 11.02.18.
 //
 
-#include <Configure.hpp>
-#include "Box.hpp"
+#include "OdeBox.hpp"
 
-ode_sim::object::Box::Box(double xlength,
+ode_sim::object::OdeBox::OdeBox(double xlength,
                           double ylength,
                           double zlength,
                           double mass,
@@ -13,7 +12,7 @@ ode_sim::object::Box::Box(double xlength,
                           dSpaceID spaceID,
                           benchmark::CollisionGroupType collisionGroup,
                           benchmark::CollisionGroupType collisionMask)
-    : SingleBodyObject(worldID, spaceID) {
+    : OdeSingleBodyObject(worldID, spaceID) {
 
   // body
   body_ = dBodyCreate(worldID);
@@ -46,5 +45,5 @@ ode_sim::object::Box::Box(double xlength,
   dBodySetGyroscopicMode(body_, true);
 }
 
-ode_sim::object::Box::~Box() {
+ode_sim::object::OdeBox::~OdeBox() {
 }

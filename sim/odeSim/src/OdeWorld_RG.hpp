@@ -8,28 +8,29 @@
 #define RAI_COLLISION(x) (1<<(x))
 
 #include <raiGraphics/RAI_graphics.hpp>
-#include <raiSim/math.hpp>
 
-#include "base/World_RG.hpp"
-#include "Configure.hpp"
-#include "World.hpp"
+#include "common/math.hpp"
+#include "common/World_RG.hpp"
+#include "common/Configure.hpp"
+
+#include "OdeWorld.hpp"
 
 namespace ode_sim {
 
-class World_RG: public benchmark::World_RG {
+class OdeWorld_RG: public benchmark::World_RG {
 
  public:
 
   /* constructor for visualization */
-  World_RG(int windowWidth,
-           int windowHeight,
-           float cms,
-           int flags = 0,
-           SolverOption solverOption = SOLVER_STANDARD);
+  OdeWorld_RG(int windowWidth,
+              int windowHeight,
+              float cms,
+              int flags = 0,
+              SolverOption solverOption = SOLVER_STANDARD);
 
   /* constructor for no visualization */
-  World_RG(SolverOption solverOption = SOLVER_STANDARD);
-  virtual ~World_RG();
+  OdeWorld_RG(SolverOption solverOption = SOLVER_STANDARD);
+  virtual ~OdeWorld_RG();
 
   //////////////////////////////////
   /// adding or removing objects ///
@@ -38,24 +39,36 @@ class World_RG: public benchmark::World_RG {
                                         double mass,
                                         benchmark::CollisionGroupType collisionGroup = 1,
                                         benchmark::CollisionGroupType collisionMask=-1) override ;
+
   benchmark::SingleBodyHandle addBox(double xLength,
                                      double yLength,
                                      double zLength,
                                      double mass,
                                      benchmark::CollisionGroupType collisionGroup = 1,
                                      benchmark::CollisionGroupType collisionMask = -1) override ;
+
   benchmark::SingleBodyHandle addCheckerboard(double gridSize,
                                               double xLength,
                                               double yLength,
                                               double reflectanceI,
+                                              bo::CheckerboardShape shape = bo::PLANE_SHAPE,
                                               benchmark::CollisionGroupType collisionGroup = 1,
                                               benchmark::CollisionGroupType collisionMask = -1,
                                               int flags = 0) override ;
+
   benchmark::SingleBodyHandle addCapsule(double radius,
                                          double height,
                                          double mass,
                                          benchmark::CollisionGroupType collisionGroup = 1,
                                          benchmark::CollisionGroupType collisionMask=-1) override ;
+
+  benchmark::SingleBodyHandle addCylinder(double radius,
+                                          double height,
+                                          double mass,
+                                          benchmark::CollisionGroupType collisionGroup = 1,
+                                          benchmark::CollisionGroupType collisionMask=-1) override ;
+
+  int getNumObject() override ;
 
   //////////////////////////
   /// simulation methods ///
@@ -65,7 +78,7 @@ class World_RG: public benchmark::World_RG {
   void setERP(double erp, double erp2, double frictionErp) override ;
 
  private:
-  ode_sim::World world_;
+  ode_sim::OdeWorld world_;
 
 };
 

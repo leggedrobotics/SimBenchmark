@@ -2,10 +2,11 @@
 
 ROOT_DIR = "$PWD"
 
-raisim_flag=''
-bullet_flag=''
-ode_flag=''
-mujoco_flag=''
+raisim_flag='OFF'
+bullet_flag='OFF'
+ode_flag='OFF'
+mujoco_flag='OFF'
+dart_flag='OFF'
 
 # sim bench logo
 echo "------------------------------------------------------------------------------"
@@ -19,18 +20,54 @@ echo "                                                                          
 echo "------------------------------------------------------------------------------"
 
 # select sim engines
-echo "Do you want to install and benchmark Bullet Physics [y/n]?"
-read answer
-echo "Do you want to install and benchmark ODE [y/n]?"
-read answer
-echo "Do you want to install and benchmark MuJoCo [y/n]?"
-read answer
-echo "Do you want to install and benchmark DART [y/n]?"
-read answer
+while true; do
+    read -p "Do you want to install and benchmark raiSim [y/n]? " yn
+    case $yn in
+        [Yy]* ) raisim_flag='ON'; break;;
+        [Nn]* ) raisim_flag='OFF'; break;;
+        * ) echo "Please answer y or n.";;
+    esac
+done
+
+while true; do
+    read -p "Do you want to install and benchmark Bullet Physics [y/n]? " yn
+    case $yn in
+        [Yy]* ) bullet_flag='ON'; break;;
+        [Nn]* ) bullet_flag='OFF'; break;;
+        * ) echo "Please answer y or n.";;
+    esac
+done
+
+while true; do
+    read -p "Do you want to install and benchmark ODE [y/n]? " yn
+    case $yn in
+        [Yy]* ) ode_flag='ON'; break;;
+        [Nn]* ) ode_flag='OFF'; break;;
+        * ) echo "Please answer y or n.";;
+    esac
+done
+
+while true; do
+    read -p "Do you want to install and benchmark MuJoCo [y/n]? " yn
+    case $yn in
+        [Yy]* ) mujoco_flag='ON'; break;;
+        [Nn]* ) mujoco_flag='OFF'; break;;
+        * ) echo "Please answer y or n.";;
+    esac
+done
+
+while true; do
+    read -p "Do you want to install and benchmark DART [y/n]? " yn
+    case $yn in
+        [Yy]* ) dart_flag='ON'; break;;
+        [Nn]* ) dart_flag='OFF'; break;;
+        * ) echo "Please answer y or n.";;
+    esac
+done
 
 # install dependencies
 echo "Install dependencies..."
-sudo rm -rf $ROOT_DIR/lib/*
+#sudo rm -rf $ROOT_DIR/lib/mjpro150
 
 # check if git is installed
 echo "Check if git is installed."
@@ -38,7 +75,7 @@ if dpkg-query -W -f'${Status}' "git" 2>/dev/null | grep -q "ok installed"; then
     echo "git is installed."
 else
     echo "git is not installed. stop installing benchmark"
-    exit 1
+    exit -1
 fi
 
 # install raiCommon
@@ -72,13 +109,13 @@ cmake ../
 sudo make install -j4
 
 # install raiSim (optional)
-if [ "$raisim_flag" == 'true' ]; then
+if [ "$raisim_flag" == 'ON' ]; then
     echo "Installing raiSim..."
     echo "raiSim is currently only available for raiSim developers."
 fi
 
 # install bullet (optional)
-if [ "$bullet_flag" == 'true' ]; then
+if [ "$bullet_flag" == 'ON' ]; then
     echo "Installing Bullet..."
     cd $ROOT_DIR/lib
     git clone https://github.com/bulletphysics/bullet3.git
@@ -88,14 +125,14 @@ if [ "$bullet_flag" == 'true' ]; then
 fi
 
 # install ode (optional)
-if [ "$ode_flag" == 'true' ]; then
+if [ "$ode_flag" == 'ON' ]; then
     echo "Installing ODE... (0.15.2 version)"
     cd $ROOT_DIR/lib
     wget https://bitbucket.org/odedevs/ode/downloads/ode-0.15.2.tar.gz
 fi
 
 # install mujoco (optional)
-if [ "mujoco_flag" == 'true' ]; then
+if [ "mujoco_flag" == 'ON' ]; then
     echo "Installing MuJoCo... (1.50 version)"
     cd $ROOT_DIR/lib
     unzip mjpro150_linux.zip

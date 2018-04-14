@@ -2,17 +2,15 @@
 // Created by kangd on 13.02.18.
 //
 
-#include <Configure.hpp>
-#include "odeSim/object/Sphere.hpp"
-#include "SingleBodyObject.hpp"
+#include "OdeSphere.hpp"
 
-ode_sim::object::Sphere::Sphere(double radius,
-                                double mass,
-                                dWorldID worldID,
-                                dSpaceID spaceID,
-                                benchmark::CollisionGroupType collisionGroup,
-                                benchmark::CollisionGroupType collisionMask)
-    : SingleBodyObject(worldID, spaceID) {
+ode_sim::object::OdeSphere::OdeSphere(double radius,
+                                      double mass,
+                                      dWorldID worldID,
+                                      dSpaceID spaceID,
+                                      benchmark::CollisionGroupType collisionGroup,
+                                      benchmark::CollisionGroupType collisionMask)
+    : OdeSingleBodyObject(worldID, spaceID) {
 
   // body
   body_ = dBodyCreate(worldID);

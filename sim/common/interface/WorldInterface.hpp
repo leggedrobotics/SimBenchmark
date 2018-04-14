@@ -50,6 +50,7 @@ class WorldInterface {
 
 
   virtual void setGravity(const benchmark::Vec<3> &gravity) = 0;
+
   virtual int getNumObject() = 0;
 
   virtual void integrate(double dt) = 0;

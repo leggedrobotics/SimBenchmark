@@ -2,7 +2,7 @@
 // Created by kangd on 12.02.18.
 //
 
-#include "odeSim/World_RG.hpp"
+#include "OdeWorld_RG.hpp"
 
 enum Object {
   BOX,
@@ -12,9 +12,9 @@ enum Object {
 
 int main() {
 
-  ode_sim::World_RG sim(800, 600, 0.5,
-                        benchmark::NO_BACKGROUND,
-                        ode_sim::SOLVER_STANDARD);
+  ode_sim::OdeWorld_RG sim(800, 600, 0.5,
+                           benchmark::NO_BACKGROUND,
+                           ode_sim::SOLVER_STANDARD);
   sim.setGravity({0, 0, -9.8});
   sim.setLightPosition(30, 0, 10);
 

@@ -4,28 +4,43 @@ set(CMAKE_CXX_FLAGS_DEBUG
 set(CMAKE_CXX_FLAGS_RELEASE
         "-Wl,--no-as-needed -O3 -mtune=native -march=native")
 
-if(BENCHMARK_ODE AND ode_FOUND)
-    message(STATUS "ODE installation was found in local path")
+# ode double precision
+add_definitions(-DODE_DOUBLE_PRECISION)
 
-    set(ODESim_SRCS
-            World.hpp
-            World.cpp
-            World_RG.hpp
-            World_RG.cpp
-            object/SingleBodyObject.hpp
-            object/SingleBodyObject.cpp
-            object/Box.hpp
-            object/Box.cpp
-            object/CheckerBoard.hpp
-            object/CheckerBoard.cpp
-            object/Sphere.cpp
-            object/Sphere.hpp
-            object/Capsule.hpp
-            object/Capsule.cpp
-            )
+find_package(ode CONFIG REQUIRED)
+include_directories(${ODE_INCLUDE_DIRS})
 
-    add_library(ODESimLib ${ODESim_SRCS})
-    target_link_libraries(ODESimLib
-            ode
-    )
-endif()
+# source
+include_directories(src)
+
+set(ODESim_SRCS
+        src/OdeWorld.hpp
+        src/OdeWorld.cpp
+        src/OdeWorld_RG.hpp
+        src/OdeWorld_RG.cpp
+        src/object/OdeSingleBodyObject.hpp
+        src/object/OdeSingleBodyObject.cpp
+        src/object/OdeBox.hpp
+        src/object/OdeBox.cpp
+        src/object/OdeCheckerBoard.hpp
+        src/object/OdeCheckerBoard.cpp
+        src/object/OdeSphere.cpp
+        src/object/OdeSphere.hpp
+        src/object/OdeCapsule.hpp
+        src/object/OdeCapsule.cpp
+        src/object/OdeCylinder.cpp src/object/OdeCylinder.hpp)
+
+# library
+add_library(ODESimLib ${ODESim_SRCS})
+target_link_libraries(ODESimLib
+        ode
+        )
+
+# link
+set(ODESimLink
+        ODESimLib
+        ${BENCHMARK_LINK}
+        )
+
+# sub-directories
+add_subdirectory(demo)

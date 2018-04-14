@@ -18,7 +18,7 @@ endif()
 # options
 option(BENCHMARK_RAISIM "benchmark raiSim" ON)
 option(BENCHMARK_BULLET "benchmark Bullet" ON)
-option(BENCHMARK_ODE "benchmark ODE" OFF)
+option(BENCHMARK_ODE "benchmark ODE" ON)
 option(BENCHMARK_MUJOCO "benchmark MUJOCO" ON)
 option(BENCHMARK_DART "benchmark DART" ON)
 
@@ -48,17 +48,6 @@ include_directories(${YAML_CPP_INCLUDE_DIR})
 find_package( Boost COMPONENTS system filesystem program_options REQUIRED )
 include_directories( ${Boost_INCLUDE_DIR} )
 link_directories(${Boost_LIBRARY_DIRS})
-
-# ode (optional)
-if(BENCHMARK_ODE)
-    message(STATUS "Benchmark ODE")
-
-    # ode double precision
-    add_definitions(-DODE_DOUBLE_PRECISION)
-
-    find_package(ode CONFIG REQUIRED)
-    include_directories(${ODE_INCLUDE_DIRS})
-endif()
 
 ## =========================== LINK ===========================
 set(BENCHMARK_LINK
