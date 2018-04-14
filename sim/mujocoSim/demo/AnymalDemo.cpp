@@ -4,7 +4,7 @@
 
 #include <boost/program_options.hpp>
 
-#include "World_RG.hpp"
+#include "MjcWorld_RG.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
 #define SIM_TIME_MODE
@@ -50,7 +50,7 @@ int main(int argc, const char* argv[]) {
   keyPath += "../../../lib/mjpro150/mjkey.txt";
 
 #if defined(SIM_TIME_MODE)
-  mujoco_sim::World_RG sim(urdfPath.c_str(),
+  mujoco_sim::MjcWorld_RG sim(urdfPath.c_str(),
                            keyPath.c_str(),
                            solverOption);
 #else

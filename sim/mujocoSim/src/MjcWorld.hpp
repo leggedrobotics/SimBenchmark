@@ -10,11 +10,11 @@
 #include "common/Configure.hpp"
 #include "common/interface/WorldInterface.hpp"
 
-#include "object/Sphere.hpp"
-#include "object/Box.hpp"
-#include "object/Capsule.hpp"
-#include "object/CheckerBoard.hpp"
-#include "object/Cylinder.hpp"
+#include "object/MjcSphere.hpp"
+#include "object/MjcBox.hpp"
+#include "object/MjcCapsule.hpp"
+#include "object/MjcCheckerBoard.hpp"
+#include "object/MjcCylinder.hpp"
 
 namespace mujoco_sim {
 
@@ -27,28 +27,28 @@ enum SolverOption {
   SOLVER_NEWTON
 };
 
-class World: public benchmark::WorldInterface {
+class MjcWorld: public benchmark::WorldInterface {
 
  public:
-  World(const char *modelPath,
+  MjcWorld(const char *modelPath,
           const char *keyPath,
           SolverOption solverOption);
-  virtual ~World();
+  virtual ~MjcWorld();
 
   /// note: use last two parameters as bodyId and geomId rather than collisionGroup and collisionMask
-  object::Sphere *addSphere(double radius,
+  object::MjcSphere *addSphere(double radius,
                             double mass,
                             int bodyId,
                             int geomId) override ;
 
-  object::Box *addBox(double xLength,
+  object::MjcBox *addBox(double xLength,
                       double yLength,
                       double zLength,
                       double mass,
                       int bodyId,
                       int geomId) override;
 
-  object::CheckerBoard *addCheckerboard(double gridSize,
+  object::MjcCheckerBoard *addCheckerboard(double gridSize,
                                         double xLength,
                                         double yLength,
                                         double reflectanceI,
@@ -56,13 +56,13 @@ class World: public benchmark::WorldInterface {
                                         int bodyId,
                                         int geomId) override;
 
-  object::Capsule *addCapsule(double radius,
+  object::MjcCapsule *addCapsule(double radius,
                               double height,
                               double mass,
                               int bodyId,
                               int geomId) override;
 
-  object::Cylinder *addCylinder(double radius,
+  object::MjcCylinder *addCylinder(double radius,
                                 double height,
                                 double mass,
                                 int bodyId,
@@ -106,7 +106,7 @@ class World: public benchmark::WorldInterface {
   mjOption *simOption_;
 
   // list
-  std::vector<object::SingleBodyObject*> objectList_;
+  std::vector<object::MjcSingleBodyObject*> objectList_;
 
   // generalized coordinate
   benchmark::VecDyn generalizedCoordinate_;

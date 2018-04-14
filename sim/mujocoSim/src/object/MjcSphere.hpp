@@ -5,20 +5,20 @@
 #ifndef MUJOCOSIM_SPHERE_HPP
 #define MUJOCOSIM_SPHERE_HPP
 
-#include "SingleBodyObject.hpp"
+#include "MjcSingleBodyObject.hpp"
 
 namespace mujoco_sim {
 namespace object {
 
-class Sphere: public SingleBodyObject {
+class MjcSphere: public MjcSingleBodyObject {
 
  public:
-  Sphere(double radius,
-           double mass,
-           mjData *data,
-           mjModel *model,
-           int bodyId,
-           int geomId);
+  MjcSphere(double radius,
+            double mass,
+            mjData *data,
+            mjModel *model,
+            int bodyId,
+            int geomId);
 
  private:
   double radius_;

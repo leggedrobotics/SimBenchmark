@@ -2,12 +2,12 @@
 // Created by kangd on 18.02.18.
 //
 
-#include "World_RG.hpp"
+#include "MjcWorld_RG.hpp"
 
 // the mass data is from XML
 #define MJC_MASS_FROM_XML -1
 
-mujoco_sim::World_RG::World_RG(int windowWidth,
+mujoco_sim::MjcWorld_RG::MjcWorld_RG(int windowWidth,
                                int windowHeight,
                                float cms,
                                const char *modelPath,
@@ -19,7 +19,7 @@ mujoco_sim::World_RG::World_RG(int windowWidth,
   initFromModel();
 }
 
-mujoco_sim::World_RG::World_RG(const char *modelPath,
+mujoco_sim::MjcWorld_RG::MjcWorld_RG(const char *modelPath,
                                const char *keyPath,
                                mujoco_sim::SolverOption solverOption) :
     world_(modelPath, keyPath, solverOption),
@@ -27,7 +27,7 @@ mujoco_sim::World_RG::World_RG(const char *modelPath,
   initFromModel();
 }
 
-void mujoco_sim::World_RG::initFromModel() {
+void mujoco_sim::MjcWorld_RG::initFromModel() {
 
   mjModel *model = world_.getWorldModel();
 
@@ -84,11 +84,11 @@ void mujoco_sim::World_RG::initFromModel() {
   }
 }
 
-mujoco_sim::World_RG::~World_RG() {
+mujoco_sim::MjcWorld_RG::~MjcWorld_RG() {
 
 }
 
-benchmark::SingleBodyHandle mujoco_sim::World_RG::addSphere(double radius,
+benchmark::SingleBodyHandle mujoco_sim::MjcWorld_RG::addSphere(double radius,
                                                             double mass,
                                                             int bodyId,
                                                             int geomId) {
@@ -98,7 +98,7 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addSphere(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle mujoco_sim::World_RG::addBox(double xLength,
+benchmark::SingleBodyHandle mujoco_sim::MjcWorld_RG::addBox(double xLength,
                                                          double yLength,
                                                          double zLength,
                                                          double mass,
@@ -110,7 +110,7 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addBox(double xLength,
   return handle;
 }
 
-benchmark::SingleBodyHandle mujoco_sim::World_RG::addCheckerboard(double gridSize,
+benchmark::SingleBodyHandle mujoco_sim::MjcWorld_RG::addCheckerboard(double gridSize,
                                                                   double xLength,
                                                                   double yLength,
                                                                   double reflectanceI,
@@ -129,7 +129,7 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addCheckerboard(double gridSiz
   return handle;
 }
 
-benchmark::SingleBodyHandle mujoco_sim::World_RG::addCapsule(double radius,
+benchmark::SingleBodyHandle mujoco_sim::MjcWorld_RG::addCapsule(double radius,
                                                              double height,
                                                              double mass,
                                                              int bodyId,
@@ -140,7 +140,7 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addCapsule(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle mujoco_sim::World_RG::addCylinder(double radius,
+benchmark::SingleBodyHandle mujoco_sim::MjcWorld_RG::addCylinder(double radius,
                                                               double height,
                                                               double mass,
                                                               int bodyId,
@@ -151,64 +151,64 @@ benchmark::SingleBodyHandle mujoco_sim::World_RG::addCylinder(double radius,
   return handle;
 }
 
-void mujoco_sim::World_RG::integrate(double dt) {
+void mujoco_sim::MjcWorld_RG::integrate(double dt) {
   world_.integrate(dt);
 }
 
-void mujoco_sim::World_RG::setGravity(Eigen::Vector3d gravity) {
+void mujoco_sim::MjcWorld_RG::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity[0], gravity[1], gravity[2]});
 }
 
-void mujoco_sim::World_RG::setERP(double erp, double erp2, double frictionErp) {}
-benchmark::SingleBodyHandle mujoco_sim::World_RG::getSingleBodyHandle(int index) {
+void mujoco_sim::MjcWorld_RG::setERP(double erp, double erp2, double frictionErp) {}
+benchmark::SingleBodyHandle mujoco_sim::MjcWorld_RG::getSingleBodyHandle(int index) {
   if(index > sbHandles_.size())
   RAIFATAL("get singlebody handle failed. invalid index");
   return sbHandles_[index];
 }
-const mujoco_sim::EigenVec mujoco_sim::World_RG::getGeneralizedCoordinate() {
+const mujoco_sim::EigenVec mujoco_sim::MjcWorld_RG::getGeneralizedCoordinate() {
   return world_.getGeneralizedCoordinate();
 }
-const mujoco_sim::EigenVec mujoco_sim::World_RG::getGeneralizedVelocity() {
+const mujoco_sim::EigenVec mujoco_sim::MjcWorld_RG::getGeneralizedVelocity() {
   return world_.getGeneralizedVelocity();
 }
-void mujoco_sim::World_RG::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
+void mujoco_sim::MjcWorld_RG::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
   world_.setGeneralizedCoordinate(jointState);
 }
-void mujoco_sim::World_RG::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
+void mujoco_sim::MjcWorld_RG::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
   world_.setGeneralizedVelocity(jointVel);
 }
-void mujoco_sim::World_RG::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
+void mujoco_sim::MjcWorld_RG::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
   world_.setGeneralizedCoordinate(jointState);
 }
-void mujoco_sim::World_RG::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+void mujoco_sim::MjcWorld_RG::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
   world_.setGeneralizedVelocity(jointVel);
 }
-void mujoco_sim::World_RG::setGeneralizedForce(std::initializer_list<double> tau) {
+void mujoco_sim::MjcWorld_RG::setGeneralizedForce(std::initializer_list<double> tau) {
   world_.setGeneralizedForce(tau);
 }
-void mujoco_sim::World_RG::setGeneralizedForce(const Eigen::VectorXd &tau) {
+void mujoco_sim::MjcWorld_RG::setGeneralizedForce(const Eigen::VectorXd &tau) {
   world_.setGeneralizedForce(tau);
 }
-void mujoco_sim::World_RG::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
+void mujoco_sim::MjcWorld_RG::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
   world_.getState(genco, genvel);
 }
-void mujoco_sim::World_RG::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
+void mujoco_sim::MjcWorld_RG::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
   world_.setState(genco, genvel);
 }
-const mujoco_sim::EigenVec mujoco_sim::World_RG::getGeneralizedForce() {
+const mujoco_sim::EigenVec mujoco_sim::MjcWorld_RG::getGeneralizedForce() {
   return world_.getGeneralizedForce();
 }
-int mujoco_sim::World_RG::getDOF() {
+int mujoco_sim::MjcWorld_RG::getDOF() {
   return world_.getDOF();
 }
-int mujoco_sim::World_RG::getGeneralizedCoordinateDim() {
+int mujoco_sim::MjcWorld_RG::getGeneralizedCoordinateDim() {
   return world_.getGeneralizedCoordinateDim();
 }
 
-int mujoco_sim::World_RG::getWorldNumContacts() {
+int mujoco_sim::MjcWorld_RG::getWorldNumContacts() {
   return world_.getWorldNumContacts();
 }
-int mujoco_sim::World_RG::getNumObject() {
+int mujoco_sim::MjcWorld_RG::getNumObject() {
   return world_.getNumObject();
 }
 

@@ -15,10 +15,10 @@
 namespace mujoco_sim {
 namespace object {
 
-class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
+class MjcSingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
 
  public:
-  SingleBodyObject(mjData *data,
+  MjcSingleBodyObject(mjData *data,
                      mjModel *model,
                      int bodyId,
                      int geomId);
@@ -37,8 +37,8 @@ class SingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
   void setExternalTorque(Eigen::Vector3d torque) override ;
 
   void setFrictionCoefficient(double friction) override ;
- private:
 
+ private:
   /// deprecated overrided functions
   /// ===================================
   void setPosition(Eigen::Vector3d originPosition) override ;

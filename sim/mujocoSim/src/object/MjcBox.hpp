@@ -5,15 +5,15 @@
 #ifndef MUJOCOSIM_BOX_HPP
 #define MUJOCOSIM_BOX_HPP
 
-#include "SingleBodyObject.hpp"
+#include "MjcSingleBodyObject.hpp"
 
 namespace mujoco_sim {
 namespace object {
 
-class Box: public SingleBodyObject {
+class MjcBox: public MjcSingleBodyObject {
 
  public:
-  Box(double xLength, double yLength, double zLength, mjData *data, mjModel *model, int bodyId, int geomId);
+  MjcBox(double xLength, double yLength, double zLength, mjData *data, mjModel *model, int bodyId, int geomId);
 
  private:
   double xLength_;

@@ -8,17 +8,17 @@
 #include <raiGraphics/RAI_graphics.hpp>
 
 #include "common/World_RG.hpp"
-#include "World.hpp"
+#include "MjcWorld.hpp"
 #include "UserHandle.hpp"
 
 namespace mujoco_sim {
 
-class World_RG: public benchmark::World_RG {
+class MjcWorld_RG: public benchmark::World_RG {
 
  public:
 
   /* constructor for visualization */
-  World_RG(int windowWidth,
+  MjcWorld_RG(int windowWidth,
            int windowHeight,
            float cms,
            const char *modelPath,
@@ -27,10 +27,10 @@ class World_RG: public benchmark::World_RG {
            mujoco_sim::SolverOption solverOption);
 
   /* constructor for no visualization */
-  World_RG(const char *modelPath,
+  MjcWorld_RG(const char *modelPath,
            const char *keyPath,
            mujoco_sim::SolverOption solverOption);
-  virtual ~World_RG();
+  virtual ~MjcWorld_RG();
 
   //////////////////////////
   /// simulation methods ///
@@ -110,7 +110,7 @@ class World_RG: public benchmark::World_RG {
                                          int bodyId,
                                          int geomid) override ;
 
-  mujoco_sim::World world_;
+  mujoco_sim::MjcWorld world_;
 };
 
 } // mujoco_sim

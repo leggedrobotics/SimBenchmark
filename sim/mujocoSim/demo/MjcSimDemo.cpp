@@ -2,11 +2,11 @@
 // Created by kangd on 18.02.18.
 //
 
-#include "World_RG.hpp"
+#include "MjcWorld_RG.hpp"
 
 int main() {
   // load model from file and check for errors
-  mujoco_sim::World_RG sim(800,
+  mujoco_sim::MjcWorld_RG sim(800,
                            600,
                            0.5,
                            "../../../res/mujoco/test.xml",

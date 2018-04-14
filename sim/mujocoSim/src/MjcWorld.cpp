@@ -2,11 +2,11 @@
 // Created by kangd on 18.02.18.
 //
 
-#include "World.hpp"
+#include "MjcWorld.hpp"
 
 namespace mujoco_sim {
 
-mujoco_sim::World::World(const char *modelPath,
+mujoco_sim::MjcWorld::MjcWorld(const char *modelPath,
                          const char *keyPath,
                          SolverOption solverOption) {
 
@@ -59,7 +59,7 @@ mujoco_sim::World::World(const char *modelPath,
   generalizedForce_.setZero();
 }
 
-mujoco_sim::World::~World() {
+mujoco_sim::MjcWorld::~MjcWorld() {
 
   // remove objects
   for (auto *ob: objectList_)
@@ -72,41 +72,41 @@ mujoco_sim::World::~World() {
 
 }
 
-mjModel *mujoco_sim::World::getWorldModel() const {
+mjModel *mujoco_sim::MjcWorld::getWorldModel() const {
   return worldModel_;
 }
-mjData *mujoco_sim::World::getWorldData() const {
+mjData *mujoco_sim::MjcWorld::getWorldData() const {
   return worldData_;
 }
 
-void mujoco_sim::World::integrate(double dt) {
+void mujoco_sim::MjcWorld::integrate(double dt) {
   if(worldModel_->opt.timestep != dt)
     worldModel_->opt.timestep = dt;
 
   mj_step(worldModel_, worldData_);
 }
 
-object::Sphere *World::addSphere(double radius,
+object::MjcSphere *MjcWorld::addSphere(double radius,
                                  double mass,
                                  int bodyId,
                                  int geomId) {
-  object::Sphere *sphere = new object::Sphere(radius, mass, worldData_, worldModel_, bodyId, geomId);
+  object::MjcSphere *sphere = new object::MjcSphere(radius, mass, worldData_, worldModel_, bodyId, geomId);
   objectList_.push_back(sphere);
   return sphere;
 }
 
-object::Box *World::addBox(double xLength,
+object::MjcBox *MjcWorld::addBox(double xLength,
                            double yLength,
                            double zLength,
                            double mass,
                            int bodyId,
                            int geomId) {
-  object::Box *box = new object::Box(xLength, yLength, zLength, worldData_, worldModel_, bodyId, geomId);
+  object::MjcBox *box = new object::MjcBox(xLength, yLength, zLength, worldData_, worldModel_, bodyId, geomId);
   objectList_.push_back(box);
   return box;
 }
 
-object::CheckerBoard *World::addCheckerboard(double gridSize,
+object::MjcCheckerBoard *MjcWorld::addCheckerboard(double gridSize,
                                              double xLength,
                                              double yLength,
                                              double reflectanceI,
@@ -115,60 +115,60 @@ object::CheckerBoard *World::addCheckerboard(double gridSize,
                                              int geomId) {
   RAIFATAL_IF(shape == bo::BOX_SHAPE, "box shape ground is not supported")
 
-  object::CheckerBoard *checkerBoard =
-      new object::CheckerBoard(xLength, yLength, worldData_, worldModel_, bodyId, geomId);
+  object::MjcCheckerBoard *checkerBoard =
+      new object::MjcCheckerBoard(xLength, yLength, worldData_, worldModel_, bodyId, geomId);
   objectList_.push_back(checkerBoard);
   return checkerBoard;
 }
 
-object::Capsule *World::addCapsule(double radius,
+object::MjcCapsule *MjcWorld::addCapsule(double radius,
                                    double height,
                                    double mass,
                                    int bodyId,
                                    int geomId) {
-  object::Capsule *capsule = new object::Capsule(radius, height, worldData_, worldModel_, bodyId, geomId);
+  object::MjcCapsule *capsule = new object::MjcCapsule(radius, height, worldData_, worldModel_, bodyId, geomId);
   objectList_.push_back(capsule);
   return capsule;
 }
 
-object::Cylinder *World::addCylinder(double radius,
+object::MjcCylinder *MjcWorld::addCylinder(double radius,
                                      double height,
                                      double mass,
                                      int bodyId,
                                      int geomId) {
-  object::Cylinder *cylinder = new object::Cylinder(radius, height, worldData_, worldModel_, bodyId, geomId);
+  object::MjcCylinder *cylinder = new object::MjcCylinder(radius, height, worldData_, worldModel_, bodyId, geomId);
   objectList_.push_back(cylinder);
   return cylinder;
 }
 
-int World::getDOF() {
+int MjcWorld::getDOF() {
   return dof_;
 }
 
-int World::getGeneralizedCoordinateDim() {
+int MjcWorld::getGeneralizedCoordinateDim() {
   return dimGenCoord_;
 }
 
-const EigenVec World::getGeneralizedCoordinate() {
+const EigenVec MjcWorld::getGeneralizedCoordinate() {
   for(int i = 0; i < dimGenCoord_; i++)
     generalizedCoordinate_[i] = worldData_->qpos[i];
   return generalizedCoordinate_.e();
 }
 
-const EigenVec World::getGeneralizedVelocity() {
+const EigenVec MjcWorld::getGeneralizedVelocity() {
   for(int i = 0; i < dof_; i++)
     generalizedVelocity_[i] = worldData_->qvel[i];
   return generalizedVelocity_.e();
 }
 
-const EigenVec World::getGeneralizedForce() {
+const EigenVec MjcWorld::getGeneralizedForce() {
   for(int i = 0; i < dof_; i++) {
     generalizedForce_[i] = worldData_->qfrc_applied[i];
   }
   return generalizedForce_.e();
 }
 
-void World::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
+void MjcWorld::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
   RAIFATAL_IF(jointState.size() != dimGenCoord_, "invalid generalized coordinate input")
   for(int i = 0; i < dimGenCoord_; i++) {
     generalizedCoordinate_[i] = jointState[i];
@@ -176,7 +176,7 @@ void World::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
   }
 }
 
-void World::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
+void MjcWorld::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
   RAIFATAL_IF(jointState.size() != dimGenCoord_, "invalid generalized coordinate input")
   for(int i = 0; i < dimGenCoord_; i++) {
     generalizedCoordinate_[i] = jointState.begin()[i];
@@ -184,7 +184,7 @@ void World::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
   }
 }
 
-void World::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
+void MjcWorld::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
   for(int i = 0; i < dof_; i++) {
     generalizedVelocity_[i] = jointVel[i];
@@ -192,7 +192,7 @@ void World::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
   }
 }
 
-void World::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+void MjcWorld::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
   for(int i = 0; i < dof_; i++) {
     generalizedVelocity_[i] = jointVel.begin()[i];
@@ -200,7 +200,7 @@ void World::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
   }
 }
 
-void World::setGeneralizedForce(std::initializer_list<double> tau) {
+void MjcWorld::setGeneralizedForce(std::initializer_list<double> tau) {
   RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
   for(int i = 0; i < dof_; i++) {
     generalizedForce_[i] = tau.begin()[i];
@@ -208,14 +208,14 @@ void World::setGeneralizedForce(std::initializer_list<double> tau) {
   }
 }
 
-void World::setGeneralizedForce(const Eigen::VectorXd &tau) {
+void MjcWorld::setGeneralizedForce(const Eigen::VectorXd &tau) {
   RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
   for(int i = 0; i < dof_; i++) {
     generalizedForce_[i] = tau[i];
     worldData_->qfrc_applied[i] = tau[i];
   }
 }
-void World::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
+void MjcWorld::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
   RAIFATAL_IF(genco.size() != dimGenCoord_, "invalid generalized coordinate input")
   RAIFATAL_IF(genvel.size() != dof_, "invalid generalized velocity input")
 
@@ -230,7 +230,7 @@ void World::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
   }
 }
 
-void World::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
+void MjcWorld::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
   RAIFATAL_IF(genco.size() != dimGenCoord_, "invalid generalized coordinate input")
   RAIFATAL_IF(genvel.size() != dof_, "invalid generalized velocity input")
 
@@ -245,17 +245,17 @@ void World::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel
   }
 }
 
-void World::setGravity(const benchmark::Vec<3> &gravity) {
+void MjcWorld::setGravity(const benchmark::Vec<3> &gravity) {
   simOption_->gravity[0] = gravity[0];
   simOption_->gravity[1] = gravity[1];
   simOption_->gravity[2] = gravity[2];
 }
 
-int World::getWorldNumContacts() {
+int MjcWorld::getWorldNumContacts() {
   return worldData_->ncon;
 }
 
-int World::getNumObject() {
+int MjcWorld::getNumObject() {
   return objectList_.size();
 }
 

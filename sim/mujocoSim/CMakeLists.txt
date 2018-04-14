@@ -32,23 +32,23 @@ file(INSTALL ${MUJOCO_LIB_DIR}/model
 include_directories(src)
 
 set(MjcSimSrc
-        src/World.cpp
-        src/World.hpp
-        src/World_RG.cpp
-        src/World_RG.hpp
+        src/MjcWorld.cpp
+        src/MjcWorld.hpp
+        src/MjcWorld_RG.cpp
+        src/MjcWorld_RG.hpp
         src/UserHandle.hpp
-        src/object/SingleBodyObject.cpp
-        src/object/SingleBodyObject.hpp
-        src/object/Sphere.cpp
-        src/object/Sphere.hpp
-        src/object/Box.cpp
-        src/object/Box.hpp
-        src/object/Capsule.cpp
-        src/object/Capsule.hpp
-        src/object/CheckerBoard.cpp
-        src/object/CheckerBoard.hpp
-        src/object/Cylinder.cpp
-        src/object/Cylinder.hpp)
+        src/object/MjcSingleBodyObject.cpp
+        src/object/MjcSingleBodyObject.hpp
+        src/object/MjcSphere.cpp
+        src/object/MjcSphere.hpp
+        src/object/MjcBox.cpp
+        src/object/MjcBox.hpp
+        src/object/MjcCapsule.cpp
+        src/object/MjcCapsule.hpp
+        src/object/MjcCheckerBoard.cpp
+        src/object/MjcCheckerBoard.hpp
+        src/object/MjcCylinder.cpp
+        src/object/MjcCylinder.hpp)
 
 # library
 add_library(MjcSimLib ${MjcSimSrc})
