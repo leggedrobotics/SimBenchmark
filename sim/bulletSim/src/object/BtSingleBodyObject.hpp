@@ -17,7 +17,7 @@ namespace bullet_sim {
 namespace object {
 
 class BtSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
-                        public bullet_sim::object::BtObject
+                          public bullet_sim::object::BtObject
 {
 
  public:

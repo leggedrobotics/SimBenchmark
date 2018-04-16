@@ -1,6 +1,8 @@
-# stack
 add_executable(OdeStackDemo StackDemo.cpp)
 target_link_libraries(OdeStackDemo ${ODESimLink})
+
+add_executable(OdeAnymalDemo AnymalDemo.cpp)
+target_link_libraries(OdeAnymalDemo ${ODESimLink})
 
 # friction
 #add_executable(frictionODESim frictionODESim.cpp)

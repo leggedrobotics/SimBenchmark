@@ -18,6 +18,7 @@ set(ODESim_SRCS
         src/OdeWorld.cpp
         src/OdeWorld_RG.hpp
         src/OdeWorld_RG.cpp
+        src/UserHandle.hpp
         src/object/OdeSingleBodyObject.hpp
         src/object/OdeSingleBodyObject.cpp
         src/object/OdeBox.hpp
@@ -32,12 +33,13 @@ set(ODESim_SRCS
         src/object/OdeCylinder.hpp
         src/object/OdeArticulatedSystem.cpp
         src/object/OdeArticulatedSystem.hpp
-        )
+        src/object/OdeObject.cpp src/object/OdeObject.hpp)
 
 # library
 add_library(ODESimLib ${ODESim_SRCS})
 target_link_libraries(ODESimLib
         ode
+        urdfdom_model
         )
 
 # link

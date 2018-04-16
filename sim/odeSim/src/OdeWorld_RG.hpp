@@ -13,6 +13,7 @@
 #include "common/World_RG.hpp"
 #include "common/Configure.hpp"
 
+#include "UserHandle.hpp"
 #include "OdeWorld.hpp"
 
 namespace ode_sim {
@@ -68,6 +69,10 @@ class OdeWorld_RG: public benchmark::World_RG {
                                           benchmark::CollisionGroupType collisionGroup = 1,
                                           benchmark::CollisionGroupType collisionMask=-1) override ;
 
+  ArticulatedSystemHandle addArticulatedSystem(std::string nm,
+                                               benchmark::CollisionGroupType collisionGroup = 1,
+                                               benchmark::CollisionGroupType collisionMask=-1) ;
+
   int getNumObject() override ;
 
   //////////////////////////
@@ -79,6 +84,8 @@ class OdeWorld_RG: public benchmark::World_RG {
 
  private:
   ode_sim::OdeWorld world_;
+
+  std::vector<ArticulatedSystemHandle> asHandles_;
 
 };
 

@@ -108,6 +108,8 @@ mkdir build && cd build
 cmake ../
 sudo make install -j4
 
+# TODO urdf
+
 # install raiSim (optional)
 if [ "$raisim_flag" == 'ON' ]; then
     echo "Installing raiSim..."

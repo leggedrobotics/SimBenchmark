@@ -149,12 +149,21 @@ ode_sim::object::OdeCheckerBoard *ode_sim::OdeWorld::addCheckerboard(double grid
   return checkerBoard;
 }
 
+ode_sim::object::OdeArticulatedSystem *ode_sim::OdeWorld::addArticulatedSystem(std::string urdfPath,
+                                                                               benchmark::CollisionGroupType collisionGroup,
+                                                                               benchmark::CollisionGroupType collisionMask) {
+  object::OdeArticulatedSystem *articulatedSystem = new object::OdeArticulatedSystem(urdfPath,
+                                                                                     dynamicsWorld_,
+                                                                                     space_);
+  objectList_.push_back(articulatedSystem);
+  return articulatedSystem;
+}
+
 void ode_sim::OdeWorld::setGravity(const benchmark::Vec<3> &gravity) {
   dVector3 dgravity = {gravity[0], gravity[1], gravity[2]};
   memcpy(gravity_, dgravity, sizeof(dVector3));
   dWorldSetGravity(dynamicsWorld_, gravity_[0], gravity_[1], gravity_[2]);
 }
-
 void ode_sim::OdeWorld::setERP(double erp) {
   dWorldSetERP(dynamicsWorld_, erp);
 }

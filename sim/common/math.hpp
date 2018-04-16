@@ -697,6 +697,43 @@ inline void matReverse(Mat<3, 3> &mat) {
   mat[7] = - mat[7];
   mat[8] = - mat[8];
 }
+
+inline void rpyToRotMat_intrinsic(const Vec<3> &rpy, Mat<3, 3> &R) {
+  const double su = std::sin(rpy[0]), cu = std::cos(rpy[0]);
+  const double sv = std::sin(rpy[1]), cv = std::cos(rpy[1]);
+  const double sw = std::sin(rpy[2]), cw = std::cos(rpy[2]);
+
+  R[0] = cv * cw;
+  R[1] = cv * sw;
+  R[2] = -sv;
+
+  R[3] = su * sv * cw - cu * sw;
+  R[4] = cu * cw + su * sv * sw;
+  R[5] = su * cv;
+
+  R[6] = su * sw + cu * sv * cw;
+  R[7] = cu * sv * sw - su * cw;
+  R[8] = cu * cv;
+}
+
+inline void rpyToRotMat_extrinsic(const Vec<3> &rpy, Mat<3, 3> &R) {
+  const double su = std::sin(rpy[0]), cu = std::cos(rpy[0]);
+  const double sv = std::sin(rpy[1]), cv = std::cos(rpy[1]);
+  const double sw = std::sin(rpy[2]), cw = std::cos(rpy[2]);
+
+  R[0] = cv * cw;
+  R[1] = cu * sw + su * cw * sv;
+  R[2] = su * sw - cu * cw * sv;
+
+  R[3] = -cv * sw;
+  R[4] = cu * cw - su * sv * sw;
+  R[5] = su * cw + cu * sv * sw;
+
+  R[6] = sv;
+  R[7] = -su * cv;
+  R[8] = cu * cv;
+}
+
 } // benchmark
 
 #endif //BENCHMARK_MATH_HPP

@@ -12,6 +12,8 @@
 #include "common/math.hpp"
 #include "common/interface/SingleBodyObjectInterface.hpp"
 
+#include "object/OdeObject.hpp"
+
 namespace ode_sim {
 namespace object {
 
@@ -20,7 +22,8 @@ struct MetrialProp {
   double restitutionCoeff = 0.0;
 };
 
-class OdeSingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
+class OdeSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
+                           public ode_sim::object::OdeObject {
 
  public:
   OdeSingleBodyObject(const dWorldID worldID, const dSpaceID spaceID);

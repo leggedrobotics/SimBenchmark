@@ -10,11 +10,13 @@
 #include "common/Configure.hpp"
 #include "common/interface/WorldInterface.hpp"
 
+#include "object/OdeObject.hpp"
 #include "object/OdeSphere.hpp"
 #include "object/OdeBox.hpp"
 #include "object/OdeCapsule.hpp"
 #include "object/OdeCheckerBoard.hpp"
 #include "object/OdeCylinder.hpp"
+#include "object/OdeArticulatedSystem.hpp"
 
 namespace ode_sim {
 
@@ -61,6 +63,10 @@ class OdeWorld: public benchmark::WorldInterface {
                                    benchmark::CollisionGroupType collisionGroup=1,
                                    benchmark::CollisionGroupType collisionMask=-1) override ;
 
+  object::OdeArticulatedSystem *addArticulatedSystem(std::string urdfPath,
+                                                    benchmark::CollisionGroupType collisionGroup=1,
+                                                    benchmark::CollisionGroupType collisionMask=-1);
+
   void integrate(double dt) override ;
 
   void setGravity(const benchmark::Vec<3> &gravity) override ;
@@ -89,7 +95,7 @@ class OdeWorld: public benchmark::WorldInterface {
   SolverOption solverOption_ = SOLVER_STANDARD;
 
   // list
-  std::vector<object::OdeSingleBodyObject*> objectList_;
+  std::vector<object::OdeObject*> objectList_;
 
 };
 
