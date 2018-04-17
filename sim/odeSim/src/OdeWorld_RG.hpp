@@ -33,6 +33,12 @@ class OdeWorld_RG: public benchmark::World_RG {
   OdeWorld_RG(SolverOption solverOption = SOLVER_STANDARD);
   virtual ~OdeWorld_RG();
 
+  /////////////////////////////////////
+  /// Visualization related methods ///
+  /////////////////////////////////////
+//  virtual void visEnd() override ;
+  virtual void updateFrame() override ;
+
   //////////////////////////////////
   /// adding or removing objects ///
   //////////World////////////////////////

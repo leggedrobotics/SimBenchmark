@@ -31,9 +31,11 @@ set(ODESim_SRCS
         src/object/OdeCapsule.cpp
         src/object/OdeCylinder.cpp
         src/object/OdeCylinder.hpp
-        src/object/OdeArticulatedSystem.cpp
-        src/object/OdeArticulatedSystem.hpp
-        src/object/OdeObject.cpp src/object/OdeObject.hpp)
+        src/object/OdeObject.hpp
+        src/object/OdeObject.cpp
+        src/object/ArticulatedSystem/OdeArticulatedSystem.cpp
+        src/object/ArticulatedSystem/OdeArticulatedSystem.hpp
+        src/object/ArticulatedSystem/OdeLinkJoint.hpp)
 
 # library
 add_library(ODESimLib ${ODESim_SRCS})

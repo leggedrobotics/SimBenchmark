@@ -16,7 +16,7 @@
 #include "object/OdeCapsule.hpp"
 #include "object/OdeCheckerBoard.hpp"
 #include "object/OdeCylinder.hpp"
-#include "object/OdeArticulatedSystem.hpp"
+#include "object/ArticulatedSystem/OdeArticulatedSystem.hpp"
 
 namespace ode_sim {
 

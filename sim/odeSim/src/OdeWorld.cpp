@@ -76,8 +76,11 @@ void ode_sim::OdeWorld::nearCallback(void *data, dGeomID o1, dGeomID o2) {
     object::MetrialProp *prop2 = (object::MetrialProp*)dGeomGetData(o2);
 
     contact[i].surface.mode = dContactBounce | dContactApprox1;
-    contact[i].surface.mu = prop1->frictionalCoeff * prop2->frictionalCoeff;
-    contact[i].surface.bounce = prop1->restitutionCoeff * prop2->restitutionCoeff;
+
+    if(prop1 && prop2) {
+      contact[i].surface.mu = prop1->frictionalCoeff * prop2->frictionalCoeff;
+      contact[i].surface.bounce = prop1->restitutionCoeff * prop2->restitutionCoeff;
+    }
   }
   if (int numc = dCollide(o1,o2, maxContactsPerBody, &contact[0].geom,
                           sizeof(dContact))) {

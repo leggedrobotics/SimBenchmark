@@ -9,7 +9,7 @@
 #include <common/UserHandle.hpp>
 
 #include "object/OdeSingleBodyObject.hpp"
-#include "object/OdeArticulatedSystem.hpp"
+#include "object/ArticulatedSystem/OdeArticulatedSystem.hpp"
 
 namespace ode_sim {
 
