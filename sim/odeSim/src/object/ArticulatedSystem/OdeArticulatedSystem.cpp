@@ -283,7 +283,7 @@ void OdeArticulatedSystem::init() {
 
   initInertial(links_[0]);
   initVisuals(links_[0], baseRotMat, baseOrigin, visObj, visProps_);
-//  links_[0].initCollisions(visColObj, visColProps_);
+  initCollisions(links_[0], baseRotMat, baseOrigin, visColObj, visColProps_);
 }
 
 void OdeArticulatedSystem::initVisuals(Link &link,
@@ -399,8 +399,8 @@ void OdeArticulatedSystem::initCollisions(Link &link,
                                      pos_w,
                                      link.bodyIdx_,
                                      link.collision_.colShape_[i]);
-    props.emplace_back(link.visual_.meshFileNames_[i],
-                       link.visual_.visShapeParam_[i]);
+    props.emplace_back("",
+                       link.collision_.colShapeParam_[i]);
 
   }
   // end of geometry
