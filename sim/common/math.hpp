@@ -734,6 +734,38 @@ inline void rpyToRotMat_extrinsic(const Vec<3> &rpy, Mat<3, 3> &R) {
   R[8] = cu * cv;
 }
 
+/// computes RIR^T
+inline void similarityTransform(const Mat<3, 3> &R, const Mat<3, 3> &I, Mat<3, 3> &mat) {
+//  Mat<3, 3> temp;
+//  transposed2MatMul(I, R, temp);
+//  matmul(R, temp, mat);
+
+  const double t00 = R[0]*I[0]+R[3]*I[3]+R[6]*I[6];
+  const double t10 = R[0]*I[1]+R[3]*I[4]+R[6]*I[7];
+  const double t20 = R[0]*I[2]+R[3]*I[5]+R[6]*I[8];
+
+  const double t01 = R[1]*I[0]+R[4]*I[1]+R[7]*I[2];
+  const double t11 = R[1]*I[1]+R[4]*I[4]+R[7]*I[5];
+  const double t21 = R[1]*I[2]+R[4]*I[5]+R[7]*I[8];
+
+  const double t02 = R[2]*I[0]+R[5]*I[1]+R[8]*I[2];
+  const double t12 = R[2]*I[1]+R[5]*I[4]+R[8]*I[5];
+  const double t22 = R[2]*I[2]+R[5]*I[5]+R[8]*I[8];
+
+  mat[0] = R[0]*t00 + R[3]*t10 + R[6]*t20;
+  mat[1] = R[1]*t00 + R[4]*t10 + R[7]*t20;
+  mat[2] = R[2]*t00 + R[5]*t10 + R[8]*t20;
+  mat[3] = mat[1];
+  mat[4] = R[1]*t01 + R[4]*t11 + R[7]*t21;
+  mat[5] = R[2]*t01 + R[5]*t11 + R[8]*t21;
+  mat[6] = mat[2];
+  mat[7] = mat[5];
+  mat[8] = R[2]*t02 + R[5]*t12 + R[8]*t22;
+//  std::cout<<test.e()<<"\n";
+//  std::cout<<mat.e()<<"\n\n";
+}
+
+
 } // benchmark
 
 #endif //BENCHMARK_MATH_HPP

@@ -12,7 +12,7 @@ namespace bo = benchmark::object;
 namespace ode_sim {
 namespace object {
 
-// world pos, world orientation, parent id, shape, color
+// world orientation, world pos, parent id, shape, color
 typedef std::tuple<benchmark::Mat<3, 3>,
                    benchmark::Vec<3>,
                    int,
@@ -21,7 +21,7 @@ typedef std::tuple<benchmark::Mat<3, 3>,
 // mesh path, size
 typedef std::pair<std::string,
                   benchmark::Vec<4>> VisualObjectProperty;
-// ...
+// world orientation, world pos, parent id, shape
 typedef std::tuple<benchmark::Mat<3, 3>,
                    benchmark::Vec<3>,
                    int,
@@ -71,8 +71,9 @@ struct LinkInertial {
   }
   benchmark::Mat<3, 3> inertia_;
   benchmark::Mat<3, 3> rotmat_;   // w.r.t joint
-  benchmark::Vec<3> pos_;    // w.r.t joint
+  benchmark::Vec<3> pos_;         // w.r.t joint
   double mass_;
+  dMass odeMass_;
 };
 
 
@@ -101,6 +102,7 @@ struct LinkCollision {
   std::vector<benchmark::Vec<4>> colShapeParam_;
   std::vector<benchmark::Vec<3>> colObjOrigin_;     // w.r.t joint
   std::vector<benchmark::Mat<3, 3>> colObjRotMat_;  // w.r.t joint
+  std::vector<dGeomID> odeGeometries_;
 };
 
 
@@ -123,15 +125,14 @@ struct Link {
   int bodyIdx_;
   int parentIdx_;
 
+  dBodyID odeBody_ = 0;
+
 
   // relative com position and body orientation w.r.t parent
   benchmark::Vec<3> com_B_;
   benchmark::Mat<3, 3> rotMat_B_;
 
   /// collision ode
-  dBodyID odeBody_ = 0;
-  dMass odeMass_;
-  std::vector<dGeomID> odeGeometries_;
 //  std::vector<MetrialProp *> matrialProps_;
 
 
@@ -139,33 +140,6 @@ struct Link {
     rpyToRotMat_intrinsic(rpy, rotMat_B_);
   }
 
-//  void initInertial() {
-////  odeBody_ = dBodyCreate(worldID_);
-//
-//      if(mass_ == 0) {
-//        inertia_.setZero();
-//      } else {
-//        // TODO cgx, cgy, cgz check
-//        dMassSetParameters(
-//            &odeMass_,
-//            mass_,
-//            com_B_[0],
-//            com_B_[1],
-//            com_B_[2],
-//            inertia_[0],
-//            inertia_[4],
-//            inertia_[8],
-//            inertia_[1],
-//            inertia_[2],
-//            inertia_[7]
-//        );
-//        dBodySetMass(odeBody_, &odeMass_);
-//      }
-//
-//      for (auto &ch: childrenLinks_)
-//        ch.initInertial();
-//  }
-//
 //  void initCollisions(std::vector<AlternativeVisualObjectData> &collect,
 //                      std::vector<VisualObjectProperty> &props);
 

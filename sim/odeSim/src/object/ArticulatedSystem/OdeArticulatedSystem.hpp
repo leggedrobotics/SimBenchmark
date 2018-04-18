@@ -46,12 +46,19 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
 
  private:
   void init();
+
+  // recursively initialize link data
   void initVisuals(Link &link,
                    benchmark::Mat<3, 3> &parentRot_w,
                    benchmark::Vec<3> &parentPos_w,
                    std::vector<VisualObjectData> &collect,
                    std::vector<VisualObjectProperty> &props);
-//  void initCollisions();
+  void initCollisions(Link &link,
+                        benchmark::Mat<3, 3> &parentRot_w,
+                        benchmark::Vec<3> &parentPos_w,
+                        std::vector<AlternativeVisualObjectData> &collect,
+                        std::vector<VisualObjectProperty> &props);
+  void initInertial(Link &link);
 
   void processLinkFromUrdf(boost::shared_ptr<const urdf::Link> urdfLink,
                              Link &raiLink,

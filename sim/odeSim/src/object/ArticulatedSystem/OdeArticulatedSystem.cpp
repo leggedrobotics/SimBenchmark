@@ -89,6 +89,7 @@ void OdeArticulatedSystem::processLinkFromUrdf(boost::shared_ptr<const urdf::Lin
 
   // link init
   raiLink.name_ = urdfLink->name;
+  raiLink.odeBody_ = dBodyCreate(worldID_);
 
   /// parent
   if(urdfLink->getParent()) {
@@ -130,24 +131,18 @@ void OdeArticulatedSystem::processLinkFromUrdf(boost::shared_ptr<const urdf::Lin
         auto box = boost::dynamic_pointer_cast<urdf::Box>(col->geometry);
         raiLink.collision_.colShape_.push_back(bo::Shape::Box);
         raiLink.collision_.colShapeParam_.push_back({box->dim.x, box->dim.y, box->dim.z, 0});
-//        raiLink.odeGeometries_.push_back(dCreateBox(spaceID_, box->dim.x, box->dim.y, box->dim.z));
-//        dGeomSetBody(raiLink.odeGeometries_.back(), raiLink.odeBody_);
       }
       else if (col->geometry->type == urdf::Geometry::CYLINDER) {
         // cylinder
         auto cyl = boost::dynamic_pointer_cast<urdf::Cylinder>(col->geometry);
         raiLink.collision_.colShape_.push_back(bo::Shape::Cylinder);
         raiLink.collision_.colShapeParam_.push_back({cyl->radius, cyl->length, 0, 0});
-//        raiLink.odeGeometries_.push_back(dCreateCylinder(spaceID_, cyl->radius, cyl->length));
-//        dGeomSetBody(raiLink.odeGeometries_.back(), raiLink.odeBody_);
       }
       else if (col->geometry->type == urdf::Geometry::SPHERE) {
         // sphere
         auto sph = boost::dynamic_pointer_cast<urdf::Sphere>(col->geometry);
         raiLink.collision_.colShape_.push_back(bo::Shape::Sphere);
         raiLink.collision_.colShapeParam_.push_back({sph->radius, 0, 0, 0});
-//        raiLink.odeGeometries_.push_back(dCreateSphere(spaceID_, sph->radius));
-//        dGeomSetBody(raiLink.odeGeometries_.back(), raiLink.odeBody_);
       }
       else {
         RAIFATAL("mesh collision body is not supported yet");
@@ -159,23 +154,6 @@ void OdeArticulatedSystem::processLinkFromUrdf(boost::shared_ptr<const urdf::Lin
       col->origin.rotation.getRPY(r, p, y);
       raiLink.collision_.colObjOrigin_.push_back({pos.x, pos.y, pos.z});
       raiLink.collision_.colOrientation({r, p, y});
-//
-//      benchmark::Mat<3,3> rotmat;
-//      dMatrix3 drotation;
-//      for(int i = 0; i < 3; i++) {
-//        for(int j = 0; j < 3; j++) {
-//          drotation[4*i + j] = rotmat[i+j*3];
-//        }
-//        drotation[4*i + 3] = 0;
-//      }
-//      dGeomSetOffsetPosition(raiLink.odeGeometries_.back(), pos.x, pos.y, pos.z);
-//      dGeomSetOffsetRotation(raiLink.odeGeometries_.back(), drotation);
-
-      // material properties
-      // TODO
-//      raiLink.matrialProps_.emplace_back();
-//      dGeomSetData(raiLink.odeGeometries_.back(),
-//                   raiLink.matrialProps_.back());
     }
   }
 
@@ -303,7 +281,7 @@ void OdeArticulatedSystem::init() {
   benchmark::Vec<3> baseOrigin;
   baseOrigin.setZero();
 
-//  links_[0].initInertial();
+  initInertial(links_[0]);
   initVisuals(links_[0], baseRotMat, baseOrigin, visObj, visProps_);
 //  links_[0].initCollisions(visColObj, visColProps_);
 }
@@ -345,6 +323,127 @@ void OdeArticulatedSystem::initVisuals(Link &link,
   }
 }
 
+void OdeArticulatedSystem::initCollisions(Link &link,
+                                          benchmark::Mat<3, 3> &parentRot_w,
+                                          benchmark::Vec<3> &parentPos_w,
+                                          std::vector<AlternativeVisualObjectData> &collect,
+                                          std::vector<VisualObjectProperty> &props) {
+
+  // collision objects
+  for(int i = 0; i < link.collision_.colShape_.size(); i++) {
+    benchmark::Vec<4> size = link.collision_.colShapeParam_[i];
+
+    switch (link.collision_.colShape_[i]) {
+      case bo::Shape::Cylinder: {
+        link.collision_.odeGeometries_.push_back(dCreateCylinder(spaceID_, size[0], size[1]));
+        dGeomSetBody(link.collision_.odeGeometries_.back(), link.odeBody_);
+        break;
+      }
+      case bo::Shape::Sphere: {
+        link.collision_.odeGeometries_.push_back(dCreateSphere(spaceID_, size[0]));
+        dGeomSetBody(link.collision_.odeGeometries_.back(), link.odeBody_);
+        break;
+      }
+      case bo::Shape::Box: {
+        link.collision_.odeGeometries_.push_back(dCreateBox(spaceID_, size[0], size[1], size[2]));
+        dGeomSetBody(link.collision_.odeGeometries_.back(), link.odeBody_);
+        break;
+      }
+      default: {
+        RAIFATAL("this shape of collision is not supported yet")
+        break;
+      }
+    }
+
+    // set body position
+    dMatrix3 bodyR;
+    for(int row = 0; row < 3; row++) {
+      for(int col = 0; col < 3; col++) {
+        bodyR[4*row + col] = parentRot_w[row + col*3];
+      }
+      bodyR[4*row + 3] = 0;
+    }
+    dBodySetPosition(link.odeBody_, parentPos_w[0], parentPos_w[1], parentPos_w[2]);
+    dBodySetRotation(link.odeBody_, bodyR);
+
+    // set each geometry position
+    dMatrix3 geomR;
+    for(int row = 0; row < 3; row++) {
+      for(int col = 0; col < 3; col++) {
+        geomR[4*row + col] = link.collision_.colObjRotMat_[i][row+col*3];
+      }
+      geomR[4*row + 3] = 0;
+    }
+    dGeomSetOffsetPosition(link.collision_.odeGeometries_.back(),
+                           link.collision_.colObjOrigin_[i][0],
+                           link.collision_.colObjOrigin_[i][1],
+                           link.collision_.colObjOrigin_[i][2]);
+    dGeomSetOffsetRotation(link.collision_.odeGeometries_.back(), geomR);
+
+    // material properties
+//    TODO
+//    raiLink.matrialProps_.emplace_back();
+//    dGeomSetData(raiLink.odeGeometries_.back(),
+//                 raiLink.matrialProps_.back());
+
+    // set alternative visualization object
+    benchmark::Mat<3,3> rot_w;
+    benchmark::Vec<3> pos_w;
+
+    benchmark::matmul(parentRot_w, link.collision_.colObjRotMat_[i], rot_w);
+    benchmark::matvecmul(parentRot_w, link.collision_.colObjOrigin_[i], pos_w);
+    benchmark::vecadd(parentPos_w, pos_w);
+
+    collect.emplace_back();
+    collect.back() = std::make_tuple(rot_w,
+                                     pos_w,
+                                     link.bodyIdx_,
+                                     link.collision_.colShape_[i]);
+    props.emplace_back(link.visual_.meshFileNames_[i],
+                       link.visual_.visShapeParam_[i]);
+
+  }
+  // end of geometry
+
+  // children
+  for (auto &ch: link.childrenLinks_) {
+    benchmark::Mat<3,3> rot_w;
+    benchmark::Vec<3> pos_w;
+
+    benchmark::matmul(parentRot_w, ch.rotMat_B_, rot_w);
+    benchmark::matvecmul(parentRot_w, ch.parentJoint_.pos_, pos_w);
+    benchmark::vecadd(parentPos_w, pos_w);
+
+    initCollisions(ch, rot_w, pos_w, collect, props);
+  }
+}
+
+void OdeArticulatedSystem::initInertial(Link &link) {
+  if(link.inertial_.mass_ == 0) {
+    link.inertial_.odeMass_.setZero();
+  } else {
+    benchmark::Mat<3,3> inertia;
+    benchmark::similarityTransform(link.inertial_.rotmat_, link.inertial_.inertia_, inertia);
+
+    dMassSetParameters(
+        &link.inertial_.odeMass_,
+        link.inertial_.mass_,
+        link.inertial_.pos_[0],
+        link.inertial_.pos_[1],
+        link.inertial_.pos_[2],
+        inertia[0],
+        inertia[4],
+        inertia[8],
+        inertia[1],
+        inertia[2],
+        inertia[7]
+    );
+    dBodySetMass(link.odeBody_, &link.inertial_.odeMass_);
+  }
+
+  for (auto &ch: link.childrenLinks_)
+    initInertial(ch);
+}
 OdeArticulatedSystem::~OdeArticulatedSystem() {
   for(int i = 0; i < links_.size(); i++) {
     // TODO
@@ -374,17 +473,17 @@ void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> 
 void OdeArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
 
 }
+
 void OdeArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
 
 }
+
 void OdeArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
 
 }
-
 void OdeArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
 
 }
-
 const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSystem::getGeneralizedForce() {
   return genForce_.e();
 }
