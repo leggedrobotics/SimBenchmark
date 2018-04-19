@@ -76,6 +76,7 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
 
   // the head of links_ is the pointer of rootLink
   std::vector<Link *> links_;
+  std::vector<Joint *> joints_;
 
   Link rootLink_;
 

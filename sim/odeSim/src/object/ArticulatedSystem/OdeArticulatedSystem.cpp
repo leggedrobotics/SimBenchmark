@@ -60,22 +60,22 @@ OdeArticulatedSystem::OdeArticulatedSystem(std::string urdfFile,
   if (rootLink->name != "world") {
     isFixed_ = false;
 //    rootJoint_ = Joint::FLOATING;
-//    dof = 5;
-//    jointStateDim = 6;
-//    baseJointStateDimMinusOne = 6;
-//    baseDOFminusOne = 5;
+    dof_ = 6;
+    stateDimension_ = 7;
   } else {
     isFixed_ = false;
 //    baseType_ = Joint::FIXED;
-//    jointStateDim = -1;
-//    baseJointStateDimMinusOne = -1;
-//    baseDOFminusOne = -1;
+    dof_ = 0;
+    stateDimension_ = 0;
+
     if (rootLink->child_links[0]->parent_joint->type == urdf::Joint::FIXED)
       rootLink = rootLink->child_links[0];
   }
 
-  // process links recursively
+  // rootlink's parent is world
   rootLink_.parentIdx_ = -1;
+
+  // process links recursively
   processLinkFromUrdf(rootLink, rootLink_, jointsNames_);
 
   // init articulated system
@@ -264,19 +264,12 @@ void OdeArticulatedSystem::processLinkFromUrdf(boost::shared_ptr<const urdf::Lin
 }
 
 void OdeArticulatedSystem::init() {
-  genForce_.resize(dof_);
-  genForce_.setZero();
-  genVelocity_.resize(dof_);
-  genVelocity_.setZero();
-  genCoordinate_.resize(stateDimension_);
-  genCoordinate_.setZero();
-
   // init recursively
   benchmark::Mat<3,3> baseRotMat;
   baseRotMat.setIdentity();
   benchmark::Vec<3> baseOrigin;
   baseOrigin.setZero();
-  baseOrigin[2] = 1.0;
+  baseOrigin[2] = 0.54;
 
   // init index of each body
   initIdx(rootLink_);
@@ -292,6 +285,14 @@ void OdeArticulatedSystem::init() {
 
   // init ODE joints
   initJoints(rootLink_, baseRotMat, baseOrigin);
+
+  // resize generalized states
+  genForce_.resize(dof_);
+  genForce_.setZero();
+  genVelocity_.resize(dof_);
+  genVelocity_.setZero();
+  genCoordinate_.resize(stateDimension_);
+  genCoordinate_.setZero();
 }
 
 /**
@@ -530,12 +531,23 @@ void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRo
             axis_w[1],
             axis_w[2]
         );
+        dof_++;
+        stateDimension_++;
         break;
       }
       case Joint::PRISMATIC: {
+        // TODO
         RAIFATAL("prismatic joint implementation is not complete")
         childLink.parentJoint_.odeJoint_ = dJointCreateSlider(worldID_, 0);
         dJointAttach(childLink.parentJoint_.odeJoint_, link.odeBody_, childLink.odeBody_);
+        dJointSetSliderAxis(
+            childLink.parentJoint_.odeJoint_,
+            axis_w[0],
+            axis_w[1],
+            axis_w[2]
+        );
+        dof_++;
+        stateDimension_++;
         break;
       }
       default:
@@ -543,6 +555,7 @@ void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRo
 
     }
 
+    joints_.push_back(&childLink.parentJoint_);
     initJoints(childLink, rot_w, pos_w);
   }
 }
@@ -610,45 +623,305 @@ void OdeArticulatedSystem::updateVisuals() {
   }
 }
 const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSystem::getGeneralizedCoordinate() {
+  if(isFixed_) {
+    // fixed body
+    int i = 0;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          continue;
+        }
+        case Joint::REVOLUTE: {
+          genCoordinate_[i++] = dJointGetHingeAngle(joint->odeJoint_);;
+          break;
+        }
+        case Joint::PRISMATIC: {
+          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
+          break;
+        }
+        default:
+          RAIINFO("not supported joint type")
+      }
+    }
+  }
+  else {
+    // floating body
+    const dReal *position = dBodyGetPosition(rootLink_.odeBody_);
+    const dReal *quaternion = dBodyGetQuaternion(rootLink_.odeBody_);
+
+    genCoordinate_[0] = position[0];
+    genCoordinate_[1] = position[1];
+    genCoordinate_[2] = position[2];
+    genCoordinate_[3] = quaternion[0];
+    genCoordinate_[4] = quaternion[1];
+    genCoordinate_[5] = quaternion[2];
+    genCoordinate_[6] = quaternion[3];
+
+    int i = 7;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          continue;
+        }
+        case Joint::REVOLUTE: {
+          genCoordinate_[i++] = dJointGetHingeAngle(joint->odeJoint_);;
+          break;
+        }
+        case Joint::PRISMATIC: {
+          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
+          break;
+        }
+        default:
+        RAIINFO("not supported joint type")
+      }
+    }
+  }
   return genCoordinate_.e();
 }
 const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSystem::getGeneralizedVelocity() {
+  if(isFixed_) {
+    // fixed body
+    int i = 0;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          continue;
+        }
+        case Joint::REVOLUTE: {
+          genVelocity_[i++] = dJointGetHingeAngleRate(joint->odeJoint_);;
+          break;
+        }
+        case Joint::PRISMATIC: {
+          genCoordinate_[i++] = dJointGetSliderPositionRate(joint->odeJoint_);
+          break;
+        }
+        default:
+        RAIINFO("not supported joint type")
+      }
+    }
+  }
+  else {
+    // floating body
+    const dReal *position = dBodyGetPosition(rootLink_.odeBody_);
+    const dReal *quaternion = dBodyGetQuaternion(rootLink_.odeBody_);
+
+    genCoordinate_[0] = position[0];
+    genCoordinate_[1] = position[1];
+    genCoordinate_[2] = position[2];
+    genCoordinate_[3] = quaternion[0];
+    genCoordinate_[4] = quaternion[1];
+    genCoordinate_[5] = quaternion[2];
+    genCoordinate_[6] = quaternion[3];
+
+    int i = 7;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          continue;
+        }
+        case Joint::REVOLUTE: {
+          genCoordinate_[i++] = dJointGetHingeAngleRate(joint->odeJoint_);;
+          break;
+        }
+        case Joint::PRISMATIC: {
+          genCoordinate_[i++] = dJointGetSliderPositionRate(joint->odeJoint_);
+          break;
+        }
+        default:
+        RAIINFO("not supported joint type")
+      }
+    }
+  }
   return genVelocity_.e();
 }
-void OdeArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
-
+void OdeArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
+  RAIFATAL("not implemented yet")
 }
-void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
 
+void OdeArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
+  RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
+  RAIFATAL("not implemented yet")
+//  if(isFixed_) {
+//    // fixed body
+//    int i = 0;
+//    for(auto *joint: joints_) {
+//      switch (joint->type) {
+//        case Joint::FIXED: {
+//          continue;
+//        }
+//        case Joint::REVOLUTE: {
+//          genCoordinate_[i++] = dJointGetHingeAngle(joint->odeJoint_);;
+//          break;
+//        }
+//        case Joint::PRISMATIC: {
+//          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
+//          break;
+//        }
+//        default:
+//        RAIINFO("not supported joint type")
+//      }
+//    }
+//  }
+//  else {
+//    // floating body
+//    const dReal *position = dBodyGetPosition(rootLink_.odeBody_);
+//    const dReal *quaternion = dBodyGetQuaternion(rootLink_.odeBody_);
+//
+//    genCoordinate_[0] = position[0];
+//    genCoordinate_[1] = position[1];
+//    genCoordinate_[2] = position[2];
+//    genCoordinate_[3] = quaternion[0];
+//    genCoordinate_[4] = quaternion[1];
+//    genCoordinate_[5] = quaternion[2];
+//    genCoordinate_[6] = quaternion[3];
+//
+//    int i = 7;
+//    for(auto *joint: joints_) {
+//      switch (joint->type) {
+//        case Joint::FIXED: {
+//          continue;
+//        }
+//        case Joint::REVOLUTE: {
+//          genCoordinate_[i++] = dJointGetHingeAngle(joint->odeJoint_);;
+//          break;
+//        }
+//        case Joint::PRISMATIC: {
+//          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
+//          break;
+//        }
+//        default:
+//        RAIINFO("not supported joint type")
+//      }
+//    }
+//  }
 }
 
 void OdeArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
+  RAIFATAL("not implemented yet")
+}
 
+void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
+  RAIFATAL("not implemented yet")
 }
 
 void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
-
+  RAIFATAL("not implemented yet")
 }
-void OdeArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
 
-}
-void OdeArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
-
-}
 void OdeArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
-
+  RAIFATAL("not implemented yet")
 }
+
+void OdeArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
+  if(isFixed_) {
+    // fixed body
+    int i = 0;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          continue;
+        }
+        case Joint::REVOLUTE: {
+          dJointAddHingeTorque(joint->odeJoint_, tau.begin()[i++]);
+          break;
+        }
+        case Joint::PRISMATIC: {
+          dJointAddSliderForce(joint->odeJoint_, tau.begin()[i++]);
+          break;
+        }
+        default:
+        RAIINFO("not supported joint type")
+      }
+    }
+  }
+  else {
+    // floating body
+    dBodyAddForce(rootLink_.odeBody_, tau.begin()[0], tau.begin()[1], tau.begin()[2]);
+    dBodyAddTorque(rootLink_.odeBody_, tau.begin()[3], tau.begin()[4], tau.begin()[4]);
+
+    int i = 6;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          continue;
+        }
+        case Joint::REVOLUTE: {
+          dJointAddHingeTorque(joint->odeJoint_, tau.begin()[i++]);
+          break;
+        }
+        case Joint::PRISMATIC: {
+          dJointAddSliderForce(joint->odeJoint_, tau.begin()[i++]);
+          break;
+        }
+        default:
+        RAIINFO("not supported joint type")
+      }
+    }
+  }
+}
+
 void OdeArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
+  if(isFixed_) {
+    // fixed body
+    int i = 0;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          continue;
+        }
+        case Joint::REVOLUTE: {
+          dJointAddHingeTorque(joint->odeJoint_, tau[i++]);
+          break;
+        }
+        case Joint::PRISMATIC: {
+          dJointAddSliderForce(joint->odeJoint_, tau[i++]);
+          break;
+        }
+        default:
+        RAIINFO("not supported joint type")
+      }
+    }
+  }
+  else {
+    // floating body
+    dBodyAddForce(rootLink_.odeBody_, tau[0], tau[1], tau[2]);
+    dBodyAddTorque(rootLink_.odeBody_, tau[3], tau[4], tau[4]);
 
+    int i = 6;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          continue;
+        }
+        case Joint::REVOLUTE: {
+          dJointAddHingeTorque(joint->odeJoint_, tau[i++]);
+          break;
+        }
+        case Joint::PRISMATIC: {
+          dJointAddSliderForce(joint->odeJoint_, tau[i++]);
+          break;
+        }
+        default:
+        RAIINFO("not supported joint type")
+      }
+    }
+  }
 }
+
 const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSystem::getGeneralizedForce() {
+  RAIFATAL("not implemented yet")
   return genForce_.e();
 }
+
 int OdeArticulatedSystem::getDOF() {
   return dof_;
 }
-void OdeArticulatedSystem::setColor(Eigen::Vector4d color) {
 
+void OdeArticulatedSystem::setColor(Eigen::Vector4d color) {
+  RAIFATAL("not implemented yet")
 }
+
 } // object
 } // ode_sim
