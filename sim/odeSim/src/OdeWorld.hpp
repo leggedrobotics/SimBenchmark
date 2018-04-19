@@ -25,6 +25,15 @@ enum SolverOption {
   SOLVER_QUICK
 };
 
+struct Single3DContactProblem {
+  Single3DContactProblem(const dVector3 &point, const dVector3 &normal) {
+    point_ = {point[0], point[1], point[2]};
+    normal_ = {normal[0], normal[1], normal[2]};
+  };
+  Eigen::Vector3d point_;
+  Eigen::Vector3d normal_;
+};
+
 class OdeWorld: public benchmark::WorldInterface {
 
  public:
@@ -69,9 +78,14 @@ class OdeWorld: public benchmark::WorldInterface {
 
   void integrate(double dt) override ;
 
+  static const std::vector<Single3DContactProblem> *getCollisionProblem();
+
   void setGravity(const benchmark::Vec<3> &gravity) override ;
+
   void setERP(double erp);
+
   virtual int getNumObject() override ;
+
 
   // dynamics world
   static dWorldID dynamicsWorld_;
@@ -85,6 +99,9 @@ class OdeWorld: public benchmark::WorldInterface {
   // call back
   static void nearCallback(void *data, dGeomID o1, dGeomID o2);
 
+  // collision problem list
+  static std::vector<Single3DContactProblem> contactProblemList_;
+
   // space
   dSpaceID space_;
 
@@ -96,7 +113,6 @@ class OdeWorld: public benchmark::WorldInterface {
 
   // list
   std::vector<object::OdeObject*> objectList_;
-
 };
 
 }

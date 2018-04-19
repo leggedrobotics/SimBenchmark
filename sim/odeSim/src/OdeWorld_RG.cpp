@@ -72,6 +72,173 @@ void OdeWorld_RG::updateFrame() {
         as.alternateVisual()[i]->setVisibility(false);
     }
   }
+
+  benchmark::Vec<3> bodyPosition;
+  benchmark::Vec<4> quat;
+
+  for (auto sb : sbHandles_) {
+    sb->getPosition_W(bodyPosition);
+    sb->getQuaternion(quat);
+
+    if (!showAlternateGraphicsIfexists || sb.alternateVisual().size() == 0) {
+      for (auto *go: sb.alternateVisual()) go->setVisibility(false);
+      for (auto *go: sb.visual()) {
+        go->setVisibility(true);
+        go->setPos({bodyPosition.v[0], bodyPosition.v[1], bodyPosition.v[2]});
+        go->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
+        adjustTransparency(go, sb.hidable);
+      }
+    } else {
+      for (auto *go: sb.visual()) go->setVisibility(false);
+      for (auto *go: sb.visual()) {
+        go->setVisibility(true);
+        go->setPos({bodyPosition.v[0], bodyPosition.v[1], bodyPosition.v[2]});
+        go->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
+        adjustTransparency(go, sb.hidable);
+      }
+    }
+  }
+
+//  rai_sim::Mat<3, 3> rot;
+//  for (auto sb : comHandles_) {
+//    sb->getPosition_W(bodyPosition);
+//    sb->getRotationMatrix(rot);
+//    auto &trans = sb->getTransformation();
+//
+//    if (!showAlternateGraphicsIfexists || sb.alternateVisual().size() == 0) {
+//      for (auto *go: sb.alternateVisual()) go->setVisibility(false);
+//      for (int i = 0; i < sb.visual().size(); i++) {
+//        Vec<3> pos;
+//        Vec<4> quat;
+//        matvecmul(rot, trans[i].pos, pos);
+//        sb.visual()[i]->setPos(bodyPosition.v[0] + pos.v[0],
+//                               bodyPosition.v[1] + pos.v[1],
+//                               bodyPosition.v[2] + pos.v[2]);
+//        matmul(rot, trans[i].rot, rot);
+//        rotMatToQuat(rot, quat);
+//        sb.visual()[i]->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
+//        adjustTransparency(sb.visual()[i], sb.hidable);
+//      }
+//    }
+//  }
+
+  /// contact points
+  if (gui_->getCustomToggleState(1)) {
+    contactPointMarker_->mutexLock();
+    contactPointMarker_->clearGhost();
+    for (auto &pro: *world_.getCollisionProblem()) {
+      Eigen::Vector3d pos = pro.point_;
+      contactPointMarker_->addGhost(pos);
+    }
+    contactPointMarker_->mutexUnLock();
+  } else
+    contactPointMarker_->clearGhost();
+
+  /// contact forces
+//  if (gui_->getCustomToggleState(2)) {
+//    double maxForce = 0;
+//    for (auto &pro: *world_.getCollisionProblem())
+//      maxForce = (maxForce < pro.imp_i.norm()) ? pro.imp_i.norm() : maxForce;
+//    contactNormalArrow_->mutexLock();
+//    contactNormalArrow_->clearGhost();
+//    for (auto &pro: world_.getObjList()) {
+//      for (auto &con: pro->getPerObjectContact().getContacts()) {
+//        const double norm = con.getImpulse()->norm();
+//        Eigen::Vector3d pos(con.getPosition().v[0], con.getPosition().v[1], con.getPosition().v[2]);
+//        Vec<3> scaledImp;
+//        matTransposevecmul(con.getContactFrame(), *con.getImpulse(), scaledImp);
+//        vecScalarMul(1.0 / norm, scaledImp);
+//        Eigen::Vector3d dir = scaledImp.e();
+//        Eigen::Vector3f color(norm / maxForce, 0.2, 1 - norm / maxForce);
+//        Eigen::Vector3f scale(norm / maxForce, 1, 1);
+//        contactNormalArrow_->addGhostWithVector(pos, dir, color, scale);
+//      }
+//    }
+//    contactNormalArrow_->mutexUnLock();
+//  } else
+//    contactNormalArrow_->clearGhost();
+
+  /// frames and COM
+  if (gui_->getCustomToggleState(4)) {
+
+    frameX_->mutexLock();
+    frameY_->mutexLock();
+    frameZ_->mutexLock();
+    graphicalComMarker_->mutexLock();
+
+    frameX_->clearGhost();
+    frameY_->clearGhost();
+    frameZ_->clearGhost();
+    graphicalComMarker_->clearGhost();
+    Eigen::Vector3f colorR(1, 0, 0), colorG(0, 1, 0), colorB(0, 0, 1);
+    Eigen::Vector3d xdir, ydir, zdir;
+
+    for (auto *cf: framesAndCOMobj_) {
+      if (!cf->isVisualizeFramesAndCom()) continue;
+      Eigen::Vector3d pos = cf->getPosition();
+      Eigen::Matrix3d dir = cf->getRotationMatrix();
+      Eigen::Vector3f scale(1, 1, 1);
+
+      xdir = dir.col(0);
+      ydir = dir.col(1);
+      zdir = dir.col(2);
+
+      frameX_->addGhostWithVector(pos, xdir, colorR, scale);
+      frameY_->addGhostWithVector(pos, ydir, colorG, scale);
+      frameZ_->addGhostWithVector(pos, zdir, colorB, scale);
+      graphicalComMarker_->addGhost(pos);
+    }
+    frameX_->mutexUnLock();
+    frameY_->mutexUnLock();
+    frameZ_->mutexUnLock();
+    graphicalComMarker_->mutexUnLock();
+  } else {
+    frameX_->clearGhost();
+    frameY_->clearGhost();
+    frameZ_->clearGhost();
+    graphicalComMarker_->clearGhost();
+  }
+
+  if(visualizerFlags_ & benchmark::DISABLE_INTERACTION)
+    return;
+
+  /// interaction
+//  if (gui_->isInteracting()) {
+//    auto indices = interactionIdx_.find(gui_->getInteractingObjectID());
+//    interactionForce_ = gui_->getInteractionMagnitude();
+//    interactionForce_ *= interactionForce_.norm() * 20.0 * world_.getObjList()[indices->second.first]->getMass(indices->second.second);
+//    objToInteract_ = world_.getObjList()[indices->second.first];
+//    objToInteractLocalIdx_ = indices->second.second;
+//    std::stringstream inStr;
+//    inStr << std::setprecision(3) << interactionForce_.norm() << "N";
+//    gui_->changeMenuText(1, false, inStr.str());
+//    gui_->setMenuPositionNextToCursor(1);
+//  } else {
+//    gui_->changeMenuText(1, false, "");
+//    objToInteract_ = nullptr;
+//  }
+
+  /// deletion
+//  if (gui_->getKeyboardEvent(rai_graphics::KeyboardEvent::DEL)) {
+//    auto indices = interactionIdx_.find(gui_->getInteractingObjectID());
+//    if (indices != interactionIdx_.end()) {
+//      object::Object *obj = world_.getObjList()[indices->second.first];
+//      long int id =
+//          std::find_if(sbHandles_.begin(), sbHandles_.end(), [obj](const SingleBodyHandle &a) { return a.s_ == obj; })
+//              - sbHandles_.begin();
+//      if (id == sbHandles_.size()) {
+//        long int id = std::find_if(asHandles_.begin(),
+//                                   asHandles_.end(),
+//                                   [obj](const ArticulatedSystemHandle &a) { return a.s_ == obj; })
+//            - asHandles_.begin();
+//        if (!id == asHandles_.size())
+//          removeObject(asHandles_[id]);
+//      } else {
+//        removeObject(sbHandles_[id]);
+//      }
+//      interactionIdx_.erase(gui_->getInteractingObjectID());
+//    }
+//  }
 }
 
 benchmark::SingleBodyHandle OdeWorld_RG::addBox(double xLength,

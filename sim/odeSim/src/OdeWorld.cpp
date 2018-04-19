@@ -4,9 +4,12 @@
 
 #include "OdeWorld.hpp"
 
+namespace ode_sim {
+
 // static members
 dWorldID ode_sim::OdeWorld::dynamicsWorld_;
 dJointGroupID ode_sim::OdeWorld::contactGroup_;
+std::vector<Single3DContactProblem> ode_sim::OdeWorld::contactProblemList_;
 
 void message(int errnum, const char *msg, va_list ap) {
   // no debug message
@@ -22,6 +25,7 @@ ode_sim::OdeWorld::OdeWorld(SolverOption solverOption) : solverOption_(solverOpt
   dVector3 Center = {0, 0, 0, 0};
   dVector3 Extents = {10, 0, 10, 0};
   space_ = dQuadTreeSpaceCreate(0, Center, Extents, 7);
+//  space_ = dHashSpaceCreate(0);
   contactGroup_ = dJointGroupCreate(0);
 
   dWorldSetGravity(dynamicsWorld_, gravity_[0], gravity_[1], gravity_[2]);
@@ -82,6 +86,7 @@ void ode_sim::OdeWorld::nearCallback(void *data, dGeomID o1, dGeomID o2) {
       contact[i].surface.bounce = prop1->restitutionCoeff * prop2->restitutionCoeff;
     }
   }
+
   if (int numc = dCollide(o1,o2, maxContactsPerBody, &contact[0].geom,
                           sizeof(dContact))) {
     dMatrix3 RI;
@@ -91,10 +96,7 @@ void ode_sim::OdeWorld::nearCallback(void *data, dGeomID o1, dGeomID o2) {
       dJointID c = dJointCreateContact (dynamicsWorld_, contactGroup_, contact+i);
       dJointAttach (c,b1,b2);
 
-//      if (show_contacts) {
-//        dsSetColor(0,0,1);
-//        dsDrawBox(contact[i].geom.pos,RI,ss);
-//      }
+      contactProblemList_.emplace_back(contact[i].geom.pos, contact[i].geom.normal);
     }
   }
 }
@@ -141,12 +143,12 @@ ode_sim::object::OdeCylinder *ode_sim::OdeWorld::addCylinder(double radius,
 }
 
 ode_sim::object::OdeCheckerBoard *ode_sim::OdeWorld::addCheckerboard(double gridSize,
-                                                            double xLength,
-                                                            double yLength,
-                                                            double reflectanceI,
-                                                            bo::CheckerboardShape shape,
-                                                            benchmark::CollisionGroupType collisionGroup,
-                                                            benchmark::CollisionGroupType collisionMask) {
+                                                                     double xLength,
+                                                                     double yLength,
+                                                                     double reflectanceI,
+                                                                     bo::CheckerboardShape shape,
+                                                                     benchmark::CollisionGroupType collisionGroup,
+                                                                     benchmark::CollisionGroupType collisionMask) {
   auto *checkerBoard = new ode_sim::object::OdeCheckerBoard(dynamicsWorld_, space_, collisionGroup, collisionMask);
   objectList_.push_back(checkerBoard);
   return checkerBoard;
@@ -167,12 +169,15 @@ void ode_sim::OdeWorld::setGravity(const benchmark::Vec<3> &gravity) {
   memcpy(gravity_, dgravity, sizeof(dVector3));
   dWorldSetGravity(dynamicsWorld_, gravity_[0], gravity_[1], gravity_[2]);
 }
+
 void ode_sim::OdeWorld::setERP(double erp) {
   dWorldSetERP(dynamicsWorld_, erp);
 }
+
 void ode_sim::OdeWorld::integrate(double dt) {
 
   // collision detection
+  contactProblemList_.clear();
   dSpaceCollide(space_, 0, &nearCallback);
 
   // collision solving
@@ -187,6 +192,14 @@ void ode_sim::OdeWorld::integrate(double dt) {
 
   dJointGroupEmpty(contactGroup_);
 }
+
 int ode_sim::OdeWorld::getNumObject() {
   return objectList_.size();
 }
+
+const std::vector<ode_sim::Single3DContactProblem> *ode_sim::OdeWorld::getCollisionProblem() {
+  return &contactProblemList_;
+}
+
+} // ode_sim
+

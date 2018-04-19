@@ -131,6 +131,11 @@ if [ "$ode_flag" == 'ON' ]; then
     echo "Installing ODE... (0.15.2 version)"
     cd $ROOT_DIR/lib
     wget https://bitbucket.org/odedevs/ode/downloads/ode-0.15.2.tar.gz
+    tar -xvf ode-0.15.2.tar.gz
+    cd ode-0.15.2
+    mkdir cmake-build && cd cmake-build
+    cmake -DCMAKE_BUILD_TYPE=Release -DODE_WITH_LIBCCD=ON ../
+    sudo make install -j4
 fi
 
 # install mujoco (optional)

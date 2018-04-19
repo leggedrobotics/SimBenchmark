@@ -7,7 +7,8 @@
 enum Object {
   BOX,
   BALL,
-  CAPSULE
+  CAPSULE,
+  Cylinder
 };
 
 int main() {
@@ -21,7 +22,7 @@ int main() {
   // add objects
   auto checkerboard = sim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
 
-  Object object = BOX;
+  Object object = Cylinder;
   switch(object) {
     case BOX:
     {
@@ -57,6 +58,18 @@ int main() {
       capsule3->setPosition(0, 5, 2.5);
       auto capsule4 = sim.addCapsule(0.25, 0.5, 1);
       capsule4->setPosition(5, 5, 3.5);
+      break;
+    }
+    case Cylinder:
+    {
+      auto cylinder1 = sim.addCylinder(0.5, 0.5, 1);
+      cylinder1->setPosition(0, 0, 0.5);
+      auto cylinder2 = sim.addCylinder(0.5, 0.5, 1);
+      cylinder2->setPosition(5, 0, 1.5);
+      auto cylinder3 = sim.addCylinder(0.5, 0.5, 1);
+      cylinder3->setPosition(0, 5, 2.5);
+      auto cylinder4 = sim.addCylinder(0.5, 0.5, 1);
+      cylinder4->setPosition(5, 5, 3.5);
       break;
     }
   }

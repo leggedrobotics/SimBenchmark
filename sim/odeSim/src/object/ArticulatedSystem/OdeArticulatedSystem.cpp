@@ -442,7 +442,6 @@ void OdeArticulatedSystem::initCollisions(Link &link,
                                      link.collision_.colShape_[i]);
     props.emplace_back("",
                        link.collision_.colShapeParam_[i]);
-
   }
   // end of geometry
 
@@ -461,10 +460,9 @@ void OdeArticulatedSystem::initCollisions(Link &link,
 
 void OdeArticulatedSystem::initInertials(Link &link) {
   if(link.inertial_.mass_ == 0) {
-    RAIFATAL("zero inertial link is not allowed for ODE")
-//    link.inertial_.odeMass_.setZero();
-//    dBodySetMass(link.odeBody_, &link.inertial_.odeMass_);
-  } else {
+    RAIFATAL("zero inertial link is not allowed in ODE")
+  }
+  else {
     benchmark::Mat<3,3> inertia;
     benchmark::similarityTransform(link.inertial_.rotmat_, link.inertial_.inertia_, inertia);
 
@@ -500,6 +498,7 @@ void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRo
   for(int i = 0; i < link.childrenLinks_.size(); i++) {
     Link &childLink = link.childrenLinks_[i];
 
+    // joint position, axis, and orientation
     benchmark::Vec<3> pos_w;
     benchmark::Vec<3> axis_w;
     benchmark::Mat<3,3> rot_w;
@@ -574,18 +573,19 @@ void OdeArticulatedSystem::updateVisuals() {
     Link *link = links_[linkIdx];
 
     const dReal *position = dBodyGetPosition(link->odeBody_);
-    benchmark::Vec<3> parentPos_w = {position[0], position[1], position[2]};
+    benchmark::Vec<3> linkPos_w = {position[0], position[1], position[2]};
 
     const dReal* rot = dBodyGetRotation(link->odeBody_);
-    benchmark::Mat<3,3> parentRot_w;
-    parentRot_w.e() << rot[0], rot[1], rot[2],
+    benchmark::Mat<3,3> linkRot_w;
+    linkRot_w.e() << rot[0], rot[1], rot[2],
         rot[4], rot[5], rot[6],
         rot[8], rot[9], rot[10];
 
+    // TODO fix this (multiple geom for one link case)
     for(int j = 0; j < link->visual_.visshape_.size(); j++) {
-      benchmark::matmul(parentRot_w, link->visual_.visObjRotMat_[j], std::get<0>(visObj[i]));
-      benchmark::matvecmul(parentRot_w, link->visual_.visObjOrigin_[j], std::get<1>(visObj[i]));
-      benchmark::vecadd(parentPos_w, std::get<1>(visObj[i]));
+      benchmark::matmul(linkRot_w, link->visual_.visObjRotMat_[j], std::get<0>(visObj[i]));
+      benchmark::matvecmul(linkRot_w, link->visual_.visObjOrigin_[j], std::get<1>(visObj[i]));
+      benchmark::vecadd(linkPos_w, std::get<1>(visObj[i]));
     }
   }
 
