@@ -110,6 +110,8 @@ struct Link {
 
   std::vector<Link> childrenLinks_;
 
+  std::vector<Link> fixedLinks_;
+
   LinkInertial inertial_;
 
   LinkCollision collision_;
@@ -127,19 +129,8 @@ struct Link {
 
   dBodyID odeBody_ = 0;
 
-
-  // relative com position and body orientation w.r.t parent
-  benchmark::Vec<3> com_B_;
-  benchmark::Mat<3, 3> rotMat_B_;
-
   /// collision ode
 //  std::vector<MetrialProp *> matrialProps_;
-
-
-  void RPY(const benchmark::Vec<3> &rpy) {
-    rpyToRotMat_intrinsic(rpy, rotMat_B_);
-  }
-
 //  void initCollisions(std::vector<AlternativeVisualObjectData> &collect,
 //                      std::vector<VisualObjectProperty> &props);
 
@@ -148,12 +139,6 @@ struct Link {
     for (auto &ch : childrenLinks_)
       nbody += ch.numberOfBodiesFromHere();
     return nbody;
-  }
-
-  int jointIdx(std::string &nm, std::vector<std::string> &jointsNames) {
-    for (uint i = 0; i < jointsNames.size(); i++)
-      if (nm == jointsNames[i]) return int(i);
-    return -1;
   }
 };
 

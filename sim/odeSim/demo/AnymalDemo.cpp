@@ -14,14 +14,15 @@ int main() {
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/ANYmal/";
+//  urdfPath += "../../../res/Singlebody/";
 
 #ifdef SIM_TIME_MODE
-  dart_sim::DartWorld_RG sim;
+  ode_sim::OdeWorld_RG sim;
 #else
   ode_sim::OdeWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 #endif
 
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1);
   auto anymal = sim.addArticulatedSystem(urdfPath);
 //  anymal->setGeneralizedCoordinate(
 //      {0, 0, 0.5,
@@ -33,7 +34,7 @@ int main() {
 //  anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
 //  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 //
-////  sim.setGravity({0, 0, 0});
+//  sim.setGravity({0, 0, 0});
 //
 //  Eigen::VectorXd jointNominalConfig(19);
 //  Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
@@ -68,12 +69,12 @@ int main() {
 //    anymal->setGeneralizedForce(jointForce);
     sim.integrate(0.005);
   }
-//
-//#if defined(SIM_TIME_MODE)
-//  std::cout<<"time taken for 50k steps "<< watch.measure()<<"s \n";
-//#elif defined(VIDEO_SAVE_MODE)
-//  sim.stopRecordingVideo();
-//#endif
+
+#if defined(SIM_TIME_MODE)
+  std::cout<<"time taken for 50k steps "<< watch.measure()<<"s \n";
+#elif defined(VIDEO_SAVE_MODE)
+  sim.stopRecordingVideo();
+#endif
 
   return 0;
 }

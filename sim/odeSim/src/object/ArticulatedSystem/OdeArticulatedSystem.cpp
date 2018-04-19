@@ -59,7 +59,7 @@ OdeArticulatedSystem::OdeArticulatedSystem(std::string urdfFile,
 
   if (rootLink->name != "world") {
     isFixed_ = false;
-//    baseType_ = Joint::FLOATING;
+//    rootJoint_ = Joint::FLOATING;
 //    dof = 5;
 //    jointStateDim = 6;
 //    baseJointStateDimMinusOne = 6;
@@ -74,10 +74,9 @@ OdeArticulatedSystem::OdeArticulatedSystem(std::string urdfFile,
       rootLink = rootLink->child_links[0];
   }
 
-  links_.emplace_back();
-
   // process links recursively
-  processLinkFromUrdf(rootLink, links_.back(), jointsNames_);
+  rootLink_.parentIdx_ = -1;
+  processLinkFromUrdf(rootLink, rootLink_, jointsNames_);
 
   // init articulated system
   init();
@@ -228,21 +227,18 @@ void OdeArticulatedSystem::processLinkFromUrdf(boost::shared_ptr<const urdf::Lin
         raiLink.childrenLinks_.emplace_back();
         childRef = &raiLink.childrenLinks_.back();
         childRef->parentJoint_.type = Joint::FIXED;
-//        childRef->joint.odeJoint_ = dJointCreateFixed(worldID_, 0);
         break;
       }
       case urdf::Joint::REVOLUTE: {
         raiLink.childrenLinks_.emplace_back();
         childRef = &raiLink.childrenLinks_.back();
         childRef->parentJoint_.type = Joint::REVOLUTE;
-//        childRef->joint.odeJoint_ = dJointCreateHinge(worldID_, 0);
         break;
       }
       case urdf::Joint::PRISMATIC: {
         raiLink.childrenLinks_.emplace_back();
         childRef = &raiLink.childrenLinks_.back();
         childRef->parentJoint_.type = Joint::PRISMATIC;
-//        childRef->joint.odeJoint_ = dJointCreateSlider(worldID_, 0);
         break;
       }
       default:
@@ -253,12 +249,12 @@ void OdeArticulatedSystem::processLinkFromUrdf(boost::shared_ptr<const urdf::Lin
     jnt->parent_to_joint_origin_transform.rotation.getRPY(r, p, y);
     benchmark::Vec<3> rpy;
     rpy.e() << r, p, y;
-    childRef->RPY(rpy);
     double axisNorm = sqrt(jnt->axis.x * jnt->axis.x + jnt->axis.y * jnt->axis.y + jnt->axis.z * jnt->axis.z);
     childRef->parentJoint_.jointAxis({jnt->axis.x / axisNorm, jnt->axis.y / axisNorm, jnt->axis.z / axisNorm});
     childRef->parentJoint_.jointPosition({jnt->parent_to_joint_origin_transform.position.x,
                                           jnt->parent_to_joint_origin_transform.position.y,
                                           jnt->parent_to_joint_origin_transform.position.z});
+    benchmark::rpyToRotMat_intrinsic(rpy, childRef->parentJoint_.rotmat_);
 
     processLinkFromUrdf(ch, *childRef, jointsOrder);
   }
@@ -280,12 +276,48 @@ void OdeArticulatedSystem::init() {
   baseRotMat.setIdentity();
   benchmark::Vec<3> baseOrigin;
   baseOrigin.setZero();
+  baseOrigin[2] = 1.0;
 
-  initInertial(links_[0]);
-  initVisuals(links_[0], baseRotMat, baseOrigin, visObj, visProps_);
-  initCollisions(links_[0], baseRotMat, baseOrigin, visColObj, visColProps_);
+  // init index of each body
+  initIdx(rootLink_);
+
+  // init ODE inertial properties
+  initInertials(rootLink_);
+
+  // init visual objects
+  initVisuals(rootLink_, baseRotMat, baseOrigin, visObj, visProps_);
+
+  // init ODE collision objects
+  initCollisions(rootLink_, baseRotMat, baseOrigin, visColObj, visColProps_);
+
+  // init ODE joints
+  initJoints(rootLink_, baseRotMat, baseOrigin);
 }
 
+/**
+ * initialize body index, parent index and make link vector (links_)
+ *
+ * @param link
+ */
+void OdeArticulatedSystem::initIdx(Link &link) {
+  link.bodyIdx_ = (int)links_.size();
+  links_.push_back(&link);
+  for(int i = 0; i < link.childrenLinks_.size(); i++) {
+    link.childrenLinks_[i].parentIdx_ = link.bodyIdx_;
+    initIdx(link.childrenLinks_[i]);
+  }
+}
+
+/**
+ * initialize visual objects (position, orientation, shape, size, color)
+ * collect, props are output of function
+ *
+ * @param link
+ * @param parentRot_w
+ * @param parentPos_w
+ * @param collect
+ * @param props
+ */
 void OdeArticulatedSystem::initVisuals(Link &link,
                                        benchmark::Mat<3, 3> &parentRot_w,
                                        benchmark::Vec<3> &parentPos_w,
@@ -315,7 +347,7 @@ void OdeArticulatedSystem::initVisuals(Link &link,
     benchmark::Mat<3,3> rot_w;
     benchmark::Vec<3> pos_w;
 
-    benchmark::matmul(parentRot_w, ch.rotMat_B_, rot_w);
+    benchmark::matmul(parentRot_w, ch.parentJoint_.rotmat_, rot_w);
     benchmark::matvecmul(parentRot_w, ch.parentJoint_.pos_, pos_w);
     benchmark::vecadd(parentPos_w, pos_w);
 
@@ -323,6 +355,15 @@ void OdeArticulatedSystem::initVisuals(Link &link,
   }
 }
 
+/**
+ * initialize ODE collision objects
+ *
+ * @param link
+ * @param parentRot_w
+ * @param parentPos_w
+ * @param collect
+ * @param props
+ */
 void OdeArticulatedSystem::initCollisions(Link &link,
                                           benchmark::Mat<3, 3> &parentRot_w,
                                           benchmark::Vec<3> &parentPos_w,
@@ -410,7 +451,7 @@ void OdeArticulatedSystem::initCollisions(Link &link,
     benchmark::Mat<3,3> rot_w;
     benchmark::Vec<3> pos_w;
 
-    benchmark::matmul(parentRot_w, ch.rotMat_B_, rot_w);
+    benchmark::matmul(parentRot_w, ch.parentJoint_.rotmat_, rot_w);
     benchmark::matvecmul(parentRot_w, ch.parentJoint_.pos_, pos_w);
     benchmark::vecadd(parentPos_w, pos_w);
 
@@ -418,9 +459,11 @@ void OdeArticulatedSystem::initCollisions(Link &link,
   }
 }
 
-void OdeArticulatedSystem::initInertial(Link &link) {
+void OdeArticulatedSystem::initInertials(Link &link) {
   if(link.inertial_.mass_ == 0) {
-    link.inertial_.odeMass_.setZero();
+    RAIFATAL("zero inertial link is not allowed for ODE")
+//    link.inertial_.odeMass_.setZero();
+//    dBodySetMass(link.odeBody_, &link.inertial_.odeMass_);
   } else {
     benchmark::Mat<3,3> inertia;
     benchmark::similarityTransform(link.inertial_.rotmat_, link.inertial_.inertia_, inertia);
@@ -442,14 +485,128 @@ void OdeArticulatedSystem::initInertial(Link &link) {
   }
 
   for (auto &ch: link.childrenLinks_)
-    initInertial(ch);
+    initInertials(ch);
 }
+
+/**
+ * initialize children joint of link (ODE)
+ *
+ * @param link
+ * @param parentRot_w
+ * @param parentPos_w
+ */
+void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRot_w, benchmark::Vec<3> &parentPos_w) {
+
+  for(int i = 0; i < link.childrenLinks_.size(); i++) {
+    Link &childLink = link.childrenLinks_[i];
+
+    benchmark::Vec<3> pos_w;
+    benchmark::Vec<3> axis_w;
+    benchmark::Mat<3,3> rot_w;
+
+    benchmark::matmul(parentRot_w, childLink.parentJoint_.rotmat_, rot_w);
+    benchmark::matvecmul(parentRot_w, childLink.parentJoint_.axis_, axis_w);
+    benchmark::matvecmul(parentRot_w, childLink.parentJoint_.pos_, pos_w);
+    benchmark::vecadd(parentPos_w, pos_w);
+
+    switch (childLink.parentJoint_.type) {
+      case Joint::FIXED: {
+        childLink.parentJoint_.odeJoint_ = dJointCreateFixed(worldID_, 0);
+        dJointAttach(childLink.parentJoint_.odeJoint_, link.odeBody_, childLink.odeBody_);
+        dJointSetFixed(childLink.parentJoint_.odeJoint_);
+        break;
+      }
+      case Joint::REVOLUTE: {
+        childLink.parentJoint_.odeJoint_ = dJointCreateHinge(worldID_, 0);
+        dJointAttach(childLink.parentJoint_.odeJoint_, link.odeBody_, childLink.odeBody_);
+        dJointSetHingeAnchor(
+            childLink.parentJoint_.odeJoint_,
+            pos_w[0],
+            pos_w[1],
+            pos_w[2]
+        );
+        dJointSetHingeAxis(
+            childLink.parentJoint_.odeJoint_,
+            axis_w[0],
+            axis_w[1],
+            axis_w[2]
+        );
+        break;
+      }
+      case Joint::PRISMATIC: {
+        RAIFATAL("prismatic joint implementation is not complete")
+        childLink.parentJoint_.odeJoint_ = dJointCreateSlider(worldID_, 0);
+        dJointAttach(childLink.parentJoint_.odeJoint_, link.odeBody_, childLink.odeBody_);
+        break;
+      }
+      default:
+      RAIFATAL("currently only support revolute/prismatic/fixed joint");
+
+    }
+
+    initJoints(childLink, rot_w, pos_w);
+  }
+}
+
 OdeArticulatedSystem::~OdeArticulatedSystem() {
   for(int i = 0; i < links_.size(); i++) {
-    // TODO
-    // delete ode body
-    // delete ode geom
+
     // delete ode joints
+    if(links_[i]->parentJoint_.odeJoint_)
+      dJointDestroy(links_[i]->parentJoint_.odeJoint_);
+
+    // delete ode body
+    if(links_[i]->odeBody_)
+      dBodyDestroy(links_[i]->odeBody_);
+
+    // delete ode geom
+    if(links_[i]->collision_.odeGeometries_.size() > 0) {
+      for(int j = 0; j < links_[i]->collision_.odeGeometries_.size(); j++)
+        dGeomDestroy(links_[i]->collision_.odeGeometries_[j]);
+    }
+  }
+}
+void OdeArticulatedSystem::updateVisuals() {
+
+  // update visual object
+  for(int i = 0; i < visObj.size(); i++) {
+    int linkIdx = std::get<2>(visObj[i]);
+    Link *link = links_[linkIdx];
+
+    const dReal *position = dBodyGetPosition(link->odeBody_);
+    benchmark::Vec<3> parentPos_w = {position[0], position[1], position[2]};
+
+    const dReal* rot = dBodyGetRotation(link->odeBody_);
+    benchmark::Mat<3,3> parentRot_w;
+    parentRot_w.e() << rot[0], rot[1], rot[2],
+        rot[4], rot[5], rot[6],
+        rot[8], rot[9], rot[10];
+
+    for(int j = 0; j < link->visual_.visshape_.size(); j++) {
+      benchmark::matmul(parentRot_w, link->visual_.visObjRotMat_[j], std::get<0>(visObj[i]));
+      benchmark::matvecmul(parentRot_w, link->visual_.visObjOrigin_[j], std::get<1>(visObj[i]));
+      benchmark::vecadd(parentPos_w, std::get<1>(visObj[i]));
+    }
+  }
+
+  // update alternative visual object
+  for(int i = 0; i < visColObj.size(); i++) {
+    Link *link = links_[std::get<2>(visColObj[i])];
+
+    const dReal *position = dBodyGetPosition(link->odeBody_);
+    benchmark::Vec<3> parentPos_w = {position[0], position[1], position[2]};
+
+    const dReal* rot = dBodyGetRotation(link->odeBody_);
+    benchmark::Mat<3,3> parentRot_w;
+    parentRot_w.e() << rot[0], rot[1], rot[2],
+        rot[4], rot[5], rot[6],
+        rot[8], rot[9], rot[10];
+
+    for(int j = 0; j < link->collision_.colShape_.size(); j++) {
+      benchmark::matmul(parentRot_w, link->collision_.colObjRotMat_[j], std::get<0>(visColObj[i]));
+      benchmark::matvecmul(parentRot_w, link->collision_.colObjOrigin_[j], std::get<1>(visColObj[i]));
+      benchmark::vecadd(parentPos_w, std::get<1>(visColObj[i]));
+    }
   }
 }
 const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSystem::getGeneralizedCoordinate() {
@@ -464,20 +621,20 @@ void OdeArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &joint
 void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
 
 }
+
 void OdeArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
 
 }
+
 void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
 
 }
 void OdeArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
 
 }
-
 void OdeArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
 
 }
-
 void OdeArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
 
 }

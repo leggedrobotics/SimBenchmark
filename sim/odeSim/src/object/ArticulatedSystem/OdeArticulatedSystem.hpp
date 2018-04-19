@@ -29,6 +29,8 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
                        const dSpaceID spaceID);
   virtual ~OdeArticulatedSystem();
 
+  void updateVisuals();
+
   const EigenVec getGeneralizedCoordinate() override;
   const EigenVec getGeneralizedVelocity() override;
   const EigenVec getGeneralizedForce() override;
@@ -48,24 +50,34 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   void init();
 
   // recursively initialize link data
+  void initIdx(Link &link);
+
   void initVisuals(Link &link,
                    benchmark::Mat<3, 3> &parentRot_w,
                    benchmark::Vec<3> &parentPos_w,
                    std::vector<VisualObjectData> &collect,
                    std::vector<VisualObjectProperty> &props);
+
   void initCollisions(Link &link,
                         benchmark::Mat<3, 3> &parentRot_w,
                         benchmark::Vec<3> &parentPos_w,
                         std::vector<AlternativeVisualObjectData> &collect,
                         std::vector<VisualObjectProperty> &props);
-  void initInertial(Link &link);
+
+  void initInertials(Link &link);
+
+  void initJoints(Link &link, benchmark::Mat<3, 3> &parentRot_w, benchmark::Vec<3> &parentPos_w);
 
   void processLinkFromUrdf(boost::shared_ptr<const urdf::Link> urdfLink,
                              Link &raiLink,
                              std::vector<std::string> &jointsOrder);
 
   std::vector<std::string> jointsNames_;
-  std::vector<Link> links_;
+
+  // the head of links_ is the pointer of rootLink
+  std::vector<Link *> links_;
+
+  Link rootLink_;
 
   dWorldID worldID_ = 0;
   dSpaceID spaceID_ = 0;

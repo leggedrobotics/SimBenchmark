@@ -30,7 +30,7 @@ void OdeWorld_RG::updateFrame() {
     benchmark::Vec<4> color;
 
     // update visuals for articulated system
-//    as->updateVisuals();
+    as->updateVisuals();
 
     if (showAlternateGraphicsIfexists) {
       /// update collision objects
