@@ -93,9 +93,6 @@ class OdeWorld_RG: public benchmark::World_RG {
 
   std::vector<ArticulatedSystemHandle> asHandles_;
 
-//  std::vector<rai_graphics::object::Sphere *> jointMarker_; // for debug
-//  std::vector<rai_graphics::object::Arrow *> jointAxes_; // for debug
-
 };
 
 } // odesim_sim

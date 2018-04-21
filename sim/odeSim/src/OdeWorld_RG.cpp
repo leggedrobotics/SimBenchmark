@@ -32,26 +32,6 @@ void OdeWorld_RG::updateFrame() {
     // update visuals for articulated system
     as->updateVisuals();
 
-//    // this is only for debug
-//    int i = 0;
-//    for(auto joint: as->getJoints()) {
-//      if (joint->type == object::Joint::REVOLUTE) {
-//        dReal pos[3];
-//        dJointGetHingeAnchor(joint->odeJoint_, pos);
-//
-//        Eigen::Vector3d position = {pos[0], pos[1], pos[2]};
-//        jointMarker_[i]->setPos(pos[0], pos[1], pos[2]);
-//
-//        dReal axis[3];
-//        dJointGetHingeAxis(joint->odeJoint_, axis);
-//
-//        Eigen::Vector3d axisE = {axis[0], axis[1], axis[2]};
-//        jointAxes_[i]->representVector(position, axisE);
-//        i++;
-//      }
-//    }
-//    // debug
-
     if (showAlternateGraphicsIfexists) {
       /// update collision objects
       for (int i = 0; i < as->getVisColOb().size(); i++) {
@@ -392,19 +372,6 @@ ArticulatedSystemHandle OdeWorld_RG::addArticulatedSystem(std::string nm,
     }
     processGraphicalObject(handle.alternateVisual().back(), std::get<2>(handle->visColObj[i]));
   }
-
-  // debug
-//  for (auto joint: handle->getJoints()) {
-//    if(joint->type == object::Joint::REVOLUTE) {
-//      jointMarker_.push_back(new rai_graphics::object::Sphere(0.02, false));
-//      jointMarker_.back()->setColor({0, 0, 1});
-//      processGraphicalObject(jointMarker_.back(), 0);
-//
-//      jointAxes_.push_back(new rai_graphics::object::Arrow(0.01, 0.02, 0.1, 0.05));
-//      jointAxes_.back()->setColor({0, 1, 0});
-//      processGraphicalObject(jointAxes_.back(), -1);
-//    }
-//  }
 
   asHandles_.push_back(handle);
   return handle;
