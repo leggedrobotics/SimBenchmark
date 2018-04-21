@@ -221,6 +221,7 @@ void OdeArticulatedSystem::processLinkFromUrdf(boost::shared_ptr<const urdf::Lin
     Link *childRef;
     auto ch = urdfLink->child_links[childOrder[i]];
     auto &jnt = ch->parent_joint;
+//    childRef->parentJoint_.jointName_ = jnt->name;
 
     switch (jnt->type) {
       case urdf::Joint::FIXED: {
@@ -269,7 +270,7 @@ void OdeArticulatedSystem::init() {
   baseRotMat.setIdentity();
   benchmark::Vec<3> baseOrigin;
   baseOrigin.setZero();
-  baseOrigin[2] = 0.54;
+  baseOrigin[2] = 1.0;
 
   // init index of each body
   initIdx(rootLink_);
@@ -502,10 +503,17 @@ void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRo
     // joint position, axis, and orientation
     benchmark::Vec<3> pos_w;
     benchmark::Vec<3> axis_w;
+    benchmark::Vec<3> temp;
     benchmark::Mat<3,3> rot_w;
 
+    // orientation
     benchmark::matmul(parentRot_w, childLink.parentJoint_.rotmat_, rot_w);
-    benchmark::matvecmul(parentRot_w, childLink.parentJoint_.axis_, axis_w);
+
+    // axis
+    benchmark::matvecmul(childLink.parentJoint_.rotmat_, childLink.parentJoint_.axis_, temp);
+    benchmark::matvecmul(parentRot_w, temp, axis_w);
+
+    // position
     benchmark::matvecmul(parentRot_w, childLink.parentJoint_.pos_, pos_w);
     benchmark::vecadd(parentPos_w, pos_w);
 
@@ -517,6 +525,7 @@ void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRo
         break;
       }
       case Joint::REVOLUTE: {
+        // joint
         childLink.parentJoint_.odeJoint_ = dJointCreateHinge(worldID_, 0);
         dJointAttach(childLink.parentJoint_.odeJoint_, link.odeBody_, childLink.odeBody_);
         dJointSetHingeAnchor(
@@ -531,6 +540,21 @@ void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRo
             axis_w[1],
             axis_w[2]
         );
+
+        // actuator (motor)
+//        childLink.parentJoint_.odeActuator_ = dJointCreateAMotor(worldID_, 0);
+//        dJointAttach(childLink.parentJoint_.odeActuator_, link.odeBody_, childLink.odeBody_);
+//        dJointSetAMotorNumAxes(childLink.parentJoint_.odeActuator_, 1);
+//        dJointSetAMotorAxis(
+//            childLink.parentJoint_.odeActuator_,
+//            0,
+//            1,
+//            axis_w[0],
+//            axis_w[1],
+//            axis_w[2]
+//        );
+//        dJointSetAMotorAngle()
+
         dof_++;
         stateDimension_++;
         break;
@@ -578,6 +602,7 @@ OdeArticulatedSystem::~OdeArticulatedSystem() {
     }
   }
 }
+
 void OdeArticulatedSystem::updateVisuals() {
 
   // update visual object
@@ -741,63 +766,119 @@ void OdeArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &gen
 void OdeArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
   RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
   RAIFATAL("not implemented yet")
-//  if(isFixed_) {
-//    // fixed body
-//    int i = 0;
-//    for(auto *joint: joints_) {
-//      switch (joint->type) {
-//        case Joint::FIXED: {
-//          continue;
-//        }
-//        case Joint::REVOLUTE: {
-//          genCoordinate_[i++] = dJointGetHingeAngle(joint->odeJoint_);;
-//          break;
-//        }
-//        case Joint::PRISMATIC: {
-//          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
-//          break;
-//        }
-//        default:
-//        RAIINFO("not supported joint type")
-//      }
-//    }
-//  }
-//  else {
-//    // floating body
-//    const dReal *position = dBodyGetPosition(rootLink_.odeBody_);
-//    const dReal *quaternion = dBodyGetQuaternion(rootLink_.odeBody_);
-//
-//    genCoordinate_[0] = position[0];
-//    genCoordinate_[1] = position[1];
-//    genCoordinate_[2] = position[2];
-//    genCoordinate_[3] = quaternion[0];
-//    genCoordinate_[4] = quaternion[1];
-//    genCoordinate_[5] = quaternion[2];
-//    genCoordinate_[6] = quaternion[3];
-//
-//    int i = 7;
-//    for(auto *joint: joints_) {
-//      switch (joint->type) {
-//        case Joint::FIXED: {
-//          continue;
-//        }
-//        case Joint::REVOLUTE: {
-//          genCoordinate_[i++] = dJointGetHingeAngle(joint->odeJoint_);;
-//          break;
-//        }
-//        case Joint::PRISMATIC: {
-//          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
-//          break;
-//        }
-//        default:
-//        RAIINFO("not supported joint type")
-//      }
-//    }
-//  }
+  if(isFixed_) {
+    // fixed body
+    int i = 0;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          continue;
+        }
+        case Joint::REVOLUTE: {
+          dJointSetAMotorAngle(joint->odeActuator_, 0, jointState[i++]);
+          break;
+        }
+        case Joint::PRISMATIC: {
+          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
+          break;
+        }
+        default:
+        RAIINFO("not supported joint type")
+      }
+    }
+  }
+  else {
+    // floating body
+    dQuaternion dquaternion = {jointState[3],
+                               jointState[4],
+                               jointState[5],
+                               jointState[6]};
+
+//    dBodySetPosition(rootLink_.odeBody_,
+//                     jointState[0],
+//                     jointState[1],
+//                     jointState[2]);
+//    dBodySetQuaternion(rootLink_.odeBody_, dquaternion);
+
+    int i = 7;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          break;
+        }
+        case Joint::REVOLUTE: {
+          dJointSetAMotorAngle(joint->odeActuator_, 0, jointState[i++]);
+          break;
+        }
+        case Joint::PRISMATIC: {
+          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
+          break;
+        }
+        default:
+        RAIINFO("not supported joint type")
+      }
+    }
+  }
 }
 
 void OdeArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
+  RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
   RAIFATAL("not implemented yet")
+  if(isFixed_) {
+    // fixed body
+    int i = 0;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          break;
+        }
+        case Joint::REVOLUTE: {
+          dJointSetAMotorAngle(joint->odeActuator_, 0, jointState.begin()[i++]);
+          break;
+        }
+        case Joint::PRISMATIC: {
+          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
+          break;
+        }
+        default:
+        RAIINFO("not supported joint type")
+      }
+    }
+  }
+  else {
+    // floating body
+    dQuaternion dquaternion = {jointState.begin()[3],
+                               jointState.begin()[4],
+                               jointState.begin()[5],
+                               jointState.begin()[6]};
+
+//    dBodySetPosition(rootLink_.odeBody_,
+//                     jointState.begin()[0],
+//                     jointState.begin()[1],
+//                     jointState.begin()[2]);
+//    dBodySetQuaternion(rootLink_.odeBody_, dquaternion);
+
+    int i = 7;
+    for(auto *joint: joints_) {
+      switch (joint->type) {
+        case Joint::FIXED: {
+          continue;
+        }
+        case Joint::REVOLUTE: {
+          RAIINFO(jointState.begin()[i++])
+          dJointSetAMotorAngle(joint->odeActuator_, 0, jointState.begin()[i++]);
+          break;
+        }
+        case Joint::PRISMATIC: {
+          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
+          break;
+        }
+        default:
+        RAIINFO("not supported joint type")
+      }
+    }
+  }
+
 }
 
 void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
@@ -921,6 +1002,10 @@ int OdeArticulatedSystem::getDOF() {
 
 void OdeArticulatedSystem::setColor(Eigen::Vector4d color) {
   RAIFATAL("not implemented yet")
+}
+
+const std::vector<Joint *> &OdeArticulatedSystem::getJoints() const {
+  return joints_;
 }
 
 } // object

@@ -46,6 +46,8 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   void setGeneralizedForce(const Eigen::VectorXd &tau) override;
   void setColor(Eigen::Vector4d color) override;
 
+  const std::vector<Joint *> &getJoints() const;
+
  private:
   void init();
 

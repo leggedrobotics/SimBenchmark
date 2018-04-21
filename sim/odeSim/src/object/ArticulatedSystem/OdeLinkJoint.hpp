@@ -53,9 +53,11 @@ struct Joint {
   benchmark::Vec<3> pos_;
   benchmark::Mat<3,3> rotmat_;
   Type type;
+  std::string jointName_;
 
   // ode
   dJointID odeJoint_ = 0;
+  dJointID odeActuator_ = 0;
 };
 
 

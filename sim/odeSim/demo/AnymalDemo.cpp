@@ -5,8 +5,8 @@
 #include <OdeWorld_RG.hpp>
 #include "raiCommon/utils/StopWatch.hpp"
 
-#define SIM_TIME_MODE
-#define VIDEO_SAVE_MODE3
+//#define SIM_TIME_MODE
+//#define VIDEO_SAVE_MODE
 
 int main() {
 
@@ -21,9 +21,15 @@ int main() {
 #else
   ode_sim::OdeWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 #endif
+  sim.setERP(0.2, 0.2, 0.2);
 
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1);
+  // TODO why joints are broken?
+  // TODO joint + actuator test
+  // TODO friction coefficient setting
+
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
   auto anymal = sim.addArticulatedSystem(urdfPath);
+
 //  anymal->setGeneralizedCoordinate(
 //      {0, 0, 0.5,
 //       1.0, 0.0, 0.0, 0.0,
@@ -63,7 +69,7 @@ int main() {
   sim.startRecordingVideo("/tmp", "odeAnymal");
   for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
 #else
-    while(sim.visualizerLoop(0.005, 0.5)) {
+    while(sim.visualizerLoop(0.005, 0.1)) {
 #endif
 #endif
     jointState = anymal->getGeneralizedCoordinate();
