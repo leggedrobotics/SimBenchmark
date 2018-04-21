@@ -6,7 +6,7 @@
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define SIM_TIME_MODE
-//#define VIDEO_SAVE_MODE
+#define VIDEO_SAVE_MODE
 
 int main() {
 
@@ -23,10 +23,7 @@ int main() {
 #endif
   sim.setERP(0.2, 0.2, 0.2);
 
-  // TODO why joints are broken?
   // TODO joint + actuator test
-  // TODO friction coefficient setting
-
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
   auto anymal = sim.addArticulatedSystem(urdfPath);
 
@@ -44,7 +41,7 @@ int main() {
 //
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
-  const double kp = 400.0, kd = 1.0;
+  const double kp = 40.0, kd = 1.0;
 
 //  jointNominalConfig << 0, 0, 0.54,
 //      1.0, 0.0, 0.0, 0.0,
@@ -69,7 +66,7 @@ int main() {
   sim.startRecordingVideo("/tmp", "odeAnymal");
   for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
 #else
-    while(sim.visualizerLoop(0.005, 0.1)) {
+    while(sim.visualizerLoop(0.005, 1.0)) {
 #endif
 #endif
     jointState = anymal->getGeneralizedCoordinate();

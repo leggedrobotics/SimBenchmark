@@ -84,6 +84,9 @@ void ode_sim::OdeWorld::nearCallback(void *data, dGeomID o1, dGeomID o2) {
     if(prop1 && prop2) {
       contact[i].surface.mu = prop1->frictionalCoeff * prop2->frictionalCoeff;
       contact[i].surface.bounce = prop1->restitutionCoeff * prop2->restitutionCoeff;
+    } else {
+      contact[i].surface.mu = 0.8;
+      contact[i].surface.bounce = 0;
     }
   }
 
