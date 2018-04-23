@@ -57,7 +57,6 @@ struct Joint {
 
   // ode
   dJointID odeJoint_ = 0;
-  dJointID odeActuator_ = 0;
 };
 
 

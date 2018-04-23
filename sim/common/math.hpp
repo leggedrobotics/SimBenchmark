@@ -765,6 +765,30 @@ inline void similarityTransform(const Mat<3, 3> &R, const Mat<3, 3> &I, Mat<3, 3
 //  std::cout<<mat.e()<<"\n\n";
 }
 
+inline void angleAxisToRotMat(const Vec<3> &a1, const double theta, Mat<3, 3> &rotMat) {
+  double s, c;
+  sincos(theta, &s, &c);
+  const double t = 1.0 - c;
+  const double tmp1 = a1[0] * a1[1] * t;
+  const double tmp2 = a1[2] * s;
+  const double tmp3 = a1[0] * a1[2] * t;
+  const double tmp4 = a1[1] * s;
+  const double tmp5 = a1[1] * a1[2] * t;
+  const double tmp6 = a1[0] * s;
+  const double tmp7 = a1[0] * a1[0] * t + c;
+  const double tmp8 = a1[1] * a1[1] * t + c;
+  const double tmp9 = a1[2] * a1[2] * t + c;
+
+  rotMat[0] = tmp7;
+  rotMat[1] = tmp1 + tmp2;
+  rotMat[2] = tmp3 - tmp4;
+  rotMat[3] = tmp1 - tmp2;
+  rotMat[4] = tmp8;
+  rotMat[5] = tmp5 + tmp6;
+  rotMat[6] = tmp3 + tmp4;
+  rotMat[7] = tmp5 - tmp6;
+  rotMat[8] = tmp9;
+}
 
 } // benchmark
 

@@ -7,20 +7,6 @@
 namespace ode_sim {
 namespace object {
 
-//void Link::initCollisions(std::vector<AlternativeVisualObjectData> &collect,
-//                          std::vector<std::pair<std::string, benchmark::Vec<4>>> &props) {
-//  // visual objects
-//  for(int i = 0; i < visshape_.size(); i++) {
-//    collect.emplace_back();
-//    collect.back() = std::make_tuple(colObjRotMat_[i], colObjOrigin_[i], bodyIdx_, colShape_[i]);
-//    props.emplace_back("", colShapeParam_[i]);
-//  }
-//
-//  // children
-//  for (auto &ch: childrenLinks_)
-//    ch.initCollisions(collect, props);
-//}
-
 OdeArticulatedSystem::OdeArticulatedSystem(std::string urdfFile,
                                            const dWorldID worldID,
                                            const dSpaceID spaceID)
@@ -59,12 +45,10 @@ OdeArticulatedSystem::OdeArticulatedSystem(std::string urdfFile,
 
   if (rootLink->name != "world") {
     isFixed_ = false;
-//    rootJoint_ = Joint::FLOATING;
     dof_ = 6;
     stateDimension_ = 7;
   } else {
     isFixed_ = false;
-//    baseType_ = Joint::FIXED;
     dof_ = 0;
     stateDimension_ = 0;
 
@@ -541,20 +525,6 @@ void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRo
             axis_w[2]
         );
 
-        // actuator (motor)
-//        childLink.parentJoint_.odeActuator_ = dJointCreateAMotor(worldID_, 0);
-//        dJointAttach(childLink.parentJoint_.odeActuator_, link.odeBody_, childLink.odeBody_);
-//        dJointSetAMotorNumAxes(childLink.parentJoint_.odeActuator_, 1);
-//        dJointSetAMotorAxis(
-//            childLink.parentJoint_.odeActuator_,
-//            0,
-//            1,
-//            axis_w[0],
-//            axis_w[1],
-//            axis_w[2]
-//        );
-//        dJointSetAMotorAngle()
-
         dof_++;
         stateDimension_++;
         break;
@@ -775,11 +745,9 @@ void OdeArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &joint
           continue;
         }
         case Joint::REVOLUTE: {
-          dJointSetAMotorAngle(joint->odeActuator_, 0, jointState[i++]);
           break;
         }
         case Joint::PRISMATIC: {
-          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
           break;
         }
         default:
@@ -789,16 +757,6 @@ void OdeArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &joint
   }
   else {
     // floating body
-    dQuaternion dquaternion = {jointState[3],
-                               jointState[4],
-                               jointState[5],
-                               jointState[6]};
-
-//    dBodySetPosition(rootLink_.odeBody_,
-//                     jointState[0],
-//                     jointState[1],
-//                     jointState[2]);
-//    dBodySetQuaternion(rootLink_.odeBody_, dquaternion);
 
     int i = 7;
     for(auto *joint: joints_) {
@@ -807,11 +765,9 @@ void OdeArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &joint
           break;
         }
         case Joint::REVOLUTE: {
-          dJointSetAMotorAngle(joint->odeActuator_, 0, jointState[i++]);
           break;
         }
         case Joint::PRISMATIC: {
-          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
           break;
         }
         default:
@@ -833,11 +789,9 @@ void OdeArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double
           break;
         }
         case Joint::REVOLUTE: {
-          dJointSetAMotorAngle(joint->odeActuator_, 0, jointState.begin()[i++]);
           break;
         }
         case Joint::PRISMATIC: {
-          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
           break;
         }
         default:
@@ -852,12 +806,6 @@ void OdeArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double
                                jointState.begin()[5],
                                jointState.begin()[6]};
 
-//    dBodySetPosition(rootLink_.odeBody_,
-//                     jointState.begin()[0],
-//                     jointState.begin()[1],
-//                     jointState.begin()[2]);
-//    dBodySetQuaternion(rootLink_.odeBody_, dquaternion);
-
     int i = 7;
     for(auto *joint: joints_) {
       switch (joint->type) {
@@ -866,11 +814,9 @@ void OdeArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double
         }
         case Joint::REVOLUTE: {
           RAIINFO(jointState.begin()[i++])
-          dJointSetAMotorAngle(joint->odeActuator_, 0, jointState.begin()[i++]);
           break;
         }
         case Joint::PRISMATIC: {
-          genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
           break;
         }
         default:
