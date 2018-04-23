@@ -76,7 +76,6 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
 
   // update joint position recursively (from gen coordinate)
   void updateJointPos(Link &link,
-                      int jointIdx,
                       benchmark::Mat<3, 3> &parentRot_w,
                       benchmark::Vec<3> &parentPos_w);
 

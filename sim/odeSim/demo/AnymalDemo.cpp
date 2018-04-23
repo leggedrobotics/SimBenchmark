@@ -27,17 +27,17 @@ int main() {
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
   auto anymal = sim.addArticulatedSystem(urdfPath);
 
-//  anymal->setGeneralizedCoordinate(
-//      {0, 0, 0.5,
-//       1.0, 0.0, 0.0, 0.0,
-//       0.03, 0.4, -0.8,
-//       0.03, -0.4, +0.8,
-//       -0.03, 0.4, -0.8,
-//       -0.03, -0.4, 0.8});
+  anymal->setGeneralizedCoordinate(
+      {0, 0, 1.0,
+       1.0, 0.0, 0.0, 0.0,
+       0.03, 0.4, -0.8,
+       0.03, -0.4, +0.8,
+       -0.03, 0.4, -0.8,
+       -0.03, -0.4, 0.8});
 //  anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
 //  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
-  sim.setGravity({0, 0, 0});
+//  sim.setGravity({0, 0, 0});
 
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
@@ -66,7 +66,7 @@ int main() {
   sim.startRecordingVideo("/tmp", "odeAnymal");
   for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
 #else
-    while(sim.visualizerLoop(0.005, 1.0)) {
+    while(sim.visualizerLoop(0.005, 0.1)) {
 #endif
 #endif
 //    jointState = anymal->getGeneralizedCoordinate();
