@@ -65,5 +65,5 @@ add_subdirectory(sim)
 file(INSTALL ${CMAKE_SOURCE_DIR}/res
         DESTINATION ${CMAKE_BINARY_DIR})
 
-#add_subdirectory(test)
+add_subdirectory(test)
 add_subdirectory(benchmark)

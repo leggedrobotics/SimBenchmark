@@ -93,10 +93,11 @@ class OdeWorld_RG: public benchmark::World_RG {
 
   std::vector<ArticulatedSystemHandle> asHandles_;
 
-  // for debug
+#ifdef ODESIM_DEBUG
   std::vector<rai_graphics::object::Sphere *> bodyOrigins;
   std::vector<rai_graphics::object::Sphere *> jointAxes;
   std::vector<rai_graphics::object::Arrow *> jointArrows;
+#endif
 
 };
 

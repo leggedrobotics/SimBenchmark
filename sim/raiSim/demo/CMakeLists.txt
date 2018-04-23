@@ -6,6 +6,10 @@ target_link_libraries(stackRaiSim ${RAI_SIM_LINK})
 add_executable(RaiAnymalDemo AnymalDemo.cpp)
 target_link_libraries(RaiAnymalDemo ${RAI_SIM_LINK})
 
+# anymal
+add_executable(RaiMultiBodyDemo MultiBodyDemo.cpp)
+target_link_libraries(RaiMultiBodyDemo ${RAI_SIM_LINK})
+
 # collision anymal
 add_executable(collisionAnymalRaiSim collisionAnymalRaiSim.cpp)
 target_link_libraries(collisionAnymalRaiSim ${RAI_SIM_LINK})

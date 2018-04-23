@@ -6,7 +6,7 @@
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define SIM_TIME_MODE
-#define VIDEO_SAVE_MODE
+//#define VIDEO_SAVE_MODE
 
 int main() {
 
@@ -23,6 +23,7 @@ int main() {
 
   /// NOTE erp should be set to 0.2 for articulated system simulation on ODE
   sim.setERP(0.2, 0.2, 0.2);
+//  sim.setGravity({0, 0, 0});
 
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
   auto anymal = sim.addArticulatedSystem(urdfPath);
@@ -30,25 +31,24 @@ int main() {
   anymal->setGeneralizedCoordinate(
       {0, 0, 0.54,
        1.0, 0.0, 0.0, 0.0,
-       -0.03, -0.4, 0.8,
-       0.03, -0.4, 0.8,
+       0.03, 0.4, -0.8,
        -0.03, 0.4, -0.8,
-       0.03, 0.4, -0.8});
+       0.03, -0.4, 0.8,
+       -0.03, -0.4, 0.8});
 //  anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
-  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
+//  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
-//  sim.setGravity({0, 0, 0});
 
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
-  const double kp = 40.0, kd = 1.0;
+  const double kp = 40.0, kd = 0.0;
 
   jointNominalConfig << 0, 0, 0.54,
       1.0, 0.0, 0.0, 0.0,
-      -0.03, -0.4, 0.8,
-      0.03, -0.4, 0.8,
+      0.03, 0.4, -0.8,
       -0.03, 0.4, -0.8,
-      0.03, 0.4, -0.8;
+      0.03, -0.4, 0.8,
+      -0.03, -0.4, 0.8;
 
 #if defined(SIM_TIME_MODE)
   StopWatch watch;
@@ -67,11 +67,9 @@ int main() {
     jointVel = anymal->getGeneralizedVelocity();
 //    jointForce = anymal->getGeneralizedForce();
 
-//      RAIINFO(jointState)
-//      RAIINFO(jointVel)
     jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
     jointForce.head(6).setZero();
-//    anymal->setGeneralizedForce(jointForce);
+    anymal->setGeneralizedForce(jointForce);
     sim.integrate(0.005);
   }
 

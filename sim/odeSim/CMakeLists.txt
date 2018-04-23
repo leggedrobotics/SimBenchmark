@@ -1,5 +1,8 @@
+#set(CMAKE_CXX_FLAGS_DEBUG
+#        "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -Wl,--no-as-needed -O0 -mtune=native -march=native")
+
 set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -Wl,--no-as-needed -O0 -mtune=native -march=native")
+        "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -Wl,--no-as-needed -O0 -mtune=native -DODESIM_DEBUG")
 
 set(CMAKE_CXX_FLAGS_RELEASE
         "-Wl,--no-as-needed -O3 -mtune=native -march=native")

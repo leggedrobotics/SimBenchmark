@@ -660,7 +660,7 @@ void OdeArticulatedSystem::updateJointPos(Link &link,
         // orientation
         benchmark::angleAxisToRotMat(
             childLink.parentJoint_.axis_,
-            -genCoordinate_[childLink.parentJoint_.gencoordId_],
+            genCoordinate_[childLink.parentJoint_.gencoordId_],
             jointR
         );
         benchmark::matmul(childLink.parentJoint_.rotmat_, jointR, tempR);
@@ -673,18 +673,6 @@ void OdeArticulatedSystem::updateJointPos(Link &link,
         // position
         benchmark::matvecmul(parentRot_w, childLink.parentJoint_.pos_, pos_w);
         benchmark::vecadd(parentPos_w, pos_w);
-//        dJointSetHingeAnchor(
-//            childLink.parentJoint_.odeJoint_,
-//            pos_w[0],
-//            pos_w[1],
-//            pos_w[2]
-//        );
-//        dJointSetHingeAxis(
-//            childLink.parentJoint_.odeJoint_,
-//            axis_w[0],
-//            axis_w[1],
-//            axis_w[2]
-//        );
         break;
       }
       case Joint::PRISMATIC: {
@@ -710,7 +698,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
           continue;
         }
         case Joint::REVOLUTE: {
-          genCoordinate_[i++] = dJointGetHingeAngle(joint->odeJoint_);;
+          genCoordinate_[i++] = -dJointGetHingeAngle(joint->odeJoint_);;
           break;
         }
         case Joint::PRISMATIC: {
@@ -742,10 +730,11 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
           continue;
         }
         case Joint::REVOLUTE: {
-          genCoordinate_[i++] = dJointGetHingeAngle(joint->odeJoint_);;
+          genCoordinate_[i++] = -dJointGetHingeAngle(joint->odeJoint_);
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not implemented yet")
           genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
           break;
         }
@@ -766,11 +755,11 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
           continue;
         }
         case Joint::REVOLUTE: {
-          genVelocity_[i++] = dJointGetHingeAngleRate(joint->odeJoint_);;
+          genVelocity_[i++] = -dJointGetHingeAngleRate(joint->odeJoint_);;
           break;
         }
         case Joint::PRISMATIC: {
-          genCoordinate_[i++] = dJointGetSliderPositionRate(joint->odeJoint_);
+          genVelocity_[i++] = dJointGetSliderPositionRate(joint->odeJoint_);
           break;
         }
         default:
@@ -780,29 +769,29 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
   }
   else {
     // floating body
-    const dReal *position = dBodyGetPosition(rootLink_.odeBody_);
-    const dReal *quaternion = dBodyGetQuaternion(rootLink_.odeBody_);
+    const dReal *linvel = dBodyGetLinearVel(rootLink_.odeBody_);
+    const dReal *angvel = dBodyGetAngularVel(rootLink_.odeBody_);
 
-    genCoordinate_[0] = position[0];
-    genCoordinate_[1] = position[1];
-    genCoordinate_[2] = position[2];
-    genCoordinate_[3] = quaternion[0];
-    genCoordinate_[4] = quaternion[1];
-    genCoordinate_[5] = quaternion[2];
-    genCoordinate_[6] = quaternion[3];
+    genVelocity_[0] = linvel[0];
+    genVelocity_[1] = linvel[1];
+    genVelocity_[2] = linvel[2];
+    genVelocity_[3] = angvel[0];
+    genVelocity_[4] = angvel[1];
+    genVelocity_[5] = angvel[2];
 
-    int i = 7;
+    int i = 6;
     for(auto *joint: joints_) {
       switch (joint->type) {
         case Joint::FIXED: {
           continue;
         }
         case Joint::REVOLUTE: {
-          genCoordinate_[i++] = dJointGetHingeAngleRate(joint->odeJoint_);;
+          genVelocity_[i++] = -dJointGetHingeAngleRate(joint->odeJoint_);;
           break;
         }
         case Joint::PRISMATIC: {
-          genCoordinate_[i++] = dJointGetSliderPositionRate(joint->odeJoint_);
+          RAIFATAL("prismatic joint is not implemented yet")
+          genVelocity_[i++] = dJointGetSliderPositionRate(joint->odeJoint_);
           break;
         }
         default:
@@ -918,7 +907,7 @@ void OdeArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau
           continue;
         }
         case Joint::REVOLUTE: {
-          dJointAddHingeTorque(joint->odeJoint_, tau.begin()[i++]);
+          dJointAddHingeTorque(joint->odeJoint_, -tau.begin()[i++]);
           break;
         }
         case Joint::PRISMATIC: {
@@ -942,7 +931,7 @@ void OdeArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau
           continue;
         }
         case Joint::REVOLUTE: {
-          dJointAddHingeTorque(joint->odeJoint_, tau.begin()[i++]);
+          dJointAddHingeTorque(joint->odeJoint_, -tau.begin()[i++]);
           break;
         }
         case Joint::PRISMATIC: {
@@ -967,7 +956,7 @@ void OdeArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
           continue;
         }
         case Joint::REVOLUTE: {
-          dJointAddHingeTorque(joint->odeJoint_, tau[i++]);
+          dJointAddHingeTorque(joint->odeJoint_, -tau[i++]);
           break;
         }
         case Joint::PRISMATIC: {
@@ -991,7 +980,7 @@ void OdeArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
           continue;
         }
         case Joint::REVOLUTE: {
-          dJointAddHingeTorque(joint->odeJoint_, tau[i++]);
+          dJointAddHingeTorque(joint->odeJoint_, -tau[i++]);
           break;
         }
         case Joint::PRISMATIC: {
