@@ -74,6 +74,12 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
                              Link &raiLink,
                              std::vector<std::string> &jointsOrder);
 
+  // update joint position recursively (from gen coordinate)
+  void updateJointPos(Link &link,
+                      int jointIdx,
+                      benchmark::Mat<3, 3> &parentRot_w,
+                      benchmark::Vec<3> &parentPos_w);
+
   std::vector<std::string> jointsNames_;
 
   // the head of links_ is the pointer of rootLink

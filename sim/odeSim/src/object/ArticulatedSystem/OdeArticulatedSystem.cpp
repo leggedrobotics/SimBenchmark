@@ -254,7 +254,6 @@ void OdeArticulatedSystem::init() {
   baseRotMat.setIdentity();
   benchmark::Vec<3> baseOrigin;
   baseOrigin.setZero();
-  baseOrigin[2] = 1.0;
 
   // init index of each body
   initIdx(rootLink_);
@@ -339,6 +338,34 @@ void OdeArticulatedSystem::initVisuals(Link &link,
 
     initVisuals(ch, rot_w, pos_w, collect, props);
   }
+}
+
+void OdeArticulatedSystem::initInertials(Link &link) {
+  if(link.inertial_.mass_ == 0) {
+    RAIFATAL("zero inertial link is not allowed in ODE")
+  }
+  else {
+    benchmark::Mat<3,3> inertia;
+    benchmark::similarityTransform(link.inertial_.rotmat_, link.inertial_.inertia_, inertia);
+
+    dMassSetParameters(
+        &link.inertial_.odeMass_,
+        link.inertial_.mass_,
+        link.inertial_.pos_[0],
+        link.inertial_.pos_[1],
+        link.inertial_.pos_[2],
+        inertia[0],
+        inertia[4],
+        inertia[8],
+        inertia[1],
+        inertia[2],
+        inertia[7]
+    );
+    dBodySetMass(link.odeBody_, &link.inertial_.odeMass_);
+  }
+
+  for (auto &ch: link.childrenLinks_)
+    initInertials(ch);
 }
 
 /**
@@ -442,34 +469,6 @@ void OdeArticulatedSystem::initCollisions(Link &link,
 
     initCollisions(ch, rot_w, pos_w, collect, props);
   }
-}
-
-void OdeArticulatedSystem::initInertials(Link &link) {
-  if(link.inertial_.mass_ == 0) {
-    RAIFATAL("zero inertial link is not allowed in ODE")
-  }
-  else {
-    benchmark::Mat<3,3> inertia;
-    benchmark::similarityTransform(link.inertial_.rotmat_, link.inertial_.inertia_, inertia);
-
-    dMassSetParameters(
-        &link.inertial_.odeMass_,
-        link.inertial_.mass_,
-        link.inertial_.pos_[0],
-        link.inertial_.pos_[1],
-        link.inertial_.pos_[2],
-        inertia[0],
-        inertia[4],
-        inertia[8],
-        inertia[1],
-        inertia[2],
-        inertia[7]
-    );
-    dBodySetMass(link.odeBody_, &link.inertial_.odeMass_);
-  }
-
-  for (auto &ch: link.childrenLinks_)
-    initInertials(ch);
 }
 
 /**
@@ -617,6 +616,110 @@ void OdeArticulatedSystem::updateVisuals() {
     }
   }
 }
+
+void OdeArticulatedSystem::updateJointPos(Link &link,
+                                          int jointIdx,
+                                          benchmark::Mat<3, 3> &parentRot_w,
+                                          benchmark::Vec<3> &parentPos_w) {
+
+  // new joint position, axis, and orientation
+  benchmark::Vec<3> pos_w;
+  benchmark::Vec<3> axis_w;
+  benchmark::Vec<3> temp;
+  benchmark::Mat<3,3> rot_w;
+
+  if(jointIdx == -1) {
+    // base link
+    rot_w = parentRot_w;
+    pos_w = parentPos_w;
+  }
+  else {
+    // not base link
+    double parentJointPos = genCoordinate_[jointIdx];
+
+    switch (link.parentJoint_.type) {
+      case object::Joint::REVOLUTE: {
+
+        benchmark::Vec<3> axis = link.parentJoint_.axis_;
+        benchmark::Mat<3, 3> jointRot;
+        benchmark::Mat<3, 3> tempR;
+
+        benchmark::angleAxisToRotMat(axis, parentJointPos, jointRot);
+        benchmark::matmul(link.parentJoint_.rotmat_, jointRot, tempR);
+        benchmark::matmul(parentRot_w, tempR, rot_w);
+
+        benchmark::matvecmul(link.parentJoint_.rotmat_, link.parentJoint_.axis_, temp);
+        benchmark::matvecmul(parentRot_w, temp, axis_w);
+
+        benchmark::matvecmul(parentRot_w, link.parentJoint_.pos_, pos_w);
+        benchmark::vecadd(parentPos_w, pos_w);
+
+        dJointSetHingeAnchor(
+            link.parentJoint_.odeJoint_,
+            pos_w[0],
+            pos_w[1],
+            pos_w[2]
+        );
+        dJointSetHingeAxis(
+            link.parentJoint_.odeJoint_,
+            axis_w[0],
+            axis_w[1],
+            axis_w[2]
+        );
+        break;
+      }
+      case object::Joint::PRISMATIC: {
+        RAIINFO("not implemented yet")
+        break;
+      }
+      default: {
+        // orientation
+        benchmark::matmul(parentRot_w, link.parentJoint_.rotmat_, rot_w);
+
+        // axis
+        benchmark::matvecmul(link.parentJoint_.rotmat_, link.parentJoint_.axis_, temp);
+        benchmark::matvecmul(parentRot_w, temp, axis_w);
+
+        // position
+        benchmark::matvecmul(parentRot_w, link.parentJoint_.pos_, pos_w);
+        benchmark::vecadd(parentPos_w, pos_w);
+      }
+    }
+  }
+
+  // set ode body pos and rotation
+  dMatrix3 bodyR;
+  for(int row = 0; row < 3; row++) {
+    for(int col = 0; col < 3; col++) {
+      bodyR[4*row + col] = rot_w[row + col*3];
+    }
+    bodyR[4*row + 3] = 0;
+  }
+
+  dBodySetPosition(link.odeBody_, pos_w[0], pos_w[1], pos_w[2]);
+  dBodySetRotation(link.odeBody_, bodyR);
+
+  // children
+  int i = 0;
+  for (auto &ch: link.childrenLinks_) {
+    benchmark::Mat<3,3> rot_w;
+    benchmark::Vec<3> pos_w;
+
+    benchmark::matmul(parentRot_w, ch.parentJoint_.rotmat_, rot_w);
+    benchmark::matvecmul(parentRot_w, ch.parentJoint_.pos_, pos_w);
+    benchmark::vecadd(parentPos_w, pos_w);
+
+    if(jointIdx == -1 && isFixed_) {
+      // base joint
+      updateJointPos(ch, jointIdx + i + 7, rot_w, pos_w);
+    }
+    else {
+      updateJointPos(ch, jointIdx + i + 1, rot_w, pos_w);
+    }
+    i++;
+  }
+}
+
 const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSystem::getGeneralizedCoordinate() {
   if(isFixed_) {
     // fixed body
@@ -635,7 +738,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
           break;
         }
         default:
-          RAIINFO("not supported joint type")
+        RAIINFO("not supported joint type")
       }
     }
   }
@@ -729,102 +832,87 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
   }
   return genVelocity_.e();
 }
+
 void OdeArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
   RAIFATAL("not implemented yet")
 }
 
 void OdeArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
   RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
-  RAIFATAL("not implemented yet")
+
+  for(int i = 0; i < stateDimension_; i++) {
+    genCoordinate_[i] = jointState[i];
+  }
+
   if(isFixed_) {
     // fixed body
-    int i = 0;
-    for(auto *joint: joints_) {
-      switch (joint->type) {
-        case Joint::FIXED: {
-          continue;
-        }
-        case Joint::REVOLUTE: {
-          break;
-        }
-        case Joint::PRISMATIC: {
-          break;
-        }
-        default:
-        RAIINFO("not supported joint type")
-      }
-    }
+    benchmark::Mat<3,3> baseRotMat;
+    baseRotMat.setIdentity();
+    benchmark::Vec<3> baseOrigin;
+    baseOrigin.setZero();
+
+    updateJointPos(rootLink_, -1, baseRotMat, baseOrigin);
   }
   else {
     // floating body
+    benchmark::Mat<3,3> baseRotMat;
+    benchmark::Vec<4> baseQuat;
+    baseQuat = {
+      jointState[3],
+      jointState[4],
+      jointState[5],
+      jointState[6],
+    };
+    benchmark::quatToRotMat(baseQuat, baseRotMat);
 
-    int i = 7;
-    for(auto *joint: joints_) {
-      switch (joint->type) {
-        case Joint::FIXED: {
-          break;
-        }
-        case Joint::REVOLUTE: {
-          break;
-        }
-        case Joint::PRISMATIC: {
-          break;
-        }
-        default:
-        RAIINFO("not supported joint type")
-      }
-    }
+    benchmark::Vec<3> baseOrigin;
+    baseOrigin = {
+        jointState[0],
+        jointState[1],
+        jointState[2]
+    };
+
+    updateJointPos(rootLink_, -1, baseRotMat, baseOrigin);
   }
 }
 
 void OdeArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
   RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
-  RAIFATAL("not implemented yet")
+
+  for(int i = 0; i < stateDimension_; i++) {
+    genCoordinate_[i] = jointState.begin()[i];
+  }
+
   if(isFixed_) {
     // fixed body
-    int i = 0;
-    for(auto *joint: joints_) {
-      switch (joint->type) {
-        case Joint::FIXED: {
-          break;
-        }
-        case Joint::REVOLUTE: {
-          break;
-        }
-        case Joint::PRISMATIC: {
-          break;
-        }
-        default:
-        RAIINFO("not supported joint type")
-      }
-    }
+    benchmark::Mat<3,3> baseRotMat;
+    baseRotMat.setIdentity();
+    benchmark::Vec<3> baseOrigin;
+    baseOrigin.setZero();
+
+    updateJointPos(rootLink_, -1, baseRotMat, baseOrigin);
   }
   else {
     // floating body
-    dQuaternion dquaternion = {jointState.begin()[3],
-                               jointState.begin()[4],
-                               jointState.begin()[5],
-                               jointState.begin()[6]};
+    benchmark::Mat<3,3> baseRotMat;
+    benchmark::Vec<4> baseQuat;
+    baseQuat = {
+        jointState.begin()[3],
+        jointState.begin()[4],
+        jointState.begin()[5],
+        jointState.begin()[6],
+    };
+    benchmark::quatToRotMat(baseQuat, baseRotMat);
 
-    int i = 7;
-    for(auto *joint: joints_) {
-      switch (joint->type) {
-        case Joint::FIXED: {
-          continue;
-        }
-        case Joint::REVOLUTE: {
-          RAIINFO(jointState.begin()[i++])
-          break;
-        }
-        case Joint::PRISMATIC: {
-          break;
-        }
-        default:
-        RAIINFO("not supported joint type")
-      }
-    }
+    benchmark::Vec<3> baseOrigin;
+    baseOrigin = {
+        jointState.begin()[0],
+        jointState.begin()[1],
+        jointState.begin()[2]
+    };
+
+    updateJointPos(rootLink_, -1, baseRotMat, baseOrigin);
   }
-
 }
 
 void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
@@ -949,7 +1037,6 @@ int OdeArticulatedSystem::getDOF() {
 void OdeArticulatedSystem::setColor(Eigen::Vector4d color) {
   RAIFATAL("not implemented yet")
 }
-
 const std::vector<Joint *> &OdeArticulatedSystem::getJoints() const {
   return joints_;
 }

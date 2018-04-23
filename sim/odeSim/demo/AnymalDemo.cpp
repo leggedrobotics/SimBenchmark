@@ -24,7 +24,6 @@ int main() {
   /// NOTE erp should be set to 0.2 for articulated system simulation on ODE
   sim.setERP(0.2, 0.2, 0.2);
 
-  // TODO joint + actuator test
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
   auto anymal = sim.addArticulatedSystem(urdfPath);
 
@@ -38,7 +37,7 @@ int main() {
 //  anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
 //  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
-//  sim.setGravity({0, 0, 0});
+  sim.setGravity({0, 0, 0});
 
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
