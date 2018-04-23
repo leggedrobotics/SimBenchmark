@@ -254,7 +254,7 @@ void OdeArticulatedSystem::init() {
   baseRotMat.setIdentity();
   benchmark::Vec<3> baseOrigin;
   baseOrigin.setZero();
-  baseOrigin[2] = 1.0;
+//  baseOrigin[2] = 1.0;
 
   // init index of each body
   initIdx(rootLink_);
@@ -532,14 +532,14 @@ void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRo
       case Joint::PRISMATIC: {
         // TODO
         RAIFATAL("prismatic joint implementation is not complete")
-        childLink.parentJoint_.odeJoint_ = dJointCreateSlider(worldID_, 0);
-        dJointAttach(childLink.parentJoint_.odeJoint_, link.odeBody_, childLink.odeBody_);
-        dJointSetSliderAxis(
-            childLink.parentJoint_.odeJoint_,
-            axis_w[0],
-            axis_w[1],
-            axis_w[2]
-        );
+//        childLink.parentJoint_.odeJoint_ = dJointCreateSlider(worldID_, 0);
+//        dJointAttach(childLink.parentJoint_.odeJoint_, link.odeBody_, childLink.odeBody_);
+//        dJointSetSliderAxis(
+//            childLink.parentJoint_.odeJoint_,
+//            axis_w[0],
+//            axis_w[1],
+//            axis_w[2]
+//        );
         dof_++;
         stateDimension_++;
         break;
@@ -549,6 +549,7 @@ void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRo
 
     }
 
+    childLink.parentJoint_.gencoordId_ = dof_;
     childLink.parentJoint_.jointId_ = (int)joints_.size();
     joints_.push_back(&childLink.parentJoint_);
     initJoints(childLink, rot_w, pos_w);
@@ -623,117 +624,79 @@ void OdeArticulatedSystem::updateJointPos(Link &link,
                                           benchmark::Mat<3, 3> &parentRot_w,
                                           benchmark::Vec<3> &parentPos_w) {
 
-  // new joint position, axis, and orientation
-  benchmark::Vec<3> pos_w;
-  benchmark::Vec<3> axis_w;
-  benchmark::Vec<3> temp;
-  benchmark::Mat<3,3> rot_w;
-
-  if(link.bodyIdx_ == 0) {
-    // base link
-    rot_w = parentRot_w;
-    pos_w = parentPos_w;
-
-    // set ode body pos and rotation
-    dMatrix3 bodyR;
-    for(int row = 0; row < 3; row++) {
-      for(int col = 0; col < 3; col++) {
-        bodyR[4*row + col] = rot_w[row + col*3];
-      }
-      bodyR[4*row + 3] = 0;
+  // set ode body pos and rotation
+  dMatrix3 bodyR;
+  for(int row = 0; row < 3; row++) {
+    for(int col = 0; col < 3; col++) {
+      bodyR[4*row + col] = parentRot_w[row + col*3];
     }
-
-    dBodySetPosition(link.odeBody_, pos_w[0], pos_w[1], pos_w[2]);
-    dBodySetRotation(link.odeBody_, bodyR);
+    bodyR[4*row + 3] = 0;
   }
-  else {
-    // non-base link
-    double parentJointPos;
-    if(isFixed_) {
-      parentJointPos = genCoordinate_[link.parentJoint_.jointId_];
-    } else {
-      parentJointPos = genCoordinate_[link.parentJoint_.jointId_ + 7];
-    }
 
-    // disable joint first ()
-    dJointDisable(link.parentJoint_.odeJoint_);
-
-    switch (link.parentJoint_.type) {
-      case object::Joint::REVOLUTE: {
-
-        benchmark::Vec<3> axis = link.parentJoint_.axis_;
-        benchmark::Mat<3, 3> jointRot;
-        benchmark::Mat<3, 3> tempR;
-
-        benchmark::angleAxisToRotMat(axis, parentJointPos, jointRot);
-        benchmark::matmul(link.parentJoint_.rotmat_, jointRot, tempR);
-        benchmark::matmul(parentRot_w, tempR, rot_w);
-
-        benchmark::matvecmul(link.parentJoint_.rotmat_, link.parentJoint_.axis_, temp);
-        benchmark::matvecmul(parentRot_w, temp, axis_w);
-
-        benchmark::matvecmul(parentRot_w, link.parentJoint_.pos_, pos_w);
-        benchmark::vecadd(parentPos_w, pos_w);
-
-        dJointSetHingeAnchor(
-            link.parentJoint_.odeJoint_,
-            pos_w[0],
-            pos_w[1],
-            pos_w[2]
-        );
-        dJointSetHingeAxis(
-            link.parentJoint_.odeJoint_,
-            axis_w[0],
-            axis_w[1],
-            axis_w[2]
-        );
-        break;
-      }
-      case object::Joint::PRISMATIC: {
-        RAIINFO("not implemented yet")
-        break;
-      }
-      default: {
-        // orientation
-        benchmark::matmul(parentRot_w, link.parentJoint_.rotmat_, rot_w);
-
-        // axis
-        benchmark::matvecmul(link.parentJoint_.rotmat_, link.parentJoint_.axis_, temp);
-        benchmark::matvecmul(parentRot_w, temp, axis_w);
-
-        // position
-        benchmark::matvecmul(parentRot_w, link.parentJoint_.pos_, pos_w);
-        benchmark::vecadd(parentPos_w, pos_w);
-      }
-    }
-
-    // set ode body pos and rotation
-    dMatrix3 bodyR;
-    for(int row = 0; row < 3; row++) {
-      for(int col = 0; col < 3; col++) {
-        bodyR[4*row + col] = rot_w[row + col*3];
-      }
-      bodyR[4*row + 3] = 0;
-    }
-
-    dBodySetPosition(link.odeBody_, pos_w[0], pos_w[1], pos_w[2]);
-    dBodySetRotation(link.odeBody_, bodyR);
-
-    // reattach joint
-    dJointEnable(link.parentJoint_.odeJoint_);
-  }
+  // update base body position and rotation
+  dBodySetPosition(link.odeBody_, parentPos_w[0], parentPos_w[1], parentPos_w[2]);
+  dBodySetRotation(link.odeBody_, bodyR);
 
   // children
-  for (int i = 0; i < link.childrenLinks_.size(); i++) {
-    auto &ch = link.childrenLinks_[i];
-    benchmark::Mat<3,3> chrot_w;
-    benchmark::Vec<3> chpos_w;
+  for(int i = 0; i < link.childrenLinks_.size(); i++) {
+    Link &childLink = link.childrenLinks_[i];
 
-    benchmark::matmul(rot_w, ch.parentJoint_.rotmat_, chrot_w);
-    benchmark::matvecmul(rot_w, ch.parentJoint_.pos_, chpos_w);
-    benchmark::vecadd(pos_w, chpos_w);
+    // joint position, axis, and orientation
+    benchmark::Vec<3> pos_w;
+    benchmark::Vec<3> axis_w;
+    benchmark::Vec<3> tempV;
+    benchmark::Mat<3,3> rot_w;
+    benchmark::Mat<3,3> jointR;
+    benchmark::Mat<3,3> tempR;
 
-    updateJointPos(ch, chrot_w, chpos_w);
+    switch (childLink.parentJoint_.type) {
+      case Joint::FIXED: {
+        benchmark::matmul(parentRot_w, childLink.parentJoint_.rotmat_, rot_w);
+        benchmark::matvecmul(parentRot_w, childLink.parentJoint_.pos_, pos_w);
+        benchmark::vecadd(parentPos_w, pos_w);
+        break;
+      }
+      case Joint::REVOLUTE: {
+        // orientation
+        benchmark::angleAxisToRotMat(
+            childLink.parentJoint_.axis_,
+            -genCoordinate_[childLink.parentJoint_.gencoordId_],
+            jointR
+        );
+        benchmark::matmul(childLink.parentJoint_.rotmat_, jointR, tempR);
+        benchmark::matmul(parentRot_w, tempR, rot_w);
+
+        // axis
+        benchmark::matvecmul(childLink.parentJoint_.rotmat_, childLink.parentJoint_.axis_, tempV);
+        benchmark::matvecmul(parentRot_w, tempV, axis_w);
+
+        // position
+        benchmark::matvecmul(parentRot_w, childLink.parentJoint_.pos_, pos_w);
+        benchmark::vecadd(parentPos_w, pos_w);
+//        dJointSetHingeAnchor(
+//            childLink.parentJoint_.odeJoint_,
+//            pos_w[0],
+//            pos_w[1],
+//            pos_w[2]
+//        );
+//        dJointSetHingeAxis(
+//            childLink.parentJoint_.odeJoint_,
+//            axis_w[0],
+//            axis_w[1],
+//            axis_w[2]
+//        );
+        break;
+      }
+      case Joint::PRISMATIC: {
+        // TODO
+        RAIFATAL("prismatic joint implementation is not complete")
+        break;
+      }
+      default:
+      RAIFATAL("currently only support revolute/prismatic/fixed joint");
+    }
+
+    updateJointPos(childLink, rot_w, pos_w);
   }
 }
 
@@ -1056,6 +1019,9 @@ void OdeArticulatedSystem::setColor(Eigen::Vector4d color) {
 }
 const std::vector<Joint *> &OdeArticulatedSystem::getJoints() const {
   return joints_;
+}
+const std::vector<Link *> &OdeArticulatedSystem::getLinks() const {
+  return links_;
 }
 
 } // object

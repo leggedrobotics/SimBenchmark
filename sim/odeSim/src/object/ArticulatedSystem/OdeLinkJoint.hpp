@@ -56,6 +56,7 @@ struct Joint {
 
   std::string jointName_;
   int jointId_;
+  int gencoordId_;
 
   // ode
   dJointID odeJoint_ = 0;

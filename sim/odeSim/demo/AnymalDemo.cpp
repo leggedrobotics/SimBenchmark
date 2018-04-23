@@ -6,7 +6,7 @@
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define SIM_TIME_MODE
-//#define VIDEO_SAVE_MODE
+#define VIDEO_SAVE_MODE
 
 int main() {
 
@@ -28,14 +28,14 @@ int main() {
   auto anymal = sim.addArticulatedSystem(urdfPath);
 
   anymal->setGeneralizedCoordinate(
-      {0, 0, 1.0,
+      {0, 0, 0.54,
        1.0, 0.0, 0.0, 0.0,
-       0.03, 0.4, -0.8,
-       0.03, -0.4, +0.8,
+       -0.03, -0.4, 0.8,
+       0.03, -0.4, 0.8,
        -0.03, 0.4, -0.8,
-       -0.03, -0.4, 0.8});
+       0.03, 0.4, -0.8});
 //  anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
-//  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
+  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
 //  sim.setGravity({0, 0, 0});
 
@@ -43,18 +43,12 @@ int main() {
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
   const double kp = 40.0, kd = 1.0;
 
-  jointNominalConfig << 0, 0, 0,
-      1.0, 0, 0, 0,
-      0.03, 0.4, -0.8,
-      -0.03, 0.4, -0.8,
+  jointNominalConfig << 0, 0, 0.54,
+      1.0, 0.0, 0.0, 0.0,
+      -0.03, -0.4, 0.8,
       0.03, -0.4, 0.8,
-      -0.03, -0.4, 0.8;
-//  jointNominalConfig << 0, 0, 0.54,
-//      1.0, 0.0, 0.0, 0.0,
-//      0.0, 0., -0.,
-//      0.0, -0., +0.,
-//      -0.0, 0., -0.,
-//      -0.0, -0., 0.;
+      -0.03, 0.4, -0.8,
+      0.03, 0.4, -0.8;
 
 #if defined(SIM_TIME_MODE)
   StopWatch watch;
@@ -69,12 +63,14 @@ int main() {
     while(sim.visualizerLoop(0.005, 0.1)) {
 #endif
 #endif
-//    jointState = anymal->getGeneralizedCoordinate();
-//    jointVel = anymal->getGeneralizedVelocity();
+    jointState = anymal->getGeneralizedCoordinate();
+    jointVel = anymal->getGeneralizedVelocity();
 //    jointForce = anymal->getGeneralizedForce();
 
-//    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-//    jointForce.head(6).setZero();
+//      RAIINFO(jointState)
+//      RAIINFO(jointVel)
+    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
+    jointForce.head(6).setZero();
 //    anymal->setGeneralizedForce(jointForce);
     sim.integrate(0.005);
   }

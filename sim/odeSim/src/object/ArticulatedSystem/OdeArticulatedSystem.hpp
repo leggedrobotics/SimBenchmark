@@ -47,6 +47,7 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   void setColor(Eigen::Vector4d color) override;
 
   const std::vector<Joint *> &getJoints() const;
+  const std::vector<Link *> &getLinks() const;
 
  private:
   void init();

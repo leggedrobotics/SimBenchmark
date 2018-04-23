@@ -29,6 +29,30 @@ void OdeWorld_RG::updateFrame() {
     benchmark::Vec<3> pos;
     benchmark::Vec<4> color;
 
+//    // this if only for debug
+//    int cnt = 0;
+//    for(int i = 0; i < as->getJoints().size(); i++) {
+//      if(as->getJoints()[i]->type == object::Joint::REVOLUTE) {
+//        dReal pos[3];
+//        dJointGetHingeAnchor(as->getJoints()[i]->odeJoint_, pos);
+//        Eigen::Vector3d posE = {pos[0], pos[1], pos[2]};
+//        jointAxes[cnt++]->setPos(posE);
+//
+//
+//        dReal axis[3];
+//        dJointGetHingeAxis(as->getJoints()[i]->odeJoint_, axis);
+//
+//        Eigen::Vector3d axisE = {axis[0], axis[1], axis[2]};
+////        jointArrows[cnt++]->representVector(posE, axisE);
+//      }
+//    }
+//
+//    for(int i = 0; i < as->getLinks().size(); i++) {
+//        const dReal *pos = dBodyGetPosition(as->getLinks()[i]->odeBody_);
+//        Eigen::Vector3d posE = {pos[0], pos[1], pos[2]};
+//        bodyOrigins[i]->setPos(posE);
+//    }
+
     // update visuals for articulated system
     as->updateVisuals();
 
@@ -371,6 +395,25 @@ ArticulatedSystemHandle OdeWorld_RG::addArticulatedSystem(std::string nm,
         break;
     }
     processGraphicalObject(handle.alternateVisual().back(), std::get<2>(handle->visColObj[i]));
+  }
+
+  for (int i = 0; i < handle->getJoints().size(); i++) {
+    if(handle->getJoints()[i]->type == object::Joint::REVOLUTE) {
+
+      jointAxes.push_back(new rai_graphics::object::Sphere(0.03, false));
+      jointAxes.back()->setColor({0, 1, 0});
+      processGraphicalObject(jointAxes.back(), 0);
+
+      jointArrows.push_back(new rai_graphics::object::Arrow(0.01, 0.02, 0.1, 0.05));
+      jointArrows.back()->setColor({0, 1, 0});
+      processGraphicalObject(jointArrows.back(), 0);
+    }
+  }
+
+  for (int i = 0; i < handle->getLinks().size(); i++) {
+    bodyOrigins.push_back(new rai_graphics::object::Sphere(0.03, false));
+    bodyOrigins.back()->setColor({0, 0, 1});
+    processGraphicalObject(bodyOrigins.back(), 0);
   }
 
   asHandles_.push_back(handle);
