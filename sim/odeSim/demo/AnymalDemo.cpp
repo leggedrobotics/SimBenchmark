@@ -60,7 +60,7 @@ int main() {
   sim.startRecordingVideo("/tmp", "odeAnymal");
   for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
 #else
-    while(sim.visualizerLoop(0.005, 0.1)) {
+    while(sim.visualizerLoop(0.005, 1.0)) {
 #endif
 #endif
     jointState = anymal->getGeneralizedCoordinate();
