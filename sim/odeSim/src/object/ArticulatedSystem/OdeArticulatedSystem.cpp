@@ -44,11 +44,13 @@ OdeArticulatedSystem::OdeArticulatedSystem(std::string urdfFile,
   boost::shared_ptr<const urdf::Link> rootLink = urdf_model->getRoot();
 
   if (rootLink->name != "world") {
+    // float base
     isFixed_ = false;
     dof_ = 6;
     stateDimension_ = 7;
   } else {
-    isFixed_ = false;
+    // fixed base
+    isFixed_ = true;
     dof_ = 0;
     stateDimension_ = 0;
 
@@ -449,6 +451,14 @@ void OdeArticulatedSystem::initCollisions(Link &link,
 }
 
 void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRot_w, benchmark::Vec<3> &parentPos_w) {
+
+  if(link.bodyIdx_ == 0 && isFixed_) {
+    // fixed base link
+    rootJoint_.type = Joint::FIXED;
+    rootJoint_.odeJoint_ = dJointCreateFixed(worldID_, 0);
+    dJointAttach(rootJoint_.odeJoint_, link.odeBody_, 0);
+    dJointSetFixed(rootJoint_.odeJoint_);
+  }
 
   for(int i = 0; i < link.childrenLinks_.size(); i++) {
     Link &childLink = link.childrenLinks_[i];
@@ -982,6 +992,7 @@ void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> 
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("not implemented yet")
 //          dJointAddSliderForce(joint->odeJoint_, tau.begin()[i++]);
           break;
         }
@@ -990,10 +1001,6 @@ void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> 
       }
     }
   }
-}
-
-void OdeArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
-  RAIFATAL("not implemented yet")
 }
 
 void OdeArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
@@ -1092,6 +1099,11 @@ void OdeArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
       }
     }
   }
+}
+
+void OdeArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
+  setGeneralizedCoordinate(genco);
+  setGeneralizedVelocity(genvel);
 }
 
 const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSystem::getGeneralizedForce() {

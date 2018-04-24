@@ -135,6 +135,7 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   std::vector<Joint *> joints_;
 
   Link rootLink_;
+  Joint rootJoint_;
 
   dWorldID worldID_ = 0;
   dSpaceID spaceID_ = 0;
