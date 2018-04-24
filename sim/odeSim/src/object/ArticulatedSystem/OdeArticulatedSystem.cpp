@@ -264,7 +264,7 @@ void OdeArticulatedSystem::init() {
   initInertials(rootLink_);
 
   // init visual objects
-  initVisuals(rootLink_, baseRotMat, baseOrigin, visObj, visProps_);
+  initVisuals(rootLink_, visObj, visProps_);
 
   // init ODE collision objects
   initCollisions(rootLink_, baseRotMat, baseOrigin, visColObj, visColProps_);
@@ -292,22 +292,13 @@ void OdeArticulatedSystem::initIdx(Link &link) {
 }
 
 void OdeArticulatedSystem::initVisuals(Link &link,
-                                       benchmark::Mat<3, 3> &parentRot_w,
-                                       benchmark::Vec<3> &parentPos_w,
                                        std::vector<VisualObjectData> &collect,
                                        std::vector<VisualObjectProperty> &props) {
   // visual objects
   for(int i = 0; i < link.visual_.visshape_.size(); i++) {
-    benchmark::Mat<3,3> rot_w;
-    benchmark::Vec<3> pos_w;
-
-    benchmark::matmul(parentRot_w, link.visual_.visObjRotMat_[i], rot_w);
-    benchmark::matvecmul(parentRot_w, link.visual_.visObjOrigin_[i], pos_w);
-    benchmark::vecadd(parentPos_w, pos_w);
-
     collect.emplace_back();
-    collect.back() = std::make_tuple(rot_w,
-                                     pos_w,
+    collect.back() = std::make_tuple(link.visual_.visObjRotMat_[i],
+                                     link.visual_.visObjOrigin_[i],
                                      link.bodyIdx_,
                                      link.visual_.visshape_[i],
                                      link.visual_.visColor_[i]);
@@ -317,14 +308,7 @@ void OdeArticulatedSystem::initVisuals(Link &link,
 
   // children
   for (auto &ch: link.childrenLinks_) {
-    benchmark::Mat<3,3> rot_w;
-    benchmark::Vec<3> pos_w;
-
-    benchmark::matmul(parentRot_w, ch.parentJoint_.rotmat_, rot_w);
-    benchmark::matvecmul(parentRot_w, ch.parentJoint_.pos_, pos_w);
-    benchmark::vecadd(parentPos_w, pos_w);
-
-    initVisuals(ch, rot_w, pos_w, collect, props);
+    initVisuals(ch, collect, props);
   }
 }
 
@@ -420,16 +404,9 @@ void OdeArticulatedSystem::initCollisions(Link &link,
 //                 raiLink.matrialProps_.back());
 
     // set alternative visualization object
-    benchmark::Mat<3,3> rot_w;
-    benchmark::Vec<3> pos_w;
-
-    benchmark::matmul(parentRot_w, link.collision_.colObjRotMat_[i], rot_w);
-    benchmark::matvecmul(parentRot_w, link.collision_.colObjOrigin_[i], pos_w);
-    benchmark::vecadd(parentPos_w, pos_w);
-
     collect.emplace_back();
-    collect.back() = std::make_tuple(rot_w,
-                                     pos_w,
+    collect.back() = std::make_tuple(link.collision_.colObjRotMat_[i],
+                                     link.collision_.colObjOrigin_[i],
                                      link.bodyIdx_,
                                      link.collision_.colShape_[i]);
     props.emplace_back("",
@@ -554,51 +531,6 @@ OdeArticulatedSystem::~OdeArticulatedSystem() {
     if(links_[i]->collision_.odeGeometries_.size() > 0) {
       for(int j = 0; j < links_[i]->collision_.odeGeometries_.size(); j++)
         dGeomDestroy(links_[i]->collision_.odeGeometries_[j]);
-    }
-  }
-}
-
-void OdeArticulatedSystem::updateVisuals() {
-
-  // update visual object
-  for(int i = 0; i < visObj.size(); i++) {
-    int linkIdx = std::get<2>(visObj[i]);
-    Link *link = links_[linkIdx];
-
-    const dReal *position = dBodyGetPosition(link->odeBody_);
-    benchmark::Vec<3> linkPos_w = {position[0], position[1], position[2]};
-
-    const dReal* rot = dBodyGetRotation(link->odeBody_);
-    benchmark::Mat<3,3> linkRot_w;
-    linkRot_w.e() << rot[0], rot[1], rot[2],
-        rot[4], rot[5], rot[6],
-        rot[8], rot[9], rot[10];
-
-    // TODO fix this (multiple geom for one link case)
-    for(int j = 0; j < link->visual_.visshape_.size(); j++) {
-      benchmark::matmul(linkRot_w, link->visual_.visObjRotMat_[j], std::get<0>(visObj[i]));
-      benchmark::matvecmul(linkRot_w, link->visual_.visObjOrigin_[j], std::get<1>(visObj[i]));
-      benchmark::vecadd(linkPos_w, std::get<1>(visObj[i]));
-    }
-  }
-
-  // update alternative visual object
-  for(int i = 0; i < visColObj.size(); i++) {
-    Link *link = links_[std::get<2>(visColObj[i])];
-
-    const dReal *position = dBodyGetPosition(link->odeBody_);
-    benchmark::Vec<3> parentPos_w = {position[0], position[1], position[2]};
-
-    const dReal* rot = dBodyGetRotation(link->odeBody_);
-    benchmark::Mat<3,3> parentRot_w;
-    parentRot_w.e() << rot[0], rot[1], rot[2],
-        rot[4], rot[5], rot[6],
-        rot[8], rot[9], rot[10];
-
-    for(int j = 0; j < link->collision_.colShape_.size(); j++) {
-      benchmark::matmul(parentRot_w, link->collision_.colObjRotMat_[j], std::get<0>(visColObj[i]));
-      benchmark::matvecmul(parentRot_w, link->collision_.colObjOrigin_[j], std::get<1>(visColObj[i]));
-      benchmark::vecadd(parentPos_w, std::get<1>(visColObj[i]));
     }
   }
 }
@@ -936,6 +868,8 @@ void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVe
 }
 
 void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+  // TODO check if it works properly
+
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
   if(isFixed_) {
     // fixed body
@@ -1126,8 +1060,21 @@ void OdeArticulatedSystem::setColor(Eigen::Vector4d color) {
 const std::vector<Joint *> &OdeArticulatedSystem::getJoints() const {
   return joints_;
 }
+
 const std::vector<Link *> &OdeArticulatedSystem::getLinks() const {
   return links_;
+}
+
+void OdeArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orientation, benchmark::Vec<3> &position) {
+  Link *link = links_[bodyId];
+
+  const dReal *pos = dBodyGetPosition(link->odeBody_);
+  position = {pos[0], pos[1], pos[2]};
+
+  const dReal* rot = dBodyGetRotation(link->odeBody_);
+  orientation.e() << rot[0], rot[1], rot[2],
+      rot[4], rot[5], rot[6],
+      rot[8], rot[9], rot[10];
 }
 
 } // object

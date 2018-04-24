@@ -29,8 +29,6 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
                        const dSpaceID spaceID);
   virtual ~OdeArticulatedSystem();
 
-  void updateVisuals();
-
   const EigenVec getGeneralizedCoordinate() override;
   const EigenVec getGeneralizedVelocity() override;
   const EigenVec getGeneralizedForce() override;
@@ -50,6 +48,10 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
 
   const std::vector<Joint *> &getJoints() const;
   const std::vector<Link *> &getLinks() const;
+
+  void getBodyPose(int bodyId,
+                   benchmark::Mat<3, 3> &orientation,
+                   benchmark::Vec<3> &position);
 
  private:
   void init();
@@ -71,8 +73,6 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
    * @param props
    */
   void initVisuals(Link &link,
-                   benchmark::Mat<3, 3> &parentRot_w,
-                   benchmark::Vec<3> &parentPos_w,
                    std::vector<VisualObjectData> &collect,
                    std::vector<VisualObjectProperty> &props);
 
