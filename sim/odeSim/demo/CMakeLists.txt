@@ -7,6 +7,9 @@ target_link_libraries(OdeAnymalDemo ${ODESimLink})
 add_executable(OdeMultiBodyDemo MultiBodyDemo.cpp)
 target_link_libraries(OdeMultiBodyDemo ${ODESimLink})
 
+add_executable(Ode2DRobotArmDemo 2DRobotArmDemo.cpp)
+target_link_libraries(Ode2DRobotArmDemo ${ODESimLink})
+
 # friction
 #add_executable(frictionODESim frictionODESim.cpp)
 #target_link_libraries(frictionODESim ${ODESimLink})

@@ -35,7 +35,9 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   const EigenVec getGeneralizedVelocity() override;
   const EigenVec getGeneralizedForce() override;
   void getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) override;
+
   int getDOF() override;
+  int getStateDimension() override;
 
   void setGeneralizedCoordinate(const Eigen::VectorXd &jointState) override;
   void setGeneralizedVelocity(const Eigen::VectorXd &jointVel) override;
@@ -52,15 +54,37 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
  private:
   void init();
 
-  // recursively initialize link data
+  /**
+   * initialize body index, parent index and make link vector (links_)
+   *
+   * @param link
+   */
   void initIdx(Link &link);
 
+  /**
+   * initialize visual objects (position, orientation, shape, size, color)
+   * collect, props are output of function
+   * @param link
+   * @param parentRot_w
+   * @param parentPos_w
+   * @param collect
+   * @param props
+   */
   void initVisuals(Link &link,
                    benchmark::Mat<3, 3> &parentRot_w,
                    benchmark::Vec<3> &parentPos_w,
                    std::vector<VisualObjectData> &collect,
                    std::vector<VisualObjectProperty> &props);
 
+  /**
+   * initialize ODE collision objects
+   *
+   * @param link
+   * @param parentRot_w
+   * @param parentPos_w
+   * @param collect
+   * @param props
+   */
   void initCollisions(Link &link,
                         benchmark::Mat<3, 3> &parentRot_w,
                         benchmark::Vec<3> &parentPos_w,
@@ -69,16 +93,40 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
 
   void initInertials(Link &link);
 
+  /**
+   * initialize children joint of link includeing ODE joint objects
+   *
+   * @param link
+   * @param parentRot_w
+   * @param parentPos_w
+   */
   void initJoints(Link &link, benchmark::Mat<3, 3> &parentRot_w, benchmark::Vec<3> &parentPos_w);
 
   void processLinkFromUrdf(boost::shared_ptr<const urdf::Link> urdfLink,
                              Link &raiLink,
                              std::vector<std::string> &jointsOrder);
 
-  // update joint position recursively (from gen coordinate)
+  /**
+   * update joint position recursively from generalized coordinate
+   *
+   * @param link
+   * @param parentRot_w
+   * @param parentPos_w
+   */
   void updateJointPos(Link &link,
                       benchmark::Mat<3, 3> &parentRot_w,
                       benchmark::Vec<3> &parentPos_w);
+
+  /**
+   * update joint velocity recursively from generalized velocity
+   *
+   * @param link
+   * @param parentRot_w
+   * @param parentPos_w
+   */
+//  void updateJointVelocity(Link &link,
+//                           benchmark::Mat<3, 3> &parentRot_w,
+//                           benchmark::Vec<3> &parentPos_w);
 
   std::vector<std::string> jointsNames_;
 

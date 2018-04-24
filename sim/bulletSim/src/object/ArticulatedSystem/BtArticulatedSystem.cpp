@@ -472,6 +472,10 @@ int BtArticulatedSystem::getDOF() {
   return dof_;
 }
 
+int BtArticulatedSystem::getStateDimension() {
+  return stateDimension_;
+}
+
 void BtArticulatedSystem::setColor(Eigen::Vector4d color) {
   color_ = {
       color[0], color[1], color[2], color[3]};

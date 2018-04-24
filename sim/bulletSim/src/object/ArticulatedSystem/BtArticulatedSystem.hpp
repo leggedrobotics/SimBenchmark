@@ -61,6 +61,8 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
   virtual const EigenVec getGeneralizedForce() override;
 
   virtual int getDOF() override ;
+  
+  virtual int getStateDimension() override ; 
 
   virtual void setColor(Eigen::Vector4d color) override ;
 

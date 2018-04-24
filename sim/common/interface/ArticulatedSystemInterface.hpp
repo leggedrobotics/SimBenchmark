@@ -62,6 +62,8 @@ class ArticulatedSystemInterface {
 
   virtual int getDOF() = 0;
 
+  virtual int getStateDimension() = 0;
+
   /// r, g, b, alpha
   virtual void setColor(Eigen::Vector4d color) = 0;
 

@@ -356,6 +356,9 @@ void DartArticulatedSystem::setColor(Eigen::Vector4d color) {
   color_ = {
       color[0], color[1], color[2], color[3]};
 }
+int DartArticulatedSystem::getStateDimension() {
+  return stateDimension_;
+}
 
 } // object
 } // dart_sim

@@ -12,6 +12,12 @@ namespace bo = benchmark::object;
 namespace ode_sim {
 namespace object {
 
+struct Joint;
+struct Link;
+struct LinkInertial;
+struct LinkVisual;
+struct LinkCollision;
+
 // world orientation, world pos, parent id, shape, color
 typedef std::tuple<benchmark::Mat<3, 3>,
                    benchmark::Vec<3>,
@@ -54,9 +60,12 @@ struct Joint {
   benchmark::Mat<3,3> rotmat_;
   Type type;
 
+  Link *childLink_;
+
   std::string jointName_;
   int jointId_;
-  int gencoordId_;
+  int gencoordIndex_;
+  int genvelIndex_;
 
   // ode
   dJointID odeJoint_ = 0;
