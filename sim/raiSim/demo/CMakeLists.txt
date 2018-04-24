@@ -7,8 +7,8 @@ target_link_libraries(RaiAnymalDemo ${RAI_SIM_LINK})
 add_executable(RaiMultiBodyDemo MultiBodyDemo.cpp)
 target_link_libraries(RaiMultiBodyDemo ${RAI_SIM_LINK})
 
-add_executable(Rai2DRobotArmDemo 2DRobotArmDemo.cpp)
-target_link_libraries(Rai2DRobotArmDemo ${RAI_SIM_LINK})
+add_executable(RaiRobotArmDemo RobotArmDemo.cpp)
+target_link_libraries(RaiRobotArmDemo ${RAI_SIM_LINK})
 
 add_executable(collisionAnymalRaiSim collisionAnymalRaiSim.cpp)
 target_link_libraries(collisionAnymalRaiSim ${RAI_SIM_LINK})
