@@ -314,7 +314,27 @@ void OdeArticulatedSystem::initVisuals(Link &link,
 
 void OdeArticulatedSystem::initInertials(Link &link) {
   if(link.inertial_.mass_ == 0) {
-    RAIFATAL("zero inertial link is not allowed in ODE")
+    
+    if(link.bodyIdx_ == 0 && isFixed_) {
+      // fixed base link (set default values)
+      dMassSetParameters(
+          &link.inertial_.odeMass_,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+      );
+      dBodySetMass(link.odeBody_, &link.inertial_.odeMass_);
+    } else {
+      // non-fixed-base link
+      RAIFATAL("zero inertial non-base link is not allowed in ODE")
+    }
   }
   else {
     benchmark::Mat<3,3> inertia;
@@ -486,16 +506,15 @@ void OdeArticulatedSystem::initJoints(Link &link, benchmark::Mat<3, 3> &parentRo
         break;
       }
       case Joint::PRISMATIC: {
-        // TODO
-        RAIFATAL("prismatic joint implementation is not complete")
-//        childLink.parentJoint_.odeJoint_ = dJointCreateSlider(worldID_, 0);
-//        dJointAttach(childLink.parentJoint_.odeJoint_, link.odeBody_, childLink.odeBody_);
-//        dJointSetSliderAxis(
-//            childLink.parentJoint_.odeJoint_,
-//            axis_w[0],
-//            axis_w[1],
-//            axis_w[2]
-//        );
+        childLink.parentJoint_.odeJoint_ = dJointCreateSlider(worldID_, 0);
+        dJointAttach(childLink.parentJoint_.odeJoint_, link.odeBody_, childLink.odeBody_);
+        dJointSetSliderAxis(
+            childLink.parentJoint_.odeJoint_,
+            axis_w[0],
+            axis_w[1],
+            axis_w[2]
+        );
+
         dof_++;
         stateDimension_++;
         break;
@@ -591,8 +610,24 @@ void OdeArticulatedSystem::updateJointPos(Link &link,
         break;
       }
       case Joint::PRISMATIC: {
-        // TODO
-        RAIFATAL("prismatic joint implementation is not complete")
+        // orientation
+        benchmark::matmul(parentRot_w, childLink.parentJoint_.rotmat_, rot_w);
+
+        // axis
+        benchmark::Vec<3> tempV2;
+        benchmark::matvecmul(childLink.parentJoint_.rotmat_, childLink.parentJoint_.axis_, tempV2);
+
+        // position
+        benchmark::vecScalarMul(
+            genCoordinate_[childLink.parentJoint_.gencoordIndex_],
+            tempV2,
+            tempV
+        );
+
+        benchmark::vecadd(childLink.parentJoint_.pos_, tempV);
+
+        benchmark::matvecmul(parentRot_w, tempV, pos_w);
+        benchmark::vecadd(parentPos_w, pos_w);
         break;
       }
       default:
@@ -649,7 +684,6 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
           break;
         }
         case Joint::PRISMATIC: {
-          RAIFATAL("prismatic joint is not implemented yet")
           genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
           break;
         }
@@ -706,7 +740,6 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
           break;
         }
         case Joint::PRISMATIC: {
-          RAIFATAL("prismatic joint is not implemented yet")
           genVelocity_[i++] = dJointGetSliderPositionRate(joint->odeJoint_);
           break;
         }

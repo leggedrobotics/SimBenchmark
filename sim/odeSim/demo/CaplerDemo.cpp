@@ -8,7 +8,7 @@ int main() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/Capler/";
+  urdfPath += "../../../res/Capler/";
 
   ode_sim::OdeWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
   sim.setLightPosition(0, -10, 10);
@@ -26,8 +26,8 @@ int main() {
   gv.setZero();
   tau.setZero();
 
-  capler->setState(gc, gv);
-  capler->setGeneralizedForce(tau);
+//  capler->setState(gc, gv);
+//  capler->setGeneralizedForce(tau);
 
   sim.cameraFollowObject(checkerBoard, {2, 2, 2});
 
