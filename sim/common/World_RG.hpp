@@ -35,9 +35,7 @@ class World_RG {
   World_RG() = default;
   virtual ~World_RG();
 
-  /////////////////////////////////////
-  /// Visualization related methods ///
-  /////////////////////////////////////
+  /// Visualization related methods
   virtual void loop(double dt, double realTimeFactor = 1.0);
   virtual void visStart();
   virtual void visEnd();
@@ -49,9 +47,7 @@ class World_RG {
   virtual void startRecordingVideo(std::string dir, std::string fileName);
   virtual void stopRecordingVideo();
 
-  //////////////////////////////////
-  /// adding or removing objects ///
-  //////////World////////////////////////
+  /// pure virtual adding or removing objects
   virtual SingleBodyHandle addCheckerboard(double gridSize,
                                            double xLength,
                                            double yLength,
@@ -85,11 +81,10 @@ class World_RG {
                                       benchmark::CollisionGroupType collisionGroup = 1,
                                       benchmark::CollisionGroupType collisionMask=-1) = 0;
 
+  /// pure virtual getter, setter
   virtual int getNumObject() = 0;
 
-  //////////////////////////
-  /// simulation methods ///
-  //////////////////////////
+  /// pure virtual simulation methods
   virtual void integrate(double dt) = 0;
   virtual void setGravity(Eigen::Vector3d gravity) = 0;
   virtual void setERP(double erp, double erp2, double frictionErp) = 0;
@@ -100,9 +95,11 @@ class World_RG {
   virtual void processGraphicalObject(rai_graphics::object::SingleBodyObject* go, int li);
   virtual void adjustTransparency(rai_graphics::object::SingleBodyObject* ob, bool hidable);
 
-  int visualizerFlags_ = 0;
-  StopWatch watch_, visualizerWatch_;
+  // object list
+  std::vector<SingleBodyHandle> sbHandles_;
+  std::vector<object::SingleBodyObjectInterface *> framesAndCOMobj_;
 
+  // gui objects
   std::unique_ptr<rai_graphics::RAI_graphics> gui_;
   std::unique_ptr<rai_graphics::object::Arrow> contactNormalArrow_;
   std::unique_ptr<rai_graphics::object::Sphere> contactPointMarker_;
@@ -110,14 +107,19 @@ class World_RG {
   std::unique_ptr<rai_graphics::object::Sphere> graphicalComMarker_;
   std::unique_ptr<rai_graphics::object::Arrow> frameX_, frameY_, frameZ_;
 
+  // gui properties
   rai_graphics::CameraProp cameraProperty_;
   rai_graphics::LightProp lightProperty_;
 
+  // gui watch timer
+  StopWatch watch_, visualizerWatch_;
+
+  // gui window size
   const int windowWidth_ = 800;
   const int windowHeight_ = 600;
 
-  std::vector<SingleBodyHandle> sbHandles_;
-  std::vector<object::SingleBodyObjectInterface *> framesAndCOMobj_;
+  // gui option
+  int visualizerFlags_ = 0;
 
   bool isReady_=false;
   bool isEnded_=false;

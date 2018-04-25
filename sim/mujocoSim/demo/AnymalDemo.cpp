@@ -7,7 +7,7 @@
 #include "MjcWorld_RG.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
-#define SIM_TIME_MODE
+//#define SIM_TIME_MODE
 #define VIDEO_SAVE_MODE
 
 namespace po = boost::program_options;

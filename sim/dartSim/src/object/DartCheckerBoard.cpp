@@ -36,7 +36,17 @@ dart_sim::object::DartCheckerBoard::DartCheckerBoard(double xLength, double yLen
 
   // position
   Eigen::Isometry3d tf(Eigen::Isometry3d::Identity());
-  tf.translation() = Eigen::Vector3d(0, 0, -5);
+
+  if(shape == benchmark::object::BOX_SHAPE)
+    tf.translation() = Eigen::Vector3d(0, 0, -5);
+
   bodyPtr_->getParentJoint()->setTransformFromParentBodyNode(tf);
+}
+
+void dart_sim::object::DartCheckerBoard::getPosition_W(benchmark::Vec<3> &pos_w) {
+  pos_w = {0, 0, 0};
+}
+void dart_sim::object::DartCheckerBoard::getQuaternion(benchmark::Vec<4> &quat) {
+  quat = {1, 0, 0, 0};
 }
 

@@ -5,8 +5,8 @@
 #include <OdeWorld_RG.hpp>
 #include "raiCommon/utils/StopWatch.hpp"
 
-//#define SIM_TIME_MODE
-#define VIDEO_SAVE_MODE
+#define SIM_TIME_MODE
+//#define VIDEO_SAVE_MODE
 
 int main() {
 
@@ -41,7 +41,7 @@ int main() {
 
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
-  const double kp = 40.0, kd = 1.0;
+  const double kp = 100.0, kd = 1.0;
 
   jointNominalConfig << 0, 0, 0.54,
       1.0, 0.0, 0.0, 0.0,

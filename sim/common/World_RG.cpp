@@ -153,7 +153,6 @@ void World_RG::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
 
-//  TODO articulated system
 //  for (auto &as : asHandles_) {
 //    Vec<4> quat;
 //    Vec<3> pos, jointPos_W;

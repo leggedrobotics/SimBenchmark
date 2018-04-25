@@ -17,6 +17,9 @@ class DartCheckerBoard: public DartSingleBodyObject,
  public:
   DartCheckerBoard(double xLength, double yLength, benchmark::object::CheckerboardShape shape, int id);
 
+  virtual void getPosition_W(benchmark::Vec<3>& pos_w) override ;
+  virtual void getQuaternion(benchmark::Vec<4>& quat) override ;
+
 };
 
 } // object

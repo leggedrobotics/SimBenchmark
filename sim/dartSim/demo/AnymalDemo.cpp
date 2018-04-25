@@ -5,7 +5,7 @@
 #include <DartWorld_RG.hpp>
 #include "raiCommon/utils/StopWatch.hpp"
 
-#define SIM_TIME_MODE
+//#define SIM_TIME_MODE
 //#define VIDEO_SAVE_MODE
 
 int main() {
@@ -52,7 +52,7 @@ int main() {
   watch.start();
   for(int i = 0; i < 50000; i++) {
 #else
-    sim.cameraFollowObject(checkerboard, {10, 10, 15});
+    sim.cameraFollowObject(checkerboard, {1, 1, 1});
 #if defined(VIDEO_SAVE_MODE)
   sim.startRecordingVideo("/tmp", "dartAnymal");
   for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
