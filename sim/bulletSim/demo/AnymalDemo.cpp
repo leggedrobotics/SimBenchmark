@@ -22,14 +22,26 @@ int main() {
 #endif
 
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
-  auto anymal = sim.addArticulatedSystem(urdfPath);
-  anymal->setColor({1, 0, 0, 1});
-  anymal->setGeneralizedCoordinate(
-      {0, 0, 0.5,
-       1.0, 0.0, 0.0, 0.0,
-       0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8});
-  anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
-  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
+
+  std::vector<bullet_sim::ArticulatedSystemHandle> anymals;
+  int numRow = 1;
+
+  for(int i = 0; i < numRow; i++) {
+    for(int j = 0; j < numRow; j++) {
+      auto anymal = sim.addArticulatedSystem(urdfPath);
+      anymal->setColor({1, 0, 0, 1});
+      anymal->setGeneralizedCoordinate(
+          {i * 2 - 5 * 0.5, j * 2 - 5 * 0.5, 0.54,
+           1.0, 0.0, 0.0, 0.0,
+           0.03, 0.4, -0.8,
+           -0.03, 0.4, -0.8,
+           0.03, -0.4, 0.8,
+           -0.03, -0.4, 0.8});
+      anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
+      anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
+      anymals.push_back(anymal);
+    }
+  }
 
   sim.setGravity({0, 0, -9.8});
 
@@ -46,22 +58,24 @@ int main() {
   watch.start();
   for(int i = 0; i < 50000; i++) {
 #else
-    sim.cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
+  sim.cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
 #if defined(VIDEO_SAVE_MODE)
   sim.startRecordingVideo("/tmp", "btAnymal");
   for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
 #else
-    while(sim.visualizerLoop(0.005, 1.0)) {
+  while(sim.visualizerLoop(0.005, 1.0)) {
 #endif
 #endif
-    jointState = anymal->getGeneralizedCoordinate();
-    jointVel = anymal->getGeneralizedVelocity();
-    jointForce = anymal->getGeneralizedForce();
+    for(int i = 0; i < numRow * numRow; i++) {
+      jointState = anymals[i]->getGeneralizedCoordinate();
+      jointVel = anymals[i]->getGeneralizedVelocity();
+      jointForce = anymals[i]->getGeneralizedForce();
 
-    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-    jointForce.head(6).setZero();
-    anymal->setGeneralizedForce(jointForce);
-    sim.integrate(0.005);
+      jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
+      jointForce.head(6).setZero();
+      anymals[i]->setGeneralizedForce(jointForce);
+      sim.integrate(0.005);
+    }
   }
 
 #if defined(SIM_TIME_MODE)
