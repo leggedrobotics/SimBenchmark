@@ -54,13 +54,13 @@ int main(int argc, const char* argv[]) {
                            keyPath.c_str(),
                            solverOption);
 #else
-  mujoco_sim::World_RG sim(800,
-                           600,
-                           0.5,
-                           urdfPath.c_str(),
-                           keyPath.c_str(),
-                           benchmark::NO_BACKGROUND,
-                           solverOption);
+  mujoco_sim::MjcWorld_RG sim(800,
+                              600,
+                              0.5,
+                              urdfPath.c_str(),
+                              keyPath.c_str(),
+                              benchmark::NO_BACKGROUND,
+                              solverOption);
   sim.cameraFollowObject(sim.getSingleBodyHandle(sim.getNumObject()-1), {1.0, 1.0, 1.0});
 
   // set color
