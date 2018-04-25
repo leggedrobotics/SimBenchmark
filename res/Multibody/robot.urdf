@@ -149,7 +149,7 @@
         <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
- <link name="LF_SHANK">
+    <link name="LF_SHANK">
         <visual>
             <origin rpy="0 0 0.0" xyz="0 0 0"/>
             <geometry>

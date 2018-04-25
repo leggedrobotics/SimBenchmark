@@ -314,7 +314,7 @@ void OdeArticulatedSystem::initVisuals(Link &link,
 
 void OdeArticulatedSystem::initInertials(Link &link) {
   if(link.inertial_.mass_ == 0) {
-    
+
     if(link.bodyIdx_ == 0 && isFixed_) {
       // fixed base link (set default values)
       dMassSetParameters(
@@ -331,9 +331,11 @@ void OdeArticulatedSystem::initInertials(Link &link) {
           1
       );
       dBodySetMass(link.odeBody_, &link.inertial_.odeMass_);
+
     } else {
       // non-fixed-base link
       RAIFATAL("zero inertial non-base link is not allowed in ODE")
+//      dBodySetKinematic(link.odeBody_);
     }
   }
   else {
@@ -652,6 +654,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not tested yet")
           genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
           break;
         }
@@ -684,6 +687,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not tested yet")
           genCoordinate_[i++] = dJointGetSliderPosition(joint->odeJoint_);
           break;
         }
@@ -709,6 +713,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not tested yet")
           genVelocity_[i++] = dJointGetSliderPositionRate(joint->odeJoint_);
           break;
         }
@@ -740,6 +745,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSyst
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not tested yet")
           genVelocity_[i++] = dJointGetSliderPositionRate(joint->odeJoint_);
           break;
         }
@@ -854,6 +860,7 @@ void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVe
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not tested yet")
 //          dJointAddSliderForce(joint->odeJoint_, tau.begin()[i++]);
           break;
         }
@@ -890,6 +897,7 @@ void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVe
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not tested yet")
 //          dJointAddSliderForce(joint->odeJoint_, tau.begin()[i++]);
           break;
         }
@@ -923,6 +931,7 @@ void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> 
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not tested yet")
 //          dJointAddSliderForce(joint->odeJoint_, tau.begin()[i++]);
           break;
         }
@@ -956,11 +965,13 @@ void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> 
                              axis[0] * rate,
                              axis[1] * rate,
                              axis[2] * rate);
+
+          const dReal *vel = dBodyGetAngularVel(joint->childLink_->odeBody_);
+          RAIINFO(vel[0] << " " << vel[1] << " " << vel[2])
           break;
         }
         case Joint::PRISMATIC: {
           RAIFATAL("not implemented yet")
-//          dJointAddSliderForce(joint->odeJoint_, tau.begin()[i++]);
           break;
         }
         default:
@@ -985,6 +996,7 @@ void OdeArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not tested yet")
           dJointAddSliderForce(joint->odeJoint_, tau.begin()[i++]);
           break;
         }
@@ -1009,6 +1021,7 @@ void OdeArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not tested yet")
           dJointAddSliderForce(joint->odeJoint_, tau.begin()[i++]);
           break;
         }
@@ -1034,6 +1047,7 @@ void OdeArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not tested yet")
           dJointAddSliderForce(joint->odeJoint_, tau[i++]);
           break;
         }
@@ -1058,6 +1072,7 @@ void OdeArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
           break;
         }
         case Joint::PRISMATIC: {
+          RAIFATAL("prismatic joint is not tested yet")
           dJointAddSliderForce(joint->odeJoint_, tau[i++]);
           break;
         }
