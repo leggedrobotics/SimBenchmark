@@ -1,3 +1,7 @@
+/**
+ * Modified by Dongho Kang
+ * */
+
 #include <stdio.h>
 #include "LinearMath/btTransform.h"
 #include "BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h"
@@ -273,9 +277,8 @@ void ConvertURDF2BulletInternal(
 	int graphicsIndex;
 	{
 		B3_PROFILE("convertLinkVisualShapes");
-//		graphicsIndex = u2b.convertLinkVisualShapes(urdfLinkIndex, pathPrefix, localInertialFrame);
+		graphicsIndex = u2b.convertLinkVisualShapes(urdfLinkIndex, pathPrefix, localInertialFrame);
 	}
-	
 
 
     if (compoundShape)

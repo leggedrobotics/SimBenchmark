@@ -1,3 +1,7 @@
+/**
+ * Modified by Dongho Kang
+ * */
+
 #ifndef _URDF2BULLET_H
 #define _URDF2BULLET_H
 #include "LinearMath/btAlignedObjectArray.h"

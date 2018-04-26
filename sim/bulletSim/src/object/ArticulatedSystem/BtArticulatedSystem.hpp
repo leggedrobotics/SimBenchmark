@@ -16,6 +16,7 @@
 
 #include "URDF/BulletUrdfImporter.h"
 #include "URDF/MyMultiBodyCreator.h"
+#include "URDF/URDFToBullet.h"
 #include "URDF/UrdfParser.h"
 
 #include "object/ArticulatedSystem/URDF/URDFToBullet.h"
@@ -71,6 +72,8 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
  private:
   void init();
   void initVisuals();
+
+  void initVisObj(btTransform linkTransform, std::vector<URDFVisualData> &data);
   void initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
   void initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
                                        btTransform parentTransform,
@@ -82,6 +85,8 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
 
   btMultiBodyDynamicsWorld *dynamicsWorld_;
   btMultiBody *multiBody_;
+  BulletURDFImporter *importer_;
+  MyMultiBodyCreator *creator_;
 
   std::vector<int> movableLinkIdx_;
   double maxJointTorque_ = 1000.0;
