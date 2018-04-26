@@ -120,21 +120,18 @@ void BtArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *li
 
   // shape
   if (linkCollider->getCollisionShape()->isCompound()) {
-
     // compound shape
     btCompoundShape *compoundShape =
         (btCompoundShape *) linkCollider->getCollisionShape();
 
     if(compoundShape->getNumChildShapes() > 0) {
       initVisualFromCompoundChildList(compoundShape->getChildList(),
-                                      linkCollider->getWorldTransform(),
                                       colliderId,
                                       compoundShape->getNumChildShapes());
       initVisualFromVisualShape(colliderId);
     }
   }
   else {
-
     // single shape
     initVisualFromCollisionShape(linkCollider->getCollisionShape(),
                                  linkCollider->getWorldTransform(),
@@ -144,11 +141,9 @@ void BtArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *li
 }
 
 void BtArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                                          btTransform parentTransform,
                                                           int id,
                                                           int numChild) {
   for (int i = 0; i < numChild; ++i) {
-//    btTransform childTransform = parentTransform * compoundShapeChild[i].m_transform;
     btTransform childTransform = compoundShapeChild[i].m_transform;
     initVisualFromCollisionShape(compoundShapeChild[i].m_childShape, childTransform, id);
   }
@@ -179,9 +174,7 @@ void BtArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, bt
                  ((btBoxShape *)col)->getHalfExtentsWithMargin().z() * 2.0,
                  0};
 
-//      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Box, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Box));
-//      visProps_.emplace_back(std::make_pair("", boxSize));
       visColProps_.emplace_back(std::make_pair("", boxSize));
       break;
     }
@@ -193,9 +186,7 @@ void BtArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, bt
                  0,
                  0};
 
-//      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Cylinder, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Cylinder));
-//      visProps_.emplace_back(std::make_pair("", cylSize));
       visColProps_.emplace_back(std::make_pair("", cylSize));
       break;
     }
@@ -207,9 +198,7 @@ void BtArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, bt
                     0,
                     0};
 
-//      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Sphere, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Sphere));
-//      visProps_.emplace_back(std::make_pair("", sphereSize));
       visColProps_.emplace_back(std::make_pair("", sphereSize));
       break;
     }
@@ -575,14 +564,21 @@ void BtArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orientat
   }
   else {
     // non-base
+    btTransform linkToInertial;
+    linkToInertial.setRotation(multiBody_->getLink(bodyId-1).m_zeroRotParentToThis);
+    linkToInertial.setOrigin(multiBody_->getLink(bodyId-1).m_dVector);
+
     btTransform tf = multiBody_->getLinkCollider(bodyId-1)->getWorldTransform();
-    orientation.e() << tf.getBasis().getRow(0).x(), tf.getBasis().getRow(0).y(), tf.getBasis().getRow(0).z(),
-        tf.getBasis().getRow(1).x(), tf.getBasis().getRow(1).y(), tf.getBasis().getRow(1).z(),
-        tf.getBasis().getRow(2).x(), tf.getBasis().getRow(2).y(), tf.getBasis().getRow(2).z();
+    btTransform bodyTf = tf * linkToInertial.inverse();
 
-    position = {tf.getOrigin().x(), tf.getOrigin().y(), tf.getOrigin().z()};
+    orientation.e() << bodyTf.getBasis().getRow(0).x(), bodyTf.getBasis().getRow(0).y(), bodyTf.getBasis().getRow(0).z(),
+        bodyTf.getBasis().getRow(1).x(), bodyTf.getBasis().getRow(1).y(), bodyTf.getBasis().getRow(1).z(),
+        bodyTf.getBasis().getRow(2).x(), bodyTf.getBasis().getRow(2).y(), bodyTf.getBasis().getRow(2).z();
+
+    position = {bodyTf.getOrigin().x(),
+                bodyTf.getOrigin().y(),
+                bodyTf.getOrigin().z()};
   }
-
 }
 
 } // object

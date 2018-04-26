@@ -74,9 +74,8 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
   void initVisuals();
   void initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
   void initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                       btTransform parentTransform,
-                                       int id,
-                                       int numChild);
+                                         int id,
+                                         int numChild);
   void initVisualFromCollisionShape(btCollisionShape *collisionShape,
                                     btTransform transform,
                                     int id);

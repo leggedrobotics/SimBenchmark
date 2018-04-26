@@ -92,7 +92,9 @@ void simulationLoop() {
       sim->integrate(0.005);
     }
 
-    std::cout<<"time taken for 50k steps "<< watch.measure()<<"s \n";
+    std::cout<<"time taken for "
+             << (int) benchmark::anymal::params.T / benchmark::anymal::params.dt
+             << " steps "<< watch.measure()<<"s \n";
   }
 }
 
