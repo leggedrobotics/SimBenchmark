@@ -10,8 +10,8 @@ namespace object {
 BtArticulatedSystem::BtArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world): dynamicsWorld_(world) {
 
   urdfFile += "robot.urdf";
-  BulletURDFImporter importer(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA | CUF_USE_SELF_COLLISION);
-  bool loadOK = importer.loadURDF(urdfFile.c_str());
+  importer_ = new BulletURDFImporter(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA | CUF_USE_SELF_COLLISION);
+  bool loadOK = importer_->loadURDF(urdfFile.c_str());
 
   if(loadOK) {
     MyMultiBodyCreator creator(0);
@@ -19,7 +19,7 @@ BtArticulatedSystem::BtArticulatedSystem(std::string urdfFile, btMultiBodyDynami
     btTransform identityTrans;
     identityTrans.setIdentity();
 
-    ConvertURDF2Bullet2(importer, creator, identityTrans, world, true, importer.getPathPrefix());
+    ConvertURDF2Bullet2(*importer_, creator, identityTrans, world, true, importer_->getPathPrefix());
 
     multiBody_ = creator.getBulletMultiBody();
     init();
@@ -31,7 +31,8 @@ BtArticulatedSystem::BtArticulatedSystem(std::string urdfFile, btMultiBodyDynami
 
 BtArticulatedSystem::~BtArticulatedSystem() {
 
-  // delete multibody
+  // TODO importer is not needed after initialization
+  delete importer_;
   delete multiBody_;
 }
 
@@ -130,6 +131,7 @@ void BtArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *li
                                       linkCollider->getWorldTransform(),
                                       colliderId,
                                       compoundShape->getNumChildShapes());
+      initVisualFromVisualShape(colliderId);
     }
   }
   else {
@@ -138,13 +140,14 @@ void BtArticulatedSystem::initVisualFromLinkCollider(btMultiBodyLinkCollider *li
     initVisualFromCollisionShape(linkCollider->getCollisionShape(),
                                  linkCollider->getWorldTransform(),
                                  colliderId);
+    initVisualFromVisualShape(colliderId);
   }
 }
 
 void BtArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                                        btTransform parentTransform,
-                                                        int id,
-                                                        int numChild) {
+                                                          btTransform parentTransform,
+                                                          int id,
+                                                          int numChild) {
   for (int i = 0; i < numChild; ++i) {
 //    btTransform childTransform = parentTransform * compoundShapeChild[i].m_transform;
     btTransform childTransform = compoundShapeChild[i].m_transform;
@@ -177,9 +180,9 @@ void BtArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, bt
                  ((btBoxShape *)col)->getHalfExtentsWithMargin().z() * 2.0,
                  0};
 
-      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Box, color_));
+//      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Box, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Box));
-      visProps_.emplace_back(std::make_pair("", boxSize));
+//      visProps_.emplace_back(std::make_pair("", boxSize));
       visColProps_.emplace_back(std::make_pair("", boxSize));
       break;
     }
@@ -191,9 +194,9 @@ void BtArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, bt
                  0,
                  0};
 
-      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Cylinder, color_));
+//      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Cylinder, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Cylinder));
-      visProps_.emplace_back(std::make_pair("", cylSize));
+//      visProps_.emplace_back(std::make_pair("", cylSize));
       visColProps_.emplace_back(std::make_pair("", cylSize));
       break;
     }
@@ -205,14 +208,98 @@ void BtArticulatedSystem::initVisualFromCollisionShape(btCollisionShape *col, bt
                     0,
                     0};
 
-      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Sphere, color_));
+//      visObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Sphere, color_));
       visColObj.emplace_back(std::make_tuple(mat, position, id, benchmark::object::Shape::Sphere));
-      visProps_.emplace_back(std::make_pair("", sphereSize));
+//      visProps_.emplace_back(std::make_pair("", sphereSize));
       visColProps_.emplace_back(std::make_pair("", sphereSize));
       break;
     }
     default:
       break;
+  }
+}
+
+void BtArticulatedSystem::initVisualFromVisualShape(int id) {
+
+  std::vector<URDFVisualData> list;
+  importer_->getLinkVisualData(id, list);
+
+  for(int i = 0;  i < list.size(); i++) {
+
+    benchmark::Mat<3,3> mat;
+    btMatrix3x3 rotMat;
+    rotMat.setRotation(list[i].visual.m_linkLocalFrame.getRotation());
+    mat.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
+        rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
+        rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
+
+    benchmark::Vec<3> pos;
+    pos = {
+        list[i].visual.m_linkLocalFrame.getOrigin().x(),
+        list[i].visual.m_linkLocalFrame.getOrigin().y(),
+        list[i].visual.m_linkLocalFrame.getOrigin().z()
+    };
+
+    switch(list[i].visual.m_geometry.m_type) {
+      case URDF_GEOM_SPHERE: {
+        benchmark::Vec<4> sphereSize;
+        sphereSize = {list[i].visual.m_geometry.m_sphereRadius,
+                      0,
+                      0,
+                      0};
+        visObj.emplace_back(std::make_tuple(mat,
+                                            pos,
+                                            id,
+                                            benchmark::object::Shape::Sphere,
+                                            color_));
+        visProps_.emplace_back(std::make_pair("", sphereSize));
+        break;
+      }
+      case URDF_GEOM_BOX: {
+        benchmark::Vec<4> boxSize;
+        boxSize = {list[i].visual.m_geometry.m_boxSize.x(),
+                   list[i].visual.m_geometry.m_boxSize.y(),
+                   list[i].visual.m_geometry.m_boxSize.z(),
+                   0};
+        visObj.emplace_back(std::make_tuple(mat,
+                                            pos,
+                                            id,
+                                            benchmark::object::Shape::Box,
+                                            color_));
+        visProps_.emplace_back(std::make_pair("", boxSize));
+        break;
+      }
+      case URDF_GEOM_CYLINDER: {
+        benchmark::Vec<4> cylSize;
+        cylSize = {list[i].visual.m_geometry.m_capsuleRadius,
+                   list[i].visual.m_geometry.m_capsuleHeight,
+                   0,
+                   0};
+        visObj.emplace_back(std::make_tuple(mat,
+                                            pos,
+                                            id,
+                                            benchmark::object::Shape::Cylinder,
+                                            color_));
+        visProps_.emplace_back(std::make_pair("", cylSize));
+        break;
+      }
+      case URDF_GEOM_MESH: {
+        benchmark::Vec<4> scale;
+        scale = {list[i].visual.m_geometry.m_meshScale.x(),
+                 list[i].visual.m_geometry.m_meshScale.y(),
+                 list[i].visual.m_geometry.m_meshScale.z(),
+                 0};
+        visObj.emplace_back(std::make_tuple(mat,
+                                            pos,
+                                            id,
+                                            benchmark::object::Shape::Mesh,
+                                            color_));
+        visProps_.emplace_back(std::make_pair(list[i].visual.m_geometry.m_meshFileName, scale));
+        break;
+      }
+      default:
+        RAIFATAL("not supported visual type")
+    }
   }
 }
 
@@ -468,7 +555,6 @@ int BtArticulatedSystem::getDOF() {
 int BtArticulatedSystem::getStateDimension() {
   return stateDimension_;
 }
-
 void BtArticulatedSystem::setColor(Eigen::Vector4d color) {
   color_ = {
       color[0], color[1], color[2], color[3]};
@@ -477,7 +563,6 @@ void BtArticulatedSystem::setColor(Eigen::Vector4d color) {
     std::get<4>(visObj[i]) = color_;
   }
 }
-
 void BtArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orientation, benchmark::Vec<3> &position) {
 
   if(bodyId == 0) {

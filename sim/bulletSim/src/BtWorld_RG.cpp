@@ -119,8 +119,8 @@ ArticulatedSystemHandle BtWorld_RG::addArticulatedSystem(std::string nm,
         handle.visual().push_back(new rai_graphics::object::Sphere(handle->visProps_[i].second.v[0], true));
         break;
       case benchmark::object::Shape::Mesh:
-        checkFileExistance(nm + handle->visProps_[i].first);
-        handle.visual().push_back(new rai_graphics::object::Mesh(nm + handle->visProps_[i].first,
+        checkFileExistance(handle->visProps_[i].first);
+        handle.visual().push_back(new rai_graphics::object::Mesh(handle->visProps_[i].first,
                                                                  handle->visProps_[i].second.v[0]));
         break;
     }

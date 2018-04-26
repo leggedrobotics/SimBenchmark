@@ -39,10 +39,9 @@ class BulletURDFImporter : public URDFImporterInterface
   virtual ~BulletURDFImporter();
 
   /// added by Dongho Kang
-  std::vector<URDFVisualData> getLinkVisualData(int linkIndex/*, const btTransform &inertialFrame*/) const;
-
-  virtual int convertLinkVisualShapes(int linkIndex, const char* pathPrefix, const btTransform& inertialFrame) const;
-//    virtual void convertLinkVisualShapes2(int linkIndex, int urdfIndex, const char* pathPrefix, const btTransform& inertialFrame, class btCollisionObject* colObj, int bodyUniqueId) const;
+  void getLinkVisualData(int linkIndex, std::vector<URDFVisualData> &visualList) const;
+//  virtual int convertLinkVisualShapes(int linkIndex, const char* pathPrefix, const btTransform& inertialFrame) const;
+//  virtual void convertLinkVisualShapes2(int linkIndex, int urdfIndex, const char* pathPrefix, const btTransform& inertialFrame, class btCollisionObject* colObj, int bodyUniqueId) const;
 
   virtual bool loadURDF(const char* fileName, bool forceFixedBase = false);
 

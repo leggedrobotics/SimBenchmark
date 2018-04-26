@@ -72,8 +72,6 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
  private:
   void init();
   void initVisuals();
-
-  void initVisObj(btTransform linkTransform, std::vector<URDFVisualData> &data);
   void initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
   void initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
                                        btTransform parentTransform,
@@ -82,11 +80,11 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
   void initVisualFromCollisionShape(btCollisionShape *collisionShape,
                                     btTransform transform,
                                     int id);
+  void initVisualFromVisualShape(int id);
 
   btMultiBodyDynamicsWorld *dynamicsWorld_;
   btMultiBody *multiBody_;
   BulletURDFImporter *importer_;
-  MyMultiBodyCreator *creator_;
 
   std::vector<int> movableLinkIdx_;
   double maxJointTorque_ = 1000.0;

@@ -716,10 +716,9 @@ int BulletURDFImporter::getAllocatedTexture(int index) const
   return m_data->m_allocatedTextures[index];
 }
 
-std::vector<URDFVisualData> BulletURDFImporter::getLinkVisualData(int linkIndex /*, const btTransform &inertialFrame*/) const {
+void BulletURDFImporter::getLinkVisualData(int linkIndex, std::vector<URDFVisualData> &visualList) const {
 
   btTransform startTrans; startTrans.setIdentity();
-  std::vector<URDFVisualData> visualDataList;
 
   const UrdfModel& model = m_data->m_urdfParser.getModel();
   UrdfLink* const* linkPtr = model.m_links.getAtIndex(linkIndex);
@@ -746,10 +745,9 @@ std::vector<URDFVisualData> BulletURDFImporter::getLinkVisualData(int linkIndex 
       URDFVisualData visualData;
       visualData.visual = vis;
       visualData.linkTransform_ = link->m_inertia.m_linkLocalFrame.inverse();
-      visualDataList.push_back(visualData);
+      visualList.push_back(visualData);
     }
   }
-  return visualDataList;
 }
 
 class btCompoundShape* BulletURDFImporter::convertLinkCollisionShapes(int linkIndex, const char* pathPrefix, const btTransform& localInertiaFrame) const

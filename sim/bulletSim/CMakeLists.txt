@@ -41,8 +41,8 @@ set(BtSimSrc
         src/object/ArticulatedSystem/URDF/MyMultiBodyCreator.cpp
         src/object/ArticulatedSystem/URDF/URDFToBullet.h
         src/object/ArticulatedSystem/URDF/URDFToBullet.cpp
-        #            src/object/ArticulatedSystem/URDF/BulletUrdfImporter.h
-        #            src/object/ArticulatedSystem/URDF/BulletUrdfImporter.cpp
+        src/object/ArticulatedSystem/URDF/BulletUrdfImporter.h
+        src/object/ArticulatedSystem/URDF/BulletUrdfImporter.cpp
         )
 
 # library
