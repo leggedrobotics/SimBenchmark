@@ -12,7 +12,7 @@ int main() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/ANYmal/robot.urdf";
+  urdfPath += "../../../res/ANYmal/";
 
   bullet_sim::BtWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
 

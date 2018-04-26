@@ -155,7 +155,8 @@ void BtArticulatedSystem::initVisualFromCompoundChildList(btCompoundShapeChild *
                                                         int id,
                                                         int numChild) {
   for (int i = 0; i < numChild; ++i) {
-    btTransform childTransform = parentTransform * compoundShapeChild[i].m_transform;
+//    btTransform childTransform = parentTransform * compoundShapeChild[i].m_transform;
+    btTransform childTransform = compoundShapeChild[i].m_transform;
     initVisualFromCollisionShape(compoundShapeChild[i].m_childShape, childTransform, id);
   }
 }
@@ -484,6 +485,29 @@ void BtArticulatedSystem::setColor(Eigen::Vector4d color) {
   for(int i = 0; i < visObj.size(); i++) {
     std::get<4>(visObj[i]) = color_;
   }
+}
+
+void BtArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orientation, benchmark::Vec<3> &position) {
+
+  if(bodyId == 0) {
+    // base
+    btTransform tf = multiBody_->getBaseWorldTransform();
+    orientation.e() << tf.getBasis().getRow(0).x(), tf.getBasis().getRow(0).y(), tf.getBasis().getRow(0).z(),
+        tf.getBasis().getRow(1).x(), tf.getBasis().getRow(1).y(), tf.getBasis().getRow(1).z(),
+        tf.getBasis().getRow(2).x(), tf.getBasis().getRow(2).y(), tf.getBasis().getRow(2).z();
+
+    position = {tf.getOrigin().x(), tf.getOrigin().y(), tf.getOrigin().z()};
+  }
+  else {
+    // non-base
+    btTransform tf = multiBody_->getLinkCollider(bodyId-1)->getWorldTransform();
+    orientation.e() << tf.getBasis().getRow(0).x(), tf.getBasis().getRow(0).y(), tf.getBasis().getRow(0).z(),
+        tf.getBasis().getRow(1).x(), tf.getBasis().getRow(1).y(), tf.getBasis().getRow(1).z(),
+        tf.getBasis().getRow(2).x(), tf.getBasis().getRow(2).y(), tf.getBasis().getRow(2).z();
+
+    position = {tf.getOrigin().x(), tf.getOrigin().y(), tf.getOrigin().z()};
+  }
+
 }
 
 } // object

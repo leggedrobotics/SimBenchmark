@@ -910,6 +910,7 @@ void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVe
 
 void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
   // TODO check if it works properly
+  RAIFATAL("not completed function implementation")
 
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
   if(isFixed_) {

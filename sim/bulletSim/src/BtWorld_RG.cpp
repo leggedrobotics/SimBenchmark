@@ -177,47 +177,46 @@ void BtWorld_RG::updateFrame() {
 
 //  TODO articulated system
   for (auto &as : asHandles_) {
-    benchmark::Vec<4> quat;
-    benchmark::Vec<3> pos;
     benchmark::Vec<4> color;
+    benchmark::Vec<4> quat;
+    benchmark::Vec<3> pos, jointPos_W;
+    benchmark::Mat<3, 3> rot_WB, rotTemp;
 
     // update visuals for articulated system
-    as->updateVisuals();
+//    as->updateVisuals();
 
     if (showAlternateGraphicsIfexists) {
       /// update collision objects
       for (int i = 0; i < as->getVisColOb().size(); i++) {
         as.alternateVisual()[i]->setVisibility(true);
-        pos = std::get<1>(as->getVisColOb()[i]);
-        as.alternateVisual()[i]->setPos(
-            pos[0],
-            pos[1],
-            pos[2]);
-        rotMatToQuat(std::get<0>(as->getVisColOb()[i]), quat);
-        as.alternateVisual()[i]->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
+        int parentId = std::get<2>(as->getVisColOb()[i]);
+        as->getBodyPose(parentId, rot_WB, jointPos_W);
+        matvecmul(rot_WB, std::get<1>(as->getVisColOb()[i]), pos);
+        as.alternateVisual()[i]->setPos(jointPos_W[0] + pos[0],
+                                        jointPos_W[1] + pos[1],
+                                        jointPos_W[2] + pos[2]);
+        matmul(rot_WB, std::get<0>(as->getVisColOb()[i]), rotTemp);
+        rotMatToQuat(rotTemp, quat);
+        as.alternateVisual()[i]->setOri(quat[0], quat[1], quat[2], quat[3]);
         adjustTransparency(as.alternateVisual()[i], as.hidable);
       }
 
       for (int i = 0; i < as->getVisOb().size(); i++)
         as.visual()[i]->setVisibility(false);
-
-    } else {
+    }
+    else {
       for (int i = 0; i < as->getVisOb().size(); i++) {
         as.visual()[i]->setVisibility(true);
         if (!as.visual()[i]->isVisible()) continue;
-        pos = std::get<1>(as->getVisOb()[i]);
-        color = std::get<4>(as->getVisOb()[i]);
-        as.visual()[i]->setPos(
-            pos[0],
-            pos[1],
-            pos[2]
-        );
-        rotMatToQuat(std::get<0>(as->getVisOb()[i]), quat);
-        as.visual()[i]->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
-        as.visual()[i]->setColor({float(color[0]),
-                                  float(color[1]),
-                                  float(color[2])});
-        as.visual()[i]->setTransparency(float(color[3]));
+        int parentId = std::get<2>(as->getVisOb()[i]);
+        as->getBodyPose(parentId, rot_WB, jointPos_W);
+        matvecmul(rot_WB, std::get<1>(as->getVisOb()[i]), pos);
+        as.visual()[i]->setPos(jointPos_W[0] + pos[0],
+                               jointPos_W[1] + pos[1],
+                               jointPos_W[2] + pos[2]);
+        matmul(rot_WB, std::get<0>(as->getVisOb()[i]), rotTemp);
+        rotMatToQuat(rotTemp, quat);
+        as.visual()[i]->setOri(quat[0], quat[1], quat[2], quat[3]);
         adjustTransparency(as.visual()[i], as.hidable);
       }
       for (int i = 0; i < as->getVisColOb().size(); i++)

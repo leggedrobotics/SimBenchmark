@@ -23,7 +23,6 @@ void OdeWorld_RG::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
 
-//  TODO articulated system
   for (auto &as : asHandles_) {
     benchmark::Vec<4> color;
     benchmark::Vec<4> quat;
