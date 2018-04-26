@@ -27,12 +27,11 @@ BtArticulatedSystem::BtArticulatedSystem(std::string urdfFile, btMultiBodyDynami
   else {
     RAIFATAL("failed to load URDF")
   }
+
+  delete importer_;
 }
 
 BtArticulatedSystem::~BtArticulatedSystem() {
-
-  // TODO importer is not needed after initialization
-  delete importer_;
   delete multiBody_;
 }
 
