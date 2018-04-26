@@ -64,3 +64,4 @@ set(BULLET_SIM_LINK
 # sub-directories
 add_subdirectory(test)
 add_subdirectory(demo)
+add_subdirectory(benchmark)

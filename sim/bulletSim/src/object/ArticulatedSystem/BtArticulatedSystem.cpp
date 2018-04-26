@@ -9,6 +9,7 @@ namespace object {
 
 BtArticulatedSystem::BtArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world): dynamicsWorld_(world) {
 
+  urdfFile += "robot.urdf";
   BulletURDFImporter importer(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA);
   bool loadOK = importer.loadURDF(urdfFile.c_str());
 

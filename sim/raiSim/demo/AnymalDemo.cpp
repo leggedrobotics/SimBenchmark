@@ -12,7 +12,7 @@ int main() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/2DRobotArm/";
+  urdfPath += "../../../res/ANYmal/";
 
 #if defined(SIM_TIME_MODE)
   rai_sim::World_RG sim;
