@@ -14,11 +14,13 @@ namespace bullet_sim {
 namespace object {
 
 class BtCheckerBoard: public BtSingleBodyObject,
-                    public bo::CheckerboardInterface {
+                      public bo::CheckerboardInterface {
 
  public:
   BtCheckerBoard(double xLength, double yLength, bo::CheckerboardShape shape = bo::PLANE_SHAPE);
 
+  virtual void getPosition_W(benchmark::Vec<3>& pos_w) override ;
+  virtual void getQuaternion(benchmark::Vec<4>& quat) override ;
 };
 
 } // object

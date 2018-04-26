@@ -175,15 +175,11 @@ void BtWorld_RG::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
 
-//  TODO articulated system
   for (auto &as : asHandles_) {
     benchmark::Vec<4> color;
     benchmark::Vec<4> quat;
     benchmark::Vec<3> pos, jointPos_W;
     benchmark::Mat<3, 3> rot_WB, rotTemp;
-
-    // update visuals for articulated system
-//    as->updateVisuals();
 
     if (showAlternateGraphicsIfexists) {
       /// update collision objects

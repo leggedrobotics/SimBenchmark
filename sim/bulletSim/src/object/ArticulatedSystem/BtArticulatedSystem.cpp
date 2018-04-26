@@ -10,7 +10,7 @@ namespace object {
 BtArticulatedSystem::BtArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world): dynamicsWorld_(world) {
 
   urdfFile += "robot.urdf";
-  BulletURDFImporter importer(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA);
+  BulletURDFImporter importer(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA | CUF_USE_SELF_COLLISION);
   bool loadOK = importer.loadURDF(urdfFile.c_str());
 
   if(loadOK) {
@@ -91,15 +91,6 @@ void BtArticulatedSystem::init() {
       }
     }
   }
-
-  initVisuals();
-}
-
-void BtArticulatedSystem::updateVisuals() {
-  visObj.clear();
-  visColObj.clear();
-  visProps_.clear();
-  visColProps_.clear();
 
   initVisuals();
 }

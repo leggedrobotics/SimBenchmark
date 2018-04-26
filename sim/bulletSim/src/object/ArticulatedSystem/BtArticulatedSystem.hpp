@@ -31,8 +31,6 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
   BtArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world);
   virtual ~BtArticulatedSystem();
 
-  void updateVisuals();
-
   virtual const EigenVec getGeneralizedCoordinate() override;
 
   virtual const EigenVec getGeneralizedVelocity() override;

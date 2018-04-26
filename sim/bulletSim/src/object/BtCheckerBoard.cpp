@@ -29,3 +29,10 @@ bullet_sim::object::BtCheckerBoard::BtCheckerBoard(double xLength, double yLengt
   btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState_, collisionShape_);
   rigidBody_ = new btRigidBody(rbInfo);
 }
+
+void bullet_sim::object::BtCheckerBoard::getPosition_W(benchmark::Vec<3> &pos_w) {
+  pos_w = {0, 0, 0};
+}
+void bullet_sim::object::BtCheckerBoard::getQuaternion(benchmark::Vec<4> &quat) {
+  quat = {1, 0, 0, 0};
+}

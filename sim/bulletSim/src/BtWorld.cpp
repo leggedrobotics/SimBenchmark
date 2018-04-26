@@ -69,7 +69,7 @@ BtWorld::BtWorld(SolverOption solverOption) : solverOption_(solverOption) {
 //  dynamicsWorld_->getSolverInfo().m_friction = btScalar(0.8);
 //  dynamicsWorld_->getSolverInfo().m_restitution = 0.0;
 //  dynamicsWorld_->getSolverInfo().m_maxErrorReduction = btScalar(20.);
-//  dynamicsWorld_->getSolverInfo().m_numIterations = 10;                     // TODO
+//  dynamicsWorld_->getSolverInfo().m_numIterations = 1000;                     // TODO
   dynamicsWorld_->getSolverInfo().m_erp = 0;
   dynamicsWorld_->getSolverInfo().m_erp2 = 0;
   dynamicsWorld_->getSolverInfo().m_frictionERP = 0;

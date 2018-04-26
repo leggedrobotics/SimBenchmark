@@ -18,7 +18,7 @@ void setupSimulation() {
 }
 
 void setupWorld() {
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
+  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(0.8);
 
   for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
@@ -64,7 +64,7 @@ void simulationLoop() {
   if(benchmark::anymal::options.gui) {
     // gui
     while(sim->visualizerLoop(0.005, 1.0)) {
-      for(int i = 0; i < benchmark::anymal::options.numRow * benchmark::anymal::options.numRow; i++) {
+      for(int i = 0; i < anymals.size(); i++) {
         jointState = anymals[i]->getGeneralizedCoordinate();
         jointVel = anymals[i]->getGeneralizedVelocity();
         jointForce = anymals[i]->getGeneralizedForce();
@@ -72,15 +72,15 @@ void simulationLoop() {
         jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
         jointForce.head(6).setZero();
         anymals[i]->setGeneralizedForce(jointForce);
-        sim->integrate(0.005);
       }
+      sim->integrate(0.005);
     }
   } else {
     // no gui
     StopWatch watch;
     watch.start();
-    for(int i = 0; i < 50000; i++) {
-      for(int i = 0; i < benchmark::anymal::options.numRow * benchmark::anymal::options.numRow; i++) {
+    for(int t = 0; t < 50000; t++) {
+      for(int i = 0; i < anymals.size(); i++) {
         jointState = anymals[i]->getGeneralizedCoordinate();
         jointVel = anymals[i]->getGeneralizedVelocity();
         jointForce = anymals[i]->getGeneralizedForce();
@@ -88,8 +88,8 @@ void simulationLoop() {
         jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
         jointForce.head(6).setZero();
         anymals[i]->setGeneralizedForce(jointForce);
-        sim->integrate(0.005);
       }
+      sim->integrate(0.005);
     }
 
     std::cout<<"time taken for 50k steps "<< watch.measure()<<"s \n";
