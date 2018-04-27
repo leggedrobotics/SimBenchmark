@@ -2,31 +2,30 @@
 // Created by kangd on 26.04.18.
 //
 
-#include <BtWorld_RG.hpp>
+#include <raiSim/World_RG.hpp>
 
 #include "AnymalBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
-bullet_sim::BtWorld_RG *sim;
-std::vector<bullet_sim::ArticulatedSystemHandle> anymals;
+rai_sim::World_RG *sim;
+std::vector<rai_sim::ArticulatedSystemHandle> anymals;
 
 void setupSimulation() {
   if(benchmark::anymal::options.gui)
-    sim = new bullet_sim::BtWorld_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
+    sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
   else
-    sim = new bullet_sim::BtWorld_RG(bullet_sim::SOLVER_MULTI_BODY);
+    sim = new rai_sim::World_RG();
 }
 
 void setupWorld() {
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
-  checkerboard->setFrictionCoefficient(0.8);
+  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
 
   for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
     for(int j = 0; j < benchmark::anymal::options.numRow; j++) {
       auto anymal = sim->addArticulatedSystem(
           benchmark::anymal::getURDFpath()
       );
-      anymal->setColor({1, 0, 0, 1});
+//      anymal->setColor({1, 0, 0, 1});
       anymal->setGeneralizedCoordinate(
           {i * 2,
            j * 2,

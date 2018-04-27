@@ -8,4 +8,4 @@ include_directories(${RAI_SIM_INCLUDE_DIR})
 
 add_subdirectory(test)
 add_subdirectory(demo)
-#add_subdirectory(benchmark)
+add_subdirectory(benchmark)
