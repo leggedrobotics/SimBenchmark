@@ -41,17 +41,18 @@ set(ODESim_SRCS
         src/object/ArticulatedSystem/OdeLinkJoint.hpp)
 
 # library
-add_library(ODESimLib ${ODESim_SRCS})
-target_link_libraries(ODESimLib
+add_library(OdeSimLib ${ODESim_SRCS})
+target_link_libraries(OdeSimLib
         ode
         urdfdom_model
         )
 
 # link
-set(ODESimLink
-        ODESimLib
+set(OdeSimLink
+        OdeSimLib
         ${BENCHMARK_LINK}
         )
 
 # sub-directories
 add_subdirectory(demo)
+add_subdirectory(benchmark)

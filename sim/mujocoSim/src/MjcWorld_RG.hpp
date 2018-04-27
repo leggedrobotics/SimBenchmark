@@ -24,12 +24,12 @@ class MjcWorld_RG: public benchmark::World_RG {
            const char *modelPath,
            const char *keyPath,
            int flags,
-           mujoco_sim::SolverOption solverOption);
+           mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS);
 
   /* constructor for no visualization */
   MjcWorld_RG(const char *modelPath,
            const char *keyPath,
-           mujoco_sim::SolverOption solverOption);
+           mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS);
   virtual ~MjcWorld_RG();
 
   //////////////////////////

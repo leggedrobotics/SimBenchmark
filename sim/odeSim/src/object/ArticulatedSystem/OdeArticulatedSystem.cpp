@@ -1103,7 +1103,12 @@ int OdeArticulatedSystem::getStateDimension() {
 }
 
 void OdeArticulatedSystem::setColor(Eigen::Vector4d color) {
-  RAIFATAL("not implemented yet")
+  color_ = {
+      color[0], color[1], color[2], color[3]};
+
+  for(int i = 0; i < visObj.size(); i++) {
+    std::get<4>(visObj[i]) = color_;
+  }
 }
 
 const std::vector<Joint *> &OdeArticulatedSystem::getJoints() const {

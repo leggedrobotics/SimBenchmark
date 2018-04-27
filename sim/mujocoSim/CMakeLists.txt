@@ -61,7 +61,7 @@ target_link_libraries(MjcSimLib
         GLU
         glut)
 
-set(MUJOCO_SIM_LINK
+set(MjcSimLink
         MjcSimLib
         ${BENCHMARK_LINK}
         )
@@ -69,3 +69,4 @@ set(MUJOCO_SIM_LINK
 # subdirectory
 add_subdirectory(test)
 add_subdirectory(demo)
+add_subdirectory(benchmark)

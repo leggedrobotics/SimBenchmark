@@ -70,27 +70,35 @@ std::string getURDFpath() {
 }
 
 /**
- * get option or parameter from arguments
+ * add options to desc
  *
- * @param argc
- * @param argv
+ * @param desc
  */
-void getParamsFromArg(int argc, const char *argv[]) {
-
-  po::options_description desc("for all");
+void addDescToOption(po::options_description &desc) {
   desc.add_options()
       ("help", "produce help message")
       ("nogui", "no visualization")
       ("row", po::value<int>(), "the number of rows")
       ("feedback", po::value<bool>(), "feed back control y/n")
       ;
+}
+
+/**
+ * get option or parameter from arguments
+ *
+ * @param argc
+ * @param argv
+ * @param desc
+ */
+void getParamsFromArg(int argc, const char *argv[], po::options_description &desc) {
 
   po::variables_map vm;
   po::store(po::parse_command_line(argc, argv, desc), vm);
 
   // help option
   if(vm.count("help")) {
-    RAIINFO(desc)
+    std::cout << desc << std::endl;
+    exit(0);
   }
 
   // nogui option

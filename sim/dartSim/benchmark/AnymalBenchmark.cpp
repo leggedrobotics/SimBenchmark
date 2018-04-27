@@ -5,16 +5,20 @@
 #include <DartWorld_RG.hpp>
 
 #include "AnymalBenchmark.hpp"
+#include "DartBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
 dart_sim::DartWorld_RG *sim;
 std::vector<dart_sim::ArticulatedSystemHandle> anymals;
+po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::options.gui)
-    sim = new dart_sim::DartWorld_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, dart_sim::SOLVER_LCP_PGS);
+    sim = new dart_sim::DartWorld_RG(800, 600, 0.5,
+                                     benchmark::NO_BACKGROUND,
+                                     benchmark::dart::options.solverOption);
   else
-    sim = new dart_sim::DartWorld_RG(dart_sim::SOLVER_LCP_PGS);
+    sim = new dart_sim::DartWorld_RG(benchmark::dart::options.solverOption);
 
   sim->setTimeStep(benchmark::anymal::params.dt);
 }
@@ -129,7 +133,21 @@ void simulationLoop() {
 
 int main(int argc, const char* argv[]) {
 
-  benchmark::anymal::getParamsFromArg(argc, argv);
+  benchmark::anymal::addDescToOption(desc);
+  benchmark::dart::addDescToOption(desc);
+
+  benchmark::anymal::getParamsFromArg(argc, argv, desc);
+  benchmark::dart::getParamsFromArg(argc, argv, desc);
+
+  RAIINFO(
+      std::endl << "-----------------------" << std::endl
+                << "Simulator: DART" << std::endl
+                << "GUI      : " << benchmark::anymal::options.gui << std::endl
+                << "Row      : " << benchmark::anymal::options.numRow << std::endl
+                << "Feedback : " << benchmark::anymal::options.feedback << std::endl
+                << "Solver   : " << benchmark::dart::options.solverOption << std::endl
+                << "-----------------------"
+  )
 
   setupSimulation();
   setupWorld();

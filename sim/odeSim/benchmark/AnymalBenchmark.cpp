@@ -2,20 +2,23 @@
 // Created by kangd on 26.04.18.
 //
 
-#include <BtWorld_RG.hpp>
+#include <OdeWorld_RG.hpp>
 
 #include "AnymalBenchmark.hpp"
+#include "OdeBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
-bullet_sim::BtWorld_RG *sim;
-std::vector<bullet_sim::ArticulatedSystemHandle> anymals;
+ode_sim::OdeWorld_RG *sim;
+std::vector<ode_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::options.gui)
-    sim = new bullet_sim::BtWorld_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
+    sim = new ode_sim::OdeWorld_RG(800, 600, 0.5,
+                                   benchmark::NO_BACKGROUND,
+                                   benchmark::ode::options.solverOption);
   else
-    sim = new bullet_sim::BtWorld_RG(bullet_sim::SOLVER_MULTI_BODY);
+    sim = new ode_sim::OdeWorld_RG(benchmark::ode::options.solverOption);
 }
 
 void setupWorld() {
@@ -95,7 +98,7 @@ void simulationLoop() {
       for(int i = 0; i < anymals.size(); i++) {
         jointState = anymals[i]->getGeneralizedCoordinate();
         jointVel = anymals[i]->getGeneralizedVelocity();
-        jointForce = anymals[i]->getGeneralizedForce();
+//        jointForce = anymals[i]->getGeneralizedForce();
 
         jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
         jointForce.head(6).setZero();
@@ -111,7 +114,7 @@ void simulationLoop() {
       for(int i = 0; i < anymals.size(); i++) {
         jointState = anymals[i]->getGeneralizedCoordinate();
         jointVel = anymals[i]->getGeneralizedVelocity();
-        jointForce = anymals[i]->getGeneralizedForce();
+//        jointForce = anymals[i]->getGeneralizedForce();
 
         jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
         jointForce.head(6).setZero();
@@ -129,17 +132,21 @@ void simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::anymal::addDescToOption(desc);
+  benchmark::ode::addDescToOption(desc);
+
   benchmark::anymal::getParamsFromArg(argc, argv, desc);
+  benchmark::ode::getParamsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "-----------------------" << std::endl
-                << "Simulator: BULLET" << std::endl
+                << "Simulator: ODE" << std::endl
                 << "GUI      : " << benchmark::anymal::options.gui << std::endl
                 << "Row      : " << benchmark::anymal::options.numRow << std::endl
                 << "Feedback : " << benchmark::anymal::options.feedback << std::endl
-                << "Solver   : " << "multibody" << std::endl
+                << "Solver   : " << benchmark::ode::options.solverOption << std::endl
                 << "-----------------------"
   )
+
   setupSimulation();
   setupWorld();
   simulationLoop();
