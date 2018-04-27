@@ -31,6 +31,26 @@ struct Parameter {
   double H = 0.54;    // starting height
   double dt = 0.005;  // timestep (sec)
   double T = 50;      // simulation time (sec)
+
+  // base quaternion
+  double baseQuat[4] = {
+      1.0, 0.0, 0.0, 0.0
+  };
+
+  // joint configuration
+  double jointPos[12] = {
+      0.03, 0.4, -0.8,
+      -0.03, 0.4, -0.8,
+      0.03, -0.4, 0.8,
+      -0.03, -0.4, 0.8
+  };
+
+  double dartjointPos[12] = {
+      0.03, 0.4, -0.8,
+      0.03, -0.4, 0.8,
+      -0.03, 0.4, -0.8,
+      -0.03, -0.4, 0.8
+  };
 };
 Parameter params;
 

@@ -555,6 +555,7 @@ void BtArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orientat
 
   if(bodyId == 0) {
     // base
+    // TODO this is not link's pose but the inertial of the link's pose
     btTransform tf = multiBody_->getBaseWorldTransform();
     orientation.e() << tf.getBasis().getRow(0).x(), tf.getBasis().getRow(0).y(), tf.getBasis().getRow(0).z(),
         tf.getBasis().getRow(1).x(), tf.getBasis().getRow(1).y(), tf.getBasis().getRow(1).z(),

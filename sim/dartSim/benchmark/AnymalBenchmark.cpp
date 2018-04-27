@@ -2,20 +2,21 @@
 // Created by kangd on 26.04.18.
 //
 
-#include <BtWorld_RG.hpp>
-#include <bounce.hpp>
+#include <DartWorld_RG.hpp>
 
 #include "AnymalBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
-bullet_sim::BtWorld_RG *sim;
-std::vector<bullet_sim::ArticulatedSystemHandle> anymals;
+dart_sim::DartWorld_RG *sim;
+std::vector<dart_sim::ArticulatedSystemHandle> anymals;
 
 void setupSimulation() {
   if(benchmark::anymal::options.gui)
-    sim = new bullet_sim::BtWorld_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
+    sim = new dart_sim::DartWorld_RG(800, 600, 0.5, benchmark::NO_BACKGROUND);
   else
-    sim = new bullet_sim::BtWorld_RG(bullet_sim::SOLVER_MULTI_BODY);
+    sim = new dart_sim::DartWorld_RG();
+
+  sim->setTimeStep(benchmark::anymal::params.dt);
 }
 
 void setupWorld() {
@@ -27,7 +28,7 @@ void setupWorld() {
       auto anymal = sim->addArticulatedSystem(
           benchmark::anymal::getURDFpath()
       );
-      anymal->setColor({1, 0, 0, 1});
+      anymal->setColor({1, 1, 0, 1});
       anymal->setGeneralizedCoordinate(
           {i * 2,
            j * 2,
@@ -36,18 +37,18 @@ void setupWorld() {
            benchmark::anymal::params.baseQuat[1],
            benchmark::anymal::params.baseQuat[2],
            benchmark::anymal::params.baseQuat[3],
-           benchmark::anymal::params.jointPos[0],
-           benchmark::anymal::params.jointPos[1],
-           benchmark::anymal::params.jointPos[2],
-           benchmark::anymal::params.jointPos[3],
-           benchmark::anymal::params.jointPos[4],
-           benchmark::anymal::params.jointPos[5],
-           benchmark::anymal::params.jointPos[6],
-           benchmark::anymal::params.jointPos[7],
-           benchmark::anymal::params.jointPos[8],
-           benchmark::anymal::params.jointPos[9],
-           benchmark::anymal::params.jointPos[10],
-           benchmark::anymal::params.jointPos[11]
+           benchmark::anymal::params.dartjointPos[0],
+           benchmark::anymal::params.dartjointPos[1],
+           benchmark::anymal::params.dartjointPos[2],
+           benchmark::anymal::params.dartjointPos[3],
+           benchmark::anymal::params.dartjointPos[4],
+           benchmark::anymal::params.dartjointPos[5],
+           benchmark::anymal::params.dartjointPos[6],
+           benchmark::anymal::params.dartjointPos[7],
+           benchmark::anymal::params.dartjointPos[8],
+           benchmark::anymal::params.dartjointPos[9],
+           benchmark::anymal::params.dartjointPos[10],
+           benchmark::anymal::params.dartjointPos[11]
           });
       anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
       anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
@@ -76,18 +77,18 @@ void simulationLoop() {
       benchmark::anymal::params.baseQuat[1],
       benchmark::anymal::params.baseQuat[2],
       benchmark::anymal::params.baseQuat[3],
-      benchmark::anymal::params.jointPos[0],
-      benchmark::anymal::params.jointPos[1],
-      benchmark::anymal::params.jointPos[2],
-      benchmark::anymal::params.jointPos[3],
-      benchmark::anymal::params.jointPos[4],
-      benchmark::anymal::params.jointPos[5],
-      benchmark::anymal::params.jointPos[6],
-      benchmark::anymal::params.jointPos[7],
-      benchmark::anymal::params.jointPos[8],
-      benchmark::anymal::params.jointPos[9],
-      benchmark::anymal::params.jointPos[10],
-      benchmark::anymal::params.jointPos[11];
+      benchmark::anymal::params.dartjointPos[0],
+      benchmark::anymal::params.dartjointPos[1],
+      benchmark::anymal::params.dartjointPos[2],
+      benchmark::anymal::params.dartjointPos[3],
+      benchmark::anymal::params.dartjointPos[4],
+      benchmark::anymal::params.dartjointPos[5],
+      benchmark::anymal::params.dartjointPos[6],
+      benchmark::anymal::params.dartjointPos[7],
+      benchmark::anymal::params.dartjointPos[8],
+      benchmark::anymal::params.dartjointPos[9],
+      benchmark::anymal::params.dartjointPos[10],
+      benchmark::anymal::params.dartjointPos[11];
 
   if(benchmark::anymal::options.gui) {
     // gui
@@ -101,7 +102,7 @@ void simulationLoop() {
         jointForce.head(6).setZero();
         anymals[i]->setGeneralizedForce(jointForce);
       }
-      sim->integrate(benchmark::anymal::params.dt);
+      sim->integrate();
     }
   } else {
     // no gui
@@ -117,7 +118,7 @@ void simulationLoop() {
         jointForce.head(6).setZero();
         anymals[i]->setGeneralizedForce(jointForce);
       }
-      sim->integrate(benchmark::anymal::params.dt);
+      sim->integrate();
     }
 
     std::cout<<"time taken for "

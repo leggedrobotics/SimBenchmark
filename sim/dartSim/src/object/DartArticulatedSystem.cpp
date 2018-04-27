@@ -9,6 +9,7 @@ namespace object {
 
 DartArticulatedSystem::DartArticulatedSystem(std::string urdfFile) {
 
+  urdfFile += "robot.urdf";
   dart::utils::DartLoader urdfLoader;
   skeletonPtr_ = urdfLoader.parseSkeleton(urdfFile);
   RAIFATAL_IF(!skeletonPtr_, "cannot load articulated system from URDF")

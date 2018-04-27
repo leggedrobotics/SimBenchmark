@@ -56,7 +56,7 @@ target_link_libraries(BtSimLib
         )
 
 # link
-set(BULLET_SIM_LINK
+set(BtSimLink
         BtSimLib
         ${BENCHMARK_LINK}
         )

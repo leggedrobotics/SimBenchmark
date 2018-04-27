@@ -116,11 +116,11 @@ void dart_sim::object::DartSingleBodyObject::setExternalTorque(Eigen::Vector3d t
 }
 
 void dart_sim::object::DartSingleBodyObject::setRestitutionCoefficient(double restitution) {
-  RAIFATAL("not implemented yet")
+  bodyPtr_->setRestitutionCoeff(restitution);
 }
 
 void dart_sim::object::DartSingleBodyObject::setFrictionCoefficient(double friction) {
-  RAIFATAL("not implemented yet")
+  bodyPtr_->setFrictionCoeff(friction);
 }
 
 void DartSingleBodyObject::setOrientationRandom() {

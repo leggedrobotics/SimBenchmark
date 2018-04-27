@@ -48,3 +48,4 @@ set(DartSimLink
 
 # sub-directories
 add_subdirectory(demo)
+add_subdirectory(benchmark)
