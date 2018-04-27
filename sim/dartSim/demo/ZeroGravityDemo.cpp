@@ -6,7 +6,7 @@
 
 int main() {
 
-  dart_sim::DartWorld_RG dartSim(800, 600, 0.5);
+  dart_sim::DartWorld_RG dartSim(800, 600, 0.5, 0);
 
   dartSim.setGravity({0,0,0});
   dartSim.setLightPosition(30, 0, 10);

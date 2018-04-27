@@ -6,12 +6,12 @@
 
 namespace dart_sim {
 
-DartWorld_RG::DartWorld_RG(int windowWidth, int windowHeight, float cms, int flags) :
-    world_(),
+DartWorld_RG::DartWorld_RG(int windowWidth, int windowHeight, float cms, int flags, SolverOption solverOption) :
+    world_(solverOption),
     benchmark::World_RG(windowWidth, windowHeight, cms, flags) {}
 
-DartWorld_RG::DartWorld_RG() :
-    world_(),
+DartWorld_RG::DartWorld_RG(SolverOption solverOption) :
+    world_(solverOption),
     benchmark::World_RG() {}
 
 benchmark::SingleBodyHandle DartWorld_RG::addSphere(double radius,

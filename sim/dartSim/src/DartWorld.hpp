@@ -17,10 +17,15 @@
 
 namespace dart_sim {
 
+enum SolverOption {
+  SOLVER_LCP_DANTZIG,
+  SOLVER_LCP_PGS
+};
+
 class DartWorld: benchmark::WorldInterface {
 
  public:
-  explicit DartWorld();
+  explicit DartWorld(SolverOption solverOption = SOLVER_LCP_DANTZIG);
   virtual ~DartWorld();
 
   object::DartSphere *addSphere(double radius,
@@ -80,6 +85,9 @@ class DartWorld: benchmark::WorldInterface {
 
   // list
   std::vector<object::DartObject*> objectList_;
+
+  // solver option
+  SolverOption solverOption_ = SOLVER_LCP_DANTZIG;
 
 };
 

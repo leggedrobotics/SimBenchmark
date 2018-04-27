@@ -12,9 +12,9 @@ std::vector<dart_sim::ArticulatedSystemHandle> anymals;
 
 void setupSimulation() {
   if(benchmark::anymal::options.gui)
-    sim = new dart_sim::DartWorld_RG(800, 600, 0.5, benchmark::NO_BACKGROUND);
+    sim = new dart_sim::DartWorld_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, dart_sim::SOLVER_LCP_PGS);
   else
-    sim = new dart_sim::DartWorld_RG();
+    sim = new dart_sim::DartWorld_RG(dart_sim::SOLVER_LCP_PGS);
 
   sim->setTimeStep(benchmark::anymal::params.dt);
 }

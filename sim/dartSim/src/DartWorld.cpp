@@ -6,8 +6,23 @@
 
 namespace dart_sim {
 
-DartWorld::DartWorld() : dynamicsWorld_(std::make_shared<dart::simulation::World>()) {
+DartWorld::DartWorld(SolverOption solverOption)
+    : dynamicsWorld_(std::make_shared<dart::simulation::World>()),
+      solverOption_(solverOption)
+{
   dynamicsWorld_->setGravity(gravity_);
+
+  if(solverOption == SOLVER_LCP_DANTZIG) {
+    dynamicsWorld_->getConstraintSolver()->setLCPSolver(
+        dart::common::make_unique<dart::constraint::DantzigLCPSolver>(dynamicsWorld_->getTimeStep())
+    );
+  } else if(solverOption == SOLVER_LCP_PGS) {
+    dynamicsWorld_->getConstraintSolver()->setLCPSolver(
+        dart::common::make_unique<dart::constraint::PGSLCPSolver>(dynamicsWorld_->getTimeStep())
+    );
+  } else {
+    RAIFATAL("invalid solver type for dart")
+  }
 }
 
 DartWorld::~DartWorld() {

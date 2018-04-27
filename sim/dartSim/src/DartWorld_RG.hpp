@@ -18,10 +18,11 @@ class DartWorld_RG: public benchmark::World_RG {
   DartWorld_RG(int windowWidth,
                int windowHeight,
                float cms,
-               int flags = 0);
+               int flags=0,
+               SolverOption solverOption = SOLVER_LCP_DANTZIG);
 
   /* constructor for no visualization */
-  DartWorld_RG();
+  DartWorld_RG(SolverOption solverOption = SOLVER_LCP_DANTZIG);
   virtual ~DartWorld_RG();
 
   /////////////////////////////////////
