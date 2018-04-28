@@ -1,0 +1,47 @@
+<mujoco model="Humanoid and 100 objects">
+    <compiler angle="degree"/>
+
+    <option timestep="0.01" iterations="50" solver="PGS" jacobian="sparse" cone="elliptic" tolerance="1e-10"/>
+
+    <size njmax="5000" nconmax="2000" nstack="1000000000"/>
+
+    <default>
+        <geom solimp=".9 .9 .01"/>        
+
+        <default class="object5">
+			<geom type="box" material="geom" rgba=".9 .1 .1 1" size="0.400000 0.200000 0.100000"/>
+        </default>
+    </default>
+
+    <asset>
+        <texture type="skybox" builtin="gradient" width="128" height="128" rgb1=".4 .6 .8" rgb2="0 0 0"/>  
+        <texture name="texgeom" type="cube" builtin="flat" mark="cross" width="128" height="128" 
+            rgb1="0.6 0.6 0.6" rgb2="0.6 0.6 0.6" markrgb="1 1 1"/>  
+        <texture name="texplane" type="2d" builtin="checker" rgb1=".4 .4 .4" rgb2=".6 .6 .6" 
+            width="512" height="512"/>  
+        <material name='geom' texture="texgeom" texuniform="true"/>
+        <material name='MatPlane' reflectance='0.3' texture="texplane" texrepeat="1 1" texuniform="true"/>
+    </asset>
+
+    <visual>
+        <quality shadowsize="4096" offsamples="8"/>
+        <map znear="0.1" force="0.05"/>
+    </visual>
+
+    <statistic extent="4"/>
+
+    <worldbody>
+        <light directional="true" diffuse=".8 .8 .8" pos="0 0 10" dir="0 0 -10"/>
+
+        <geom pos="0 0 0" type="plane" size="3 3 .5" rgba=".7 .7 .7 1" material="MatPlane"/>
+		<body pos="1.100078 1.100591 6.100496" quat="-0.011589 0.243223 0.559225 -0.792449"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100844 1.100772 7.200289" quat="0.294977 0.607266 0.654099 -0.341131"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100154 2.200371 6.100223" quat="-0.592693 -0.399000 -0.320470 0.621943"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100655 2.200118 7.200825" quat="0.676762 0.626922 0.167326 -0.347799"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200347 1.100085 6.100212" quat="-0.627996 0.396148 -0.656921 0.130928"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200283 1.100522 7.200974" quat="0.404803 -0.216491 -0.868496 -0.187033"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200548 2.200231 6.100006" quat="0.079551 0.734665 -0.235117 0.631395"> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200153 2.200600 7.200838" quat="-0.765965 -0.405360 -0.368341 0.336609"> <freejoint/> <geom class="object5"/> </body> 
+
+    </worldbody>
+</mujoco>
