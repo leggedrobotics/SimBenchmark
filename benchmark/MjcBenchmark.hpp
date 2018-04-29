@@ -7,19 +7,29 @@
 
 #include <raiCommon/rai_utils.hpp>
 #include <boost/program_options.hpp>
-#include "mjcSim/src/MjcWorld.hpp"
+#include "mujocoSim/src/MjcWorld.hpp"
 
 namespace po = boost::program_options;
 
-namespace benchmark::ode {
+namespace benchmark::mujoco {
 
 /**
  * options for Dart simulation
  */
 struct Option {
-  ode_sim::SolverOption solverOption = ode_sim::SOLVER_STANDARD;
+  mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS;
 };
 Option options;
+
+std::string getKeypath() {
+
+  std::string keyPath(__FILE__);
+  while (keyPath.back() != '/')
+    keyPath.erase(keyPath.size() - 1, 1);
+  keyPath += "../lib/mjpro150/mjkey.txt";
+
+  return keyPath;
+}
 
 /**
  * add options to desc
@@ -28,7 +38,7 @@ Option options;
  */
 void addDescToOption(po::options_description &desc) {
   desc.add_options()
-      ("solver", po::value<std::string>(), "constraint solver type (std / quick)")
+      ("solver", po::value<std::string>(), "constraint solver type (pgs / cg / newton)")
       ;
 }
 
@@ -46,11 +56,14 @@ void getParamsFromArg(int argc, const char *argv[], po::options_description &des
 
   // help option
   if(vm.count("solver")) {
-    if(vm["solver"].as<std::string>().compare("std") == 0) {
-      options.solverOption = ode_sim::SOLVER_STANDARD;
+    if(vm["solver"].as<std::string>().compare("pgs") == 0) {
+      options.solverOption = mujoco_sim::SOLVER_PGS;
     }
-    else if (vm["solver"].as<std::string>().compare("quick") == 0) {
-      options.solverOption = ode_sim::SOLVER_QUICK;
+    else if (vm["solver"].as<std::string>().compare("cg") == 0) {
+      options.solverOption = mujoco_sim::SOLVER_CG;
+    }
+    else if (vm["solver"].as<std::string>().compare("newton") == 0) {
+      options.solverOption = mujoco_sim::SOLVER_NEWTON;
     }
     else {
       RAIFATAL("invalid solver input")

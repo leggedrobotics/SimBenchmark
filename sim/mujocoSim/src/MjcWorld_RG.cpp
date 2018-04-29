@@ -201,7 +201,7 @@ const mujoco_sim::EigenVec mujoco_sim::MjcWorld_RG::getGeneralizedForce() {
 int mujoco_sim::MjcWorld_RG::getDOF() {
   return world_.getDOF();
 }
-int mujoco_sim::MjcWorld_RG::getGeneralizedCoordinateDim() {
+int mujoco_sim::MjcWorld_RG::getStateDimension() {
   return world_.getGeneralizedCoordinateDim();
 }
 

@@ -69,6 +69,16 @@ std::string getURDFpath() {
   return urdfPath;
 }
 
+std::string getMujocoURDFpath(int rowNum) {
+
+  std::string urdfPath(__FILE__);
+  while (urdfPath.back() != '/')
+    urdfPath.erase(urdfPath.size() - 1, 1);
+  urdfPath += "../res/mujoco/ANYmal/robot" + std::to_string(rowNum * rowNum) + ".urdf";
+
+  return urdfPath;
+}
+
 /**
  * add options to desc
  *

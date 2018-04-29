@@ -2,108 +2,134 @@
 // Created by kangd on 26.04.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <MjcWorld_RG.hpp>
 
 #include "AnymalBenchmark.hpp"
-#include "OdeBenchmark.hpp"
+#include "MjcBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
-ode_sim::OdeWorld_RG *sim;
-std::vector<ode_sim::ArticulatedSystemHandle> anymals;
+mujoco_sim::MjcWorld_RG *sim;
 po::options_description desc;
 
 void setupSimulation() {
+  int numRow = benchmark::anymal::options.numRow;
+
   if(benchmark::anymal::options.gui)
-    sim = new ode_sim::OdeWorld_RG(800, 600, 0.5,
-                                   benchmark::NO_BACKGROUND,
-                                   benchmark::ode::options.solverOption);
+    sim = new mujoco_sim::MjcWorld_RG(800, 600, 0.5,
+                                      benchmark::anymal::getMujocoURDFpath(numRow).c_str(),
+                                      benchmark::mujoco::getKeypath().c_str(),
+                                      benchmark::NO_BACKGROUND,
+                                      benchmark::mujoco::options.solverOption);
   else
-    sim = new ode_sim::OdeWorld_RG(benchmark::ode::options.solverOption);
+    sim = new mujoco_sim::MjcWorld_RG(benchmark::anymal::getMujocoURDFpath(numRow).c_str(),
+                                      benchmark::mujoco::getKeypath().c_str(),
+                                      benchmark::mujoco::options.solverOption);
 }
 
 void setupWorld() {
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
-  checkerboard->setFrictionCoefficient(0.8);
+  int numRow = benchmark::anymal::options.numRow;
+  Eigen::VectorXd genCoord(sim->getStateDimension());
 
-  for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
-    for(int j = 0; j < benchmark::anymal::options.numRow; j++) {
-      auto anymal = sim->addArticulatedSystem(
-          benchmark::anymal::getURDFpath()
-      );
-      anymal->setColor({1, 0, 0, 1});
-      anymal->setGeneralizedCoordinate(
-          {i * 2,
-           j * 2,
-           benchmark::anymal::params.H,
-           benchmark::anymal::params.baseQuat[0],
-           benchmark::anymal::params.baseQuat[1],
-           benchmark::anymal::params.baseQuat[2],
-           benchmark::anymal::params.baseQuat[3],
-           benchmark::anymal::params.jointPos[0],
-           benchmark::anymal::params.jointPos[1],
-           benchmark::anymal::params.jointPos[2],
-           benchmark::anymal::params.jointPos[3],
-           benchmark::anymal::params.jointPos[4],
-           benchmark::anymal::params.jointPos[5],
-           benchmark::anymal::params.jointPos[6],
-           benchmark::anymal::params.jointPos[7],
-           benchmark::anymal::params.jointPos[8],
-           benchmark::anymal::params.jointPos[9],
-           benchmark::anymal::params.jointPos[10],
-           benchmark::anymal::params.jointPos[11]
-          });
-      anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
-      anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
-      anymals.push_back(anymal);
+  int cnt = 0;
+  for(int i = 0; i < numRow; i++) {
+    for (int j = 0; j < numRow; j++) {
+      genCoord[cnt * 19 + 0] = i * 2;
+      genCoord[cnt * 19 + 1] = j * 2;
+      genCoord[cnt * 19 + 2] = benchmark::anymal::params.H;
+      genCoord[cnt * 19 + 3] = benchmark::anymal::params.baseQuat[0];
+      genCoord[cnt * 19 + 4] = benchmark::anymal::params.baseQuat[1];
+      genCoord[cnt * 19 + 5] = benchmark::anymal::params.baseQuat[2];
+      genCoord[cnt * 19 + 6] = benchmark::anymal::params.baseQuat[3];
+      genCoord[cnt * 19 + 7] = benchmark::anymal::params.jointPos[0];
+      genCoord[cnt * 19 + 8] = benchmark::anymal::params.jointPos[1];
+      genCoord[cnt * 19 + 9] = benchmark::anymal::params.jointPos[2];
+      genCoord[cnt * 19 + 10] = benchmark::anymal::params.jointPos[3];
+      genCoord[cnt * 19 + 11] = benchmark::anymal::params.jointPos[4];
+      genCoord[cnt * 19 + 12] = benchmark::anymal::params.jointPos[5];
+      genCoord[cnt * 19 + 13] = benchmark::anymal::params.jointPos[6];
+      genCoord[cnt * 19 + 14] = benchmark::anymal::params.jointPos[7];
+      genCoord[cnt * 19 + 15] = benchmark::anymal::params.jointPos[8];
+      genCoord[cnt * 19 + 16] = benchmark::anymal::params.jointPos[9];
+      genCoord[cnt * 19 + 17] = benchmark::anymal::params.jointPos[10];
+      genCoord[cnt * 19 + 18] = benchmark::anymal::params.jointPos[11];
+      cnt++;
     }
   }
+
+  sim->setGeneralizedCoordinate(genCoord);
+  sim->setGeneralizedVelocity(Eigen::VectorXd::Zero(sim->getDOF()));
+  sim->setGeneralizedForce(Eigen::VectorXd::Zero(sim->getDOF()));
 
   sim->setGravity({0, 0, -9.8});
 
   if(benchmark::anymal::options.gui)
-    sim->cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
+    sim->cameraFollowObject(
+        sim->getSingleBodyHandle(0), {1.0, 1.0, 1.0});
 }
 
 void simulationLoop() {
-  Eigen::VectorXd jointNominalConfig(19);
-  Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
+  Eigen::VectorXd jointNominalConfig(sim->getStateDimension());
+  Eigen::VectorXd jointState(sim->getStateDimension());
+  Eigen::VectorXd jointVel(sim->getDOF());
+  Eigen::VectorXd jointForce(sim->getDOF());
+
   const double kp = benchmark::anymal::params.kp;
   const double kd = benchmark::anymal::params.kd;
 
-  jointNominalConfig
-      <<
-      0,
-      0,
-      benchmark::anymal::params.H,
-      benchmark::anymal::params.baseQuat[0],
-      benchmark::anymal::params.baseQuat[1],
-      benchmark::anymal::params.baseQuat[2],
-      benchmark::anymal::params.baseQuat[3],
-      benchmark::anymal::params.jointPos[0],
-      benchmark::anymal::params.jointPos[1],
-      benchmark::anymal::params.jointPos[2],
-      benchmark::anymal::params.jointPos[3],
-      benchmark::anymal::params.jointPos[4],
-      benchmark::anymal::params.jointPos[5],
-      benchmark::anymal::params.jointPos[6],
-      benchmark::anymal::params.jointPos[7],
-      benchmark::anymal::params.jointPos[8],
-      benchmark::anymal::params.jointPos[9],
-      benchmark::anymal::params.jointPos[10],
-      benchmark::anymal::params.jointPos[11];
+  //  jointNominalConfig
+  int cnt = 0;
+  for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
+    for (int j = 0; j < benchmark::anymal::options.numRow; j++) {
+      jointNominalConfig[cnt * 19 + 0] = 0;
+      jointNominalConfig[cnt * 19 + 1] = 0;
+      jointNominalConfig[cnt * 19 + 2] = 0;
+      jointNominalConfig[cnt * 19 + 3] = 1;
+      jointNominalConfig[cnt * 19 + 4] = 0;
+      jointNominalConfig[cnt * 19 + 5] = 0;
+      jointNominalConfig[cnt * 19 + 6] = 0;
+      jointNominalConfig[cnt * 19 + 7] = benchmark::anymal::params.jointPos[0];
+      jointNominalConfig[cnt * 19 + 8] = benchmark::anymal::params.jointPos[1];
+      jointNominalConfig[cnt * 19 + 9] = benchmark::anymal::params.jointPos[2];
+      jointNominalConfig[cnt * 19 + 10] = benchmark::anymal::params.jointPos[3];
+      jointNominalConfig[cnt * 19 + 11] = benchmark::anymal::params.jointPos[4];
+      jointNominalConfig[cnt * 19 + 12] = benchmark::anymal::params.jointPos[5];
+      jointNominalConfig[cnt * 19 + 13] = benchmark::anymal::params.jointPos[6];
+      jointNominalConfig[cnt * 19 + 14] = benchmark::anymal::params.jointPos[7];
+      jointNominalConfig[cnt * 19 + 15] = benchmark::anymal::params.jointPos[8];
+      jointNominalConfig[cnt * 19 + 16] = benchmark::anymal::params.jointPos[9];
+      jointNominalConfig[cnt * 19 + 17] = benchmark::anymal::params.jointPos[10];
+      jointNominalConfig[cnt * 19 + 18] = benchmark::anymal::params.jointPos[11];
+      cnt++;
+    }
+  }
+
+  sim->setGeneralizedVelocity(Eigen::VectorXd::Zero(sim->getDOF()));
+  sim->setGeneralizedForce(Eigen::VectorXd::Zero(sim->getDOF()));
 
   if(benchmark::anymal::options.gui) {
     // gui
     while(sim->visualizerLoop(benchmark::anymal::params.dt, 1.0)) {
-      for(int i = 0; i < anymals.size(); i++) {
-        jointState = anymals[i]->getGeneralizedCoordinate();
-        jointVel = anymals[i]->getGeneralizedVelocity();
-//        jointForce = anymals[i]->getGeneralizedForce();
+      jointState = sim->getGeneralizedCoordinate();
+      jointVel = sim->getGeneralizedVelocity();
 
-        jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-        jointForce.head(6).setZero();
-        anymals[i]->setGeneralizedForce(jointForce);
+      // joint force
+      int cnt = 0;
+      for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
+        for (int j = 0; j < benchmark::anymal::options.numRow; j++) {
+          jointForce[cnt * 18 + 0] = 0;
+          jointForce[cnt * 18 + 1] = 0;
+          jointForce[cnt * 18 + 2] = 0;
+          jointForce[cnt * 18 + 3] = 0;
+          jointForce[cnt * 18 + 4] = 0;
+          jointForce[cnt * 18 + 5] = 0;
+          for(int k = 6; k < 18; k++)
+            jointForce[cnt * 18 + k] =
+                kp * (jointNominalConfig[cnt * 19 + k + 1] - jointState[cnt * 19 + k + 1]) - kd * jointVel[cnt * 18 + k];
+
+          cnt++;
+        }
       }
+      sim->setGeneralizedForce(jointForce);
       sim->integrate(benchmark::anymal::params.dt);
     }
   } else {
@@ -111,15 +137,27 @@ void simulationLoop() {
     StopWatch watch;
     watch.start();
     for(int t = 0; t < (int)benchmark::anymal::params.T / (int)benchmark::anymal::params.dt; t++) {
-      for(int i = 0; i < anymals.size(); i++) {
-        jointState = anymals[i]->getGeneralizedCoordinate();
-        jointVel = anymals[i]->getGeneralizedVelocity();
-//        jointForce = anymals[i]->getGeneralizedForce();
+      jointState = sim->getGeneralizedCoordinate();
+      jointVel = sim->getGeneralizedVelocity();
 
-        jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-        jointForce.head(6).setZero();
-        anymals[i]->setGeneralizedForce(jointForce);
+      // joint force
+      int cnt = 0;
+      for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
+        for (int j = 0; j < benchmark::anymal::options.numRow; j++) {
+          jointForce[cnt * 18 + 0] = 0;
+          jointForce[cnt * 18 + 1] = 0;
+          jointForce[cnt * 18 + 2] = 0;
+          jointForce[cnt * 18 + 3] = 0;
+          jointForce[cnt * 18 + 4] = 0;
+          jointForce[cnt * 18 + 5] = 0;
+          for(int k = 6; k < 18; k++)
+            jointForce[cnt * 18 + k] =
+                kp * (jointNominalConfig[cnt * 19 + k + 1] - jointState[cnt * 19 + k + 1]) - kd * jointVel[cnt * 18 + k];
+
+          cnt++;
+        }
       }
+      sim->setGeneralizedForce(jointForce);
       sim->integrate(benchmark::anymal::params.dt);
     }
 
@@ -132,18 +170,18 @@ void simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::anymal::addDescToOption(desc);
-  benchmark::ode::addDescToOption(desc);
+  benchmark::mujoco::addDescToOption(desc);
 
   benchmark::anymal::getParamsFromArg(argc, argv, desc);
-  benchmark::ode::getParamsFromArg(argc, argv, desc);
+  benchmark::mujoco::getParamsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "-----------------------" << std::endl
-                << "Simulator: ODE" << std::endl
+                << "Simulator: MUJOCO" << std::endl
                 << "GUI      : " << benchmark::anymal::options.gui << std::endl
                 << "Row      : " << benchmark::anymal::options.numRow << std::endl
                 << "Feedback : " << benchmark::anymal::options.feedback << std::endl
-                << "Solver   : " << benchmark::ode::options.solverOption << std::endl
+                << "Solver   : " << benchmark::mujoco::options.solverOption << std::endl
                 << "-----------------------"
   )
 

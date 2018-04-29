@@ -17,7 +17,7 @@ int main(int argc, const char* argv[]) {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/mujoco/ANYmal/robot2.urdf";
+  urdfPath += "../../../res/mujoco/ANYmal/robot.urdf";
 
   std::string keyPath(__FILE__);
   while (keyPath.back() != '/')
@@ -38,12 +38,15 @@ int main(int argc, const char* argv[]) {
   }
 
   // initial general coordinate
-//  sim.setGeneralizedCoordinate(
-//      {0, 0, 0.54,
-//       1.0, 0.0, 0.0, 0.0,
-//       0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8});
-//  sim.setGeneralizedVelocity(Eigen::VectorXd::Zero(sim.getDOF()));
-//  sim.setGeneralizedForce(Eigen::VectorXd::Zero(sim.getDOF()));
+  sim.setGeneralizedCoordinate(
+      {0, 0, 0.54,
+       1.0, 0.0, 0.0, 0.0,
+       0.03, 0.4, -0.8,
+       -0.03, 0.4, -0.8,
+       0.03, -0.4, 0.8,
+       -0.03, -0.4, 0.8});
+  sim.setGeneralizedVelocity(Eigen::VectorXd::Zero(sim.getDOF()));
+  sim.setGeneralizedForce(Eigen::VectorXd::Zero(sim.getDOF()));
 
   // run simulation for 10 seconds
   Eigen::VectorXd jointNominalConfig(19);
@@ -53,20 +56,23 @@ int main(int argc, const char* argv[]) {
 
   jointNominalConfig << 0, 0, 0,
       1.0, 0, 0, 0,
-      0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8;
+      0.03, 0.4, -0.8,
+      -0.03, 0.4, -0.8,
+      0.03, -0.4, 0.8,
+      -0.03, -0.4, 0.8;
 
 #if defined(VIDEO_SAVE_MODE)
   sim.startRecordingVideo("/tmp", "mjcAnymal");
   for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
 #endif
   while(sim.visualizerLoop(0.005, 1.0)) {
-//    jointState = sim.getGeneralizedCoordinate();
-//    jointVel = sim.getGeneralizedVelocity();
-//    jointForce = sim.getGeneralizedForce();
+    jointState = sim.getGeneralizedCoordinate();
+    jointVel = sim.getGeneralizedVelocity();
+    jointForce = sim.getGeneralizedForce();
 
-//    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-//    jointForce.head(6).setZero();
-//    sim.setGeneralizedForce(jointForce);
+    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
+    jointForce.head(6).setZero();
+    sim.setGeneralizedForce(jointForce);
     sim.integrate(0.005);
   }
 

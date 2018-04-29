@@ -65,7 +65,7 @@ class MjcWorld_RG: public benchmark::World_RG {
 
   const EigenVec getGeneralizedForce();
   int getDOF();
-  int getGeneralizedCoordinateDim();
+  int getStateDimension();
   /// ===================================
 
  private:
