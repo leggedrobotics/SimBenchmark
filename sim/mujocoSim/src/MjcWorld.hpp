@@ -70,6 +70,8 @@ class MjcWorld: public benchmark::WorldInterface {
 
   void setGravity(const benchmark::Vec<3> &gravity) override ;
 
+  void setNoSlipParameter(int maxIter);
+
   mjModel *getWorldModel() const;
   mjData *getWorldData() const;
   int getWorldNumContacts();

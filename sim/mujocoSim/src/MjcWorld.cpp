@@ -259,4 +259,8 @@ int MjcWorld::getNumObject() {
   return objectList_.size();
 }
 
+void MjcWorld::setNoSlipParameter(int maxIter) {
+  simOption_->noslip_iterations = maxIter;
+}
+
 } // mujoco_sim

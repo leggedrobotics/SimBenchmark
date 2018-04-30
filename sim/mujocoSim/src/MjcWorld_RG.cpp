@@ -212,3 +212,7 @@ int mujoco_sim::MjcWorld_RG::getNumObject() {
   return world_.getNumObject();
 }
 
+void mujoco_sim::MjcWorld_RG::setNoSlipParameter(int maxiter) {
+  world_.setNoSlipParameter(maxiter);
+}
+

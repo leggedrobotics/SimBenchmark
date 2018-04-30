@@ -41,6 +41,8 @@ class MjcWorld_RG: public benchmark::World_RG {
   int getWorldNumContacts();
   int getNumObject() override ;
 
+  void setNoSlipParameter(int maxiter);
+
   void setGravity(Eigen::Vector3d gravity) override ;
 
   /// the functions below are articulated system related.
