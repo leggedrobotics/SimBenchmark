@@ -151,10 +151,6 @@ benchmark::SingleBodyHandle mujoco_sim::MjcWorld_RG::addCylinder(double radius,
   return handle;
 }
 
-void mujoco_sim::MjcWorld_RG::integrate(double dt) {
-  world_.integrate(dt);
-}
-
 void mujoco_sim::MjcWorld_RG::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity[0], gravity[1], gravity[2]});
 }
@@ -216,3 +212,23 @@ void mujoco_sim::MjcWorld_RG::setNoSlipParameter(int maxiter) {
   world_.setNoSlipParameter(maxiter);
 }
 
+void mujoco_sim::MjcWorld_RG::loop(double dt, double realTimeFactor) {
+  RAIFATAL("use setTimeStep(double dt) + loop() instead")
+}
+
+void mujoco_sim::MjcWorld_RG::integrate(double dt) {
+  RAIFATAL("use setTimeStep(double dt) + integrate() instead")
+}
+
+void mujoco_sim::MjcWorld_RG::setTimeStep(double timeStep) {
+  timeStep_ = timeStep;
+  world_.setTimeStep(timeStep);
+}
+
+void mujoco_sim::MjcWorld_RG::loop(double realTimeFactor) {
+  while (visualizerLoop(timeStep_, realTimeFactor))
+    integrate();
+}
+void mujoco_sim::MjcWorld_RG::integrate() {
+  world_.integrate();
+}

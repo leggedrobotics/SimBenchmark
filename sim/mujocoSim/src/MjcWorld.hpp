@@ -69,15 +69,15 @@ class MjcWorld: public benchmark::WorldInterface {
                                 int geomId) override;
 
   void setGravity(const benchmark::Vec<3> &gravity) override ;
-
   void setNoSlipParameter(int maxIter);
+  void setTimeStep(double timeStep);
 
   mjModel *getWorldModel() const;
   mjData *getWorldData() const;
   int getWorldNumContacts();
   int getNumObject() override ;
 
-  void integrate(double dt);
+  void integrate();
 
   /// the functions below are articulated system related.
   /// ===================================
@@ -102,6 +102,9 @@ class MjcWorld: public benchmark::WorldInterface {
   /// ===================================
 
  private:
+
+  /// deprecated function
+  void integrate(double dt);
 
   mjModel *worldModel_;
   mjData *worldData_;

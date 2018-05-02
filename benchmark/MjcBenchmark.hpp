@@ -18,6 +18,7 @@ namespace benchmark::mujoco {
  */
 struct Option {
   mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS;
+  bool noSlip = false;
 };
 Option options;
 
@@ -39,6 +40,7 @@ std::string getKeypath() {
 void addDescToOption(po::options_description &desc) {
   desc.add_options()
       ("solver", po::value<std::string>(), "constraint solver type (pgs / cg / newton)")
+      ("noslip", "no-slip solver")
       ;
 }
 
@@ -68,6 +70,10 @@ void getParamsFromArg(int argc, const char *argv[], po::options_description &des
     else {
       RAIFATAL("invalid solver input")
     }
+  }
+
+  if(vm.count("noslip")) {
+    options.noSlip = true;
   }
 }
 

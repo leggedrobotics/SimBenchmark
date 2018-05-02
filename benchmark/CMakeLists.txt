@@ -1,6 +1,9 @@
 file(COPY anymal-stand.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+file(COPY anymal.sh
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 #if(BENCHMARK_BULLET)
 #    # rolling
 #    add_executable(rollingBulletSim rollingBulletSim.cpp rolling.hpp)

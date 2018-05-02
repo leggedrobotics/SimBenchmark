@@ -14,6 +14,7 @@ po::options_description desc;
 void setupSimulation() {
   int numRow = benchmark::anymal::options.numRow;
 
+  // gui
   if(benchmark::anymal::options.gui)
     sim = new mujoco_sim::MjcWorld_RG(800, 600, 0.5,
                                       benchmark::anymal::getMujocoURDFpath(numRow).c_str(),
@@ -24,6 +25,13 @@ void setupSimulation() {
     sim = new mujoco_sim::MjcWorld_RG(benchmark::anymal::getMujocoURDFpath(numRow).c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
                                       benchmark::mujoco::options.solverOption);
+
+  // no slip parameter
+  if(benchmark::mujoco::options.noSlip)
+    sim->setNoSlipParameter(10);
+
+  // timestep
+  sim->setTimeStep(benchmark::anymal::params.dt);
 }
 
 void setupWorld() {
@@ -109,60 +117,68 @@ void simulationLoop() {
   if(benchmark::anymal::options.gui) {
     // gui
     while(sim->visualizerLoop(benchmark::anymal::params.dt, 1.0)) {
-      jointState = sim->getGeneralizedCoordinate();
-      jointVel = sim->getGeneralizedVelocity();
 
       // joint force
-      int cnt = 0;
-      for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
-        for (int j = 0; j < benchmark::anymal::options.numRow; j++) {
-          jointForce[cnt * 18 + 0] = 0;
-          jointForce[cnt * 18 + 1] = 0;
-          jointForce[cnt * 18 + 2] = 0;
-          jointForce[cnt * 18 + 3] = 0;
-          jointForce[cnt * 18 + 4] = 0;
-          jointForce[cnt * 18 + 5] = 0;
-          for(int k = 6; k < 18; k++)
-            jointForce[cnt * 18 + k] =
-                kp * (jointNominalConfig[cnt * 19 + k + 1] - jointState[cnt * 19 + k + 1]) - kd * jointVel[cnt * 18 + k];
+      if(benchmark::anymal::options.feedback) {
+        jointState = sim->getGeneralizedCoordinate();
+        jointVel = sim->getGeneralizedVelocity();
 
-          cnt++;
+        int cnt = 0;
+        for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
+          for (int j = 0; j < benchmark::anymal::options.numRow; j++) {
+            jointForce[cnt * 18 + 0] = 0;
+            jointForce[cnt * 18 + 1] = 0;
+            jointForce[cnt * 18 + 2] = 0;
+            jointForce[cnt * 18 + 3] = 0;
+            jointForce[cnt * 18 + 4] = 0;
+            jointForce[cnt * 18 + 5] = 0;
+            for(int k = 6; k < 18; k++)
+              jointForce[cnt * 18 + k] =
+                  kp * (jointNominalConfig[cnt * 19 + k + 1] - jointState[cnt * 19 + k + 1]) - kd * jointVel[cnt * 18 + k];
+
+            cnt++;
+          }
         }
+        sim->setGeneralizedForce(jointForce);
       }
-      sim->setGeneralizedForce(jointForce);
-      sim->integrate(benchmark::anymal::params.dt);
+
+      sim->integrate();
     }
   } else {
     // no gui
     StopWatch watch;
     watch.start();
-    for(int t = 0; t < (int)benchmark::anymal::params.T / (int)benchmark::anymal::params.dt; t++) {
-      jointState = sim->getGeneralizedCoordinate();
-      jointVel = sim->getGeneralizedVelocity();
+    for(int t = 0; t < (int)(benchmark::anymal::params.T / benchmark::anymal::params.dt); t++) {
 
       // joint force
-      int cnt = 0;
-      for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
-        for (int j = 0; j < benchmark::anymal::options.numRow; j++) {
-          jointForce[cnt * 18 + 0] = 0;
-          jointForce[cnt * 18 + 1] = 0;
-          jointForce[cnt * 18 + 2] = 0;
-          jointForce[cnt * 18 + 3] = 0;
-          jointForce[cnt * 18 + 4] = 0;
-          jointForce[cnt * 18 + 5] = 0;
-          for(int k = 6; k < 18; k++)
-            jointForce[cnt * 18 + k] =
-                kp * (jointNominalConfig[cnt * 19 + k + 1] - jointState[cnt * 19 + k + 1]) - kd * jointVel[cnt * 18 + k];
+      if(benchmark::anymal::options.feedback) {
+        jointState = sim->getGeneralizedCoordinate();
+        jointVel = sim->getGeneralizedVelocity();
 
-          cnt++;
+        int cnt = 0;
+        for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
+          for (int j = 0; j < benchmark::anymal::options.numRow; j++) {
+            jointForce[cnt * 18 + 0] = 0;
+            jointForce[cnt * 18 + 1] = 0;
+            jointForce[cnt * 18 + 2] = 0;
+            jointForce[cnt * 18 + 3] = 0;
+            jointForce[cnt * 18 + 4] = 0;
+            jointForce[cnt * 18 + 5] = 0;
+            for(int k = 6; k < 18; k++)
+              jointForce[cnt * 18 + k] =
+                  kp * (jointNominalConfig[cnt * 19 + k + 1] - jointState[cnt * 19 + k + 1]) - kd * jointVel[cnt * 18 + k];
+
+            cnt++;
+          }
         }
+        sim->setGeneralizedForce(jointForce);
       }
-      sim->setGeneralizedForce(jointForce);
-      sim->integrate(benchmark::anymal::params.dt);
+
+      sim->integrate();
     }
 
     std::cout<<"time taken for "
-             << (int) benchmark::anymal::params.T / benchmark::anymal::params.dt
+             << (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt)
              << " steps "<< watch.measure()<<"s \n";
   }
 }
@@ -182,12 +198,17 @@ int main(int argc, const char* argv[]) {
                 << "Row      : " << benchmark::anymal::options.numRow << std::endl
                 << "Feedback : " << benchmark::anymal::options.feedback << std::endl
                 << "Solver   : " << benchmark::mujoco::options.solverOption << std::endl
+                << "No Slip  : " << benchmark::mujoco::options.noSlip << std::endl
                 << "-----------------------"
   )
 
   setupSimulation();
   setupWorld();
   simulationLoop();
+
+  RAIINFO(
+      std::endl << "# of contact : " << sim->getWorldNumContacts() << std::endl;
+  )
 
   return 0;
 }

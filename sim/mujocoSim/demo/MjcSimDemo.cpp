@@ -16,7 +16,8 @@ int main() {
   sim.cameraFollowObject(sim.getSingleBodyHandle(0), {10, 0, 5});
 
   // run simulation for 10 seconds
-  sim.loop(0.01, 1.0);
+  sim.setTimeStep(0.01);
+  sim.loop(1.0);
 
   return 0;
 }

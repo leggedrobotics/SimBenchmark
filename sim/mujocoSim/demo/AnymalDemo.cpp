@@ -34,6 +34,7 @@ int main(int argc, const char* argv[]) {
 
   /// no slip parameter should be set in order to make anymal stands
   sim.setNoSlipParameter(10);
+  sim.setTimeStep(0.005);
 
   // set color
   for(int i = 0; i < sim.getNumObject()-1; i++) {
@@ -41,13 +42,6 @@ int main(int argc, const char* argv[]) {
   }
 
   // initial general coordinate
-  sim.setGeneralizedCoordinate(
-      {0, 0, 0.54,
-       1.0, 0.0, 0.0, 0.0,
-       0.03, 0.4, -0.8,
-       -0.03, 0.4, -0.8,
-       0.03, -0.4, 0.8,
-       -0.03, -0.4, 0.8});
   sim.setGeneralizedCoordinate(
       {0, 0, 0.54,
        1.0, 0.0, 0.0, 0.0,
@@ -82,8 +76,8 @@ int main(int argc, const char* argv[]) {
 
     jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
     jointForce.head(6).setZero();
-//    sim.setGeneralizedForce(jointForce);
-    sim.integrate(0.005);
+    sim.setGeneralizedForce(jointForce);
+    sim.integrate();
   }
 
 #if defined(VIDEO_SAVE_MODE)

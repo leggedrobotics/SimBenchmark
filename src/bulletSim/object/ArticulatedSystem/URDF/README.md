@@ -1,1 +1,0 @@
-These files are originated and modified from Bullet Physics.

@@ -35,15 +35,16 @@ class MjcWorld_RG: public benchmark::World_RG {
   //////////////////////////
   /// simulation methods ///
   //////////////////////////
-  void integrate(double dt) override ;
+  void setNoSlipParameter(int maxiter);
+  void setGravity(Eigen::Vector3d gravity) override ;
+
+  void loop(double realTimeFactor = 1.0);
+  void integrate();
+  void setTimeStep(double timeStep);
 
   benchmark::SingleBodyHandle getSingleBodyHandle(int index);
   int getWorldNumContacts();
   int getNumObject() override ;
-
-  void setNoSlipParameter(int maxiter);
-
-  void setGravity(Eigen::Vector3d gravity) override ;
 
   /// the functions below are articulated system related.
   /// ===================================
@@ -72,7 +73,11 @@ class MjcWorld_RG: public benchmark::World_RG {
 
  private:
   void initFromModel();
+
+  /// deprecated functions
   void setERP(double erp, double erp2, double frictionErp) override ;
+  void integrate(double dt) override ;
+  void loop(double dt, double realTimeFactor) override ;
 
   //////////////////////////////////
   /// adding or removing objects ///
@@ -113,6 +118,8 @@ class MjcWorld_RG: public benchmark::World_RG {
                                          int geomid) override ;
 
   mujoco_sim::MjcWorld world_;
+
+  double timeStep_ = 0.01;
 };
 
 } // mujoco_sim

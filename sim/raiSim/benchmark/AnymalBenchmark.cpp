@@ -9,6 +9,7 @@
 
 rai_sim::World_RG *sim;
 std::vector<rai_sim::ArticulatedSystemHandle> anymals;
+po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::options.gui)
@@ -105,7 +106,7 @@ void simulationLoop() {
     // no gui
     StopWatch watch;
     watch.start();
-    for(int t = 0; t < (int)benchmark::anymal::params.T / (int)benchmark::anymal::params.dt; t++) {
+    for(int t = 0; t < (int)(benchmark::anymal::params.T / benchmark::anymal::params.dt); t++) {
       for(int i = 0; i < anymals.size(); i++) {
         jointState = anymals[i]->getGeneralizedCoordinate();
         jointVel = anymals[i]->getGeneralizedVelocity();
@@ -126,7 +127,17 @@ void simulationLoop() {
 
 int main(int argc, const char* argv[]) {
 
-  benchmark::anymal::getParamsFromArg(argc, argv);
+  benchmark::anymal::addDescToOption(desc);
+  benchmark::anymal::getParamsFromArg(argc, argv, desc);
+
+  RAIINFO(
+      std::endl << "-----------------------" << std::endl
+                << "Simulator: RAI" << std::endl
+                << "GUI      : " << benchmark::anymal::options.gui << std::endl
+                << "Row      : " << benchmark::anymal::options.numRow << std::endl
+                << "Feedback : " << benchmark::anymal::options.feedback << std::endl
+                << "-----------------------"
+  )
 
   setupSimulation();
   setupWorld();

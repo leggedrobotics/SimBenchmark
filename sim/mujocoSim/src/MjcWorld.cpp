@@ -80,10 +80,7 @@ mjData *mujoco_sim::MjcWorld::getWorldData() const {
 }
 
 void mujoco_sim::MjcWorld::integrate(double dt) {
-  if(worldModel_->opt.timestep != dt)
-    worldModel_->opt.timestep = dt;
-
-  mj_step(worldModel_, worldData_);
+  RAIFATAL("use setTimeStep(double dt) + integrate() instead")
 }
 
 object::MjcSphere *MjcWorld::addSphere(double radius,
@@ -261,6 +258,14 @@ int MjcWorld::getNumObject() {
 
 void MjcWorld::setNoSlipParameter(int maxIter) {
   simOption_->noslip_iterations = maxIter;
+}
+
+void MjcWorld::setTimeStep(double timeStep) {
+  worldModel_->opt.timestep = timeStep;
+}
+
+void MjcWorld::integrate() {
+  mj_step(worldModel_, worldData_);
 }
 
 } // mujoco_sim
