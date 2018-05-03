@@ -90,12 +90,18 @@ class BtWorld: public benchmark::WorldInterface {
   void integrate(double dt) override ;
 
   const std::vector<Single3DContactProblem> *getCollisionProblem() const;
+  int getNumObject() override ;
 
   void setGravity(const benchmark::Vec<3> &gravity) override ;
-
   void setERP(double erp, double erp2, double frictionErp);
 
-  int getNumObject() override ;
+  /**
+   * The parameters for the number of iteration during detecting collision btw convex-convex and convex-plane
+   *
+   * @param convexconvex default value is 3
+   * @param convexplane default value is 3
+   */
+  void setMultipointIteration(int convexconvex, int convexplane);
 
  private:
 

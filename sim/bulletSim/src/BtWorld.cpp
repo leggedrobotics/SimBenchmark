@@ -227,4 +227,10 @@ int BtWorld::getNumObject() {
   objectList_.size();
 }
 
+void BtWorld::setMultipointIteration(int convexconvex, int convexplane) {
+  collisionConfiguration_->setConvexConvexMultipointIterations(convexconvex);
+  collisionConfiguration_->setPlaneConvexMultipointIterations(convexplane);
+}
+
+
 } // bullet_sim

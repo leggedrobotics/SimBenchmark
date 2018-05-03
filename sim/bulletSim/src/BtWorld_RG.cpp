@@ -414,4 +414,8 @@ int BtWorld_RG::getWorldNumContacts() {
   return (int)world_.getCollisionProblem()->size();
 }
 
+void BtWorld_RG::setMultipointIteration(int convexconvex, int convexplane) {
+  world_.setMultipointIteration(convexconvex, convexplane);
+}
+
 } // bullet_sim

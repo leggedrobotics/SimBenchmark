@@ -79,15 +79,17 @@ class BtWorld_RG: public benchmark::World_RG {
                                                benchmark::CollisionGroupType collisionGroup = 1,
                                                benchmark::CollisionGroupType collisionMask=-1) ;
 
-  int getNumObject() override ;
-  int getWorldNumContacts() override ;
-
   //////////////////////////
   /// simulation methods ///
   //////////////////////////
   virtual void integrate(double dt) override ;
+
+  int getNumObject() override ;
+  int getWorldNumContacts() override ;
+
   virtual void setGravity(Eigen::Vector3d gravity) override ;
   void setERP(double erp, double erp2, double frictionErp) override ;
+  void setMultipointIteration(int convexconvex, int convexplane);
 
  private:
   bullet_sim::BtWorld world_;

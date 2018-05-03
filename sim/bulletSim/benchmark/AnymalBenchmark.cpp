@@ -16,6 +16,9 @@ void setupSimulation() {
     sim = new bullet_sim::BtWorld_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
   else
     sim = new bullet_sim::BtWorld_RG(bullet_sim::SOLVER_MULTI_BODY);
+
+  /// NOTE: collision detection parameters
+  sim->setMultipointIteration(0, 0);
 }
 
 void setupWorld() {
