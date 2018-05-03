@@ -14,7 +14,7 @@ int main() {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/ANYmal/";
 
-  dart_sim::DartWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
+  dart_sim::DartWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND, SOLVER_LCP_PGS, COLLISION_DETECTOR_DART);
 
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(0.8);

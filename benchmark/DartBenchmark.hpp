@@ -15,6 +15,7 @@ namespace benchmark::dart {
  */
 struct Option {
   dart_sim::SolverOption solverOption = dart_sim::SOLVER_LCP_DANTZIG;
+  dart_sim::CollisionDetectorOption detectorOption = dart_sim::COLLISION_DETECTOR_FCL;
 };
 Option options;
 
@@ -26,6 +27,7 @@ Option options;
 void addDescToOption(po::options_description &desc) {
   desc.add_options()
       ("solver", po::value<std::string>(), "constraint solver type (dantzig/pgs)")
+      ("detector", po::value<std::string>(), "collision detector type (fcl/dart/bullet/ode)")
       ;
 }
 
@@ -41,7 +43,7 @@ void getParamsFromArg(int argc, const char *argv[], po::options_description &des
   po::variables_map vm;
   po::store(po::parse_command_line(argc, argv, desc), vm);
 
-  // help option
+  // solver option
   if(vm.count("solver")) {
     if(vm["solver"].as<std::string>().compare("dantzig") == 0) {
       options.solverOption = dart_sim::SOLVER_LCP_DANTZIG;
@@ -51,6 +53,25 @@ void getParamsFromArg(int argc, const char *argv[], po::options_description &des
     }
     else {
       RAIFATAL("invalid solver input")
+    }
+  }
+
+  // detector option
+  if(vm.count("detector")) {
+    if(vm["detector"].as<std::string>().compare("fcl") == 0) {
+      options.detectorOption = dart_sim::COLLISION_DETECTOR_FCL;
+    }
+    else if (vm["detector"].as<std::string>().compare("bullet") == 0) {
+      options.detectorOption = dart_sim::COLLISION_DETECTOR_BULLET;
+    }
+    else if (vm["detector"].as<std::string>().compare("ode") == 0) {
+      options.detectorOption = dart_sim::COLLISION_DETECTOR_ODE;
+    }
+    else if (vm["detector"].as<std::string>().compare("dart") == 0) {
+      options.detectorOption = dart_sim::COLLISION_DETECTOR_DART;
+    }
+    else {
+      RAIFATAL("invalid detector input")
     }
   }
 }

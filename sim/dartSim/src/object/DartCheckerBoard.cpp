@@ -7,9 +7,6 @@
 dart_sim::object::DartCheckerBoard::DartCheckerBoard(double xLength, double yLength, benchmark::object::CheckerboardShape shape, int id)
     : DartSingleBodyObject(0, id) {
 
-  if(shape == benchmark::object::PLANE_SHAPE)
-    RAIFATAL("plane shape ground is not supported")
-
   // props
   dart::dynamics::BodyNode::Properties bodyProp;
   bodyProp.mName = "ground_link";

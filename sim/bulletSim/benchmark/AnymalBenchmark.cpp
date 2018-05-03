@@ -107,7 +107,7 @@ void simulationLoop() {
     // no gui
     StopWatch watch;
     watch.start();
-    for(int t = 0; t < (int)benchmark::anymal::params.T / (int)benchmark::anymal::params.dt; t++) {
+    for(int t = 0; t < (int)(benchmark::anymal::params.T / benchmark::anymal::params.dt); t++) {
       for(int i = 0; i < anymals.size(); i++) {
         jointState = anymals[i]->getGeneralizedCoordinate();
         jointVel = anymals[i]->getGeneralizedVelocity();
@@ -121,7 +121,7 @@ void simulationLoop() {
     }
 
     std::cout<<"time taken for "
-             << (int) benchmark::anymal::params.T / benchmark::anymal::params.dt
+             << (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt)
              << " steps "<< watch.measure()<<"s \n";
   }
 }
@@ -143,6 +143,12 @@ int main(int argc, const char* argv[]) {
   setupSimulation();
   setupWorld();
   simulationLoop();
+
+  RAIINFO(
+      std::endl << "-----------------------" << std::endl
+                << "Contacts : " << sim->getWorldNumContacts() << std::endl
+                << "======================="
+  )
 
   return 0;
 }

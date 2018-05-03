@@ -18,11 +18,13 @@ class DartWorld_RG: public benchmark::World_RG {
   DartWorld_RG(int windowWidth,
                int windowHeight,
                float cms,
-               int flags=0,
-               SolverOption solverOption = SOLVER_LCP_DANTZIG);
+               int flags,
+               SolverOption solverOption = SOLVER_LCP_DANTZIG,
+               CollisionDetectorOption detectorOption = COLLISION_DETECTOR_FCL);
 
   /* constructor for no visualization */
-  DartWorld_RG(SolverOption solverOption = SOLVER_LCP_DANTZIG);
+  DartWorld_RG(SolverOption solverOption = SOLVER_LCP_DANTZIG,
+               CollisionDetectorOption detectorOption = COLLISION_DETECTOR_FCL);
   virtual ~DartWorld_RG();
 
   /////////////////////////////////////
@@ -71,6 +73,7 @@ class DartWorld_RG: public benchmark::World_RG {
                                                benchmark::CollisionGroupType collisionMask=-1) ;
 
   int getNumObject() override ;
+  int getWorldNumContacts() override ;
 
   //////////////////////////
   /// simulation methods ///

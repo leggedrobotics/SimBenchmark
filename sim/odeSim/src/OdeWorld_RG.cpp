@@ -430,5 +430,8 @@ void OdeWorld_RG::setERP(double erp, double erp2, double frictionErp) {
 int OdeWorld_RG::getNumObject() {
   return world_.getNumObject();
 }
+int OdeWorld_RG::getWorldNumContacts() {
+  return (int)world_.getCollisionProblem()->size();
+}
 
 } // ode_sim

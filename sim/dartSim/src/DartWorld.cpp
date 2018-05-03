@@ -6,12 +6,13 @@
 
 namespace dart_sim {
 
-DartWorld::DartWorld(SolverOption solverOption)
+DartWorld::DartWorld(SolverOption solverOption, CollisionDetectorOption detectorOption)
     : dynamicsWorld_(std::make_shared<dart::simulation::World>()),
       solverOption_(solverOption)
 {
   dynamicsWorld_->setGravity(gravity_);
 
+  /// contact solver
   if(solverOption == SOLVER_LCP_DANTZIG) {
     dynamicsWorld_->getConstraintSolver()->setLCPSolver(
         dart::common::make_unique<dart::constraint::DantzigLCPSolver>(dynamicsWorld_->getTimeStep())
@@ -23,6 +24,27 @@ DartWorld::DartWorld(SolverOption solverOption)
   } else {
     RAIFATAL("invalid solver type for dart")
   }
+
+  /// collision detector
+  if(detectorOption == COLLISION_DETECTOR_FCL) {
+    dynamicsWorld_->getConstraintSolver()->setCollisionDetector(
+        dart::collision::FCLCollisionDetector::create()
+    );
+  } else if(detectorOption == COLLISION_DETECTOR_BULLET) {
+    dynamicsWorld_->getConstraintSolver()->setCollisionDetector(
+        dart::collision::BulletCollisionDetector::create()
+    );
+  } else if(detectorOption == COLLISION_DETECTOR_ODE) {
+    dynamicsWorld_->getConstraintSolver()->setCollisionDetector(
+        dart::collision::OdeCollisionDetector::create()
+    );
+  } else if(detectorOption == COLLISION_DETECTOR_DART) {
+    dynamicsWorld_->getConstraintSolver()->setCollisionDetector(
+        dart::collision::DARTCollisionDetector::create()
+    );
+  } else {
+    RAIFATAL("invalid collision detector type for dart")
+  }
 }
 
 DartWorld::~DartWorld() {
@@ -32,9 +54,9 @@ DartWorld::~DartWorld() {
 }
 
 object::DartSphere *DartWorld::addSphere(double radius,
-                                 double mass,
-                                 benchmark::CollisionGroupType collisionGroup,
-                                 benchmark::CollisionGroupType collisionMask) {
+                                         double mass,
+                                         benchmark::CollisionGroupType collisionGroup,
+                                         benchmark::CollisionGroupType collisionMask) {
   auto *sphere = new dart_sim::object::DartSphere(radius, mass, objectList_.size());
   dynamicsWorld_->addSkeleton(sphere->getSkeletonPtr());
   objectList_.push_back(sphere);
@@ -42,11 +64,11 @@ object::DartSphere *DartWorld::addSphere(double radius,
 }
 
 object::DartBox *DartWorld::addBox(double xLength,
-                           double yLength,
-                           double zLength,
-                           double mass,
-                           benchmark::CollisionGroupType collisionGroup,
-                           benchmark::CollisionGroupType collisionMask) {
+                                   double yLength,
+                                   double zLength,
+                                   double mass,
+                                   benchmark::CollisionGroupType collisionGroup,
+                                   benchmark::CollisionGroupType collisionMask) {
   auto *box = new dart_sim::object::DartBox(xLength, yLength, zLength, mass, objectList_.size());
   dynamicsWorld_->addSkeleton(box->getSkeletonPtr());
   objectList_.push_back(box);
@@ -54,10 +76,10 @@ object::DartBox *DartWorld::addBox(double xLength,
 }
 
 object::DartCapsule *DartWorld::addCapsule(double radius,
-                                   double height,
-                                   double mass,
-                                   benchmark::CollisionGroupType collisionGroup,
-                                   benchmark::CollisionGroupType collisionMask) {
+                                           double height,
+                                           double mass,
+                                           benchmark::CollisionGroupType collisionGroup,
+                                           benchmark::CollisionGroupType collisionMask) {
   auto *capsule = new dart_sim::object::DartCapsule(radius, height, mass, objectList_.size());
   dynamicsWorld_->addSkeleton(capsule->getSkeletonPtr());
   objectList_.push_back(capsule);
@@ -65,12 +87,12 @@ object::DartCapsule *DartWorld::addCapsule(double radius,
 }
 
 object::DartCheckerBoard *DartWorld::addCheckerboard(double gridSize,
-                                             double xLength,
-                                             double yLength,
-                                             double reflectanceI,
-                                             bo::CheckerboardShape shape,
-                                             benchmark::CollisionGroupType collisionGroup,
-                                             benchmark::CollisionGroupType collisionMask) {
+                                                     double xLength,
+                                                     double yLength,
+                                                     double reflectanceI,
+                                                     bo::CheckerboardShape shape,
+                                                     benchmark::CollisionGroupType collisionGroup,
+                                                     benchmark::CollisionGroupType collisionMask) {
   auto *checkerBoard = new dart_sim::object::DartCheckerBoard(xLength, yLength, shape, objectList_.size());
   dynamicsWorld_->addSkeleton(checkerBoard->getSkeletonPtr());
   objectList_.push_back(checkerBoard);
@@ -78,10 +100,10 @@ object::DartCheckerBoard *DartWorld::addCheckerboard(double gridSize,
 }
 
 object::DartCylinder *DartWorld::addCylinder(double radius,
-                                     double height,
-                                     double mass,
-                                     benchmark::CollisionGroupType collisionGroup,
-                                     benchmark::CollisionGroupType collisionMask) {
+                                             double height,
+                                             double mass,
+                                             benchmark::CollisionGroupType collisionGroup,
+                                             benchmark::CollisionGroupType collisionMask) {
   auto *cylinder = new dart_sim::object::DartCylinder(radius, height, mass, objectList_.size());
   dynamicsWorld_->addSkeleton(cylinder->getSkeletonPtr());
   objectList_.push_back(cylinder);
@@ -89,8 +111,8 @@ object::DartCylinder *DartWorld::addCylinder(double radius,
 }
 
 object::DartArticulatedSystem *DartWorld::addArticulatedSystem(std::string urdfPath,
-                                                       benchmark::CollisionGroupType collisionGroup,
-                                                       benchmark::CollisionGroupType collisionMask) {
+                                                               benchmark::CollisionGroupType collisionGroup,
+                                                               benchmark::CollisionGroupType collisionMask) {
   auto *robot = new dart_sim::object::DartArticulatedSystem(urdfPath);
   dynamicsWorld_->addSkeleton(robot->getSkeletonPtr());
   objectList_.push_back(robot);
@@ -105,7 +127,20 @@ void DartWorld::setGravity(const benchmark::Vec<3> &gravity) {
 }
 
 void DartWorld::integrate() {
+  // clear contact problem list
+  contactProblemList_.clear();
+
+  // step
   dynamicsWorld_->step();
+
+  // collision
+  const dart::collision::CollisionResult &collisions = dynamicsWorld_->getLastCollisionResult();
+  contactProblemList_.reserve(collisions.getNumContacts());
+
+  for(int i = 0; i < collisions.getNumContacts(); i++) {
+    const dart::collision::Contact &contact = collisions.getContact(i);
+    contactProblemList_.emplace_back(contact.point, contact.normal, contact.force);
+  }
 }
 
 void DartWorld::setTimeStep(double timeStep) {
@@ -123,6 +158,10 @@ int DartWorld::getNumObject() {
 
 void DartWorld::setMaxContacts(int maxContacts) {
   dynamicsWorld_->getConstraintSolver()->getCollisionOption().maxNumContacts = maxContacts;
+}
+
+const std::vector<Single3DContactProblem> &DartWorld::getCollisionProblem() {
+  return contactProblemList_;
 }
 
 } // dart_sim

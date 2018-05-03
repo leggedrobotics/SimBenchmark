@@ -6,7 +6,9 @@
 
 int main() {
 
-  dart_sim::DartWorld_RG sim(800, 600, 0.5, 0);
+  dart_sim::DartWorld_RG sim(800, 600, 0.5, 0,
+                             dart_sim::SOLVER_LCP_PGS,
+                             dart_sim::COLLISION_DETECTOR_DART);
 
 //  sim.setGravity({0,0,0});
   sim.setLightPosition(30, 0, 10);

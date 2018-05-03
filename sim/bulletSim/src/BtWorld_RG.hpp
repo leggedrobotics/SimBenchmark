@@ -80,6 +80,7 @@ class BtWorld_RG: public benchmark::World_RG {
                                                benchmark::CollisionGroupType collisionMask=-1) ;
 
   int getNumObject() override ;
+  int getWorldNumContacts() override ;
 
   //////////////////////////
   /// simulation methods ///

@@ -16,9 +16,11 @@ void setupSimulation() {
   if(benchmark::anymal::options.gui)
     sim = new dart_sim::DartWorld_RG(800, 600, 0.5,
                                      benchmark::NO_BACKGROUND,
-                                     benchmark::dart::options.solverOption);
+                                     benchmark::dart::options.solverOption,
+                                     benchmark::dart::options.detectorOption);
   else
-    sim = new dart_sim::DartWorld_RG(benchmark::dart::options.solverOption);
+    sim = new dart_sim::DartWorld_RG(benchmark::dart::options.solverOption,
+                                     benchmark::dart::options.detectorOption);
 
   sim->setTimeStep(benchmark::anymal::params.dt);
   sim->setMaxContacts(5000);
@@ -113,7 +115,7 @@ void simulationLoop() {
     // no gui
     StopWatch watch;
     watch.start();
-    for(int t = 0; t < (int)benchmark::anymal::params.T / (int)benchmark::anymal::params.dt; t++) {
+    for(int t = 0; t < (int)(benchmark::anymal::params.T / benchmark::anymal::params.dt); t++) {
       for(int i = 0; i < anymals.size(); i++) {
         jointState = anymals[i]->getGeneralizedCoordinate();
         jointVel = anymals[i]->getGeneralizedVelocity();
@@ -127,7 +129,7 @@ void simulationLoop() {
     }
 
     std::cout<<"time taken for "
-             << (int) benchmark::anymal::params.T / benchmark::anymal::params.dt
+             << (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt)
              << " steps "<< watch.measure()<<"s \n";
   }
 }
@@ -141,7 +143,7 @@ int main(int argc, const char* argv[]) {
   benchmark::dart::getParamsFromArg(argc, argv, desc);
 
   RAIINFO(
-      std::endl << "-----------------------" << std::endl
+      std::endl << "=======================" << std::endl
                 << "Simulator: DART" << std::endl
                 << "GUI      : " << benchmark::anymal::options.gui << std::endl
                 << "Row      : " << benchmark::anymal::options.numRow << std::endl
@@ -153,6 +155,12 @@ int main(int argc, const char* argv[]) {
   setupSimulation();
   setupWorld();
   simulationLoop();
+
+  RAIINFO(
+      std::endl << "-----------------------" << std::endl
+                << "Contacts : " << sim->getWorldNumContacts() << std::endl
+                << "======================="
+  )
 
   return 0;
 }

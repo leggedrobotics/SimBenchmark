@@ -5,6 +5,10 @@
 #ifndef DARTSIM_WORLD_HPP
 #define DARTSIM_WORLD_HPP
 
+#include <dart/collision/bullet/BulletCollisionDetector.hpp>
+#include <dart/collision/dart/DARTCollisionDetector.hpp>
+#include <dart/collision/ode/OdeCollisionDetector.hpp>
+
 #include "common/interface/WorldInterface.hpp"
 #include "common/Configure.hpp"
 
@@ -22,10 +26,33 @@ enum SolverOption {
   SOLVER_LCP_PGS
 };
 
+enum CollisionDetectorOption {
+  COLLISION_DETECTOR_FCL,
+  COLLISION_DETECTOR_DART,
+  COLLISION_DETECTOR_BULLET,
+  COLLISION_DETECTOR_ODE
+};
+
+struct Single3DContactProblem {
+ public:
+  Single3DContactProblem(const Eigen::Vector3d &pos,
+                         const Eigen::Vector3d &normal,
+                         const Eigen::Vector3d &force) {
+    pos_.e() = pos;
+    normal_.e() = normal;
+    force_.e() = force;
+  }
+
+  benchmark::Vec<3> pos_;
+  benchmark::Vec<3> normal_;
+  benchmark::Vec<3> force_;
+};
+
 class DartWorld: benchmark::WorldInterface {
 
  public:
-  explicit DartWorld(SolverOption solverOption = SOLVER_LCP_DANTZIG);
+  explicit DartWorld(SolverOption solverOption = SOLVER_LCP_DANTZIG,
+                     CollisionDetectorOption detectorOption = COLLISION_DETECTOR_FCL);
   virtual ~DartWorld();
 
   object::DartSphere *addSphere(double radius,
@@ -67,12 +94,12 @@ class DartWorld: benchmark::WorldInterface {
 
   void integrate();
 
-//  const std::vector<Single3DContactProblem> *getCollisionProblem() const;
   void setGravity(const benchmark::Vec<3> &gravity) override ;
   void setTimeStep(double timeStep);
   void setMaxContacts(int maxcontacts);
 
   int getNumObject() override ;
+  const std::vector<Single3DContactProblem> &getCollisionProblem();
 //  void setERP(double erp, double erp2, double frictionErp);
 
  private:
@@ -86,6 +113,9 @@ class DartWorld: benchmark::WorldInterface {
 
   // list
   std::vector<object::DartObject*> objectList_;
+
+  // collision problem list
+  std::vector<Single3DContactProblem> contactProblemList_;
 
   // solver option
   SolverOption solverOption_ = SOLVER_LCP_DANTZIG;

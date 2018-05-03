@@ -410,4 +410,8 @@ int BtWorld_RG::getNumObject() {
   return world_.getNumObject();
 }
 
+int BtWorld_RG::getWorldNumContacts() {
+  return (int)world_.getCollisionProblem()->size();
+}
+
 } // bullet_sim

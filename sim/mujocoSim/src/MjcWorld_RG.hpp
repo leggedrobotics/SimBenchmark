@@ -43,7 +43,7 @@ class MjcWorld_RG: public benchmark::World_RG {
   void setTimeStep(double timeStep);
 
   benchmark::SingleBodyHandle getSingleBodyHandle(int index);
-  int getWorldNumContacts();
+  int getWorldNumContacts() override ;
   int getNumObject() override ;
 
   /// the functions below are articulated system related.

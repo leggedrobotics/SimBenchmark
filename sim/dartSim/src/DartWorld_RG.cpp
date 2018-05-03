@@ -6,12 +6,17 @@
 
 namespace dart_sim {
 
-DartWorld_RG::DartWorld_RG(int windowWidth, int windowHeight, float cms, int flags, SolverOption solverOption) :
-    world_(solverOption),
+DartWorld_RG::DartWorld_RG(int windowWidth,
+                           int windowHeight,
+                           float cms,
+                           int flags,
+                           SolverOption solverOption,
+                           CollisionDetectorOption detectorOption) :
+    world_(solverOption, detectorOption),
     benchmark::World_RG(windowWidth, windowHeight, cms, flags) {}
 
-DartWorld_RG::DartWorld_RG(SolverOption solverOption) :
-    world_(solverOption),
+DartWorld_RG::DartWorld_RG(SolverOption solverOption, CollisionDetectorOption detectorOption) :
+    world_(solverOption, detectorOption),
     benchmark::World_RG() {}
 
 benchmark::SingleBodyHandle DartWorld_RG::addSphere(double radius,
@@ -185,7 +190,6 @@ void DartWorld_RG::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
 
-//  TODO articulated system
   for (auto &as : asHandles_) {
     benchmark::Vec<4> quat;
     benchmark::Vec<3> pos;
@@ -285,16 +289,19 @@ void DartWorld_RG::updateFrame() {
 //  }
 
   /// contact points
-//  if (gui_->getCustomToggleState(1)) {
-//    contactPointMarker_->mutexLock();
-//    contactPointMarker_->clearGhost();
-//    for (auto &pro: *world_.getCollisionProblem()) {
-//      Eigen::Vector3d pos = pro.point_;
-//      contactPointMarker_->addGhost(pos);
-//    }
-//    contactPointMarker_->mutexUnLock();
-//  } else
-//    contactPointMarker_->clearGhost();
+  if (gui_->getCustomToggleState(1)) {
+    contactPointMarker_->mutexLock();
+    contactPointMarker_->clearGhost();
+    for (auto &pro: world_.getCollisionProblem()) {
+      Eigen::Vector3d pos;
+      pos[0] = pro.pos_[0];
+      pos[1] = pro.pos_[1];
+      pos[2] = pro.pos_[2];
+      contactPointMarker_->addGhost(pos);
+    }
+    contactPointMarker_->mutexUnLock();
+  } else
+    contactPointMarker_->clearGhost();
 
   /// contact forces
 //  if (gui_->getCustomToggleState(2)) {
@@ -404,6 +411,9 @@ void DartWorld_RG::updateFrame() {
 }
 void DartWorld_RG::setMaxContacts(int maxcontacts) {
   world_.setMaxContacts(maxcontacts);
+}
+int DartWorld_RG::getWorldNumContacts() {
+  return (int) world_.getCollisionProblem().size();
 }
 
 } // dart_sim

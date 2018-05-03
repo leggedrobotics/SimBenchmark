@@ -83,6 +83,7 @@ class World_RG {
 
   /// pure virtual getter, setter
   virtual int getNumObject() = 0;
+  virtual int getWorldNumContacts() = 0;
 
   /// pure virtual simulation methods
   virtual void integrate(double dt) = 0;

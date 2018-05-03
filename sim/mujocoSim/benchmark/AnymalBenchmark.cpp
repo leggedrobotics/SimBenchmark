@@ -192,7 +192,7 @@ int main(int argc, const char* argv[]) {
   benchmark::mujoco::getParamsFromArg(argc, argv, desc);
 
   RAIINFO(
-      std::endl << "-----------------------" << std::endl
+      std::endl << "=======================" << std::endl
                 << "Simulator: MUJOCO" << std::endl
                 << "GUI      : " << benchmark::anymal::options.gui << std::endl
                 << "Row      : " << benchmark::anymal::options.numRow << std::endl
@@ -207,7 +207,9 @@ int main(int argc, const char* argv[]) {
   simulationLoop();
 
   RAIINFO(
-      std::endl << "# of contact : " << sim->getWorldNumContacts() << std::endl;
+      std::endl << "-----------------------" << std::endl
+                << "Contacts : " << sim->getWorldNumContacts() << std::endl
+                << "======================="
   )
 
   return 0;

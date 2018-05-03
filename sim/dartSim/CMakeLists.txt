@@ -5,7 +5,12 @@ set(CMAKE_CXX_FLAGS_RELEASE
         "${CMAKE_CXX_FLAGS_RELEASE} -Wl,--no-as-needed -O3 -mtune=native")
 
 # dart (optional)
-find_package(DART CONFIG REQUIRED COMPONENTS utils-urdf)
+find_package(DART
+        CONFIG REQUIRED COMPONENTS
+        utils-urdf
+        collision-bullet
+        collision-ode
+        )
 include_directories(${DART_INCLUDE_DIRS})
 
 # source
