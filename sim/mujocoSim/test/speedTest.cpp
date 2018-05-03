@@ -200,12 +200,6 @@ int main(int argc, const char** argv)
         remove(tempfile.c_str());
     }
 
-    // noslip
-    if( option.find_first_of('n')!=std::string::npos )
-    {
-      m->opt.noslip_iterations = 10;
-    }
-
     // solvers
     if( option.find_first_of('P')!=std::string::npos )
     {
@@ -218,6 +212,16 @@ int main(int argc, const char** argv)
     else if( option.find_first_of('N')!=std::string::npos )
     {
       m->opt.solver = mjSOL_NEWTON;
+    }
+    else
+    {
+      m->opt.solver = mjSOL_PGS;
+    }
+
+    // noslip
+    if( option.find_first_of('n')!=std::string::npos )
+    {
+      m->opt.noslip_iterations = 10;
     }
 
     // speed test

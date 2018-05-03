@@ -55,8 +55,8 @@ add_library(MjcSimLib ${MjcSimSrc})
 target_link_libraries(MjcSimLib
 #        ${glew}
 #        ${glfw}
-#        ${mujoco150}
-        ${mujoco150nogl}
+        ${mujoco150}
+#        ${mujoco150nogl}
 #        GL
 #        GLU
 #        glut)
