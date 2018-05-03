@@ -1,8 +1,8 @@
-head = fileread('urdf-template/head.urdf');
-body = fileread('urdf-template/body.urdf');
-tail = fileread('urdf-template/tail.urdf');
+head = fileread('urdf-template/head.txt');
+body = fileread('urdf-template/body.txt');
+tail = fileread('urdf-template/tail.txt');
 
-for numrow = 1:5
+for numrow = 1:15
     % head
     text = head;
     text = strcat(text, '\n');

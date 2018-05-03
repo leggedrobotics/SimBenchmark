@@ -30,7 +30,7 @@ struct Parameter {
   double kd = 1.0;    // kd gain
   double H = 0.54;    // starting height
   double dt = 0.005;  // timestep (sec)
-  double T = 50;      // simulation time (sec)
+  double T = 250;      // simulation time (sec)
 
   // base quaternion
   double baseQuat[4] = {
