@@ -121,4 +121,8 @@ int DartWorld::getNumObject() {
   return objectList_.size();
 }
 
+void DartWorld::setMaxContacts(int maxContacts) {
+  dynamicsWorld_->getConstraintSolver()->getCollisionOption().maxNumContacts = maxContacts;
+}
+
 } // dart_sim

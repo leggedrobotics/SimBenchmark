@@ -69,9 +69,10 @@ class DartWorld: benchmark::WorldInterface {
 
 //  const std::vector<Single3DContactProblem> *getCollisionProblem() const;
   void setGravity(const benchmark::Vec<3> &gravity) override ;
-  int getNumObject() override ;
-
   void setTimeStep(double timeStep);
+  void setMaxContacts(int maxcontacts);
+
+  int getNumObject() override ;
 //  void setERP(double erp, double erp2, double frictionErp);
 
  private:

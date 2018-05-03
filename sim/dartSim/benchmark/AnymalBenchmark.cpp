@@ -21,6 +21,7 @@ void setupSimulation() {
     sim = new dart_sim::DartWorld_RG(benchmark::dart::options.solverOption);
 
   sim->setTimeStep(benchmark::anymal::params.dt);
+  sim->setMaxContacts(5000);
 }
 
 void setupWorld() {

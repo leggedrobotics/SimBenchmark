@@ -402,5 +402,8 @@ void DartWorld_RG::updateFrame() {
 //    }
 //  }
 }
+void DartWorld_RG::setMaxContacts(int maxcontacts) {
+  world_.setMaxContacts(maxcontacts);
+}
 
 } // dart_sim

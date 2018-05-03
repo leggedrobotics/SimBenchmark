@@ -80,6 +80,7 @@ class DartWorld_RG: public benchmark::World_RG {
   void loop(double realTimeFactor = 1.0);
   void integrate();
   void setTimeStep(double timeStep);
+  void setMaxContacts(int maxcontacts);
 
  private:
   virtual void loop(double dt, double realTimeFactor = 1.0) override ;
