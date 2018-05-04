@@ -17,8 +17,9 @@ void setupSimulation() {
   else
     sim = new bullet_sim::BtWorld_RG(bullet_sim::SOLVER_MULTI_BODY);
 
-  /// NOTE: collision detection parameters
+  /// NOTE: collision detection parameters to maintain 4 contact points
   sim->setMultipointIteration(0, 0);
+  sim->setERP(0.05, 0.01, 0.0);
 }
 
 void setupWorld() {

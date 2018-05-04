@@ -1,0 +1,5 @@
+# ignore image files generated
+
+*.png
+*.jpg
+*.fig

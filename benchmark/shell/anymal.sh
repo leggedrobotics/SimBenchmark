@@ -6,7 +6,7 @@
 ## This test is for measuring simulation speed of articulated system: 18-DOF quadrupedal robot ANYmal.
 ########################################################################################################################
 
-# the number of test (for num_row <= 5)
+# the number of test (for num_row <= 3)
 num_test=10
 
 # the number of anymals
@@ -35,7 +35,7 @@ echo "====================================================================="
 echo "RAI"
 for num_row in ${num_row_rai[@]}
 do
-    if [[ $num_row -le 5 ]]
+    if [[ $num_row -le 3 ]]
     then
         for (( i=1; i <= $num_test; ++i ))
         do
@@ -51,14 +51,14 @@ echo "====================================================================="
 echo "BULLET (MULTIBODY SOLVER)"
 for num_row in ${num_row_bt[@]}
 do
-    if [[ $num_row -le 5 ]]
+    if [[ $num_row -le 3 ]]
     then
         for (( i=1; i <= $num_test; ++i ))
         do
             ../sim/bulletSim/benchmark/BtAnymalBenchmark --nogui --feedback=$feedback --row=$num_row
         done
-#    else
-#        ../sim/bulletSim/benchmark/BtAnymalBenchmark --nogui --feedback=$feedback --row=$num_row
+    else
+        ../sim/bulletSim/benchmark/BtAnymalBenchmark --nogui --feedback=$feedback --row=$num_row
     fi
 done
 
@@ -67,14 +67,14 @@ echo "====================================================================="
 echo "DART (DANTZIG - BULLET)"
 for num_row in ${num_row_dart[@]}
 do
-    if [[ $num_row -le 5 ]]
+    if [[ $num_row -le 3 ]]
     then
         for (( i=1; i <= $num_test; ++i ))
         do
             ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=bullet
         done
-#    else
-#        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=bullet
+    else
+        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=bullet
     fi
 done
 
@@ -82,14 +82,14 @@ echo "====================================================================="
 echo "DART (DANTZIG - ODE)"
 for num_row in ${num_row_dart[@]}
 do
-    if [[ $num_row -le 5 ]]
+    if [[ $num_row -le 3 ]]
     then
         for (( i=1; i <= $num_test; ++i ))
         do
             ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=ode
         done
-#    else
-#        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=ode
+    else
+        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=ode
     fi
 done
 
@@ -97,14 +97,14 @@ echo "====================================================================="
 echo "DART (PGS - BULLET)"
 for num_row in ${num_row_dart[@]}
 do
-    if [[ $num_row -le 5 ]]
+    if [[ $num_row -le 3 ]]
     then
         for (( i=1; i <= $num_test; ++i ))
         do
             ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=bullet
         done
-#    else
-#        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=bullet
+    else
+        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=bullet
     fi
 done
 
@@ -112,14 +112,14 @@ echo "====================================================================="
 echo "DART (PGS - ODE)"
 for num_row in ${num_row_dart[@]}
 do
-    if [[ $num_row -le 5 ]]
+    if [[ $num_row -le 3 ]]
     then
         for (( i=1; i <= $num_test; ++i ))
         do
             ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=ode
         done
-#    else
-#        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=ode
+    else
+        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=ode
     fi
 done
 
@@ -128,14 +128,14 @@ echo "====================================================================="
 echo "MUJOCO (PGS)"
 for num_row in ${num_row_mjc[@]}
 do
-    if [[ $num_row -le 5 ]]
+    if [[ $num_row -le 3 ]]
     then
         for (( i=1; i <= $num_test; ++i ))
         do
             ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --noslip
         done
-#    else
-#        ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --noslip
+    else
+        ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --noslip
     fi
 done
 
@@ -143,14 +143,14 @@ echo "====================================================================="
 echo "MUJOCO (CG)"
 for num_row in ${num_row_mjc[@]}
 do
-    if [[ $num_row -le 5 ]]
+    if [[ $num_row -le 3 ]]
     then
         for (( i=1; i <= $num_test; ++i ))
         do
             ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=cg --noslip
         done
-#    else
-#        ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=cg --noslip
+    else
+        ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=cg --noslip
     fi
 done
 
@@ -158,14 +158,14 @@ echo "====================================================================="
 echo "MUJOCO (NEWTON)"
 for num_row in ${num_row_mjc[@]}
 do
-    if [ "$num_row" <= 5 ]
+    if [[ $num_row -le 3 ]]
     then
         for (( i=1; i <= $num_test; ++i ))
         do
             ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=newton --noslip
         done
-#    else
-#        ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=newton --noslip
+    else
+        ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=newton --noslip
     fi
 done
 
@@ -174,13 +174,13 @@ echo "====================================================================="
 echo "ODE (STANDARD SOLVER)"
 for num_row in ${num_row_ode[@]}
 do
-    if [[ $num_row -le 5 ]]
+    if [[ $num_row -le 3 ]]
     then
         for (( i=1; i <= $num_test; ++i ))
         do
             ../sim/odeSim/benchmark/OdeAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=std
         done
-#    else
-#        ../sim/odeSim/benchmark/OdeAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=std
+    else
+        ../sim/odeSim/benchmark/OdeAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=std
     fi
 done
