@@ -119,9 +119,22 @@ void simulationLoop() {
       sim->integrate(benchmark::anymal::params.dt);
     }
 
+    double time = watch.measure();
+
+    // print to screen
     std::cout<<"time taken for "
              << (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt)
-             << " steps "<< watch.measure()<<"s \n";
+             << " steps "<< time <<"s \n";
+
+    // print to log file
+    benchmark::anymal::printCSV(
+        benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
+        "RAI",
+        "",
+        "",
+        benchmark::anymal::options.numRow,
+        time
+    );
   }
 }
 

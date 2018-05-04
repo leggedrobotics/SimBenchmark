@@ -1,7 +1,4 @@
-file(COPY anymal-stand.sh
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-file(COPY anymal.sh
+file(COPY shell/anymal.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 #if(BENCHMARK_BULLET)

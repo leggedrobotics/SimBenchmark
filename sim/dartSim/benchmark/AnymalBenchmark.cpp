@@ -128,9 +128,22 @@ void simulationLoop() {
       sim->integrate();
     }
 
+    double time = watch.measure();
+
+    // print to screen
     std::cout<<"time taken for "
              << (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt)
-             << " steps "<< watch.measure()<<"s \n";
+             << " steps "<< time <<"s \n";
+
+    // print to log file
+    benchmark::anymal::printCSV(
+        benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
+        "DART",
+        benchmark::dart::options.solverName,
+        benchmark::dart::options.detectorName,
+        benchmark::anymal::options.numRow,
+        time
+    );
   }
 }
 

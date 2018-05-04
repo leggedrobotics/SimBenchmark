@@ -19,6 +19,8 @@ namespace benchmark::mujoco {
 struct Option {
   mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS;
   bool noSlip = false;
+
+  std::string solverName = "PGS";
 };
 Option options;
 
@@ -60,12 +62,15 @@ void getParamsFromArg(int argc, const char *argv[], po::options_description &des
   if(vm.count("solver")) {
     if(vm["solver"].as<std::string>().compare("pgs") == 0) {
       options.solverOption = mujoco_sim::SOLVER_PGS;
+      options.solverName = "PGS";
     }
     else if (vm["solver"].as<std::string>().compare("cg") == 0) {
       options.solverOption = mujoco_sim::SOLVER_CG;
+      options.solverName = "CG";
     }
     else if (vm["solver"].as<std::string>().compare("newton") == 0) {
       options.solverOption = mujoco_sim::SOLVER_NEWTON;
+      options.solverName = "NEWTON";
     }
     else {
       RAIFATAL("invalid solver input")
@@ -74,6 +79,7 @@ void getParamsFromArg(int argc, const char *argv[], po::options_description &des
 
   if(vm.count("noslip")) {
     options.noSlip = true;
+    options.solverName += "-NOSLIP";
   }
 }
 

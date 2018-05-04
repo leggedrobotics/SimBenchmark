@@ -79,6 +79,26 @@ std::string getMujocoURDFpath(int rowNum) {
   return urdfPath;
 }
 
+std::string getLogFilepath(bool feedback) {
+
+  time_t t = time(0);   // get time now
+  struct tm * now = localtime( & t );
+
+  char buffer[80];
+  strftime (buffer,80,"log.csv",now);
+
+  std::string logPath(__FILE__);
+  while (logPath.back() != '/')
+    logPath.erase(logPath.size() - 1, 1);
+
+  if(feedback)
+    logPath += "../data/anymal-stand/" + std::string(buffer);
+  else
+    logPath += "../data/anymal-grounded/" + std::string(buffer);
+
+  return logPath;
+}
+
 /**
  * add options to desc
  *
@@ -125,6 +145,18 @@ void getParamsFromArg(int argc, const char *argv[], po::options_description &des
   if(vm.count("feedback")) {
     options.feedback = vm["feedback"].as<bool>();
   }
+}
+
+void printCSV(std::string filePath,
+              std::string sim,
+              std::string solver,
+              std::string detector,
+              int rownum,
+              double time) {
+  std::ofstream myfile;
+  myfile.open (filePath, std::ios_base::app);
+  myfile << sim << "," << solver << "," << detector << "," << rownum << "," << time << std::endl;
+  myfile.close();
 }
 
 } // benchmark::anymal

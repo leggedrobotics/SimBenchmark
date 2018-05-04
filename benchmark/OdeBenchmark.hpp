@@ -18,6 +18,7 @@ namespace benchmark::ode {
  */
 struct Option {
   ode_sim::SolverOption solverOption = ode_sim::SOLVER_STANDARD;
+  std::string solverName = "STANDARD";
 };
 Option options;
 
@@ -48,9 +49,11 @@ void getParamsFromArg(int argc, const char *argv[], po::options_description &des
   if(vm.count("solver")) {
     if(vm["solver"].as<std::string>().compare("std") == 0) {
       options.solverOption = ode_sim::SOLVER_STANDARD;
+      options.solverName = "STANDARD";
     }
     else if (vm["solver"].as<std::string>().compare("quick") == 0) {
       options.solverOption = ode_sim::SOLVER_QUICK;
+      options.solverName = "QUICK";
     }
     else {
       RAIFATAL("invalid solver input")

@@ -18,6 +18,7 @@ namespace benchmark::bullet {
  */
 struct Option {
   bullet_sim::SolverOption solverOption = bullet_sim::SOLVER_SEQUENTIAL_IMPULSE;
+  std::string solverName = "SEQUENCEIMPULSE";
 };
 Option options;
 
@@ -48,21 +49,27 @@ void getParamsFromArg(int argc, const char *argv[], po::options_description &des
   if(vm.count("solver")) {
     if(vm["solver"].as<std::string>().compare("seqimp") == 0) {
       options.solverOption = bullet_sim::SOLVER_SEQUENTIAL_IMPULSE;
+      options.solverName = "SEQUENCEIMPULSE";
     }
     else if (vm["solver"].as<std::string>().compare("nncg") == 0) {
       options.solverOption = bullet_sim::SOLVER_NNCG;
+      options.solverName = "NNCG";
     }
     else if (vm["solver"].as<std::string>().compare("pgs") == 0) {
       options.solverOption = bullet_sim::SOLVER_MLCP_PGS;
+      options.solverName = "MLCPPGS";
     }
     else if (vm["solver"].as<std::string>().compare("dantzig") == 0) {
       options.solverOption = bullet_sim::SOLVER_MLCP_DANTZIG;
+      options.solverName = "MLCPDANTZIG";
     }
     else if (vm["solver"].as<std::string>().compare("lemke") == 0) {
       options.solverOption = bullet_sim::SOLVER_MLCP_LEMKE;
+      options.solverName = "MLCPLEMKE";
     }
     else if (vm["solver"].as<std::string>().compare("multibody") == 0) {
       options.solverOption = bullet_sim::SOLVER_MULTI_BODY;
+      options.solverName = "MULTIBODY";
     }
     else {
       RAIFATAL("invalid solver input")
