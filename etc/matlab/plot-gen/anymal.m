@@ -1,0 +1,73 @@
+% csv format
+formatSpec = '%C%C%C%d%f';
+
+% load csv
+T = readtable(...
+    '../../../data/anymal-stand/sample.csv', ...
+    'Delimiter', ',', ...
+    'Format',formatSpec ...
+    );
+
+% data from rai
+RAI = T(T.SIM == 'RAI', :);
+
+% data from bullet
+BT = T(T.SIM == 'BULLET', :);
+
+% data from dart-dantzig-bullet
+DART_DAN_BT = T(...
+    T.SIM == 'DART' ...
+    & T.SOLVER == 'DANTZIG' ...
+    & T.DETECTOR == 'BULLET', :);
+
+% data from dart-pgs-bullet
+DART_PGS_BT = T(...
+    T.SIM == 'DART' ...
+    & T.SOLVER == 'PGS' ...
+    & T.DETECTOR == 'BULLET', :);
+
+% data from dart-dantzig-ode
+DART_DAN_ODE = T(...
+    T.SIM == 'DART' ...
+    & T.SOLVER == 'DANTZIG' ...
+    & T.DETECTOR == 'DART', :);
+
+% data from dart-pgs-ode
+DART_PGS_ODE = T(...
+    T.SIM == 'DART' ...
+    & T.SOLVER == 'PGS' ...
+    & T.DETECTOR == 'DART', :);
+
+% data from mujoco-pgs
+MJC_PGS = T(...
+    T.SIM == 'MUJOCO' ...
+    & T.SOLVER == 'PGS', :);
+
+% data from mujoco-cg
+MJC_CG = T(...
+    T.SIM == 'MUJOCO' ...
+    & T.SOLVER == 'CG', :);
+
+% data from mujoco-newton
+MJC_NEWTON = T(...
+    T.SIM == 'MUJOCO' ...
+    & T.SOLVER == 'NEWTON', :);
+
+% data from ODE
+ODE = T(T.SIM == 'ODE', :);
+
+% plot 
+plot(RAI.NUMROW.^2, RAI.TIME, 'g')
+hold on 
+plot(BT.NUMROW.^2, BT.TIME, 'r')
+plot(DART_DAN_BT.NUMROW.^2, DART_DAN_BT.TIME, 'm:')
+plot(DART_PGS_BT.NUMROW.^2, DART_PGS_BT.TIME, '-m*')
+plot(DART_DAN_ODE.NUMROW.^2, DART_DAN_ODE.TIME, '-m.')
+plot(DART_PGS_ODE.NUMROW.^2, DART_PGS_ODE.TIME, '-mo')
+plot(MJC_PGS.NUMROW.^2, MJC_PGS.TIME, 'b:')
+plot(MJC_CG.NUMROW.^2, MJC_CG.TIME, '-b*')
+plot(MJC_NEWTON.NUMROW.^2, MJC_NEWTON.TIME, '-bo')
+% plot(ODE.NUMROW.^2, ODE.TIME, 'y')
+xlabel('number of robots')
+ylabel('50k simulation time (sec)')
+hold off
