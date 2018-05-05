@@ -43,7 +43,7 @@ void addDescToOption(po::options_description &desc) {
  * @param argv
  * @param desc
  */
-void getParamsFromArg(int argc, const char *argv[], po::options_description &desc) {
+void getOptionsFromArg(int argc, const char **argv, po::options_description &desc) {
 
   po::variables_map vm;
   po::store(po::parse_command_line(argc, argv, desc), vm);

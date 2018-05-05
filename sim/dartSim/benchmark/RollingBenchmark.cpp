@@ -133,9 +133,13 @@ void simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::rolling::addDescToOption(desc);
+  benchmark::dart::addDescToOption(desc);
+
   benchmark::rolling::getOptionsFromArg(argc, argv, desc);
+  benchmark::dart::getOptionsFromArg(argc, argv, desc);
+
   benchmark::rolling::getParamsFromYAML(benchmark::rolling::getYamlpath().c_str(),
-                                        benchmark::ODE);
+                                        benchmark::DART);
 
   RAIINFO(
       std::endl << "=======================" << std::endl

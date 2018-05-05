@@ -39,7 +39,7 @@ void setupSimulation() {
 void setupWorld() {
 
   // add objects
-  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1);
+  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(benchmark::rolling::params.groundMu);
 
   auto box = sim->addBox(20, 20, 1, 10);
@@ -130,7 +130,11 @@ void simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::rolling::addDescToOption(desc);
+  benchmark::ode::addDescToOption(desc);
+
   benchmark::rolling::getOptionsFromArg(argc, argv, desc);
+  benchmark::ode::getOptionsFromArg(argc, argv, desc);
+
   benchmark::rolling::getParamsFromYAML(benchmark::rolling::getYamlpath().c_str(),
                                         benchmark::ODE);
 

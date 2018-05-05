@@ -153,7 +153,7 @@ int main(int argc, const char* argv[]) {
   benchmark::dart::addDescToOption(desc);
 
   benchmark::anymal::getOptionsFromArg(argc, argv, desc);
-  benchmark::dart::getParamsFromArg(argc, argv, desc);
+  benchmark::dart::getOptionsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "=======================" << std::endl

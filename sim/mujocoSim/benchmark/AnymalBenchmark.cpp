@@ -202,7 +202,7 @@ int main(int argc, const char* argv[]) {
   benchmark::mujoco::addDescToOption(desc);
 
   benchmark::anymal::getOptionsFromArg(argc, argv, desc);
-  benchmark::mujoco::getParamsFromArg(argc, argv, desc);
+  benchmark::mujoco::getOptionsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "=======================" << std::endl

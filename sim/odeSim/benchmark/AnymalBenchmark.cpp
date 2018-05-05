@@ -148,7 +148,7 @@ int main(int argc, const char* argv[]) {
   benchmark::ode::addDescToOption(desc);
 
   benchmark::anymal::getOptionsFromArg(argc, argv, desc);
-  benchmark::ode::getParamsFromArg(argc, argv, desc);
+  benchmark::ode::getOptionsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "=======================" << std::endl

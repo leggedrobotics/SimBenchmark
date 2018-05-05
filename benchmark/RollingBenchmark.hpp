@@ -72,7 +72,9 @@ struct Parameter {
   double initPenetration = 5e-6;
 
   /// note
-  /// (frictional coeff A-B) = (friction coeff of A) x (friction coeff of B)
+  /// 1. (frictional coeff A-B) = (friction coeff of A) x (friction coeff of B)             - Bullet & ODE
+  /// 2. (frictional coeff A-B) = max of (friction coeff of A) and (friction coeff of B)   - Mujoco
+  /// 3. (frictional coeff A-B)                                                             - Rai
 };
 Parameter params;
 
@@ -82,7 +84,7 @@ Parameter params;
  * @param rowNum # of row
  * @return urdf path in string
  */
-std::string getMujocoXMLpath(int rowNum) {
+std::string getMujocoXMLpath() {
 
   std::string xmlPath(__FILE__);
   while (xmlPath.back() != '/')
