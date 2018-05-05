@@ -66,15 +66,34 @@ struct Parameter {
   double g = -9.8;
   double T = 4.0;
   double F = 150;
-  double groundMu = 0.5;
-  double ballMu = 1.0;
-  double boxMu = 0.8;
+
   double initPenetration = 5e-6;
+
+  double btGroundMu = 0.5;
+  double btBallMu = 1.0;
+  double btBoxMu = 0.8;
+
+  double odeGroundMu = 0.5;
+  double odeBallMu = 1.0;
+  double odeBoxMu = 0.8;
+
+  double raiGroundMu = 0.5;
+  double raiBallMu = 1.0;
+  double raiBoxMu = 0.8;
+
+  double dartGroundMu = 0.4;
+  double dartBallMu = 0.8;
+  double dartBoxMu = 0.8;
+
+  double mjcGroundMu = 0.4;
+  double mjcBallMu = 0.8;
+  double mjcBoxMu = 0.8;
 
   /// note
   /// 1. (frictional coeff A-B) = (friction coeff of A) x (friction coeff of B)             - Bullet & ODE
-  /// 2. (frictional coeff A-B) = max of (friction coeff of A) and (friction coeff of B)   - Mujoco
-  /// 3. (frictional coeff A-B)                                                             - Rai
+  /// 2. (frictional coeff A-B) = max of (friction coeff of A) and (friction coeff of B)    - Mujoco
+  /// 3. (frictional coeff A-B) = min of (friction coeff of A) and (friction coeff of B)    - Dart
+  /// 4. (frictional coeff A-B)                                                             - Rai
 };
 Parameter params;
 
@@ -144,7 +163,7 @@ void addDescToOption(po::options_description &desc) {
   desc.add_options()
       ("erp-on", po::value<bool>(), "erp on (true / false)")
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
-      ("force-direction", po::value<std::string>(), "applied force direction (y / xy)")
+      ("force", po::value<std::string>(), "applied force direction (y / xy)")
       ;
 }
 
@@ -182,13 +201,13 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   }
 
   // force direction
-  if(vm.count("force-direction")) {
-    if(vm["force-direction"].as<std::string>().compare("xy") == 0) {
+  if(vm.count("force")) {
+    if(vm["force"].as<std::string>().compare("xy") == 0) {
       options.forceDirection = FORCE_XY;
-    } else if(vm["force-direction"].as<std::string>().compare("y") == 0) {
+    } else if(vm["force"].as<std::string>().compare("y") == 0) {
       options.forceDirection = FORCE_Y;
     } else {
-      RAIFATAL("invalid force-direction (should be xy or y)")
+      RAIFATAL("invalid force input (should be xy or y)")
     }
   }
 
@@ -225,9 +244,6 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   params.g = constant["g"].as<double>();
   params.T = constant["T"].as<double>();
   params.F = constant["F"].as<double>();
-  params.groundMu = constant["mu_ground"].as<double>();
-  params.ballMu = constant["mu_ball"].as<double>();
-  params.boxMu = constant["mu_box"].as<double>();
   params.initPenetration = constant["penentration0"].as<double>();
 
   // solver parameters
@@ -236,18 +252,34 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   switch (simulator) {
     case benchmark::RAI:
       params.erp = solver_params["raiSim"]["erp"].as<double>();
+      params.raiGroundMu = constant["raiSim"]["mu_ground"].as<double>();
+      params.raiBallMu = constant["raiSim"]["mu_ball"].as<double>();
+      params.raiBoxMu = constant["raiSim"]["mu_box"].as<double>();
       break;
     case benchmark::BULLET:
       params.erp = solver_params["bullet"]["erp"].as<double>();
       params.erp2 = solver_params["bullet"]["erp2"].as<double>();
       params.erpFriction = solver_params["bullet"]["erp_friction"].as<double>();
+      params.btGroundMu = constant["bullet"]["mu_ground"].as<double>();
+      params.btBallMu = constant["bullet"]["mu_ball"].as<double>();
+      params.btBoxMu = constant["bullet"]["mu_box"].as<double>();
       break;
     case benchmark::ODE:
       params.erp = solver_params["ode"]["erp"].as<double>();
+      params.odeGroundMu = constant["ode"]["mu_ground"].as<double>();
+      params.odeBallMu = constant["ode"]["mu_ball"].as<double>();
+      params.odeBoxMu = constant["ode"]["mu_box"].as<double>();
       break;
     case benchmark::MUJOCO:
+      params.mjcGroundMu = constant["mujoco"]["mu_ground"].as<double>();
+      params.mjcBallMu = constant["mujoco"]["mu_ball"].as<double>();
+      params.mjcBoxMu = constant["mujoco"]["mu_box"].as<double>();
       break;
     case benchmark::DART:
+      params.dartGroundMu = constant["dart"]["mu_ground"].as<double>();
+      params.dartBallMu = constant["dart"]["mu_ball"].as<double>();
+      params.dartBoxMu = constant["dart"]["mu_box"].as<double>();
+      break;
     default:
       RAIFATAL("invalid simulator value")
   }

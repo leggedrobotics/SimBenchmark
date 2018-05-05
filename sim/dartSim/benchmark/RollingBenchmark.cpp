@@ -42,12 +42,12 @@ void setupSimulation() {
 void setupWorld() {
 
   // add objects
-  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1);
-  checkerboard->setFrictionCoefficient(benchmark::rolling::params.groundMu);
+  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
+  checkerboard->setFrictionCoefficient(benchmark::rolling::params.dartGroundMu);
 
   auto box = sim->addBox(20, 20, 1, 10);
   box->setPosition(0, 0, 0.5 - benchmark::rolling::params.initPenetration);
-  box->setFrictionCoefficient(benchmark::rolling::params.boxMu);
+  box->setFrictionCoefficient(benchmark::rolling::params.dartBoxMu);
   objectList.push_back(box);
 
   for(int i = 0; i < 5; i++) {
@@ -56,7 +56,7 @@ void setupWorld() {
       ball->setPosition(i * 2.0 - 4.0,
                         j * 2.0 - 4.0,
                         1.5 - 3 * benchmark::rolling::params.initPenetration);
-      ball->setFrictionCoefficient(benchmark::rolling::params.ballMu);
+      ball->setFrictionCoefficient(benchmark::rolling::params.dartBallMu);
       objectList.push_back(ball);
     }
   }

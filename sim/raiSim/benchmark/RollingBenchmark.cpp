@@ -43,13 +43,13 @@ void setupWorld() {
   rai_sim::MaterialManager materials;
   materials.setMaterialNames({"ground", "box", "ball"});
   materials.setMaterialPairProp("ground", "ball",
-                                benchmark::rolling::params.groundMu * benchmark::rolling::params.ballMu,
+                                benchmark::rolling::params.raiGroundMu * benchmark::rolling::params.raiBallMu,
                                 0.0, 0.01);
   materials.setMaterialPairProp("ground", "box",
-                                benchmark::rolling::params.groundMu * benchmark::rolling::params.boxMu,
+                                benchmark::rolling::params.raiGroundMu * benchmark::rolling::params.raiBoxMu,
                                 0.0, 0.01);
   materials.setMaterialPairProp("ball", "box",
-                                benchmark::rolling::params.ballMu * benchmark::rolling::params.boxMu,
+                                benchmark::rolling::params.raiBallMu * benchmark::rolling::params.raiBoxMu,
                                 0.0, 0.01);
   sim->updateMaterialProp(materials);
 
