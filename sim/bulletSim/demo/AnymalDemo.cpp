@@ -32,6 +32,7 @@ int main() {
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
   sim.setGravity({0, 0, -9.8});
+  sim.setERP(0.05, 0.01, 0.0);
 
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);

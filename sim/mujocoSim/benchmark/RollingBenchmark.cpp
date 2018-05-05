@@ -4,7 +4,7 @@
 
 #include <mujocoSim/World_RG.hpp>
 
-#include "rolling.hpp"
+#include "RollingBenchmark.hpp"
 
 namespace rb = rolling_benchmark;
 

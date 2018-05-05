@@ -5,7 +5,7 @@
 #ifndef BENCHMARK_THOUSAND_HPP
 #define BENCHMARK_THOUSAND_HPP
 
-#include "benchmark.hpp"
+#include "BenchmarkTest.hpp"
 
 namespace benchmark {
 

@@ -101,19 +101,39 @@ ODE_mins = splitapply(...
     ODE_G);
 
 % plot 
+figure(1)
 plot(RAI_numrows.^2, RAI_mins, 'g', 'DisplayName', 'Rai')
 hold on 
 plot(BT_numrows.^2, BT_mins, 'r', 'DisplayName', 'BtMultibody')
-plot(DART_DAN_BT_numrows.^2, DART_DAN_BT_mins, 'm:', 'DisplayName', 'DartDantzig')
+plot(DART_DAN_BT_numrows.^2, DART_DAN_BT_mins, '-mo', 'DisplayName', 'DartDantzig')
 plot(DART_PGS_BT_numrows.^2, DART_PGS_BT_mins, '-m*', 'DisplayName', 'DartPGS')
-plot(MJC_PGS_numrows.^2, MJC_PGS_mins, 'b:', 'DisplayName', 'MjcPGS')
+plot(MJC_PGS_numrows.^2, MJC_PGS_mins, '-bs', 'DisplayName', 'MjcPGS')
 plot(MJC_CG_numrows.^2, MJC_CG_mins, '-b*', 'DisplayName', 'MjcCG')
 plot(MJC_NEWTON_numrows.^2, MJC_NEWTON_mins, '-bo', 'DisplayName', 'MjcNewton')
 plot(ODE_numrows.^2, ODE_mins, 'y', 'DisplayName', 'OdeStd')
 % plot(DART_DAN_ODE_numrows.^2, DART_DAN_ODE_mins, '-m.') % redundant 
 % plot(DART_PGS_ODE_numrows.^2, DART_PGS_ODE_mins, '-mo') % redundant
-xlabel('number of robots')
+xlabel('number of robots (n)')
 ylabel('50k simulation time (sec)')
 legend('Location', 'eastoutside')
+title('ANYmal PD control test')
 hold off
+
+figure(2)
+plot(RAI_numrows.^2, RAI_mins, 'g', 'DisplayName', 'Rai')
+hold on 
+plot(BT_numrows.^2, BT_mins, 'r', 'DisplayName', 'BtMultibody')
+plot(DART_DAN_BT_numrows.^2, DART_DAN_BT_mins, '-mo', 'DisplayName', 'DartDantzig')
+plot(DART_PGS_BT_numrows.^2, DART_PGS_BT_mins, '-m*', 'DisplayName', 'DartPGS')
+plot(MJC_PGS_numrows.^2, MJC_PGS_mins, '-bs', 'DisplayName', 'MjcPGS')
+plot(MJC_CG_numrows.^2, MJC_CG_mins, '-b*', 'DisplayName', 'MjcCG')
+plot(MJC_NEWTON_numrows.^2, MJC_NEWTON_mins, '-bo', 'DisplayName', 'MjcNewton')
+plot(ODE_numrows.^2, ODE_mins, 'y', 'DisplayName', 'OdeStd')
+% plot(DART_DAN_ODE_numrows.^2, DART_DAN_ODE_mins, '-m.') % redundant 
+% plot(DART_PGS_ODE_numrows.^2, DART_PGS_ODE_mins, '-mo') % redundant
+xlabel('number of robots (log n)')
+ylabel('50k simulation time (log sec)')
+legend('Location', 'eastoutside')
+hold off
+title('ANYmal PD control test (log scale)')
 set(gca, 'YScale', 'log', 'XScale', 'log')

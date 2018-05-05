@@ -17,10 +17,13 @@ namespace benchmark::mujoco {
  * options for Dart simulation
  */
 struct Option {
-  mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS;
-  bool noSlip = false;
+  const benchmark::Simulator simulator = benchmark::MUJOCO;
+  const std::string simName = "MUJOCO";
 
+  mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS;
   std::string solverName = "PGS";
+
+  bool noSlip = false;
 };
 Option options;
 

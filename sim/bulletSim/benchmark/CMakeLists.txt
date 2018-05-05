@@ -3,6 +3,10 @@ include_directories(${CMAKE_SOURCE_DIR}/benchmark)
 add_executable(BtAnymalBenchmark
         AnymalBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/AnymalBenchmark.hpp
-        ${CMAKE_SOURCE_DIR}/benchmark/BtBenchmark.hpp
-        )
+        ${CMAKE_SOURCE_DIR}/benchmark/BtBenchmark.hpp)
 target_link_libraries(BtAnymalBenchmark ${BtSimLink})
+
+add_executable(BtRollingBenchmark
+        RollingBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)
+target_link_libraries(BtRollingBenchmark ${BtSimLink})

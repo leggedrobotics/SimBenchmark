@@ -126,22 +126,22 @@ void simulationLoop() {
              << (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt)
              << " steps "<< time <<"s \n";
 
-    // print to log file
-    benchmark::anymal::printCSV(
-        benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
-        "RAI",
-        "",
-        "",
-        benchmark::anymal::options.numRow,
-        time
-    );
+    if(benchmark::anymal::options.log)
+      benchmark::anymal::printCSV(
+          benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
+          "RAI",
+          "",
+          "",
+          benchmark::anymal::options.numRow,
+          time
+      );
   }
 }
 
 int main(int argc, const char* argv[]) {
 
   benchmark::anymal::addDescToOption(desc);
-  benchmark::anymal::getParamsFromArg(argc, argv, desc);
+  benchmark::anymal::getOptionsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
@@ -160,5 +160,6 @@ int main(int argc, const char* argv[]) {
       std::endl << "=======================" 
   )
 
+  delete sim;
   return 0;
 }

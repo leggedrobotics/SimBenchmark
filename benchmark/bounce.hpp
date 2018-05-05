@@ -5,7 +5,7 @@
 #ifndef BENCHMARK_BOUNCE_HPP
 #define BENCHMARK_BOUNCE_HPP
 
-#include "benchmark.hpp"
+#include "BenchmarkTest.hpp"
 
 namespace benchmark {
 

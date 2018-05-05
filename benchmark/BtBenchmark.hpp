@@ -17,6 +17,9 @@ namespace benchmark::bullet {
  * options for Dart simulation
  */
 struct Option {
+  const benchmark::Simulator simulator = benchmark::BULLET;
+  const std::string simName = "BULLET";
+
   bullet_sim::SolverOption solverOption = bullet_sim::SOLVER_SEQUENTIAL_IMPULSE;
   std::string solverName = "SEQUENCEIMPULSE";
 };

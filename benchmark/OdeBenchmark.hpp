@@ -17,6 +17,9 @@ namespace benchmark::ode {
  * options for Dart simulation
  */
 struct Option {
+  const benchmark::Simulator simulator = benchmark::ODE;
+  const std::string simName = "ODE";
+
   ode_sim::SolverOption solverOption = ode_sim::SOLVER_STANDARD;
   std::string solverName = "STANDARD";
 };

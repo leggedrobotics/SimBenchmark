@@ -3,6 +3,10 @@ include_directories(${CMAKE_SOURCE_DIR}/benchmark)
 add_executable(OdeAnymalBenchmark
         AnymalBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/AnymalBenchmark.hpp
-        ${CMAKE_SOURCE_DIR}/benchmark/OdeBenchmark.hpp
-        )
+        ${CMAKE_SOURCE_DIR}/benchmark/OdeBenchmark.hpp)
 target_link_libraries(OdeAnymalBenchmark ${OdeSimLink})
+
+add_executable(OdeRollingBenchmark
+        RollingBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)
+target_link_libraries(OdeRollingBenchmark ${OdeSimLink})

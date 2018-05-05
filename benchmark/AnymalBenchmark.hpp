@@ -8,6 +8,16 @@
 #include <raiCommon/rai_utils.hpp>
 #include <boost/program_options.hpp>
 
+#include "BenchmarkTest.hpp"
+
+/**
+ * ANYmal test is for testing articulated robot system.
+ * The test focuses on:
+ *
+ * 1. Speed of simulation
+ * 2. Scalability
+ */
+
 namespace po = boost::program_options;
 
 namespace benchmark::anymal {
@@ -15,9 +25,11 @@ namespace benchmark::anymal {
 /**
  * options for ANYmal simulation
  */
-struct Option {
-  bool gui = true;
+struct Option: benchmark::Option {
+  // PD control to stand
   bool feedback = true;
+
+  // # of robots = numRow x numRow
   int numRow = 1;
 };
 Option options;
@@ -69,6 +81,12 @@ std::string getURDFpath() {
   return urdfPath;
 }
 
+/**
+ * get URDF file path of ANYmal for Mujoco
+ *
+ * @param rowNum # of row
+ * @return urdfPath in string
+ */
 std::string getMujocoURDFpath(int rowNum) {
 
   std::string urdfPath(__FILE__);
@@ -79,22 +97,22 @@ std::string getMujocoURDFpath(int rowNum) {
   return urdfPath;
 }
 
+/**
+ * get CSV log file path of test result
+ *
+ * @param feedback
+ * @return log file path in string
+ */
 std::string getLogFilepath(bool feedback) {
-
-  time_t t = time(0);   // get time now
-  struct tm * now = localtime( & t );
-
-  char buffer[80];
-  strftime (buffer,80,"log.csv",now);
 
   std::string logPath(__FILE__);
   while (logPath.back() != '/')
     logPath.erase(logPath.size() - 1, 1);
 
   if(feedback)
-    logPath += "../data/anymal-stand/" + std::string(buffer);
+    logPath += "../data/anymal-stand/log.csv";
   else
-    logPath += "../data/anymal-grounded/" + std::string(buffer);
+    logPath += "../data/anymal-grounded/log.csv";
 
   return logPath;
 }
@@ -105,22 +123,22 @@ std::string getLogFilepath(bool feedback) {
  * @param desc
  */
 void addDescToOption(po::options_description &desc) {
+  benchmark::addDescToOption(desc);
+
   desc.add_options()
-      ("help", "produce help message")
-      ("nogui", "no visualization")
       ("row", po::value<int>(), "the number of rows")
       ("feedback", po::value<bool>(), "feed back control y/n")
       ;
 }
 
 /**
- * get option or parameter from arguments
+ * get options from arguments
  *
  * @param argc
  * @param argv
  * @param desc
  */
-void getParamsFromArg(int argc, const char *argv[], po::options_description &desc) {
+void getOptionsFromArg(int argc, const char **argv, po::options_description &desc) {
 
   po::variables_map vm;
   po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -129,6 +147,11 @@ void getParamsFromArg(int argc, const char *argv[], po::options_description &des
   if(vm.count("help")) {
     std::cout << desc << std::endl;
     exit(0);
+  }
+
+  // log option
+  if(vm.count("log")) {
+    options.log = vm["log"].as<bool>();
   }
 
   // nogui option
@@ -141,7 +164,7 @@ void getParamsFromArg(int argc, const char *argv[], po::options_description &des
     options.numRow = vm["row"].as<int>();
   }
 
-  // feed back erp
+  // feed-back (PD control)
   if(vm.count("feedback")) {
     options.feedback = vm["feedback"].as<bool>();
   }

@@ -46,11 +46,17 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::DartSingleBodyO
   return pos_.e();
 }
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::DartSingleBodyObject::getLinearVelocity() {
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
+  linVelTemp_[0] = bodyPtr_->getParentJoint()->getVelocity(3);
+  linVelTemp_[1] = bodyPtr_->getParentJoint()->getVelocity(4);
+  linVelTemp_[2] = bodyPtr_->getParentJoint()->getVelocity(5);
+  return linVelTemp_.e();
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::DartSingleBodyObject::getAngularVelocity() {
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(nullptr);
+  angVelTemp_[0] = bodyPtr_->getParentJoint()->getVelocity(0);
+  angVelTemp_[1] = bodyPtr_->getParentJoint()->getVelocity(1);
+  angVelTemp_[2] = bodyPtr_->getParentJoint()->getVelocity(2);
+  return angVelTemp_.e();
 }
 
 void dart_sim::object::DartSingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
@@ -108,11 +114,11 @@ void dart_sim::object::DartSingleBodyObject::setVelocity(double dx, double dy, d
 }
 
 void dart_sim::object::DartSingleBodyObject::setExternalForce(Eigen::Vector3d force) {
-  RAIFATAL("not implemented yet")
+  bodyPtr_->setExtForce(force);
 }
 
 void dart_sim::object::DartSingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
-  RAIFATAL("not implemented yet")
+  bodyPtr_->setExtTorque(torque);
 }
 
 void dart_sim::object::DartSingleBodyObject::setRestitutionCoefficient(double restitution) {

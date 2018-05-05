@@ -14,10 +14,13 @@ namespace benchmark::dart {
  * options for Dart simulation
  */
 struct Option {
+  const benchmark::Simulator simulator = benchmark::DART;
+  const std::string simName = "DART";
+
   dart_sim::SolverOption solverOption = dart_sim::SOLVER_LCP_DANTZIG;
-  dart_sim::CollisionDetectorOption detectorOption = dart_sim::COLLISION_DETECTOR_FCL;
+  dart_sim::CollisionDetectorOption detectorOption = dart_sim::COLLISION_DETECTOR_BULLET;
   std::string solverName = "DANTZIG";
-  std::string detectorName = "FCL";
+  std::string detectorName = "BULLET";
 };
 Option options;
 

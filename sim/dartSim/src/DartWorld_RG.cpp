@@ -178,6 +178,7 @@ void DartWorld_RG::loop(double dt, double realTimeFactor) {
 void DartWorld_RG::integrate(double dt) {
   RAIFATAL("use setTimeStep(double dt) + integrate() instead")
 }
+
 void DartWorld_RG::setERP(double erp, double erp2, double frictionErp) {
 
 }

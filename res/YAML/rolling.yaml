@@ -1,13 +1,4 @@
 ---
-# path
-parent_diretory: rolling/
-
-# simulation options
-options:
-  erp_on: True
-  force_direction: xy     # xy / y
-  dt: 0.1
-
 # simulation properties
 sim_properties:
   light_position: [30.0, 0.0, 10.0]
@@ -17,7 +8,9 @@ solver_params:
   raiSim:
     erp: 0.2    # when erp_on = true
   bullet:
-    erp: 0.2    # when erp_on = true
+    erp: 0.2              # when erp_on = true
+    erp2: 0.2             # when erp_on = true
+    erp_friction: 0.2     # when erp_on = true
   ode:
     erp: 0.2    # when erp_on = true
 

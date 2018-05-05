@@ -135,15 +135,15 @@ void simulationLoop() {
              << (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt)
              << " steps "<< time <<"s \n";
 
-    // print to log file
-    benchmark::anymal::printCSV(
-        benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
-        "DART",
-        benchmark::dart::options.solverName,
-        benchmark::dart::options.detectorName,
-        benchmark::anymal::options.numRow,
-        time
-    );
+    if(benchmark::anymal::options.log)
+      benchmark::anymal::printCSV(
+          benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
+          "DART",
+          benchmark::dart::options.solverName,
+          benchmark::dart::options.detectorName,
+          benchmark::anymal::options.numRow,
+          time
+      );
   }
 }
 
@@ -152,7 +152,7 @@ int main(int argc, const char* argv[]) {
   benchmark::anymal::addDescToOption(desc);
   benchmark::dart::addDescToOption(desc);
 
-  benchmark::anymal::getParamsFromArg(argc, argv, desc);
+  benchmark::anymal::getOptionsFromArg(argc, argv, desc);
   benchmark::dart::getParamsFromArg(argc, argv, desc);
 
   RAIINFO(
@@ -175,5 +175,6 @@ int main(int argc, const char* argv[]) {
                 << "======================="
   )
 
+  delete sim;
   return 0;
 }

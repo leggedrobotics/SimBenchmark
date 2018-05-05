@@ -52,7 +52,7 @@ int main() {
   sim.startRecordingVideo("/tmp", "dartAnymal");
   for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
 #else
-    while(sim.visualizerLoop(0.005, 1.0)) {
+  while(sim.visualizerLoop(0.005, 1.0)) {
 #endif
     jointState = anymal->getGeneralizedCoordinate();
     jointVel = anymal->getGeneralizedVelocity();
