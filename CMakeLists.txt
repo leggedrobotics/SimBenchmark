@@ -21,6 +21,7 @@ option(BENCHMARK_BULLET "benchmark Bullet" ON)
 option(BENCHMARK_ODE "benchmark ODE" ON)
 option(BENCHMARK_MUJOCO "benchmark MUJOCO" ON)
 option(BENCHMARK_DART "benchmark DART" ON)
+option(BUILD_DEMO "build demos" ON)
 
 ## =========================== LINK DIRECTORIES ===========================
 link_directories(/usr/local/lib)

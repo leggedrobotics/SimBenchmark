@@ -87,7 +87,7 @@ struct Parameter {
 
   double mjcGroundMu = 0.4;
   double mjcBallMu = 0.8;
-  double mjcBoxMu = 0.8;
+  double mjcBoxMu = 0.4;
 
   /// note
   /// 1. (frictional coeff A-B) = (friction coeff of A) x (friction coeff of B)             - Bullet & ODE

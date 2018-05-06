@@ -69,5 +69,8 @@ set(MjcSimLink
 
 # subdirectory
 add_subdirectory(test)
-add_subdirectory(demo)
 add_subdirectory(benchmark)
+
+if(BUILD_DEMO)
+    add_subdirectory(demo)
+endif(BUILD_DEMO)

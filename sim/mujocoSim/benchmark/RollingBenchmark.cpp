@@ -45,12 +45,12 @@ void setupWorld() {
   // gravity
   sim->setGravity({0, 0, benchmark::rolling::params.g});
 
-//  /// Note. for mujoco (frictional coefficient A-B) = max(coeff of A, coeff of B)
-//  sim->getSingleBodyHandle(0)->setFrictionCoefficient(0.4);
-//  sim->getSingleBodyHandle(1)->setFrictionCoefficient(0.4);
-//  for(int i = 2; i < sim->getNumObject(); i++) {
-//    sim->getSingleBodyHandle(1)->setFrictionCoefficient(0.8);
-//  }
+  /// Note. for mujoco (frictional coefficient A-B) = max(coeff of A, coeff of B)
+  sim->getSingleBodyHandle(0)->setFrictionCoefficient(benchmark::rolling::params.mjcGroundMu);
+  sim->getSingleBodyHandle(1)->setFrictionCoefficient(benchmark::rolling::params.mjcBoxMu);
+  for(int i = 2; i < sim->getNumObject(); i++) {
+    sim->getSingleBodyHandle(1)->setFrictionCoefficient(benchmark::rolling::params.mjcBallMu);
+  }
 
   if(benchmark::rolling::options.gui) {
     sim->setLightPosition((float)benchmark::rolling::params.lightPosition[0],
