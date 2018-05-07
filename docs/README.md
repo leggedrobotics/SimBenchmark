@@ -35,7 +35,6 @@ The test focuses on:
 
 
 
-
 ## ANYmal test
 
 ![anymal-test-image](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/AnymalBenchmark.png)
