@@ -48,8 +48,12 @@ const.mu2 = const.raiSim.mu_box * const.raiSim.mu_ball;
 
 % variables
 curr = data_dir;
-testOptions = strsplit(ls(curr));
-testOptions = testOptions(1:end-1);
+
+dinfo = dir(curr);
+dirflags = [dinfo.isdir] & [~ ismember({dinfo.name}, {'.', '..'})];
+
+testOptions = {dinfo.name};
+testOptions = {testOptions{:, dirflags}};
 
 %% save data to table
 
@@ -77,42 +81,41 @@ T.Properties.VariableNames = entry;
 % testOptions
 for i = 1:length(testOptions)
     
-    % option TODO
-    % erp: 1/0 
+    % erp: 1/0
     % dir: 1/0
     testOption = testOptions{i};
     erp = regexp(testOption, 'erp=([0-9])', 'tokens');
-    erp = str2num(erp{1}{1});    % 0: false / 1: true
-    dir = regexp(testOption, 'dir=([0-9])', 'tokens');
-    dir = str2num(dir{1}{1});    % 0: y     / 1: xy
+    erp = str2num(erp{1}{1});                % 0: false / 1: true
+    direction = regexp(testOption, 'dir=([0-9])', 'tokens');
+    direction = str2num(direction{1}{1});    % 0: y     / 1: xy
     
     optionDir = strcat(data_dir, '/', testOption);
     sims = strsplit(ls(optionDir));
     sims = sims(1:end-1);
     
-    % simulators 
+    % simulators
     % RAI / BULLET / DART / MUJOCO / ODE
-    for j = 1:length(sims) 
+    for j = 1:length(sims)
         sim = sims{j};
         
         simDir = strcat(optionDir, '/', sim);
         solvers = strsplit(ls(simDir));
         solvers = solvers(1:end-1);
         
-        % solvers 
+        % solvers
         % RAI    : RAI
         % BULLET : SEQUENCEIMPULSE, NNCG, ...
         % ODE    : QUICK, STANDARD
         % DART   : DANTZIG, PGS
         % MUJOCO : PGS, CG, NEWTON
         for k = 1:length(solvers)
-        
+            
             solver = solvers{k};
             
             solverDir = strcat(simDir, '/', solver);
             timesteps = strsplit(ls(solverDir));
             timesteps = timesteps(1:end-1);
-
+            
             % timesteps
             % 0.00010, 0.000040 ...
             for l = 1:length(timesteps)
@@ -130,20 +133,20 @@ for i = 1:length(testOptions)
                 
                 opt = struct(...
                     'erp', logical(erp), ...
-                    'dir', logical(dir), ...
+                    'dir', logical(direction), ...
                     'dt', str2double(timestep), ...
                     'sim', sim, ...
                     'solver', solver ...
                     );
-                                
+                
                 errorBox = mean(vel_error(const, opt, velBox, false));
                 errorBall = mean(vel_error(const, opt, velBall, true));
                 
                 data = {...
                     sim, ...
-                    solver, ... 
+                    solver, ...
                     logical(erp), ...
-                    logical(dir), ...
+                    logical(direction), ...
                     str2double(timestep), ...
                     0, ...                 % too much memory consumption!
                     0, ...                 % too much memory consumption!
@@ -169,18 +172,36 @@ writetable(T, 'rolling-log.csv', 'Delimiter', ',', 'QuoteStrings', true)
 
 
 %% error plot
+% plot option
+erpNdirY = plotoption;
+erpNdirY.ODESTANDARD = false;   % ODE-std fails
+
+erpNdirXY = plotoption;
+erpNdirXY.ODESTANDARD = false;  % ODE is pyramid friction cone
+erpNdirXY.ODEQUICK = false;     % ODE is pyramid friction cone
+erpNdirXY.DARTDANTZIG = false;  % DART is pyramid friction cone
+erpNdirXY.DARTPGS = false;      % DART is pyramid friction cone
+
+erpYdirY = plotoption;
+
+erpYdirXY = plotoption;
+erpYdirXY.ODESTANDARD = false;  % ODE is pyramid friction cone
+erpYdirXY.ODEQUICK = false;     % ODE is pyramid friction cone
+erpYdirXY.DARTDANTZIG = false;  % DART is pyramid friction cone
+erpYdirXY.DARTPGS = false;      % DART is pyramid friction cone
+
 % error plot vs dt
 disp('plotting error vs timestep...')
-plot_error_dt(T, const, plotSpec, false, false, '-noerp-y', '(No Erp / Y force)')
-plot_error_dt(T, const, plotSpec, false, true, '-noerp-xy', '(No Erp / XY force)')
-plot_error_dt(T, const, plotSpec, true, false, '-erp-y', '(Erp / Y force)')
-plot_error_dt(T, const, plotSpec, true, true, '-erp-xy', '(Erp / XY force)')
+plot_error_dt(T, const, plotSpec, false, false, '-noerp-y', '(No Erp / Y force)', erpNdirY);
+plot_error_dt(T, const, plotSpec, false, true, '-noerp-xy', '(No Erp / XY force)', erpNdirXY);
+plot_error_dt(T, const, plotSpec, true, false, '-erp-y', '(Erp / Y force)', erpYdirY);
+plot_error_dt(T, const, plotSpec, true, true, '-erp-xy', '(Erp / XY force)', erpYdirXY);
 
 disp('plotting error vs real-time-factor...')
-plot_error_speed(T, const, plotSpec, false, false, '-noerp-y', '(No Erp / Y force)');
-plot_error_speed(T, const, plotSpec, false, true, '-noerp-xy', '(No Erp / XY force)');
-plot_error_speed(T, const, plotSpec, true, false, '-erp-y', '(Erp / Y force)');
-plot_error_speed(T, const, plotSpec, true, true, '-erp-xy', '(Erp / XY force)');
+plot_error_speed(T, const, plotSpec, false, false, '-noerp-y', '(No Erp / Y force)', erpNdirY);
+plot_error_speed(T, const, plotSpec, false, true, '-noerp-xy', '(No Erp / XY force)', erpNdirXY);
+plot_error_speed(T, const, plotSpec, true, false, '-erp-y', '(Erp / Y force)', erpYdirY);
+plot_error_speed(T, const, plotSpec, true, true, '-erp-xy', '(Erp / XY force)', erpYdirXY);
 
 disp('plotting is finished.')
 
@@ -188,7 +209,7 @@ disp('plotting is finished.')
 %% functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function plot_error_dt(dataTable, const, plotSpec, erpYN, dir, fileName, plotTitle)
+function plot_error_dt(dataTable, const, plotSpec, erpYN, dir, fileName, plotTitle, plotOption)
 
 % filter
 dataTable = dataTable(...
@@ -196,10 +217,10 @@ dataTable = dataTable(...
     dataTable.DIRECTION == dir ...
     ,:);
 
-% ball
+% ball + box
 sims = unique(dataTable.SIM);
 
-h = figure('Name','ball error','Position', [0, 0, 800, 600]);
+h = figure('Name','error','Position', [0, 0, 800, 600]);
 hold on
 set(gca, 'YScale', 'log')
 for i = 1:length(sims)
@@ -216,48 +237,10 @@ for i = 1:length(sims)
         % e.g. RAIRAI or BULLETNNCG
         name = strcat(cellstr(sim), cellstr(solver));
         
-        % data
-        data = Tsim(Tsim.SOLVER == categorical(solver), :);
-        data = sortrows(data, 5);
-        
-        % plot
-        plotspec = getfield(plotSpec, char(name));
-        
-        plot(data.TIMESTEP, ...
-        data.BALLERROR, ...
-        plotspec{1}, ...
-        'DisplayName', plotspec{2}, ...
-        'color', plotspec{3})
-    end
-    % end solvers
-end
-% end sims
-hold off
-title(['Ball Velocity Error ', plotTitle])
-xlabel('timestep size')
-ylabel('squared error (log scale)')
-legend('Location', 'eastoutside');
-saveas(h, strcat('plots/ballerror-dt', fileName, '.png'))
-saveas(h, strcat('plots/ballerror-dt', fileName, '.eps'), 'epsc')
-saveas(h, strcat('plots/ballerror-dt', fileName, '.fig'), 'fig')
-
-% box
-h = figure('Name','box error','Position', [0, 0, 800, 600]);
-hold on
-set(gca, 'YScale', 'log')
-for i = 1:length(sims)
-    
-    sim = sims(i);
-    Tsim = dataTable(dataTable.SIM == categorical(sim), :);
-    
-    solvers = unique(Tsim.SOLVER);
-    
-    for j = 1:length(solvers)
-        
-        solver = solvers(j);
-        
-        % e.g. RAIRAI or BULLETNNCG
-        name = strcat(cellstr(sim), cellstr(solver));
+        % check plot option
+        if ~getfield(plotOption, char(name))
+            continue;
+        end
         
         % data
         data = Tsim(Tsim.SOLVER == categorical(solver), :);
@@ -267,26 +250,74 @@ for i = 1:length(sims)
         plotspec = getfield(plotSpec, char(name));
         
         plot(data.TIMESTEP, ...
-        data.BOXERROR, ...
-        plotspec{1}, ...
-        'DisplayName', plotspec{2}, ...
-        'color', plotspec{3})
+            data.BALLERROR + data.BOXERROR, ...
+            plotspec{1}, ...
+            'DisplayName', plotspec{2}, ...
+            'color', plotspec{3})
     end
     % end solvers
 end
 % end sims
 hold off
-title(['Box Velocity Error ', plotTitle])
+title(['Velocity Error ', plotTitle])
 xlabel('timestep size')
 ylabel('squared error (log scale)')
 legend('Location', 'eastoutside');
-saveas(h, strcat('plots/boxerror-dt', fileName, '.png'))
-saveas(h, strcat('plots/boxerror-dt', fileName, '.epsc'), 'epsc')
-saveas(h, strcat('plots/boxerror-dt', fileName, '.fig'), 'fig')
+saveas(h, strcat('plots/error-dt', fileName, '.png'))
+saveas(h, strcat('plots/error-dt', fileName, '.eps'), 'epsc')
+saveas(h, strcat('plots/error-dt', fileName, '.fig'), 'fig')
+% 
+% % box
+% h = figure('Name','box error','Position', [0, 0, 800, 600]);
+% hold on
+% set(gca, 'YScale', 'log')
+% for i = 1:length(sims)
+%     
+%     sim = sims(i);
+%     Tsim = dataTable(dataTable.SIM == categorical(sim), :);
+%     
+%     solvers = unique(Tsim.SOLVER);
+%     
+%     for j = 1:length(solvers)
+%         
+%         solver = solvers(j);
+%         
+%         % e.g. RAIRAI or BULLETNNCG
+%         name = strcat(cellstr(sim), cellstr(solver));
+%         
+%         % check plot option
+%         if ~getfield(plotOption, char(name))
+%             continue;
+%         end
+%         
+%         % data
+%         data = Tsim(Tsim.SOLVER == categorical(solver), :);
+%         data = sortrows(data, 5);
+%         
+%         % plot
+%         plotspec = getfield(plotSpec, char(name));
+%         
+%         plot(data.TIMESTEP, ...
+%             data.BOXERROR + data.BOXERROR, ...
+%             plotspec{1}, ...
+%             'DisplayName', plotspec{2}, ...
+%             'color', plotspec{3})
+%     end
+%     % end solvers
+% end
+% % end sims
+% hold off
+% title(['Box Velocity Error ', plotTitle])
+% xlabel('timestep size')
+% ylabel('squared error (log scale)')
+% legend('Location', 'eastoutside');
+% saveas(h, strcat('plots/boxerror-dt', fileName, '.png'))
+% saveas(h, strcat('plots/boxerror-dt', fileName, '.epsc'), 'epsc')
+% saveas(h, strcat('plots/boxerror-dt', fileName, '.fig'), 'fig')
 
 end
 
-function plot_error_speed(dataTable, const, plotSpec, erpYN, dir, fileName, plotTitle)
+function plot_error_speed(dataTable, const, plotSpec, erpYN, dir, fileName, plotTitle, plotOption)
 
 % filter
 dataTable = dataTable(...
@@ -294,10 +325,10 @@ dataTable = dataTable(...
     dataTable.DIRECTION == dir ...
     ,:);
 
-% ball
+% ball + box
 sims = unique(dataTable.SIM);
 
-h = figure('Name','ball error','Position', [0, 0, 800, 600]);
+h = figure('Name','error','Position', [0, 0, 800, 600]);
 hold on
 set(gca, 'YScale', 'log', 'XScale', 'log')
 for i = 1:length(sims)
@@ -314,6 +345,11 @@ for i = 1:length(sims)
         % e.g. RAIRAI or BULLETNNCG
         name = strcat(cellstr(sim), cellstr(solver));
         
+        % check plot option
+        if ~getfield(plotOption, char(name))
+            continue;
+        end
+        
         % data
         data = Tsim(Tsim.SOLVER == categorical(solver), :);
         data = sortrows(data, 12, 'descend');
@@ -323,7 +359,7 @@ for i = 1:length(sims)
         
         plot(...
             const.T ./ data.TIME, ...
-            data.BALLERROR, ...
+            data.BALLERROR + data.BOXERROR, ...
             plotspec{1}, ...
             'DisplayName', plotspec{2}, ...
             'color', plotspec{3})
@@ -332,57 +368,62 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title(['Ball Velocity Error ', plotTitle])
-xlabel('real time factor')
-ylabel('squared error (log scale)')
+title(['Velocity Error ', plotTitle])
+xlabel(sprintf('real time factor \n FAST →'))
+ylabel(sprintf('squared error (log scale) \n ← ACCURATE'))
 legend('Location', 'eastoutside');
-saveas(h, strcat('plots/ballerror-speed', fileName, '.png'))
-saveas(h, strcat('plots/ballerror-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('plots/ballerror-speed', fileName, '.fig'), 'fig')
+saveas(h, strcat('plots/error-speed', fileName, '.png'))
+saveas(h, strcat('plots/error-speed', fileName, '.eps'), 'epsc')
+saveas(h, strcat('plots/error-speed', fileName, '.fig'), 'fig')
 
 % box
-h = figure('Name','box error','Position', [0, 0, 800, 600]);
-hold on
-set(gca, 'YScale', 'log', 'XScale', 'log')
-for i = 1:length(sims)
-    
-    sim = sims(i);
-    Tsim = dataTable(dataTable.SIM == categorical(sim), :);
-    
-    solvers = unique(Tsim.SOLVER);
-    
-    for j = 1:length(solvers)
-        
-        solver = solvers(j);
-        
-        % e.g. RAIRAI or BULLETNNCG
-        name = strcat(cellstr(sim), cellstr(solver));
-        
-        % data
-        data = Tsim(Tsim.SOLVER == categorical(solver), :);
-        data = sortrows(data, 12, 'descend');
-        
-        % plot
-        plotspec = getfield(plotSpec, char(name));
-        
-        plot(...
-            const.T ./ data.TIME, ...
-            data.BOXERROR, ...
-            plotspec{1}, ...
-            'DisplayName', plotspec{2}, ...
-            'color', plotspec{3})
-    end
-    % end solvers
-end
-% end sims
-hold off
-title(['Box Velocity Error ', plotTitle])
-xlabel('real time factor')
-ylabel('squared error (log scale)')
-legend('Location', 'eastoutside');
-saveas(h, strcat('plots/boxerror-speed', fileName, '.png'))
-saveas(h, strcat('plots/boxerror-speed', fileName, '.epg'), 'epsc')
-saveas(h, strcat('plots/boxerror-speed', fileName, '.fig'), 'fig')
+% h = figure('Name','box error','Position', [0, 0, 800, 600]);
+% hold on
+% set(gca, 'YScale', 'log', 'XScale', 'log')
+% for i = 1:length(sims)
+%     
+%     sim = sims(i);
+%     Tsim = dataTable(dataTable.SIM == categorical(sim), :);
+%     
+%     solvers = unique(Tsim.SOLVER);
+%     
+%     for j = 1:length(solvers)
+%         
+%         solver = solvers(j);
+%         
+%         % e.g. RAIRAI or BULLETNNCG
+%         name = strcat(cellstr(sim), cellstr(solver));
+%         
+%         % check plot option
+%         if ~getfield(plotOption, char(name))
+%             continue;
+%         end
+%         
+%         % data
+%         data = Tsim(Tsim.SOLVER == categorical(solver), :);
+%         data = sortrows(data, 12, 'descend');
+%         
+%         % plot
+%         plotspec = getfield(plotSpec, char(name));
+%         
+%         plot(...
+%             const.T ./ data.TIME, ...
+%             data.BOXERROR, ...
+%             plotspec{1}, ...
+%             'DisplayName', plotspec{2}, ...
+%             'color', plotspec{3})
+%     end
+%     % end solvers
+% end
+% % end sims
+% hold off
+% title(['Box Velocity Error ', plotTitle])
+% xlabel(sprintf('real time factor \n FAST →'))
+% ylabel(sprintf('squared error (log scale) \n ← ACCURATE'))
+% legend('Location', 'eastoutside');
+% saveas(h, strcat('plots/boxerror-speed', fileName, '.png'))
+% saveas(h, strcat('plots/boxerror-speed', fileName, '.epg'), 'epsc')
+% saveas(h, strcat('plots/boxerror-speed', fileName, '.fig'), 'fig')
 
 end
 
@@ -424,20 +465,20 @@ end
 if eq(size(v), size(data))
     error = sum((v - data).^2, 2);
     
-%     error plots
-%     if save_subplots
-%         h = figure('Name','ball errors');
-%         set(h, 'Visible', 'off');
-%         plot(error)
-%         hold on
-%         plot((v(:,1) - data(:,1)).^2)
-%         plot((v(:,2) - data(:,2)).^2)
-%         plot((v(:,3) - data(:,3)).^2)
-%         hold off
-%         title(strcat(sim, ' ', solver, ' ', dtstr))
-%         legend('sum', 'x error sq', 'y error sq', 'z error sq')
-%         saveas(h, strcat(plot_path, sim, '_', solver, '_', dtstr, "_velballerror.png"))
-%     end
+    %     error plots
+    %     if save_subplots
+    %         h = figure('Name','ball errors');
+    %         set(h, 'Visible', 'off');
+    %         plot(error)
+    %         hold on
+    %         plot((v(:,1) - data(:,1)).^2)
+    %         plot((v(:,2) - data(:,2)).^2)
+    %         plot((v(:,3) - data(:,3)).^2)
+    %         hold off
+    %         title(strcat(sim, ' ', solver, ' ', dtstr))
+    %         legend('sum', 'x error sq', 'y error sq', 'z error sq')
+    %         saveas(h, strcat(plot_path, sim, '_', solver, '_', dtstr, "_velballerror.png"))
+    %     end
 elseif abs(size(v, 1) - size(data, 1))
     minidx = min(size(v, 1), size(data, 1));
     error = sum((v(1:minidx, :) - data(1:minidx, :)).^2, 2);

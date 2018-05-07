@@ -29,7 +29,7 @@ struct Option {
   bool gui = true;
 
   // print log on/off
-  bool log = true;
+  bool log = false;
 };
 
 void addDescToOption(po::options_description &desc) {

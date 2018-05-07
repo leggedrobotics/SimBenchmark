@@ -142,7 +142,7 @@ plot(ODE_numrows.^2, ODE_mins, ...
 % plot(DART_DAN_ODE_numrows.^2, DART_DAN_ODE_mins, '-m.') % redundant
 % plot(DART_PGS_ODE_numrows.^2, DART_PGS_ODE_mins, '-mo') % redundant
 xlabel('number of robots (n)')
-ylabel('50k simulation time (sec)')
+ylabel(sprintf('50k simulation time (sec) \n FAST ←'))
 legend('Location', 'eastoutside')
 title('ANYmal PD control test')
 hold off
@@ -188,7 +188,7 @@ plot(ODE_numrows.^2, ODE_mins, ...
 % plot(DART_DAN_ODE_numrows.^2, DART_DAN_ODE_mins, '-m.') % redundant
 % plot(DART_PGS_ODE_numrows.^2, DART_PGS_ODE_mins, '-mo') % redundant
 xlabel('number of robots (log n)')
-ylabel('50k simulation time (log sec)')
+ylabel(sprintf('50k simulation time (log sec) \n FAST ←'))
 legend('Location', 'eastoutside')
 hold off
 title('ANYmal PD control test (log scale)')
@@ -228,21 +228,17 @@ T2 = sortrows(T2, 2, 'descend');
 T2.sim = reordercats(T2.sim,cellstr(T2.sim));
 
 figure('Name', 'speed', 'Position', [0, 0, 800, 600])
-bar(T2.sim(1), T2.speed(1), 'FaceColor', plotspec.RAIRAI{3})    % rai
+bar(T2.sim(1), T2.speed(1), 'FaceColor', plotspec.RAIRAI{3})            
 hold on
-bar(T2.sim(2), T2.speed(2), 'FaceColor', plotspec.BULLETMULTIBODY{3})   % bt
-bar(T2.sim(3), T2.speed(3), 'FaceColor', plotspec.DARTDANTZIG{3})       % dart-dantzig
-bar(T2.sim(4), T2.speed(4), 'FaceColor', plotspec.DARTPGS{3})           % dart-pgs
-bar(T2.sim(5), T2.speed(5), 'FaceColor', plotspec.MUJOCOPGS{3})         % mjc-pgs
-bar(T2.sim(6), T2.speed(6), 'FaceColor', plotspec.MUJOCOCG{3})          % mjc-cg
-bar(T2.sim(7), T2.speed(7), 'FaceColor', plotspec.MUJOCONEWTON{3})      % mjc-newton
-bar(T2.sim(8), T2.speed(8), 'FaceColor', plotspec.ODESTANDARD{3})       % ode
+bar(T2.sim(2), T2.speed(2), 'FaceColor', plotspec.MUJOCOPGS{3})         
+bar(T2.sim(3), T2.speed(3), 'FaceColor', plotspec.MUJOCOCG{3})          
+bar(T2.sim(4), T2.speed(4), 'FaceColor', plotspec.MUJOCONEWTON{3})      
+bar(T2.sim(5), T2.speed(5), 'FaceColor', plotspec.BULLETMULTIBODY{3})   
+bar(T2.sim(6), T2.speed(6), 'FaceColor', plotspec.DARTDANTZIG{3})       
+bar(T2.sim(7), T2.speed(7), 'FaceColor', plotspec.DARTPGS{3})      
+bar(T2.sim(8), T2.speed(8), 'FaceColor', plotspec.ODESTANDARD{3})  
 hold off
 title('ANYmal PD control test (1 robot)')
-saveas(gcf,'plots/samplebar.eps','epsc')
-saveas(gcf,'plots/samplebar.fig','fig')
-saveas(gcf,'plots/samplebar.png')
-
 % numbers on bars
 text(1:length(T2.speed), ...
     T2.speed, ...
@@ -250,5 +246,9 @@ text(1:length(T2.speed), ...
     'vert', 'bottom', ...
     'horiz','center', ...
     'FontWeight','bold');
-ylabel('timestep per second (kHz)')
+ylabel(sprintf('timestep per second (kHz) \n FAST →'))
 ylim([0, 110])
+
+saveas(gcf,'plots/samplebar.eps','epsc')
+saveas(gcf,'plots/samplebar.fig','fig')
+saveas(gcf,'plots/samplebar.png')
