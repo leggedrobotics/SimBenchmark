@@ -18,6 +18,8 @@
  * 1. Frictional cone (diagonal, elliptic)
  * 2. The accuracy of frictional contact simulation
  * 3. The violation of hard-contact constraint (penetration)
+ *
+ * Please read benchmark/README.md for more details
  */
 
 namespace po = boost::program_options;
@@ -123,7 +125,7 @@ std::string getYamlpath() {
   std::string yamlPath(__FILE__);
   while (yamlPath.back() != '/')
     yamlPath.erase(yamlPath.size() - 1, 1);
-  yamlPath += "../res/YAML/rolling.yaml";
+  yamlPath += "./yaml/rolling.yaml";
 
   return yamlPath;
 }

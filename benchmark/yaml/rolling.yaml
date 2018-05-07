@@ -1,0 +1,46 @@
+---
+# simulation properties
+sim_properties:
+  light_position: [30.0, 0.0, 10.0]
+
+# solver parameters
+solver_params:
+  raiSim:
+    erp: 0.2    # when erp_on = true
+  bullet:
+    erp: 0.2              # when erp_on = true
+    erp2: 0.2             # when erp_on = true
+    erp_friction: 0.2     # when erp_on = true
+  ode:
+    erp: 0.2    # when erp_on = true
+
+# simulation constants
+constant:
+  m: 1
+  n: 25
+  M: 10
+  g: -9.8
+  T: 4.0
+  F: 150
+  penentration0: 1e-5   # initial penetration
+  raiSim:
+    mu_ground: 0.5
+    mu_ball: 1.0
+    mu_box: 0.8
+  bullet:
+    mu_ground: 0.5
+    mu_ball: 1.0
+    mu_box: 0.8
+  ode:
+    mu_ground: 0.5
+    mu_ball: 1.0
+    mu_box: 0.8
+  dart:
+    mu_ground: 0.4
+    mu_ball: 0.8
+    mu_box: 0.8
+  mujoco:
+    mu_ground: 0.4
+    mu_ball: 0.4
+    mu_box: 0.8
+...

@@ -1,5 +1,16 @@
 # Benchmark test results 
 
+## Rolling test 
+
+![rolling-test-image](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/RollingBenchmark.png)
+
+Rolling test is for testing frictional contact behavior. The error is measured by comparing the simulation with analytical solution.
+The test focuses on:
+
+1. Frictional cone (diagonal, elliptic)
+2. The accuracy of frictional contact simulation
+3. The violation of hard-contact constraint (penetration)
+
 ## ANYmal test
 
 ![anymal-test-image](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/AnymalBenchmark.png)

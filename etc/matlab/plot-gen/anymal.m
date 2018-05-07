@@ -114,7 +114,7 @@ plot(DART_PGS_BT_numrows.^2, DART_PGS_BT_mins, '-m*', 'DisplayName', 'DartPGS')
 plot(MJC_PGS_numrows.^2, MJC_PGS_mins, '-bs', 'DisplayName', 'MjcPGS')
 plot(MJC_CG_numrows.^2, MJC_CG_mins, '-b*', 'DisplayName', 'MjcCG')
 plot(MJC_NEWTON_numrows.^2, MJC_NEWTON_mins, '-bo', 'DisplayName', 'MjcNewton')
-plot(ODE_numrows.^2, ODE_mins, 'y', 'DisplayName', 'OdeStd')
+plot(ODE_numrows.^2, ODE_mins, 'c', 'DisplayName', 'OdeStd')
 % plot(DART_DAN_ODE_numrows.^2, DART_DAN_ODE_mins, '-m.') % redundant 
 % plot(DART_PGS_ODE_numrows.^2, DART_PGS_ODE_mins, '-mo') % redundant
 xlabel('number of robots (n)')
@@ -133,7 +133,7 @@ plot(DART_PGS_BT_numrows.^2, DART_PGS_BT_mins, '-m*', 'DisplayName', 'DartPGS')
 plot(MJC_PGS_numrows.^2, MJC_PGS_mins, '-bs', 'DisplayName', 'MjcPGS')
 plot(MJC_CG_numrows.^2, MJC_CG_mins, '-b*', 'DisplayName', 'MjcCG')
 plot(MJC_NEWTON_numrows.^2, MJC_NEWTON_mins, '-bo', 'DisplayName', 'MjcNewton')
-plot(ODE_numrows.^2, ODE_mins, 'y', 'DisplayName', 'OdeStd')
+plot(ODE_numrows.^2, ODE_mins, 'c', 'DisplayName', 'OdeStd')
 % plot(DART_DAN_ODE_numrows.^2, DART_DAN_ODE_mins, '-m.') % redundant 
 % plot(DART_PGS_ODE_numrows.^2, DART_PGS_ODE_mins, '-mo') % redundant
 xlabel('number of robots (log n)')
@@ -182,7 +182,7 @@ bar(T2.sim(4), T2.speed(4), 'm')    % dart-pgs
 bar(T2.sim(5), T2.speed(5), 'b')    % mjc-pgs
 bar(T2.sim(6), T2.speed(6), 'b')    % mjc-cg
 bar(T2.sim(7), T2.speed(7), 'b')    % mjc-newton
-bar(T2.sim(8), T2.speed(8), 'y')    % ode
+bar(T2.sim(8), T2.speed(8), 'c')    % ode
 hold off
 title('ANYmal PD control test (1 robot)')
 
