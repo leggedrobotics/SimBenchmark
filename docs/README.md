@@ -10,6 +10,31 @@ The test focuses on:
 1. Frictional cone (diagonal, elliptic)
 2. The accuracy of frictional contact simulation
 3. The violation of hard-contact constraint (penetration)
+4. The effect of ERP (error-correcting)
+
+### Force along XY-direction 
+
+#### With ERP
+
+![error-realtimefactor-image-noerp-xy](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/rolling/error-speed-noerp-xy.png)
+
+#### Without ERP
+
+![error-realtimefactor-image-noerp-xy](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/rolling/error-speed-erp-xy.png)
+
+
+### Force along Y-direction 
+
+#### With ERP
+
+![error-realtimefactor-image-noerp-xy](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/rolling/error-speed-noerp-y.png)
+
+#### Without ERP
+
+![error-realtimefactor-image-noerp-xy](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/rolling/error-speed-erp-y.png)
+
+
+
 
 ## ANYmal test
 
@@ -24,10 +49,10 @@ The test focuses on:
 
 The test result is as the following plots.
 
-#### Speed of 1 robot simulation 
+### Speed of 1 robot simulation 
 ![anymal-test-image](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/anymal-stand/samplebar.png)
 
-#### Time for 50k iteration 
+### Time for 50k iteration 
 ![anymal-test-image](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/anymal-stand/sampleplot.png)
 
 ![anymal-test-image](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/anymal-stand/sampleplot-log.png)
