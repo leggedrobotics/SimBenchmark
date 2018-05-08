@@ -40,13 +40,8 @@ int main() {
   anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
-  // set color
-  for(int i = 0; i < anymal.visual().size(); i++) {
-    anymal.visual()[i]->setColor({0, 1, 0});
-  }
 
   const double kp = 40.0, kd = 1.0;
-
 #if defined(SIM_TIME_MODE)
   StopWatch watch;
   watch.start();

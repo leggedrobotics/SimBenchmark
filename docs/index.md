@@ -18,7 +18,7 @@ The list of the simulators is as follows:
 - Bouncing test
 - Thousand balls test
 - Tower test
-- [ANYmal PD control test](rolling/anymal.html)
+- [ANYmal PD control test](anymal/anymal.html)
 - ANYmal zero gravity test
 - ANYmal free drop test
 

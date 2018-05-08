@@ -18,7 +18,6 @@ int main() {
 
   /// NOTE erp should be set to 0.2 for articulated system simulation on ODE
   sim.setERP(0.2, 0.2, 0.2);
-//  sim.setGravity({0, 0, 0});
 
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
   auto anymal = sim.addArticulatedSystem(urdfPath);
@@ -35,7 +34,7 @@ int main() {
 
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
-  const double kp = 100.0, kd = 1.0;
+  const double kp = 40.0, kd = 1.0;
 
   jointNominalConfig << 0, 0, 0.54,
       1.0, 0.0, 0.0, 0.0,

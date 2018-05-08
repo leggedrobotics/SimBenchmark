@@ -19,14 +19,27 @@ The test focuses on:
 - 25 number of 1 kg balls on the box
 - 150 N force applied to box in the xy direction  
 
-## Tested solvers
+## Tested solver list
 
 - Rai 
     - Bisection solver (Rai solver)
 - Bullet
-    - 
+    - Sequence impulse 
+    - NNCG
+    - MLCP Dantzig
+    - MLCP PGS
+- ODE
+    - Standard
+    - Quick 
+- MuJoCo
+    - PGS
+    - CG
+    - Newton 
+- Dart
+    - Dantzig
+    - PGS
 
-## Result
+## Results
 
 ![rolling-test-error-plot](../img/error-speed-noerp-xy.png)
 **Note. the pushing force resulted in no motion in ODE and Dart.**
