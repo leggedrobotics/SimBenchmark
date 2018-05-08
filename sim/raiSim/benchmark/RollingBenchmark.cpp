@@ -54,7 +54,7 @@ void setupWorld() {
   sim->updateMaterialProp(materials);
 
   // add objects
-  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1);
+  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, 1, -1, rai_sim::GRID);
   checkerboard->setMaterial(sim->getMaterialKey("ground"));
 
   auto box = sim->addBox(20, 20, 1, 10);
@@ -99,6 +99,9 @@ void simulationLoop() {
 
   if(benchmark::rolling::options.gui) {
     // gui
+    if(benchmark::rolling::options.saveVideo)
+      sim->startRecordingVideo("/tmp", "rai-rolling");
+
     for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt) &&
         sim->visualizerLoop(benchmark::rolling::options.dt); i++) {
 
@@ -115,6 +118,9 @@ void simulationLoop() {
 
       sim->integrate(benchmark::rolling::options.dt);
     }
+
+    if(benchmark::rolling::options.saveVideo)
+      sim->stopRecordingVideo();
   }
   else {
     // no gui
