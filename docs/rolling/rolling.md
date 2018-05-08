@@ -1,6 +1,6 @@
 # Rolling test 
 
-![rolling-test-image](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/RollingBenchmark.png)
+![rolling-test-image](../img/RollingBenchmark.png)
 
 Rolling test is for testing frictional contact behavior. The error is measured by comparing the simulation with analytical solution.
 The test focuses on:
@@ -12,16 +12,29 @@ The test focuses on:
 
 ## Test scenario 
 
+![rolling-test-scenario-image](../img/ballOnBox.png)
+
 - static ground
 - 10 kg box on the ground
 - 25 number of 1 kg balls on the box
 - 150 N force applied to box in the xy direction  
 
+## Tested solvers
+
+- Rai 
+    - Bisection solver (Rai solver)
+- Bullet
+    - 
+
 ## Result
 
-![rolling-test-error-plot](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/rolling/error-speed-noerp-xy.png)
+![rolling-test-error-plot](../img/error-speed-noerp-xy.png)
+**Note. the pushing force resulted in no motion in ODE and Dart.**
+**Note. the ODE standard solver 
 
-![rolling-test-speed-bar](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/rolling/rollingbar.png)
+
+![rolling-test-speed-bar](../img/rollingbar.png)
+
 
 
 <!---
