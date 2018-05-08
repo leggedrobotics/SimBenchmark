@@ -84,6 +84,9 @@ void simulationLoop() {
 
   if(benchmark::rolling::options.gui) {
     // gui
+    if(benchmark::rolling::options.saveVideo)
+      sim->startRecordingVideo("/tmp", "ode-rolling");
+
     for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt) &&
         sim->visualizerLoop(benchmark::rolling::options.dt); i++) {
 
@@ -100,6 +103,9 @@ void simulationLoop() {
 
       sim->integrate(benchmark::rolling::options.dt);
     }
+
+    if(benchmark::rolling::options.saveVideo)
+      sim->stopRecordingVideo();
   }
   else {
     // no gui

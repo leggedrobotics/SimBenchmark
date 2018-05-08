@@ -19,12 +19,12 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#157878">
-    <link rel="stylesheet" href="/assets/css/style.css?v=40ccb2e26afb1ffe96a7ef87ab9240ef9fc3d2cf">
+    <link rel="stylesheet" href="/assets/css/style.css?v=0650ff5d54b98884657c4eacee2cf990483d1b77">
 </head>
 <body>
 <section class="page-header">
     <h1 class="project-name">
-        <a href="../index.html" style="color:white; text-decoration:none">
+        <a href="https://eastskykang.github.io/simbench" style="color:white; text-decoration:none">
             SIMBENCH
         </a>
     </h1>
@@ -41,7 +41,13 @@
 <section class="main-content">
     <h1 id="rolling-test">Rolling test</h1>
 
-<p><img src="/img/RollingBenchmark.png" alt="rolling-test-image" /></p>
+<!---
+![rolling-test-image](/img/RollingBenchmark.png)
+--->
+
+<div style="position:relative;padding-top:75%;">
+  <iframe src="https://www.youtube.com/embed/5wcjoc7NRmk?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+</div>
 
 <p>Rolling test is for testing frictional contact behavior. The error is measured by comparing the simulation with analytical solution.
 The test focuses on:</p>
@@ -55,13 +61,20 @@ The test focuses on:</p>
 
 <h2 id="test-scenario">Test scenario</h2>
 
-<p><img src="/img/ballOnBox.png" alt="rolling-test-scenario-image" /></p>
+<p><img src="/img/ballOnBox.png" alt="rolling-test-speed-bar" /></p>
 
 <ul>
   <li>static ground</li>
   <li>10 kg box on the ground</li>
   <li>25 number of 1 kg balls on the box</li>
+  <li>the friction coefficient
+    <ul>
+      <li>0.8 for ball-box pair</li>
+      <li>0.4 for box-ground pari</li>
+    </ul>
+  </li>
   <li>150 N force applied to box in the xy direction</li>
+  <li>no error correcting (ERP)</li>
 </ul>
 
 <h2 id="tested-solver-list">Tested solver list</h2>
@@ -82,7 +95,6 @@ The test focuses on:</p>
   </li>
   <li>ODE
     <ul>
-      <li>Standard</li>
       <li>Quick</li>
     </ul>
   </li>
@@ -101,11 +113,31 @@ The test focuses on:</p>
   </li>
 </ul>
 
+<p>Note that ODE standard solver fails without ERP, the box goes into the ground as <a href="https://youtu.be/ifO2gtINIzU">this video</a>.</p>
+
 <h2 id="results">Results</h2>
 
-<p><img src="/img/error-speed-noerp-xy.png" alt="rolling-test-error-plot" />
-<strong>Note. the pushing force resulted in no motion in ODE and Dart.</strong>
-**Note. the ODE standard solver</p>
+<p><img src="/img/error-speed-noerp-xy.png" alt="rolling-test-error-plot" /></p>
+
+<p>The pushing force resulted in no motion in ODE and Dart as the following video.</p>
+
+<div style="position:relative;padding-top:75%;">
+  <iframe src="https://www.youtube.com/embed/Jrhxo_yocVE?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+</div>
+
+<p>However as the force is applied to y direction, the objects move. This is due to the pyramid shaped friction cone.</p>
+
+<div style="position:relative;padding-top:75%;">
+  <iframe src="https://www.youtube.com/embed/0nW6O5q8Z0Q?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+</div>
+
+<p>The objects oscillates significantly in MuJoCo as the time step size increases. It leads to inaccurate solution.</p>
+
+<div style="position:relative;padding-top:75%;">
+  <iframe src="https://www.youtube.com/embed/OLvkfdO9SzA?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+</div>
+
+<p>Besides, Bullet and Rai are stable, accurate and fast as the following figure.</p>
 
 <p><img src="/img/rollingbar.png" alt="rolling-test-speed-bar" /></p>
 

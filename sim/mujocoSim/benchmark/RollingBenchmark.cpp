@@ -75,6 +75,9 @@ void simulationLoop() {
 
   if(benchmark::rolling::options.gui) {
     // gui
+    if(benchmark::rolling::options.saveVideo)
+      sim->startRecordingVideo("/tmp", "mujoco-rolling");
+
     for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt) &&
         sim->visualizerLoop(benchmark::rolling::options.dt); i++) {
 
@@ -91,6 +94,10 @@ void simulationLoop() {
 
       sim->integrate();
     }
+
+    if(benchmark::rolling::options.saveVideo)
+      sim->stopRecordingVideo();
+
   }
   else {
     // no gui
