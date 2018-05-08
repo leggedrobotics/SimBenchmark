@@ -28,6 +28,9 @@ struct Option {
   // gui on/off
   bool gui = true;
 
+  // save video
+  bool saveVideo = false;
+
   // print log on/off
   bool log = false;
 };
@@ -36,7 +39,8 @@ void addDescToOption(po::options_description &desc) {
   desc.add_options()
       ("help", "produce help message")
       ("nogui", "no visualization")
-      ("log", po::value<bool>(), "create log files")
+      ("log", "create log files")
+      ("video", "save a video file (only available when gui is on)")
       ;
 }
 

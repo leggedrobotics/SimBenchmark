@@ -153,12 +153,18 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
 
   // log option
   if(vm.count("log")) {
-    options.log = vm["log"].as<bool>();
+    options.log = true;
   }
 
   // nogui option
   if(vm.count("nogui")) {
     options.gui = false;
+  }
+
+  // save video
+  if(vm.count("video")) {
+    RAIFATAL_IF(!options.gui, "GUI should be on to save a video")
+    options.saveVideo = true;
   }
 
   // the number of row

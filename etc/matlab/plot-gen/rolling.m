@@ -18,23 +18,7 @@ yaml_path = '../../../benchmark/yaml/rolling.yaml';
 %% options
 save_subplots = false;
 
-% always plot raisim
-plot_options = struct(...
-    'plot_bullet_seqImp', true, ...
-    'plot_bullet_nncg', true, ...
-    'plot_bullet_pgs', true, ...
-    'plot_bullet_dantzig', true, ...
-    'plot_bullet_lemke', false, ...
-    'plot_ode_std', true, ...
-    'plot_ode_quick', true, ...
-    'plot_mujoco_pgs', true, ...
-    'plot_mujoco_cg', true, ...
-    'plot_mujoco_newton', true ...
-    );
-
 disp('===================================================================')
-disp('plot sims: ')
-[sims, solvers] = print_solvers(plot_options);
 disp('data path: ')
 fprintf('\t%s\n', data_dir)
 disp('===================================================================')
@@ -177,18 +161,18 @@ erpNdirY = plotoption;
 erpNdirY.ODESTANDARD = false;   % ODE-std fails
 
 erpNdirXY = plotoption;
-erpNdirXY.ODESTANDARD = false;  % ODE is pyramid friction cone
-erpNdirXY.ODEQUICK = false;     % ODE is pyramid friction cone
-erpNdirXY.DARTDANTZIG = false;  % DART is pyramid friction cone
-erpNdirXY.DARTPGS = false;      % DART is pyramid friction cone
+erpNdirXY.ODESTANDARD = false;  % ODE is pyramid friction cone (and simulation fails)
+% erpNdirXY.ODEQUICK = false;     % ODE is pyramid friction cone
+% erpNdirXY.DARTDANTZIG = false;  % DART is pyramid friction cone
+% erpNdirXY.DARTPGS = false;      % DART is pyramid friction cone
 
 erpYdirY = plotoption;
 
 erpYdirXY = plotoption;
-erpYdirXY.ODESTANDARD = false;  % ODE is pyramid friction cone
-erpYdirXY.ODEQUICK = false;     % ODE is pyramid friction cone
-erpYdirXY.DARTDANTZIG = false;  % DART is pyramid friction cone
-erpYdirXY.DARTPGS = false;      % DART is pyramid friction cone
+erpYdirXY.ODESTANDARD = false;  % ODE is pyramid friction cone (and simulation fails)
+% erpYdirXY.ODEQUICK = false;     % ODE is pyramid friction cone
+% erpYdirXY.DARTDANTZIG = false;  % DART is pyramid friction cone
+% erpYdirXY.DARTPGS = false;      % DART is pyramid friction cone
 
 % error plot vs dt
 disp('plotting error vs timestep...')
@@ -203,7 +187,45 @@ plot_error_speed(T, const, plotSpec, false, true, '-noerp-xy', '(No Erp / XY for
 plot_error_speed(T, const, plotSpec, true, false, '-erp-y', '(Erp / Y force)', erpYdirY);
 plot_error_speed(T, const, plotSpec, true, true, '-erp-xy', '(Erp / XY force)', erpYdirXY);
 
-disp('plotting is finished.')
+%% bar plot (for min dt)
+T2 = T(T.ERP == false & T.DIRECTION == true, :);
+dt = min(T2.TIMESTEP);
+
+simTime = const.T;
+numIter = simTime / dt;
+
+% filtering
+T2 = T2(T2.TIMESTEP == dt, :);
+T2 = sortrows(T2, 12);
+
+speed = numIter ./ T2.TIME ./ 1000;
+
+disp('plotting bar graph')
+h = figure('Name', 'speed', 'Position', [0, 0, 800, 600])
+hold on
+for i = 1:size(T2, 1)
+    data = T2(i, :);
+    
+    spec = getfield(plotSpec, char(strcat(data.SIM, data.SOLVER)));
+    
+    bar(categorical(cellstr(spec{2})), ...
+        speed(i), ...
+        'FaceColor', spec{3})
+end
+hold off
+title(sprintf('Rolling test speed (timestep = %f)', dt))
+% numbers on bars
+text(1:length(speed), ...
+    speed, ...
+    num2str(speed, '%0.2f'),...
+    'vert', 'bottom', ...
+    'horiz','center', ...
+    'FontWeight','bold');
+ylabel(sprintf('timestep per second (kHz) \n FAST →'))
+ylim([0, 16])
+saveas(h, strcat('plots/rollingbar.png'))
+saveas(h, strcat('plots/rollingbar.eps'), 'epsc')
+saveas(h, strcat('plots/rollingbar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -330,7 +352,7 @@ sims = unique(dataTable.SIM);
 
 h = figure('Name','error','Position', [0, 0, 800, 600]);
 hold on
-set(gca, 'YScale', 'log', 'XScale', 'log')
+set(gca, 'YScale', 'log', 'XScale', 'log', 'Ydir', 'reverse')
 for i = 1:length(sims)
     
     sim = sims(i);
@@ -370,7 +392,7 @@ end
 hold off
 title(['Velocity Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
-ylabel(sprintf('squared error (log scale) \n ← ACCURATE'))
+ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
 legend('Location', 'eastoutside');
 saveas(h, strcat('plots/error-speed', fileName, '.png'))
 saveas(h, strcat('plots/error-speed', fileName, '.eps'), 'epsc')
@@ -510,91 +532,4 @@ data_path = strcat(dirPath, '/vartimer.rlog');
 string = fileread(data_path);
 time = regexp(string, 'min: (\d+\.?\d*)', 'tokens');
 time = str2double(time{1}{1});
-end
-
-function [sims, solvers] = print_solvers(options)
-
-sims = {};
-solvers = {};
-
-fprintf('\t-rai\n') % always
-sims{end+1} = 'rai';
-solvers{end+1} = '';
-
-% bullet
-if options.plot_bullet_seqImp ...
-        || options.plot_bullet_nncg ...
-        || options.plot_bullet_pgs ...
-        || options.plot_bullet_dantzig ...
-        || options.plot_bullet_lemke
-    
-    fprintf('\t-bullet\n')
-    
-    if options.plot_bullet_seqImp
-        fprintf('\t\t-seqImp\n')
-        sims{end+1} = 'bullet';
-        solvers{end+1} = 'seqImp';
-    end
-    if options.plot_bullet_nncg
-        fprintf('\t\t-nncg\n')
-        sims{end+1} = 'bullet';
-        solvers{end+1} = 'nncg';
-    end
-    if options.plot_bullet_pgs
-        fprintf('\t\t-pgs\n')
-        sims{end+1} = 'bullet';
-        solvers{end+1} = 'pgs';
-    end
-    if options.plot_bullet_dantzig
-        fprintf('\t\t-dantzig\n')
-        sims{end+1} = 'bullet';
-        solvers{end+1} = 'dantzig';
-    end
-    if options.plot_bullet_lemke
-        fprintf('\t\t-lemke\n')
-        sims{end+1} = 'bullet';
-        solvers{end+1} = 'lemke';
-    end
-end
-
-% ode
-if options.plot_ode_std ...
-        || options.plot_ode_quick
-    fprintf('\t-ode\n')
-    
-    if options.plot_ode_std
-        fprintf('\t\t-std\n')
-        sims{end+1} = 'ode';
-        solvers{end+1} = 'std';
-    end
-    if options.plot_ode_quick
-        fprintf('\t\t-quick\n')
-        sims{end+1} = 'ode';
-        solvers{end+1} = 'quick';
-    end
-end
-
-% mujoco
-if options.plot_mujoco_pgs ...
-        || options.plot_mujoco_cg ...
-        || options.plot_mujoco_newton
-    fprintf('\t-mujoco\n')
-    
-    if options.plot_mujoco_pgs
-        fprintf('\t\t-pgs\n')
-        sims{end+1} = 'mujoco';
-        solvers{end+1} = 'pgs';
-    end
-    if options.plot_mujoco_cg
-        fprintf('\t\t-cg\n')
-        sims{end+1} = 'mujoco';
-        solvers{end+1} = 'cg';
-    end
-    if options.plot_mujoco_newton
-        fprintf('\t\t-newton\n')
-        sims{end+1} = 'mujoco';
-        solvers{end+1} = 'newton';
-    end
-end
-
 end
