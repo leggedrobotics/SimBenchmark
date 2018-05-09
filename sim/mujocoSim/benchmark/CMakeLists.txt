@@ -11,3 +11,8 @@ add_executable(MjcRollingBenchmark
         RollingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)
 target_link_libraries(MjcRollingBenchmark ${MjcSimLink})
+
+add_executable(MjcBuildingBenchmark
+        BuildingBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/BuildingBenchmark.hpp)
+target_link_libraries(MjcBuildingBenchmark ${MjcSimLink})

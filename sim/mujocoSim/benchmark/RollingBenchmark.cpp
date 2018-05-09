@@ -25,9 +25,9 @@ void setupSimulation() {
   // timestep
   sim->setTimeStep(benchmark::rolling::options.dt);
 
-  /// no erp for dart
+  /// no erp for mujoco
   if(benchmark::rolling::options.erpYN)
-    RAIFATAL("erp is not supported for dart")
+    RAIFATAL("erp is not supported for mujoco")
 
   // set up logger and timer
   if(benchmark::rolling::options.log)

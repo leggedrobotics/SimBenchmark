@@ -1,9 +1,9 @@
 //
-// Created by kangd on 17.02.18.
+// Created by kangd on 09.05.18.
 //
 
-#ifndef BENCHMARK_ROLLING_HPP
-#define BENCHMARK_ROLLING_HPP
+#ifndef BENCHMARK_BUILDINGBENCHMARK_HPP
+#define BENCHMARK_BUILDINGBENCHMARK_HPP
 
 #include <yaml-cpp/yaml.h>
 #include <boost/program_options.hpp>
@@ -11,13 +11,10 @@
 #include "BenchmarkTest.hpp"
 
 /**
- * Rolling test is for testing frictional contact solving.
- * The error is measured by comparing the simulation with analytical solution.
+ * Building test is for testing stability of contact solution.
  * The test focuses on:
  *
- * 1. Frictional cone (diagonal, elliptic)
- * 2. The accuracy of frictional contact simulation
- * 3. The violation of hard-contact constraint (penetration)
+ * 1. The stability of contact simulation
  *
  * Please read docs for more details
  */
@@ -25,30 +22,22 @@
 namespace po = boost::program_options;
 namespace ru = rai::Utils;
 
-namespace benchmark::rolling {
-
-enum ForceDirection {
-  FORCE_Y,    // force along the y axis
-  FORCE_XY    // force along the diagonal direction
-};
+namespace benchmark::building {
 
 /**
- * options for rolling simulation
+ * options for building simulation
  */
 struct Option: benchmark::Option {
-  // force-direction Y/XY
-  ForceDirection forceDirection = FORCE_Y;
-
   // erp
   bool erpYN = false;
 
   // time step
-  double dt = 0.01;
+  double dt = 0.001;
 };
 Option options;
 
 /**
- * parameter for rolling simulation
+ * parameter for building simulation
  * this can be set by YAML file
  */
 struct Parameter {
@@ -58,59 +47,34 @@ struct Parameter {
 
   // solver parameters
   double erp = 0.2;
-  double erp2 = 0.1;            // for bullet
-  double erpFriction = 0.1;     // for bullet
+  double erp2 = 0.1;              // for bullet
+  double erpFriction = 0.01;      // for bullet
+
+  int raiMaxIter = 100;
+  double raiThreshold = 1e-7;
 
   // simulation parameters
-  double m = 1;
-  double n = 25;
-  double M = 10;
-  double g = -9.8;
-  double T = 4.0;
-  double F = 150;
+  // num of blocks = numFloor x numBase + numFloor x (numWall x 2 + 1)
+  int numFloor = 6;
+  int numBase = 20;
 
-  double initPenetration = 5e-6;
-
-  double btGroundMu = 0.5;
-  double btBallMu = 1.0;
-  double btBoxMu = 0.8;
-
-  double odeGroundMu = 0.5;
-  double odeBallMu = 1.0;
-  double odeBoxMu = 0.8;
-
-  double raiGroundMu = 0.5;
-  double raiBallMu = 1.0;
-  double raiBoxMu = 0.8;
-
-  double dartGroundMu = 0.4;
-  double dartBallMu = 0.8;
-  double dartBoxMu = 0.8;
-
-  double mjcGroundMu = 0.4;
-  double mjcBallMu = 0.8;
-  double mjcBoxMu = 0.4;
-
-  /// note
-  /// 1. (frictional coeff A-B) = (friction coeff of A) x (friction coeff of B)             - Bullet & ODE
-  /// 2. (frictional coeff A-B) = max of (friction coeff of A) and (friction coeff of B)    - Mujoco
-  /// 3. (frictional coeff A-B) = min of (friction coeff of A) and (friction coeff of B)    - Dart
-  /// 4. (frictional coeff A-B)                                                             - Rai
+  const float shortLen = 0.05;
+  const float longLen = 0.2;
+  const float heightLen = 0.1;
 };
 Parameter params;
 
 /**
  * get XML file path for Mujoco
  *
- * @param rowNum # of row
- * @return urdf path in string
+ * @return xml path in string
  */
 std::string getMujocoXMLpath() {
 
   std::string xmlPath(__FILE__);
   while (xmlPath.back() != '/')
     xmlPath.erase(xmlPath.size() - 1, 1);
-  xmlPath += "../res/mujoco/Rolling/rolling.xml";
+  xmlPath += "../res/mujoco/Building/building.xml";
 
   return xmlPath;
 }
@@ -125,7 +89,7 @@ std::string getYamlpath() {
   std::string yamlPath(__FILE__);
   while (yamlPath.back() != '/')
     yamlPath.erase(yamlPath.size() - 1, 1);
-  yamlPath += "./yaml/rolling.yaml";
+  yamlPath += "./yaml/building.yaml";
 
   return yamlPath;
 }
@@ -137,7 +101,6 @@ std::string getYamlpath() {
  * @return log directory path in string
  */
 std::string getLogDirpath(bool erpYN,
-                          ForceDirection forceDirection,
                           std::string simulation,
                           std::string solver,
                           double dt) {
@@ -146,8 +109,7 @@ std::string getLogDirpath(bool erpYN,
   while (dirPath.back() != '/')
     dirPath.erase(dirPath.size() - 1, 1);
 
-  dirPath += "../data/rolling/erp=" + std::to_string(erpYN)
-      + "-dir=" + std::to_string(forceDirection)
+  dirPath += "../data/building/erp=" + std::to_string(erpYN)
       + "/" + simulation
       + "/" + solver
       + "/" + std::to_string(dt);
@@ -165,7 +127,6 @@ void addDescToOption(po::options_description &desc) {
   desc.add_options()
       ("erp-on", po::value<bool>(), "erp on (true / false)")
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
-      ("force", po::value<std::string>(), "applied force direction (y / xy)")
       ;
 }
 
@@ -208,17 +169,6 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
     options.dt = vm["dt"].as<double>();
   }
 
-  // force direction
-  if(vm.count("force")) {
-    if(vm["force"].as<std::string>().compare("xy") == 0) {
-      options.forceDirection = FORCE_XY;
-    } else if(vm["force"].as<std::string>().compare("y") == 0) {
-      options.forceDirection = FORCE_Y;
-    } else {
-      RAIFATAL("invalid force input (should be xy or y)")
-    }
-  }
-
   // erp
   if(vm.count("erp-on")) {
     if(vm["erp-on"].as<bool>()) {
@@ -246,13 +196,8 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
 
   // simulation constants
   YAML::Node constant = yaml["constant"];
-  params.m = constant["m"].as<double>();
-  params.n = constant["n"].as<double>();
-  params.M = constant["M"].as<double>();
-  params.g = constant["g"].as<double>();
-  params.T = constant["T"].as<double>();
-  params.F = constant["F"].as<double>();
-  params.initPenetration = constant["penentration0"].as<double>();
+  params.numFloor = constant["num_floor"].as<int>();
+  params.numBase = constant["num_base"].as<int>();
 
   // solver parameters
   YAML::Node solver_params = yaml["solver_params"];
@@ -260,33 +205,20 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   switch (simulator) {
     case benchmark::RAI:
       params.erp = solver_params["raiSim"]["erp"].as<double>();
-      params.raiGroundMu = constant["raiSim"]["mu_ground"].as<double>();
-      params.raiBallMu = constant["raiSim"]["mu_ball"].as<double>();
-      params.raiBoxMu = constant["raiSim"]["mu_box"].as<double>();
+      params.raiMaxIter = solver_params["raiSim"]["maxiter"].as<int>();
+      params.raiThreshold = solver_params["raiSim"]["threshold"].as<double>();
       break;
     case benchmark::BULLET:
       params.erp = solver_params["bullet"]["erp"].as<double>();
       params.erp2 = solver_params["bullet"]["erp2"].as<double>();
       params.erpFriction = solver_params["bullet"]["erp_friction"].as<double>();
-      params.btGroundMu = constant["bullet"]["mu_ground"].as<double>();
-      params.btBallMu = constant["bullet"]["mu_ball"].as<double>();
-      params.btBoxMu = constant["bullet"]["mu_box"].as<double>();
       break;
     case benchmark::ODE:
       params.erp = solver_params["ode"]["erp"].as<double>();
-      params.odeGroundMu = constant["ode"]["mu_ground"].as<double>();
-      params.odeBallMu = constant["ode"]["mu_ball"].as<double>();
-      params.odeBoxMu = constant["ode"]["mu_box"].as<double>();
       break;
     case benchmark::MUJOCO:
-      params.mjcGroundMu = constant["mujoco"]["mu_ground"].as<double>();
-      params.mjcBallMu = constant["mujoco"]["mu_ball"].as<double>();
-      params.mjcBoxMu = constant["mujoco"]["mu_box"].as<double>();
       break;
     case benchmark::DART:
-      params.dartGroundMu = constant["dart"]["mu_ground"].as<double>();
-      params.dartBallMu = constant["dart"]["mu_ball"].as<double>();
-      params.dartBoxMu = constant["dart"]["mu_box"].as<double>();
       break;
     default:
       RAIFATAL("invalid simulator value")
@@ -300,15 +232,6 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
  * @param name name of log file
  */
 void loggerSetup(std::string path, std::string name) {
-  // logger
-  ru::logger->setLogPath(path);
-  ru::logger->setLogFileName(name);
-  ru::logger->setOptions(ru::ONEFILE_FOR_ONEDATA);
-  ru::logger->addVariableToLog(3, "velbox", "linear velocity of box");
-  ru::logger->addVariableToLog(3, "velball", "linear velocity of ball");
-  ru::logger->addVariableToLog(3, "posbox", "position of box");
-  ru::logger->addVariableToLog(3, "posball", "position of ball");
-
   // timer
   std::string timer = name + "timer";
   ru::timer->setLogPath(path);
@@ -317,4 +240,5 @@ void loggerSetup(std::string path, std::string name) {
 
 } // benchmark::rolling
 
-#endif //BENCHMARK_ROLLING_HPP
+
+#endif //BENCHMARK_BUILDINGBENCHMARK_HPP

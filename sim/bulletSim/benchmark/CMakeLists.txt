@@ -10,3 +10,8 @@ add_executable(BtRollingBenchmark
         RollingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)
 target_link_libraries(BtRollingBenchmark ${BtSimLink})
+
+add_executable(BtBuildingBenchmark
+        BuildingBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/BuildingBenchmark.hpp)
+target_link_libraries(BtBuildingBenchmark ${BtSimLink})

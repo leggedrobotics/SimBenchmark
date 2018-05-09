@@ -10,3 +10,8 @@ add_executable(OdeRollingBenchmark
         RollingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)
 target_link_libraries(OdeRollingBenchmark ${OdeSimLink})
+
+add_executable(OdeBuildingBenchmark
+        BuildingBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/BuildingBenchmark.hpp)
+target_link_libraries(OdeBuildingBenchmark ${OdeSimLink})

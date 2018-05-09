@@ -17,7 +17,7 @@
  * 1. Speed of simulation
  * 2. Scalability
  *
- * Please read benchmark/README.md for more details
+ * Please read docs for more details
  */
 
 namespace po = boost::program_options;

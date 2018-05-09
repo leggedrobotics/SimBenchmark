@@ -1,0 +1,24 @@
+---
+# simulation properties
+sim_properties:
+  light_position: [0.0, 10.0, 10.0]
+
+# solver parameters
+solver_params:
+  raiSim:
+    erp: 0.2              # when erp_on = true
+    maxiter: 100
+    threshold: 1e-7
+  bullet:
+    erp: 0.2              # when erp_on = true
+    erp2: 0.1             # when erp_on = true
+    erp_friction: 0.01    # when erp_on = true
+  ode:
+    erp: 0.2    # when erp_on = true
+
+# simulation constants
+constant:
+  num_floor: 6
+  num_base: 20
+  max_time: 60            # in (sec)
+...
