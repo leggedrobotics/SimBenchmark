@@ -23,10 +23,6 @@ void setupSimulation() {
   else
     sim->setERP(0);
 
-  /// Note: set solver termination condition according to dt
-  sim->setContactSolverParam(1.0, 1, 1.0, 50,
-                             1e-7 * benchmark::rolling::options.dt);
-
   // set up logger and timer
   if(benchmark::rolling::options.log)
     benchmark::rolling::loggerSetup(

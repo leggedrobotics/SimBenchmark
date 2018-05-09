@@ -13,6 +13,9 @@ target_link_libraries(OdeRobotArmDemo ${OdeSimLink})
 add_executable(OdeCaplerDemo CaplerDemo.cpp)
 target_link_libraries(OdeCaplerDemo ${OdeSimLink})
 
+add_executable(OdeBuildingDemo BuildingDemo.cpp)
+target_link_libraries(OdeBuildingDemo ${OdeSimLink})
+
 # friction
 #add_executable(frictionODESim frictionODESim.cpp)
 #target_link_libraries(frictionODESim ${ODESimLink})

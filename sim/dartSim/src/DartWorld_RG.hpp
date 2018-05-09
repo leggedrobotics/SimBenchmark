@@ -86,7 +86,7 @@ class DartWorld_RG: public benchmark::World_RG {
   void setMaxContacts(int maxcontacts);
 
  private:
-  virtual void loop(double dt, double realTimeFactor = 1.0) override ;
+  virtual void loop(double dt, double realTimeFactor) override ;
   void setERP(double erp, double erp2, double frictionErp) override ;
   virtual void integrate(double dt) override ;
 
