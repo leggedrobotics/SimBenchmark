@@ -29,10 +29,15 @@ The test focuses on:
 
 Note that ODE quick solver easily fails for articulated system simulation as the following video, thus was exempted. 
  
+<!---
 <div style="position:relative;padding-top:75%;">
     <iframe src="https://www.youtube.com/embed/X0lYN7bzoNk?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen
  style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
 </div>
+--->
+
+![anymal-test-ode-fail](../img/ode-quicksolver-fail.gif)
+
 
 According to the manual this is due to the solver's property:
  

@@ -2,12 +2,13 @@
 
 <!---
 ![rolling-test-image](../img/RollingBenchmark.png)
---->
-
 <div style="position:relative;padding-top:75%;">
   <iframe src="https://www.youtube.com/embed/5wcjoc7NRmk?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen
     style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
 </div>
+--->
+
+![rolling-test](../img/rolling.gif)
 
 Rolling test is for testing frictional contact behavior. The error is measured by comparing the simulation with analytical solution.
 The test focuses on:
@@ -55,26 +56,35 @@ Note that ODE standard solver fails without ERP, the box goes into the ground as
 
 ![rolling-test-error-plot](../img/error-speed-noerp-xy.png)
 
-The pushing force resulted in no motion in ODE and Dart as the following video.
+The pushing force resulted in no motion in ODE and Dart. However as the force is applied to y direction, the objects move. This is due to the pyramid shaped friction cone.
 
+![rolling-test-dart-xy](../img/dart-dt=0.001-dantzig-xy.gif)
+
+![rolling-test-dart-xy](../img/dart-dt=0.001-dantzig-y.gif)
+
+<!---
 <div style="position:relative;padding-top:75%;">
   <iframe src="https://www.youtube.com/embed/Jrhxo_yocVE?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen
     style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
-</div>
-
-However as the force is applied to y direction, the objects move. This is due to the pyramid shaped friction cone.   
+</div>   
 
 <div style="position:relative;padding-top:75%;">
   <iframe src="https://www.youtube.com/embed/0nW6O5q8Z0Q?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen
     style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
 </div>
+--->
 
 The objects oscillates significantly in MuJoCo as the time step size increases. It leads to inaccurate solution. 
 
+<!---
 <div style="position:relative;padding-top:75%;">
   <iframe src="https://www.youtube.com/embed/OLvkfdO9SzA?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen
     style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
 </div>
+--->
+
+![rolling-test-mujoco](../img/mjc-dt=0.04-pgs.gif)
+
 
 Besides, Bullet and Rai are stable, accurate and fast as the following figure.  
 
