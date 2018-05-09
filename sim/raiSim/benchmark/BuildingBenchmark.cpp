@@ -30,9 +30,9 @@ void setupSimulation() {
   if(benchmark::building::options.log)
     benchmark::building::loggerSetup(
         benchmark::building::getLogDirpath(benchmark::building::options.erpYN,
-                                          "RAI",
-                                          "RAI",
-                                          benchmark::building::options.dt), "var"
+                                           "RAI",
+                                           "RAI",
+                                           benchmark::building::options.dt), "var"
     );
 }
 
@@ -56,38 +56,47 @@ void setupWorld() {
     for(int j = 0; j < numBase; j++) {
       // base
       auto base = sim->addBox(shortLen, longLen + 0.05, heightLen, 10.0);
-      base.visual()[0]->setColor({0.0, 0.0, 1.0});
       base->setPosition(j * longLen, 0, i * heightLen * 2 + 0.05);
       objectList.push_back(base);
+
+      if(benchmark::building::options.gui)
+        base.visual()[0]->setColor({0.0, 0.0, 1.0});
     }
 
     for(int j = 0; j < numWall; j++) {
       // right wall
       auto wall = sim->addBox(longLen, shortLen, heightLen, 10.0);
-      wall.visual()[0]->setColor({0.0, 1.0, 0.0});
       wall->setPosition(j * longLen * 2 + 0.1, -0.5 * longLen, i * heightLen * 2 + 0.15);
       objectList.push_back(wall);
+
+      if(benchmark::building::options.gui)
+        wall.visual()[0]->setColor({0.0, 1.0, 0.0});
     }
 
     for(int j = 0; j < numWall - 1; j++) {
       // left wall
       auto wall = sim->addBox(longLen, shortLen, heightLen, 10.0);
-      wall.visual()[0]->setColor({1.0, 0.0, 0.0});
       wall->setPosition(j * longLen * 2 + 0.3, 0.5 * longLen, i * heightLen * 2 + 0.15);
       objectList.push_back(wall);
+
+      if(benchmark::building::options.gui)
+        wall.visual()[0]->setColor({1.0, 0.0, 0.0});
     }
 
     // first wall on left
     auto wall1 = sim->addBox(longLen, shortLen, heightLen, 10.0);
-    wall1.visual()[0]->setColor({1.0, 0.0, 0.0});
     wall1->setPosition(0.1, 0.5 * longLen, i * heightLen * 2 + 0.15);
     objectList.push_back(wall1);
 
     // last wall on left
     auto wall2 = sim->addBox(longLen, shortLen, heightLen, 10.0);
-    wall2.visual()[0]->setColor({1.0, 0.0, 0.0});
     wall2->setPosition((numWall - 1) * longLen * 2 + 0.1, 0.5 * longLen, i * heightLen * 2 + 0.15);
     objectList.push_back(wall2);
+
+    if(benchmark::building::options.gui) {
+      wall1.visual()[0]->setColor({1.0, 0.0, 0.0});
+      wall2.visual()[0]->setColor({1.0, 0.0, 0.0});
+    }
   }
 
   if(benchmark::building::options.gui) {
@@ -121,10 +130,11 @@ void simulationLoop() {
   }
   else {
     // no gui
-    if(benchmark::building::options.log)
-      ru::timer->startTimer("building");
+    StopWatch watch;
+    watch.start();
 
-    while(sim->visualizerLoop(benchmark::building::options.dt)) {
+    int i = 0;
+    for(i = 0; i < (int) (benchmark::building::options.T / benchmark::building::options.dt); i++) {
 
       if(objectList.back()->getPosition()[2] <
           benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
@@ -136,8 +146,9 @@ void simulationLoop() {
       sim->integrate(benchmark::building::options.dt);
     }
 
-    if(benchmark::building::options.log)
-      ru::timer->stopTimer("building");
+    // print to screen
+    double time = watch.measure();
+    std::cout << "time taken for " << i << " steps "<< time <<"s \n";
   }
 }
 
@@ -146,7 +157,7 @@ int main(int argc, const char* argv[]) {
   benchmark::building::addDescToOption(desc);
   benchmark::building::getOptionsFromArg(argc, argv, desc);
   benchmark::building::getParamsFromYAML(benchmark::building::getYamlpath().c_str(),
-                                        benchmark::RAI);
+                                         benchmark::RAI);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
@@ -163,8 +174,8 @@ int main(int argc, const char* argv[]) {
   simulationLoop();
 
   // time log
-  if(benchmark::building::options.log)
-    ru::timer->dumpToStdOuput();
+//  if(benchmark::building::options.log)
+//    ru::timer->dumpToStdOuput();
 
   delete sim;
   return 0;

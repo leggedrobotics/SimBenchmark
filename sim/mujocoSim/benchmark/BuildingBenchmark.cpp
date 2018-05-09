@@ -62,7 +62,6 @@ void simulationLoop() {
       if(sim->getSingleBodyHandle(sim->getNumObject()-1)->getPosition()[2] <
           benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
         // break if the building collapses
-        RAIINFO(sim->getSingleBodyHandle(sim->getNumObject()-1)->getPosition()[2])
         RAIINFO("building collapsed!")
         break;
       }
@@ -73,10 +72,11 @@ void simulationLoop() {
   }
   else {
     // no gui
-    if(benchmark::building::options.log)
-      ru::timer->startTimer("building");
+    StopWatch watch;
+    watch.start();
 
-    while(true) {
+    int i = 0;
+    for(i = 0; i < (int) (benchmark::building::options.T / benchmark::building::options.dt); i++) {
       sim->integrate();
 
       /// note that mujoco set object position after one step
@@ -88,8 +88,10 @@ void simulationLoop() {
       }
     }
 
-    if(benchmark::building::options.log)
-      ru::timer->stopTimer("building");
+    // print to screen
+    double time = watch.measure();
+    std::cout << "time taken for " << i << " steps "<< time <<"s \n";
+
   }
 }
 
@@ -119,8 +121,8 @@ int main(int argc, const char* argv[]) {
   simulationLoop();
 
   // time log
-  if(benchmark::building::options.log)
-    ru::timer->dumpToStdOuput();
+//  if(benchmark::building::options.log)
+//    ru::timer->dumpToStdOuput();
 
   delete sim;
   return 0;

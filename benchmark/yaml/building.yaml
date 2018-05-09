@@ -18,7 +18,6 @@ solver_params:
 
 # simulation constants
 constant:
-  num_floor: 6
+  num_floor: 6            # remark! doesn't work for MUJOCO
   num_base: 20
-  max_time: 60            # in (sec)
 ...

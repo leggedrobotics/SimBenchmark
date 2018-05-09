@@ -33,6 +33,9 @@ struct Option: benchmark::Option {
 
   // time step
   double dt = 0.001;
+
+  // simulation time
+  double T = 600.0;
 };
 Option options;
 
@@ -54,9 +57,10 @@ struct Parameter {
   double raiThreshold = 1e-7;
 
   // simulation parameters
-  // num of blocks = numFloor x numBase + numFloor x (numWall x 2 + 1)
+  /// Remark! doesn't work for MUJOCO
   int numFloor = 6;
   int numBase = 20;
+  /// (num of blocks) = (numFloor) x (numBase) + (numFloor) x (numWall x 2 + 1)
 
   const float shortLen = 0.05;
   const float longLen = 0.2;
