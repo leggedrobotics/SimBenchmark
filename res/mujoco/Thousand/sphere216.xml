@@ -1,0 +1,255 @@
+<mujoco model="thousand">
+    <compiler angle="degree"/>
+
+    <option timestep="0.01" iterations="50" solver="PGS" jacobian="sparse" cone="elliptic" tolerance="1e-10"/>
+
+    <size njmax="5000" nconmax="2000" nstack="1000000000"/>
+
+    <default>
+        <geom solimp=".9 .9 .01"/>        
+
+        <default class="object5">
+			<geom type="sphere" material="geom" rgba=".9 .1 .1 1" size="0.500000"/>
+        </default>
+    </default>
+
+    <asset>
+        <texture type="skybox" builtin="gradient" width="128" height="128" rgb1=".4 .6 .8" rgb2="0 0 0"/>  
+        <texture name="texgeom" type="cube" builtin="flat" mark="cross" width="128" height="128" 
+            rgb1="0.6 0.6 0.6" rgb2="0.6 0.6 0.6" markrgb="1 1 1"/>  
+        <texture name="texplane" type="2d" builtin="checker" rgb1=".4 .4 .4" rgb2=".6 .6 .6" 
+            width="512" height="512"/>  
+        <material name='geom' texture="texgeom" texuniform="true"/>
+        <material name='MatPlane' reflectance='0.3' texture="texplane" texrepeat="1 1" texuniform="true"/>
+    </asset>
+
+    <visual>
+        <quality shadowsize="4096" offsamples="8"/>
+        <map znear="0.1" force="0.05"/>
+    </visual>
+
+    <statistic extent="4"/>
+
+    <worldbody>
+        <light directional="true" diffuse=".8 .8 .8" pos="0 0 10" dir="0 0 -10"/>
+
+        <geom pos="0 0 0" type="plane" size="200 200 5" rgba=".7 .7 .7 1" material="MatPlane"/>
+		<body pos="1.100815 1.100906 1.601127" quat="0.654066 0.209426 -0.636794 -0.350473"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100547 1.100958 2.701965" quat="-0.462558 0.635761 0.617623 -0.019757"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100800 1.100142 3.801422" quat="0.591732 0.415910 0.654013 0.221672"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100036 1.100849 4.901934" quat="0.434643 0.626764 0.591242 -0.262079"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100655 1.100171 6.001706" quat="-0.586490 -0.279457 -0.568528 -0.504688"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100823 1.100695 7.101317" quat="0.680889 -0.704076 -0.092639 -0.179124"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100766 2.200795 1.601187" quat="-0.039164 -0.208198 0.559823 0.801073"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100755 2.200276 2.701680" quat="0.291523 -0.634157 -0.716135 -0.003075"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100960 2.200340 3.801585" quat="-0.618459 0.562654 -0.548408 0.013339"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100699 2.200891 4.901959" quat="0.084177 -0.644268 -0.625246 -0.432319"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100841 2.200254 6.001814" quat="-0.424750 0.710906 -0.248443 -0.502470"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100251 2.200616 7.101473" quat="-0.394776 0.880428 0.226912 0.132328"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100917 3.300286 1.601757" quat="0.494597 -0.233048 0.132205 -0.826792"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100054 3.300531 2.701779" quat="0.754364 -0.643269 0.119624 -0.053203"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100012 3.300337 3.801162" quat="0.607259 -0.389560 0.058878 -0.689937"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100602 3.300263 4.901654" quat="0.362116 0.474909 -0.094653 -0.796476"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100229 3.300913 6.001152" quat="0.446823 0.052583 0.680395 -0.578487"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100443 3.300107 7.101962" quat="-0.663395 0.368161 0.424933 0.493757"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100084 4.400400 1.601260" quat="0.496951 -0.113587 0.680083 -0.526901"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100264 4.400146 2.701136" quat="0.709034 0.153031 0.095731 -0.681680"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100853 4.400622 3.801351" quat="0.026122 -0.193591 -0.836006 -0.512770"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100123 4.400184 4.901240" quat="-0.109614 -0.596669 0.533564 0.589305"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100491 4.400489 6.001338" quat="0.627198 -0.204993 -0.609550 0.439375"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100390 4.400242 7.101404" quat="-0.481724 -0.439324 0.527689 0.544501"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100575 5.500060 1.601235" quat="-0.194772 0.426034 -0.642773 -0.606137"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100169 5.500649 2.701732" quat="0.566862 -0.188293 0.180361 -0.781463"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100745 5.500189 3.801687" quat="-0.687745 -0.285789 0.272975 0.608947"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100081 5.500929 4.901776" quat="-0.062529 -0.303647 -0.251927 -0.916745"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100509 5.500511 6.001818" quat="0.629196 0.307987 -0.259058 0.664940"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100533 5.500351 7.101939" quat="0.921535 0.122946 0.300219 0.213369"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100208 6.600301 1.601471" quat="-0.449516 0.574269 -0.509099 -0.457132"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100171 6.600228 2.701436" quat="-0.334374 0.749439 -0.123542 -0.557918"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100905 6.600980 3.801439" quat="-0.816036 -0.507683 -0.191544 0.199132"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100262 6.600603 4.901711" quat="-0.509741 -0.700865 -0.372476 -0.331986"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100424 6.600508 6.001086" quat="-0.319522 0.404942 -0.633319 0.576918"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="1.100730 6.600489 7.101579" quat="-0.490092 -0.076767 0.863882 0.087315"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200521 1.100232 1.601489" quat="0.450100 0.649919 -0.379080 -0.480951"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200988 1.100038 2.701885" quat="0.598861 0.429176 -0.581474 -0.345053"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200335 1.100680 3.801137" quat="0.464071 -0.824899 0.322538 -0.012221"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200779 1.100715 4.901904" quat="0.700829 -0.297305 0.356303 -0.541753"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200031 1.100744 6.001500" quat="-0.046047 0.928205 0.251972 0.269861"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200859 1.100805 7.101577" quat="-0.431603 -0.354002 0.526116 -0.641564"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200490 2.200168 1.601979" quat="0.434151 0.000963 -0.059014 -0.898904"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200682 2.200042 2.701071" quat="0.035828 -0.667360 0.526495 0.525500"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200722 2.200150 3.801660" quat="0.032058 0.815416 0.256864 0.517775"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200454 2.200432 4.901825" quat="-0.637706 -0.561614 -0.500041 -0.166974"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200831 2.200803 6.001060" quat="-0.489255 0.130523 -0.404064 0.761791"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200628 2.200292 7.101432" quat="-0.565181 0.564657 -0.388246 -0.459346"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200372 3.300198 1.601490" quat="-0.206098 0.579915 0.539727 -0.574384"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200738 3.300269 2.701423" quat="0.072299 0.668658 -0.124230 0.729546"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200301 3.300701 3.801666" quat="0.094313 0.477526 0.401410 -0.775850"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200128 3.300999 4.901171" quat="-0.742137 0.097173 0.606329 0.268617"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200190 3.300369 6.001461" quat="0.682926 -0.487192 0.504105 0.205265"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200376 3.300191 7.101428" quat="-0.037713 -0.795863 0.187765 -0.574390"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200385 4.400583 1.601252" quat="-0.448890 0.250817 -0.502784 0.694836"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200983 4.400730 2.701344" quat="0.122610 -0.572045 0.592576 0.553702"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200818 4.400261 3.801594" quat="-0.771298 -0.120731 -0.302520 -0.546813"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200179 4.400423 4.901094" quat="0.330431 -0.097515 0.657180 0.670389"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200639 4.400034 6.001069" quat="-0.702822 0.120244 0.601706 -0.359907"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200820 4.400718 7.101969" quat="0.070171 -0.391578 -0.883175 0.248487"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200779 5.500423 1.601091" quat="-0.491190 -0.728478 -0.460620 -0.126021"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200527 5.500457 2.701875" quat="0.027672 0.680027 0.211093 0.701596"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200241 5.500676 3.801289" quat="0.306431 0.348046 -0.770513 -0.437348"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200224 5.500668 4.901844" quat="-0.253333 0.456898 0.285573 -0.803440"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200602 5.500387 6.001916" quat="-0.983040 -0.073998 -0.149079 -0.077019"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200770 5.500322 7.101785" quat="-0.047052 -0.762613 -0.532449 0.364287"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200473 6.600153 1.601341" quat="0.224153 -0.643417 0.497666 -0.536748"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200917 6.600269 2.701766" quat="-0.554650 -0.378573 -0.728433 0.135767"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200683 6.600547 3.801426" quat="0.473291 0.483694 0.586579 0.444928"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200945 6.600209 4.901709" quat="-0.551879 -0.796329 0.224510 -0.104326"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200459 6.600662 6.001770" quat="-0.360500 0.389930 -0.201792 0.822967"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="2.200833 6.600256 7.101613" quat="0.183635 0.090957 0.825955 -0.525170"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300318 1.100119 1.601940" quat="0.701784 -0.099019 0.671722 0.215600"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300647 1.100544 2.701721" quat="0.032510 0.713503 -0.406569 -0.569701"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300110 1.100064 3.801405" quat="-0.158226 -0.411245 0.807587 0.391976"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300772 1.100933 4.901973" quat="-0.470330 -0.551507 0.299735 -0.620313"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300525 1.100530 6.001861" quat="-0.048097 -0.338319 0.544363 0.766091"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300520 1.100348 7.101150" quat="0.148413 -0.410033 -0.785308 0.439475"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300243 2.200442 1.601688" quat="-0.405695 0.681117 -0.303446 0.528593"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300704 2.200442 2.701020" quat="-0.399907 -0.178957 -0.543155 -0.716263"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300822 2.200430 3.801888" quat="-0.249580 0.617234 -0.236716 0.707600"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300755 2.200377 4.901216" quat="0.494225 0.764641 -0.293455 0.291463"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300439 2.200834 6.001769" quat="-0.479314 0.521425 0.705650 0.020777"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300884 2.200588 7.101155" quat="-0.581287 -0.180204 0.481678 0.630570"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300790 3.300319 1.601534" quat="-0.589946 -0.558646 -0.523273 0.257030"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300495 3.300190 2.701495" quat="-0.525961 -0.664222 0.523455 0.090388"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300930 3.300697 3.801583" quat="0.368731 0.443105 0.571586 -0.583939"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300865 3.300613 4.901990" quat="0.067925 -0.050248 0.739483 -0.667852"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300498 3.300901 6.001575" quat="0.693646 0.479555 0.172794 -0.508945"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300666 3.300083 7.101626" quat="0.236277 0.337290 0.573648 0.708051"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300769 4.400581 1.601928" quat="0.111600 -0.673051 -0.528306 0.505412"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300484 4.400845 2.701209" quat="0.104209 0.258839 -0.932674 0.228607"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300362 4.400050 3.801490" quat="-0.459246 -0.562937 -0.439854 -0.527942"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300189 4.400043 4.901635" quat="-0.738857 0.130734 0.661053 -0.002994"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300536 4.400445 6.001124" quat="-0.017119 0.626681 0.663836 -0.407798"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300208 4.400565 7.101640" quat="-0.121201 -0.429499 0.654323 -0.610494"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300106 5.500142 1.601166" quat="0.189686 0.115591 -0.702427 0.676206"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300729 5.500738 2.701063" quat="0.436424 0.525980 0.586513 0.434605"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300786 5.500513 3.801178" quat="-0.135855 -0.490407 -0.628448 0.588300"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300301 5.500296 4.901333" quat="-0.054467 0.245111 -0.785245 0.565990"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300559 5.500854 6.001348" quat="-0.093618 -0.773184 -0.560066 0.282395"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300331 5.500898 7.101118" quat="0.669344 0.054793 0.283566 0.684519"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300288 6.600415 1.601465" quat="0.400506 0.482816 -0.606590 -0.488398"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300360 6.600057 2.701522" quat="-0.265939 -0.525445 -0.471532 0.656385"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300675 6.600468 3.801912" quat="-0.752731 0.466756 0.449119 0.117592"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300184 6.600597 4.901300" quat="-0.490637 -0.385398 0.529613 -0.574677"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300242 6.600054 6.001442" quat="-0.602763 0.491892 -0.375667 -0.503581"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="3.300307 6.600456 7.101102" quat="0.696093 -0.235933 -0.284757 -0.615389"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400298 1.100046 1.601505" quat="0.398955 0.200022 -0.625855 -0.639634"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400777 1.100905 2.701534" quat="-0.682893 0.569259 -0.282879 -0.359974"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400746 1.100010 3.801048" quat="0.552555 0.340478 0.085894 0.755896"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400707 1.100781 4.901288" quat="0.390418 0.114915 -0.209836 -0.889009"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400780 1.100338 6.001608" quat="0.404742 -0.662989 -0.624277 0.083111"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400485 1.100890 7.101799" quat="0.300547 -0.575426 -0.547783 -0.527722"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400798 2.200943 1.601684" quat="-0.529333 0.320440 -0.560596 -0.550324"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400641 2.200329 2.701654" quat="0.561416 0.187459 0.540912 -0.597566"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400735 2.200971 3.801867" quat="-0.843918 -0.272416 -0.266783 0.377385"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400598 2.200789 4.901368" quat="-0.454780 -0.639434 0.420686 -0.455327"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400388 2.200552 6.001229" quat="0.301875 -0.033007 -0.740444 0.599604"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400101 2.200294 7.101237" quat="0.053504 -0.707965 -0.164096 -0.684833"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400112 3.300784 1.601292" quat="0.199659 0.895618 -0.130200 0.375571"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400758 3.300433 2.701655" quat="-0.555911 0.617899 -0.445218 -0.333083"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400798 3.300488 3.801769" quat="-0.187824 -0.410099 -0.835809 0.312991"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400430 3.300452 4.901610" quat="-0.754493 -0.315411 0.467019 0.336378"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400125 3.300130 6.001092" quat="-0.867285 -0.135491 0.274140 0.392819"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400531 3.300109 7.101632" quat="-0.497997 -0.487592 -0.535204 -0.477294"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400168 4.400196 1.601317" quat="-0.319635 -0.491781 -0.433488 0.684159"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400703 4.400556 2.701184" quat="-0.417599 -0.612912 0.600074 0.299769"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400558 4.400313 3.801166" quat="0.188935 0.752572 -0.508313 -0.373572"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400397 4.400074 4.901684" quat="-0.188981 0.934794 -0.189377 0.233627"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400154 4.400381 6.001161" quat="0.505194 0.726362 -0.292069 0.363142"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400294 4.400531 7.101832" quat="0.346450 -0.585252 -0.713491 -0.168471"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400423 5.500360 1.601558" quat="0.528944 -0.165011 -0.154061 -0.818080"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400024 5.500290 2.701318" quat="0.236015 0.701696 0.669132 -0.064672"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400240 5.500764 3.801759" quat="0.435347 0.440847 -0.712913 0.328454"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400463 5.500212 4.901099" quat="0.546117 -0.548507 -0.567815 0.280147"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400894 5.500517 6.001703" quat="-0.577671 0.756183 0.068178 0.299724"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400037 5.500809 7.101749" quat="-0.901824 0.059467 -0.413539 0.110289"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400399 6.600415 1.601181" quat="-0.348437 -0.682968 0.603501 0.218936"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400933 6.600164 2.701921" quat="0.748046 0.196480 -0.152231 -0.615344"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400752 6.600229 3.801064" quat="0.653633 0.418597 0.526205 0.347345"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400419 6.600391 4.901816" quat="-0.313145 0.539494 0.495814 0.604198"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400506 6.600636 6.001951" quat="-0.094930 -0.745368 0.621307 0.222245"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="4.400355 6.600997 7.101224" quat="0.364419 0.250970 -0.269529 -0.855317"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500025 1.100421 1.601184" quat="0.461529 -0.265004 0.698215 0.478811"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500571 1.100177 2.701957" quat="-0.409996 0.741767 -0.482589 -0.220891"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500088 1.100640 3.801181" quat="-0.822627 0.403536 -0.275859 0.290423"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500384 1.100627 4.901022" quat="0.635506 0.465223 0.380538 0.484655"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500383 1.100617 6.001575" quat="0.087848 -0.657525 -0.734818 -0.141371"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500228 1.100804 7.101986" quat="-0.675628 0.051267 -0.593569 0.434251"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500989 2.200067 1.601939" quat="-0.817210 0.311805 0.481240 0.057900"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500885 2.200899 2.701626" quat="-0.501348 -0.390686 -0.440056 -0.634322"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500107 2.200616 3.801940" quat="-0.214058 -0.131441 0.712351 0.655331"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500677 2.200988 4.901767" quat="-0.407865 0.405570 -0.638981 -0.510747"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500680 2.200528 6.001412" quat="0.356359 0.869803 0.290026 0.179823"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500584 2.200512 7.101083" quat="0.299456 0.676671 -0.198390 0.642716"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500346 3.300887 1.601455" quat="-0.168550 -0.549553 -0.728820 -0.372028"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500726 3.300783 2.701694" quat="-0.627701 0.439487 0.540798 0.346958"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500043 3.300378 3.801704" quat="0.498500 -0.598867 -0.501611 0.375822"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500477 3.300624 4.901236" quat="-0.469501 0.479341 0.388136 0.631784"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500108 3.300182 6.001099" quat="-0.015954 -0.478102 0.617029 -0.624851"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500044 3.300557 7.101772" quat="-0.377352 -0.644139 -0.323144 -0.581608"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500510 4.400906 1.601629" quat="-0.655912 -0.179663 -0.733142 0.002112"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500432 4.400998 2.701812" quat="-0.026228 0.721042 -0.662557 -0.201069"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500927 4.400917 3.801714" quat="0.194683 -0.257815 0.717332 -0.617304"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500731 4.400646 4.901833" quat="-0.218533 0.536724 0.720196 -0.381430"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500552 4.400979 6.001549" quat="-0.473520 0.333609 -0.389154 0.716270"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500414 4.400492 7.101695" quat="0.725643 -0.264395 0.518525 0.366974"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500954 5.500032 1.601357" quat="0.371722 -0.499347 -0.616170 0.482504"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500625 5.500591 2.701660" quat="-0.830111 -0.277438 -0.089276 -0.475367"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500715 5.500856 3.801282" quat="0.352928 -0.553314 0.514341 -0.552032"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500588 5.500366 4.901807" quat="0.009340 -0.025706 0.931466 -0.362800"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500449 5.500964 6.001042" quat="0.793033 -0.521123 0.280219 0.144938"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500675 5.500361 7.101620" quat="0.365044 -0.564010 -0.488202 0.557040"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500651 6.600231 1.601403" quat="-0.709936 -0.434927 -0.454823 -0.316173"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500152 6.600348 2.701122" quat="0.539343 -0.569625 0.603768 -0.141774"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500047 6.600342 3.801736" quat="0.558415 0.085095 0.352888 0.745923"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500055 6.600304 4.901046" quat="-0.527623 0.381464 0.384214 0.654583"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500582 6.600071 6.001923" quat="0.491847 -0.350504 0.071497 0.793802"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="5.500716 6.600839 7.101433" quat="-0.084842 0.175354 -0.666915 0.719220"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600504 1.100647 1.601308" quat="-0.748376 -0.050600 -0.284913 0.596822"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600780 1.100669 2.701134" quat="-0.701441 0.087732 -0.292017 0.644213"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600981 1.100287 3.801801" quat="0.554242 0.136460 0.537319 0.620873"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600549 1.100728 4.901577" quat="-0.949189 -0.107040 0.292883 0.042446"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600372 1.100937 6.001830" quat="0.653225 -0.238520 0.174371 0.697137"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600934 1.100668 7.101207" quat="0.311861 -0.867466 -0.189068 0.338376"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600934 2.200811 1.601485" quat="0.351513 -0.113569 0.645917 0.668081"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600864 2.200389 2.701455" quat="-0.372363 0.418095 0.562762 0.608146"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600558 2.200599 3.801149" quat="0.625330 -0.077607 -0.460460 0.625233"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600763 2.200882 4.901285" quat="0.379957 0.360334 -0.827324 -0.203289"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600275 2.200717 6.001283" quat="0.754526 0.621941 -0.209435 -0.003994"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600695 2.200834 7.101610" quat="0.258709 -0.602171 -0.150840 0.740073"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600884 3.300721 1.601019" quat="0.406506 -0.143020 -0.144622 -0.890720"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600815 3.300325 2.701246" quat="-0.731820 -0.578377 0.216604 0.288101"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600396 3.300398 3.801515" quat="0.293764 0.840869 0.414636 -0.186332"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600832 3.300134 4.901060" quat="-0.696778 -0.563287 -0.294597 -0.332295"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600012 3.300540 6.001095" quat="-0.501841 0.186180 0.510125 0.673250"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600571 3.300997 7.101554" quat="0.083991 -0.919956 -0.380322 -0.044519"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600071 4.400888 1.601065" quat="-0.173838 0.889769 -0.287297 0.309116"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600819 4.400886 2.701931" quat="-0.545845 -0.426165 0.702336 0.164808"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600504 4.400613 3.801819" quat="0.102338 -0.956092 -0.147964 -0.231346"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600966 4.400620 4.901695" quat="0.801705 -0.557514 0.061869 0.206447"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600156 4.400562 6.001695" quat="-0.168009 0.768194 0.528593 -0.319752"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600454 4.400386 7.101776" quat="0.430964 -0.128260 0.356426 0.819012"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600784 5.500706 1.601109" quat="-0.232448 0.191976 -0.085783 -0.949608"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600229 5.500834 2.701016" quat="0.624783 -0.724793 0.290381 0.000363"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600218 5.500572 3.801122" quat="0.260059 0.151304 -0.674621 -0.674064"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600153 5.500020 4.901435" quat="0.655387 0.231580 0.039710 0.717817"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600098 5.500908 6.001108" quat="0.027697 -0.581490 0.096747 -0.807305"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600767 5.500849 7.101917" quat="0.726889 0.007662 -0.341195 -0.595953"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600508 6.600586 1.601763" quat="-0.750802 0.290925 0.030568 -0.592220"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600939 6.600590 2.701441" quat="0.760906 0.268456 -0.082741 0.584899"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600533 6.600554 3.801680" quat="-0.279095 -0.547870 0.165854 0.770998"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600407 6.600113 4.901444" quat="-0.484525 -0.239123 0.808360 -0.233687"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600390 6.600360 6.001140" quat="-0.443781 -0.764429 -0.130621 -0.449049"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+		<body pos="6.600298 6.600425 7.101119" quat="-0.011328 0.473970 -0.588829 0.654603"><inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/> <freejoint/> <geom class="object5"/> </body> 
+
+    </worldbody>
+</mujoco>

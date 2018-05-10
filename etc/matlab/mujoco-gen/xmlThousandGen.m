@@ -4,8 +4,8 @@
 type = 1;
 
 %% parameters
-z_height = 0.501;    % drop height 
-number_one_dim = 10;
+z_height = 5.501;    % drop height 
+number_one_dim = 6;
 gap = 1.1;
 perturb = 0.001;
 

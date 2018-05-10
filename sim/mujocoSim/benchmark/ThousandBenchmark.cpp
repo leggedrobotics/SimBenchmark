@@ -160,6 +160,7 @@ int main(int argc, const char* argv[]) {
                 << "GUI      : " << benchmark::thousand::options.gui << std::endl
                 << "ERP      : " << benchmark::thousand::options.erpYN << std::endl
                 << "Timestep : " << benchmark::thousand::options.dt << std::endl
+                << "Solver   : " << benchmark::mujoco::options.solverName << std::endl
                 << "-----------------------"
   )
 

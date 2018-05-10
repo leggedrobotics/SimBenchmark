@@ -78,10 +78,12 @@ Parameter params;
  */
 std::string getMujocoXMLpath() {
 
+  int ncubic = params.n * params.n * params.n;
+
   std::string xmlPath(__FILE__);
   while (xmlPath.back() != '/')
     xmlPath.erase(xmlPath.size() - 1, 1);
-  xmlPath += "../res/mujoco/Thousand/sphere1000.xml";
+  xmlPath += "../res/mujoco/Thousand/sphere" + std::to_string(ncubic) + ".xml";
 
   return xmlPath;
 }

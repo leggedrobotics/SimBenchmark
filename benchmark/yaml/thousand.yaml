@@ -20,8 +20,8 @@ constant:
   ballM: 1500
   gap: 1.1
   perturbation: 0.001
-  H: 0.501
-  n: 10
+  H: 5.501
+  n: 6
 
 # randomseed
 random_seed: 42
