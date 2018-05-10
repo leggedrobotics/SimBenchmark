@@ -114,6 +114,9 @@ void setupWorld() {
 void simulationLoop() {
   if(benchmark::building::options.gui) {
     // gui
+    double numContact = 0;
+    int i = 0;
+
     if(benchmark::building::options.saveVideo)
       sim->startRecordingVideo("/tmp", "dart-building");
 
@@ -127,13 +130,21 @@ void simulationLoop() {
       }
 
       sim->integrate();
+
+      // calculate average contacts
+      numContact = double(i) / double(i+1) * numContact + sim->getWorldNumContacts() / double(i+1);
+      i++;
     }
 
     if(benchmark::building::options.saveVideo)
       sim->stopRecordingVideo();
+
+    std::cout << "average contact " << numContact << "\n";
   }
   else {
     // no gui
+    double numContact = 0;
+
     StopWatch watch;
     watch.start();
 
@@ -148,11 +159,15 @@ void simulationLoop() {
       }
 
       sim->integrate();
+
+      // calculate average contacts
+      numContact = double(i) / double(i+1) * numContact + sim->getWorldNumContacts() / double(i+1);
     }
 
     // print to screen
     double time = watch.measure();
     std::cout << "time taken for " << i << " steps "<< time <<"s \n";
+    std::cout << "average contact " << numContact << "\n";
   }
 }
 

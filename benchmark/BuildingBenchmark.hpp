@@ -131,6 +131,7 @@ void addDescToOption(po::options_description &desc) {
   desc.add_options()
       ("erp-on", po::value<bool>(), "erp on (true / false)")
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
+      ("T", po::value<double>(), "simulation time (e.g. 60)")
       ;
 }
 
@@ -171,6 +172,11 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   // dt option
   if(vm.count("dt")) {
     options.dt = vm["dt"].as<double>();
+  }
+
+  // T option
+  if(vm.count("T")) {
+    options.T = vm["T"].as<double>();
   }
 
   // erp
