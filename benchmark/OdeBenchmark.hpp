@@ -13,6 +13,9 @@ namespace po = boost::program_options;
 
 namespace benchmark::ode {
 
+/// color of ode
+float color[3] = {0.8588, 0.5176, 0.2392};
+
 /**
  * options for Dart simulation
  */

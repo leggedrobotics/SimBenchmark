@@ -13,6 +13,9 @@ namespace po = boost::program_options;
 
 namespace benchmark::bullet {
 
+/// color of bullet
+float color[3] = {0.6667, 0.2745, 0.2627};
+
 /**
  * options for Dart simulation
  */

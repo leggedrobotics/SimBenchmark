@@ -15,3 +15,8 @@ add_executable(BtBuildingBenchmark
         BuildingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/BuildingBenchmark.hpp)
 target_link_libraries(BtBuildingBenchmark ${BtSimLink})
+
+add_executable(BtThousandBenchmark
+        ThousandBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/ThousandBenchmark.hpp)
+target_link_libraries(BtThousandBenchmark ${BtSimLink})

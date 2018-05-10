@@ -16,3 +16,8 @@ add_executable(MjcBuildingBenchmark
         BuildingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/BuildingBenchmark.hpp)
 target_link_libraries(MjcBuildingBenchmark ${MjcSimLink})
+
+add_executable(MjcThousandBenchmark
+        ThousandBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/ThousandBenchmark.hpp)
+target_link_libraries(MjcThousandBenchmark ${MjcSimLink})

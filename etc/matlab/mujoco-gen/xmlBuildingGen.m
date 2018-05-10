@@ -100,6 +100,6 @@ end
 text = strcat(text, fileread('xml-template/bldg_tail.txt'));
 
 %% save file
-fid = fopen(sprintf(output), 'wt');
+fid = fopen(strcat('output/', sprintf(output)), 'wt');
 fprintf(fid, text);
 fclose(fid);

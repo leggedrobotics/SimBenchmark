@@ -1,4 +1,4 @@
-<mujoco model="Humanoid and 100 objects">
+<mujoco model="thousand">
     <compiler angle="degree"/>
 
     <option timestep="0.01" iterations="50" solver="PGS" jacobian="sparse" cone="elliptic" tolerance="1e-10"/>

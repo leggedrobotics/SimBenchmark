@@ -14,6 +14,9 @@ namespace po = boost::program_options;
 
 namespace benchmark::mujoco {
 
+/// color of mujoco
+float color[3] = {0.2706, 0.4471, 0.6549};
+
 /**
  * options for Dart simulation
  */

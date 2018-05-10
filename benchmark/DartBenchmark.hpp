@@ -10,6 +10,9 @@
 
 namespace benchmark::dart {
 
+/// color of dart
+float color[3] = {0.5020, 0.4118, 0.6078};
+
 /**
  * options for Dart simulation
  */

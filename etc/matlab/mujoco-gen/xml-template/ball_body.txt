@@ -21,4 +21,4 @@
     <worldbody>
         <light directional="true" diffuse=".8 .8 .8" pos="0 0 10" dir="0 0 -10"/>
 
-        <geom pos="0 0 0" type="plane" size="3 3 .5" rgba=".7 .7 .7 1" material="MatPlane"/>
+        <geom pos="0 0 0" type="plane" size="200 200 5" rgba=".7 .7 .7 1" material="MatPlane"/>
