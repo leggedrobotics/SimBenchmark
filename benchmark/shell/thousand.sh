@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DT_ARRAY=( "0.01" )
+DT_ARRAY=( "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.02" "0.03" "0.04" "0.05" "0.06" "0.07" "0.08" "0.09" "0.1" )
 
 # options
 raisim_installed="ON"
@@ -91,12 +91,9 @@ do
         if [ "$mujocosim_installed" == "ON" ] ; then
             for solver in pgs cg newton
             do
-                for erpon in true false
-                do
-                    # note mujoco has no erp
-                    timeout 600 ../sim/mujocoSim/benchmark/MjcThousandBenchmark --nogui --dt=$dt --solver=$solver --log --timer
-#                    timeout 600 ../sim/mujocoSim/benchmark/MjcThousandBenchmark --nogui --dt=$dt --solver=$solver --timer
-                done
+                # note mujoco has no erp
+                timeout 600 ../sim/mujocoSim/benchmark/MjcThousandBenchmark --nogui --dt=$dt --solver=$solver --log --timer
+#                timeout 600 ../sim/mujocoSim/benchmark/MjcThousandBenchmark --nogui --dt=$dt --solver=$solver --timer
             done
         else
             echo "mujocosim is not built. turn on BENCHMARK_MUJOCOSIM option in cmake"
@@ -108,12 +105,9 @@ do
         if [ "$dartsim_installed" == "ON" ] ; then
             for solver in dantzig pgs
             do
-                for erpon in true false
-                do
-                    # note dart has no erp
-                    timeout 600 ../sim/dartSim/benchmark/DartThousandBenchmark --nogui --dt=$dt --solver=$solver --log --timer
-#                    timeout 600 ../sim/dartSim/benchmark/DartThousandBenchmark --nogui --dt=$dt --solver=$solver --timer
-                done
+                # note dart has no erp
+                timeout 600 ../sim/dartSim/benchmark/DartThousandBenchmark --nogui --dt=$dt --solver=$solver --log --timer
+#                timeout 600 ../sim/dartSim/benchmark/DartThousandBenchmark --nogui --dt=$dt --solver=$solver --timer
             done
         else
             echo "dartsim is not built. turn on BENCHMARK_DARTSIM option in cmake"

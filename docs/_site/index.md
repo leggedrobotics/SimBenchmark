@@ -16,7 +16,7 @@ The list of the simulators is as follows:
 
 - [Rolling test](rolling/rolling.html)
 - Bouncing test
-- Thousand balls test
+- [666 balls test](666/666.html)
 - Building test
 - [ANYmal PD control test](anymal/anymal.html)
 - ANYmal zero gravity test
