@@ -1,0 +1,25 @@
+---
+# simulation properties
+sim_properties:
+  light_position: [30.0, 0.0, 10.0]
+
+# solver parameters
+solver_params:
+  raiSim:
+    erp: 0.2    # when erp_on = true
+  bullet:
+    erp: 0.2              # when erp_on = true
+    erp2: 0.2             # when erp_on = true
+    erp_friction: 0.2     # when erp_on = true
+  ode:
+    erp: 0.2    # when erp_on = true
+
+# simulation constants
+constant:
+  m: 1
+  n: 1                    # (num obj) = n x n
+  g: -9.8
+  mu_ground: 0
+  mu_ball: 0
+  T: 10
+...
