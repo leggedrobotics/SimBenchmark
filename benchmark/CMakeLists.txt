@@ -10,6 +10,9 @@ file(COPY shell/building.sh
 file(COPY shell/thousand.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+file(COPY shell/bouncing.sh
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 #if(BENCHMARK_BULLET)
 #    # rolling
 #    add_executable(rollingBulletSim rollingBulletSim.cpp rolling.hpp)

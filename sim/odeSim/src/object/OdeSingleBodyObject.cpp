@@ -216,7 +216,7 @@ double object::OdeSingleBodyObject::getPotentialEnergy(const benchmark::Vec<3> &
   double potential = position[0] * gravity[0] +
       position[1] * gravity[1] +
       position[2] * gravity[2];
-  return -potential;
+  return -potential * mass_.mass;
 }
 
 double object::OdeSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {

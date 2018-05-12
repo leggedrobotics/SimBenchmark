@@ -22,5 +22,6 @@ constant:
   R: 0.5
   mu_ground: 0
   mu_ball: 0
-  T: 10
+  T: 20
+  H: 10
 ...

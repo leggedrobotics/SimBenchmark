@@ -173,7 +173,7 @@ double bullet_sim::object::BtSingleBodyObject::getPotentialEnergy(const benchmar
   double potential = 0;
   getPosition();
   benchmark::vecDot(posTemp_, gravity, potential);
-  return -potential;
+  return -potential * mass_;
 }
 
 double bullet_sim::object::BtSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {

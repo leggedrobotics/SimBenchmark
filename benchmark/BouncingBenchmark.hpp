@@ -211,6 +211,7 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   params.mu_ground = constant["mu_ground"].as<double>();
   params.mu_ball = constant["mu_ball"].as<double>();
   params.T = constant["T"].as<double>();
+  params.H = constant["H"].as<double>();
 
   // solver parameters
   YAML::Node solver_params = yaml["solver_params"];

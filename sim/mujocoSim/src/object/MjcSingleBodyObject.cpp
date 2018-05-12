@@ -162,9 +162,11 @@ double MjcSingleBodyObject::getKineticEnergy() {
 
 double MjcSingleBodyObject::getPotentialEnergy(const benchmark::Vec<3> &gravity) {
   double potential = 0;
+  double mass = getBodyMass();
+
   getPosition();
   benchmark::vecDot(posTemp_, gravity, potential);
-  return -potential;
+  return -potential * mass;
 }
 
 double MjcSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {
