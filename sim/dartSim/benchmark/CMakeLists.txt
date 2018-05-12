@@ -21,3 +21,8 @@ add_executable(DartThousandBenchmark
         ThousandBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/ThousandBenchmark.hpp)
 target_link_libraries(DartThousandBenchmark ${DartSimLink})
+
+add_executable(DartBouncingBenchmark
+        BouncingBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/BouncingBenchmark.hpp)
+target_link_libraries(DartBouncingBenchmark ${DartSimLink})

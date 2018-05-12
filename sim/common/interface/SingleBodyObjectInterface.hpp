@@ -40,6 +40,10 @@ class SingleBodyObjectInterface {
   virtual void setRestitutionCoefficient(double restitution) = 0;
   virtual void setFrictionCoefficient(double friction) = 0;
 
+  virtual double getKineticEnergy() = 0;
+  virtual double getPotentialEnergy(const benchmark::Vec<3> &gravity) = 0;
+  virtual double getEnergy(const benchmark::Vec<3> &gravity) = 0;
+
   virtual bool isVisualizeFramesAndCom() const = 0;
 
  protected:

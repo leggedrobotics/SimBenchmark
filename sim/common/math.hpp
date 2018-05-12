@@ -790,6 +790,13 @@ inline void angleAxisToRotMat(const Vec<3> &a1, const double theta, Mat<3, 3> &r
   rotMat[8] = tmp9;
 }
 
+inline void vecTransposeMatVecMul(const Vec<3> &vec, const Mat<3, 3> &mat, double &scalar) {
+  /// x^T M x
+  scalar = vec[0] * (mat[0] * vec[0] + mat[1] * vec[1] + mat[2] * vec[2])
+      + vec[1] * (mat[3] * vec[0] + mat[4] * vec[1] + mat[5] * vec[2])
+      + vec[2] * (mat[6] * vec[0] + mat[7] * vec[1] + mat[8] * vec[2]);
+}
+
 } // benchmark
 
 #endif //BENCHMARK_MATH_HPP

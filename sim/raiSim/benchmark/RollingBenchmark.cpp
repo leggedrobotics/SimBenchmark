@@ -8,7 +8,7 @@
 #include "RollingBenchmark.hpp"
 
 rai_sim::World_RG *sim;
-std::vector<rai_sim::SingleBodyHandle> ballList;
+std::vector<rai_sim::SingleBodyHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
@@ -56,7 +56,10 @@ void setupWorld() {
   auto box = sim->addBox(20, 20, 1, 10);
   box->setPosition(0, 0, 0.5 - benchmark::rolling::params.initPenetration);
   box->setMaterial(sim->getMaterialKey("box"));
-  ballList.push_back(box);
+  objList.push_back(box);
+
+  if(benchmark::rolling::options.gui)
+    box.visual()[0]->setColor({0.5373, 0.6471, 0.3059});
 
   for(int i = 0; i < 5; i++) {
     for(int j = 0; j < 5; j++) {
@@ -65,7 +68,10 @@ void setupWorld() {
                         j * 2.0 - 4.0,
                         1.5 - 3 * benchmark::rolling::params.initPenetration);
       ball->setMaterial(sim->getMaterialKey("ball"));
-      ballList.push_back(ball);
+      objList.push_back(ball);
+
+      if(benchmark::rolling::options.gui)
+        ball.visual()[0]->setColor({0.5373, 0.6471, 0.3059});
     }
   }
 
@@ -102,14 +108,14 @@ void simulationLoop() {
         sim->visualizerLoop(benchmark::rolling::options.dt); i++) {
 
       // set force to box
-      ballList[0]->setExternalForce(force, 0);
+      objList[0]->setExternalForce(force, 0);
 
       // log
       if(benchmark::rolling::options.log) {
-        ru::logger->appendData("velbox", ballList[0]->getLinearVelocity().data());
-        ru::logger->appendData("velball", ballList[1]->getLinearVelocity().data());
-        ru::logger->appendData("posbox", ballList[0]->getPosition().data());
-        ru::logger->appendData("posball", ballList[1]->getPosition().data());
+        ru::logger->appendData("velbox", objList[0]->getLinearVelocity().data());
+        ru::logger->appendData("velball", objList[1]->getLinearVelocity().data());
+        ru::logger->appendData("posbox", objList[0]->getPosition().data());
+        ru::logger->appendData("posball", objList[1]->getPosition().data());
       }
 
       sim->integrate(benchmark::rolling::options.dt);
@@ -126,14 +132,14 @@ void simulationLoop() {
     for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt); i++) {
 
       // set force to box
-      ballList[0]->setExternalForce(force, 0);
+      objList[0]->setExternalForce(force, 0);
 
       // log
       if(benchmark::rolling::options.log) {
-        ru::logger->appendData("velbox", ballList[0]->getLinearVelocity().data());
-        ru::logger->appendData("velball", ballList[1]->getLinearVelocity().data());
-        ru::logger->appendData("posbox", ballList[0]->getPosition().data());
-        ru::logger->appendData("posball", ballList[1]->getPosition().data());
+        ru::logger->appendData("velbox", objList[0]->getLinearVelocity().data());
+        ru::logger->appendData("velball", objList[1]->getLinearVelocity().data());
+        ru::logger->appendData("posbox", objList[0]->getPosition().data());
+        ru::logger->appendData("posball", objList[1]->getPosition().data());
       }
 
       sim->integrate(benchmark::rolling::options.dt);

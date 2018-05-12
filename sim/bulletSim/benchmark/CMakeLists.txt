@@ -20,3 +20,8 @@ add_executable(BtThousandBenchmark
         ThousandBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/ThousandBenchmark.hpp)
 target_link_libraries(BtThousandBenchmark ${BtSimLink})
+
+add_executable(BtBouncingBenchmark
+        BouncingBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/BouncingBenchmark.hpp)
+target_link_libraries(BtBouncingBenchmark ${BtSimLink})

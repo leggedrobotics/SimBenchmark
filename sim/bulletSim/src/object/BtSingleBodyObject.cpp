@@ -5,7 +5,6 @@
 #include "BtSingleBodyObject.hpp"
 
 bullet_sim::object::BtSingleBodyObject::BtSingleBodyObject(double mass) : mass_(mass) {
-
 }
 
 bullet_sim::object::BtSingleBodyObject::~BtSingleBodyObject() {
@@ -145,4 +144,38 @@ void bullet_sim::object::BtSingleBodyObject::setExternalForce(Eigen::Vector3d fo
 }
 void bullet_sim::object::BtSingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
   rigidBody_->applyTorque(btVector3(torque[0], torque[1], torque[2]));
+}
+
+double bullet_sim::object::BtSingleBodyObject::getKineticEnergy() {
+  getLinearVelocity();
+  getAngularVelocity();
+  const btVector3 &localInertia = rigidBody_->getLocalInertia();
+  benchmark::Mat<3,3> I;
+  I.e() << localInertia.x(), 0, 0,
+      0, localInertia.y(), 0,
+      0, 0, localInertia.z();
+
+  // ang
+  double angEnergy = 0;
+  benchmark::Mat<3,3> I_w;
+  getRotationMatrix();
+  benchmark::similarityTransform(rotMatTemp_, I, I_w);
+  benchmark::vecTransposeMatVecMul(angVelTemp_, I_w, angEnergy);
+
+  // lin
+  double linEnergy = 0;
+  benchmark::vecDot(linVelTemp_, linVelTemp_, linEnergy);
+
+  return 0.5 * angEnergy + 0.5 * mass_ * linEnergy;
+}
+
+double bullet_sim::object::BtSingleBodyObject::getPotentialEnergy(const benchmark::Vec<3> &gravity) {
+  double potential = 0;
+  getPosition();
+  benchmark::vecDot(posTemp_, gravity, potential);
+  return -potential;
+}
+
+double bullet_sim::object::BtSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {
+  return getKineticEnergy() + getPotentialEnergy(gravity);
 }

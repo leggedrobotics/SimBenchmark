@@ -2,59 +2,60 @@
 // Created by kangd on 15.02.18.
 //
 
-#include <raiSim/World_RG.hpp>
+#include <BtWorld_RG.hpp>
 
 #include "BouncingBenchmark.hpp"
+#include "BtBenchmark.hpp"
 
-rai_sim::World_RG *sim;
-std::vector<rai_sim::SingleBodyHandle> objList;
+bullet_sim::BtWorld_RG *sim;
+std::vector<benchmark::SingleBodyHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
   if (benchmark::bouncing::options.gui)
-    sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+    sim = new bullet_sim::BtWorld_RG(800, 600, 0.5,
+                                     benchmark::NO_BACKGROUND,
+                                     benchmark::bullet::options.solverOption);
   else
-    sim = new rai_sim::World_RG();
+    sim = new bullet_sim::BtWorld_RG(benchmark::bullet::options.solverOption);
+
 
   // erp
   if(benchmark::bouncing::options.erpYN)
-    sim->setERP(benchmark::bouncing::params.erp);
+    sim->setERP(benchmark::bouncing::params.erp, 0, 0);
   else
-    sim->setERP(0);
+    sim->setERP(0, 0, 0);
 
   // set up logger and timer
   if(benchmark::bouncing::options.log)
     benchmark::bouncing::loggerSetup(
         benchmark::bouncing::getLogDirpath(benchmark::bouncing::options.erpYN,
                                            benchmark::bouncing::options.e,
-                                           "RAI",
-                                           "RAI",
+                                           benchmark::bullet::options.simName,
+                                           benchmark::bullet::options.solverName,
                                            benchmark::bouncing::options.dt), "var"
     );
 }
 
 void setupWorld() {
   // materials
-  rai_sim::MaterialManager materials;
-  materials.setMaterialNames({"ground", "ball"});
-  materials.setMaterialPairProp("ground", "ball",
-                                benchmark::bouncing::params.mu_ground * benchmark::bouncing::params.mu_ball,
-                                benchmark::bouncing::options.e,
-                                0.01);
-  sim->updateMaterialProp(materials);
-
   // add objects
-  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, 1, -1, rai_sim::GRID);
-  checkerboard->setMaterial(sim->getMaterialKey("ground"));
+  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
+  checkerboard->setFrictionCoefficient(benchmark::bouncing::params.mu_ground);
+  checkerboard->setRestitutionCoefficient(1.0);
 
   for(int i = 0; i < benchmark::bouncing::params.n; i++) {
     for(int j = 0; j < benchmark::bouncing::params.n; j++) {
       auto ball = sim->addSphere(0.5, 1);
       ball->setPosition(i * 2.0, j * 2.0, benchmark::bouncing::params.H);
-      ball->setMaterial(sim->getMaterialKey("ball"));
+      ball->setFrictionCoefficient(benchmark::bouncing::params.mu_ball);
+      ball->setRestitutionCoefficient(benchmark::bouncing::options.e);
 
       if(benchmark::bouncing::options.gui)
-        ball.visual()[0]->setColor({0.5373, 0.6471, 0.3059});
+        ball.visual()[0]->setColor(
+            {benchmark::bullet::color[0],
+             benchmark::bullet::color[1],
+             benchmark::bullet::color[2]});
 
       objList.push_back(ball);
     }
@@ -75,7 +76,7 @@ void simulationLoop() {
   if(benchmark::bouncing::options.gui) {
     // gui
     if(benchmark::bouncing::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "rai-rolling");
+      sim->startRecordingVideo("/tmp", "bullet-bouncing");
 
     for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt)
         && sim->visualizerLoop(benchmark::bouncing::options.dt); i++) {
@@ -113,17 +114,22 @@ void simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::bouncing::addDescToOption(desc);
+  benchmark::bullet::addDescToOption(desc);
+
   benchmark::bouncing::getOptionsFromArg(argc, argv, desc);
+  benchmark::bullet::getOptionsFromArg(argc, argv, desc);
+
   benchmark::bouncing::getParamsFromYAML(benchmark::bouncing::getYamlpath().c_str(),
-                                         benchmark::RAI);
+                                         benchmark::BULLET);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: RAI" << std::endl
+                << "Simulator: BULLET" << std::endl
                 << "GUI      : " << benchmark::bouncing::options.gui << std::endl
                 << "ERP      : " << benchmark::bouncing::options.erpYN << std::endl
                 << "Res Coef : " << benchmark::bouncing::options.e << std::endl
                 << "Timestep : " << benchmark::bouncing::options.dt << std::endl
+                << "Solver   : " << benchmark::bullet::options.solverName << std::endl
                 << "-----------------------"
   )
 

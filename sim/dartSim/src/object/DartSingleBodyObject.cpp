@@ -176,6 +176,16 @@ void DartSingleBodyObject::updateBodyQuaternion() {
 void DartSingleBodyObject::updateBodyRotationMatrix() {
   rotMat_.e() = bodyPtr_->getParentJoint()->getRelativeTransform().linear();
 }
+double DartSingleBodyObject::getKineticEnergy() {
+  return bodyPtr_->computeKineticEnergy();
+}
+double DartSingleBodyObject::getPotentialEnergy(const benchmark::Vec<3> &gravity) {
+  Eigen::Vector3d gravityE = {gravity[0], gravity[1], gravity[2]};
+  return bodyPtr_->computePotentialEnergy(gravityE);
+}
+double DartSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {
+  return getKineticEnergy() + getPotentialEnergy(gravity);
+}
 
 } // object
 } // dart_sim

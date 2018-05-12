@@ -8,7 +8,7 @@
 #include "OdeBenchmark.hpp"
 
 ode_sim::OdeWorld_RG *sim;
-std::vector<benchmark::SingleBodyHandle> ballList;
+std::vector<benchmark::SingleBodyHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
@@ -84,7 +84,7 @@ void setupWorld() {
           }
         }
 
-        ballList.push_back(obj);
+        objList.push_back(obj);
       }
     }
   }
@@ -93,17 +93,17 @@ void setupWorld() {
     sim->setLightPosition((float)benchmark::thousand::params.lightPosition[0],
                           (float)benchmark::thousand::params.lightPosition[1],
                           (float)benchmark::thousand::params.lightPosition[2]);
-    sim->cameraFollowObject(ballList[ballList.size() / 2], {0, 20, 10});
+    sim->cameraFollowObject(objList[objList.size() / 2], {0, 20, 10});
   }
 }
 
 double penetrationCheck() {
   double error = 0;
-  int numObj = ballList.size();
+  int numObj = objList.size();
 
   for (int i = 0; i < numObj; i++) {
     for (int j = i + 1; j < numObj; j++) {
-      double dist = (ballList[i]->getPosition() - ballList[j]->getPosition()).norm();
+      double dist = (objList[i]->getPosition() - objList[j]->getPosition()).norm();
 
       // error between spheres
       if (dist < benchmark::thousand::params.ballR * 2)
@@ -111,9 +111,9 @@ double penetrationCheck() {
     }
 
     // error sphere ~ ground
-    if (ballList[i]->getPosition()[2] < benchmark::thousand::params.ballR) {
+    if (objList[i]->getPosition()[2] < benchmark::thousand::params.ballR) {
       error +=
-          (benchmark::thousand::params.ballR - ballList[i]->getPosition()[2]) * (benchmark::thousand::params.ballR - ballList[i]->getPosition()[2]);
+          (benchmark::thousand::params.ballR - objList[i]->getPosition()[2]) * (benchmark::thousand::params.ballR - objList[i]->getPosition()[2]);
     }
   }
 

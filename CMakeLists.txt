@@ -22,6 +22,7 @@ option(BENCHMARK_ODE "benchmark ODE" ON)
 option(BENCHMARK_MUJOCO "benchmark MUJOCO" ON)
 option(BENCHMARK_DART "benchmark DART" ON)
 option(BUILD_DEMO "build demos" ON)
+option(BUILD_TEST "build test" ON)
 
 ## =========================== LINK DIRECTORIES ===========================
 link_directories(/usr/local/lib)
@@ -62,9 +63,11 @@ set(BENCHMARK_LINK
 ## =========================== FILES ===========================
 include_directories(sim)
 add_subdirectory(sim)
-
-file(INSTALL ${CMAKE_SOURCE_DIR}/res
-        DESTINATION ${CMAKE_BINARY_DIR})
-
-add_subdirectory(test)
 add_subdirectory(benchmark)
+
+#file(INSTALL ${CMAKE_SOURCE_DIR}/res
+#        DESTINATION ${CMAKE_BINARY_DIR})
+
+if(BUILD_TEST)
+    add_subdirectory(test)
+endif(BUILD_TEST)

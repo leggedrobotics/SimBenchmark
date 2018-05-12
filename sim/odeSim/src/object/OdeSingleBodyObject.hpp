@@ -39,6 +39,10 @@ class OdeSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getAngularVelocity();
   virtual void getPosition_W(benchmark::Vec<3>& pos_w);
 
+  double getKineticEnergy() override ;
+  double getPotentialEnergy(const benchmark::Vec<3> &gravity) override ;
+  double getEnergy(const benchmark::Vec<3> &gravity) override ;
+
   virtual void setPosition(Eigen::Vector3d originPosition);
   virtual void setPosition(double x, double y, double z);
   virtual void setOrientation(Eigen::Quaterniond quaternion);

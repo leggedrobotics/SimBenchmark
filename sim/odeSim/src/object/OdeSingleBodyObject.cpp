@@ -177,4 +177,50 @@ bool ode_sim::object::OdeSingleBodyObject::isVisualizeFramesAndCom() const {
   return visualizeFramesAndCom_;
 }
 
+double object::OdeSingleBodyObject::getKineticEnergy() {
+  const dReal *angularVelocity;
+  const dReal *linearVelocity;
+  const dReal* rot = dGeomGetRotation(geometry_);
+  if(body_) {
+    linearVelocity = dBodyGetLinearVel(body_);
+    angularVelocity = dBodyGetAngularVel(body_);
+  }
+  else {
+    RAIFATAL('cannot get velocity from static object');
+  }
+
+  // cal kinetic energy
+  double linEnergy = dDot(linearVelocity, linearVelocity, 3);
+  double angEnergy = 0;
+  benchmark::Vec<3> angVel = {angularVelocity[0],
+                              angularVelocity[1],
+                              angularVelocity[2]};
+
+  benchmark::Mat<3,3> I_w;
+  benchmark::Mat<3,3> rotation;
+  rotation.e() << rot[0], rot[1], rot[2],
+      rot[4], rot[5], rot[6],
+      rot[8], rot[9], rot[10];
+  benchmark::Mat<3,3> I;
+  I.e() << mass_.I[0], mass_.I[1], mass_.I[2],
+      mass_.I[4], mass_.I[5], mass_.I[6],
+      mass_.I[8], mass_.I[9], mass_.I[10];
+  benchmark::similarityTransform(rotation, I, I_w);
+  benchmark::vecTransposeMatVecMul(angVel, I_w, angEnergy);
+
+  return 0.5 * mass_.mass * linEnergy + 0.5 * angEnergy;
+}
+
+double object::OdeSingleBodyObject::getPotentialEnergy(const benchmark::Vec<3> &gravity) {
+  const dReal *position = dGeomGetPosition(geometry_);
+  double potential = position[0] * gravity[0] +
+      position[1] * gravity[1] +
+      position[2] * gravity[2];
+  return -potential;
+}
+
+double object::OdeSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {
+  return getKineticEnergy() + getPotentialEnergy(gravity);
+}
+
 } // ode_sim
