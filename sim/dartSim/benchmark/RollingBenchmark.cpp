@@ -50,6 +50,11 @@ void setupWorld() {
   box->setFrictionCoefficient(benchmark::rolling::params.dartBoxMu);
   objList.push_back(box);
 
+  if(benchmark::rolling::options.gui)
+    box.visual()[0]->setColor({benchmark::dart::color[0],
+                               benchmark::dart::color[1],
+                               benchmark::dart::color[2]});
+
   for(int i = 0; i < 5; i++) {
     for(int j = 0; j < 5; j++) {
       auto ball = sim->addSphere(0.5, 1);
@@ -58,6 +63,11 @@ void setupWorld() {
                         1.5 - 3 * benchmark::rolling::params.initPenetration);
       ball->setFrictionCoefficient(benchmark::rolling::params.dartBallMu);
       objList.push_back(ball);
+
+      if(benchmark::rolling::options.gui)
+        ball.visual()[0]->setColor({benchmark::dart::color[0],
+                                    benchmark::dart::color[1],
+                                    benchmark::dart::color[2]});
     }
   }
 

@@ -67,7 +67,7 @@ void setupWorld() {
     sim->setLightPosition((float)benchmark::bouncing::params.lightPosition[0],
                           (float)benchmark::bouncing::params.lightPosition[1],
                           (float)benchmark::bouncing::params.lightPosition[2]);
-    sim->cameraFollowObject(checkerboard, {30, 0, 15});
+    sim->cameraFollowObject(checkerboard, {20, 0, 10});
   }
 }
 
@@ -75,7 +75,7 @@ void simulationLoop() {
   if(benchmark::bouncing::options.gui) {
     // gui
     if(benchmark::bouncing::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "rai-rolling");
+      sim->startRecordingVideo("/tmp", "rai-bouncing");
 
     for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt)
         && sim->visualizerLoop(benchmark::bouncing::options.dt); i++) {

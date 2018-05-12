@@ -9,10 +9,10 @@ odesim_installed="ON"
 mujocosim_installed="ON"
 dartsim_installed="ON"
 
-raisim_flag='true'
+raisim_flag='false'
 bullet_flag='false'
 ode_flag='false'
-mujoco_flag='false'
+mujoco_flag='true'
 dart_flag='false'
 
 

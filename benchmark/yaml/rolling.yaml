@@ -41,6 +41,6 @@ constant:
     mu_box: 0.8
   mujoco:
     mu_ground: 0.4
-    mu_ball: 0.4
-    mu_box: 0.8
+    mu_ball: 0.8
+    mu_box: 0.4
 ...

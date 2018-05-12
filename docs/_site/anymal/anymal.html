@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
 
     <!-- Begin Jekyll SEO tag v2.4.0 -->
-<title>ANYmal PD control test | SIMBENCH</title>
+<title>SIMBENCH | Collision simulator benchmark for robotics applications: RaiSim vs Bullet vs ODE vs MuJoCo vs DartSim</title>
 <meta name="generator" content="Jekyll v3.7.3" />
-<meta property="og:title" content="ANYmal PD control test" />
+<meta property="og:title" content="SIMBENCH" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Collision simulator benchmark for robotics applications: RaiSim vs Bullet vs ODE vs MuJoCo vs DartSim" />
 <meta property="og:description" content="Collision simulator benchmark for robotics applications: RaiSim vs Bullet vs ODE vs MuJoCo vs DartSim" />
@@ -14,12 +14,12 @@
 <meta property="og:url" content="http://localhost:4000/anymal/anymal.html" />
 <meta property="og:site_name" content="SIMBENCH" />
 <script type="application/ld+json">
-{"description":"Collision simulator benchmark for robotics applications: RaiSim vs Bullet vs ODE vs MuJoCo vs DartSim","@type":"WebPage","url":"http://localhost:4000/anymal/anymal.html","headline":"ANYmal PD control test","@context":"http://schema.org"}</script>
+{"description":"Collision simulator benchmark for robotics applications: RaiSim vs Bullet vs ODE vs MuJoCo vs DartSim","@type":"WebPage","url":"http://localhost:4000/anymal/anymal.html","headline":"SIMBENCH","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#157878">
-    <link rel="stylesheet" href="/assets/css/style.css?v=1c54be763188ec74bbc1199b4a3e42b97e5c78be">
+    <link rel="stylesheet" href="/assets/css/style.css?v=0bf37138490d95f194b7b5e9920c60f2ead72133">
 </head>
 <body>
 <section class="page-header">
@@ -39,56 +39,56 @@
 </section>
 
 <section class="main-content">
-    <h1 id="anymal-pd-control-test">ANYmal PD control test</h1>
+    <h1>ANYmal PD control test</h1>
 
-<p><img src="/img/AnymalBenchmark.png" alt="anymal-test-image" /></p>
+<img src="anymal-test.png" alt="anymal-test">
 
-<p>ANYmal test is for testing articulated robot system. In this test, the 18 DOF quadruped robot <a href="http://www.rsl.ethz.ch/">ANYmal</a> is feedback-controlled to stand on the flat ground.</p>
+<p>ANYmal test is for testing articulated robot system. In this test, the 18 DOF quadruped robot [ANYmal](http://www.rsl.ethz.ch/) is feedback-controlled to stand on the flat ground.</p>
 
-<p>The test focuses on:</p>
+The test focuses on:
 
-<ol>
-  <li>Speed of the articulated system (multibody system with revolute joints) simulation</li>
-  <li>Scalability of the simulators</li>
-</ol>
+1. Speed of the articulated system (multibody system with revolute joints) simulation
+2. Scalability of the simulators
 
-<h2 id="test-scenario">Test scenario</h2>
+<h2>Test scenario</h2>
 
-<h2 id="tested-solver-list">Tested solver list</h2>
+<h2>Tested solver list</h2>
 
 <ul>
-  <li>Rai
-    <ul>
-      <li>Bisection solver (Rai solver)</li>
-    </ul>
-  </li>
-  <li>Bullet
-    <ul>
-      <li>Multibody solver (Featherstone implementation on Sequential impulse)</li>
-    </ul>
-  </li>
-  <li>ODE
-    <ul>
-      <li>Standard</li>
-    </ul>
-  </li>
-  <li>MuJoCo
-    <ul>
-      <li>PGS</li>
-      <li>CG</li>
-      <li>Newton</li>
-    </ul>
-  </li>
-  <li>Dart
-    <ul>
-      <li>Dantzig</li>
-      <li>PGS</li>
-    </ul>
-  </li>
+    <li>Rai
+        <ul>
+            <li>Bisection solver (Rai solver)</li>
+        </ul>
+    </li>
+    <li>Bullet
+        <ul>
+            <li>Multibody solver (Featherstone implementation on Sequential impulse)</li>
+        </ul>
+    </li>
+    <li>ODE
+        <ul>
+            <li><strike>Quick</strike></li>
+            <li>Standard</li>
+        </ul>
+    </li>
+    <li>MuJoCo
+        <ul>
+            <li>PGS</li>
+            <li>CG</li>
+            <li>Newton</li>
+        </ul>
+    </li>
+    <li>Dart
+        <ul>
+            <li>Dantzig</li>
+            <li>PGS</li>
+        </ul>
+    </li>
 </ul>
 
 <p>Note that ODE quick solver easily fails for articulated system simulation as the following video, thus was exempted.</p>
 
+ 
 <!---
 <div style="position:relative;padding-top:75%;">
     <iframe src="https://www.youtube.com/embed/X0lYN7bzoNk?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen
@@ -96,25 +96,28 @@
 </div>
 --->
 
-<p><img src="/img/ode-quicksolver-fail.gif" alt="anymal-test-ode-fail" /></p>
+<img alt="anymal-test-ode-fail" src="../img/ode-quicksolver-fail.gif">
 
-<p>According to the manual this is due to the solver’s property:</p>
+
+<p>
+    According to the manual this is due to the solver's property:
 
 <blockquote>
-  <p>QuickStep is great for stacks of objects especially when the auto-disable feature is used as well. However, it has poor accuracy for near-singular systems. Near-singular systems can occur when using high-friction contacts, motors, or certain articulated structures. For example, a robot with multiple legs sitting on the ground may be near-singular.</p>
+    <p>QuickStep is great for stacks of objects especially when the auto-disable feature is used as well. However, it has poor accuracy for near-singular systems. Near-singular systems can occur when using high-friction contacts, motors, or certain articulated structures. For example, a robot with multiple legs sitting on the ground may be near-singular.</p>
 
-  <p><em>from <a href="https://www.ode-wiki.org/wiki/index.php?title=Manual:_World">ODE wiki</a></em></p>
+    <i>from <a href="https://www.ode-wiki.org/wiki/index.php?title=Manual:_World">ODE wiki</a></i>
 </blockquote>
+</p>
 
-<h2 id="results">Results</h2>
+<h2>Results</h2>
 
 <p>The results of the test are as following figures.</p>
 
-<p><img src="/img/samplebar.png" alt="anymal-test-speed-bar" /></p>
+<img alt="anymal-test-speed-bar" src="anymal-speed-bar.png">
 
-<p><img src="/img/sampleplot.png" alt="anymal-test-speed-plot" /></p>
+<img alt="anymal-test-speed-plot" src="anymal-plot.png">
 
-<p><img src="/img/sampleplot-log.png" alt="anymal-test-speed-plot-log" /></p>
+<img alt="anymal-test-speed-plot-log" src="anymal-plot-log.png">
 
 
     <footer class="site-footer">

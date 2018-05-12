@@ -15,7 +15,7 @@ The list of the simulators is as follows:
 ## Test results
 
 - [Rolling test](rolling/rolling.html)
-- Bouncing test
+- [Bouncing test](bouncing/bouncing.html)
 - [666 balls test](666/666.html)
 - Building test
 - [ANYmal PD control test](anymal/anymal.html)

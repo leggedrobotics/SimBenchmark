@@ -48,8 +48,18 @@ void setupWorld() {
   /// Note. for mujoco (frictional coefficient A-B) = max(coeff of A, coeff of B)
   sim->getSingleBodyHandle(0)->setFrictionCoefficient(benchmark::rolling::params.mjcGroundMu);
   sim->getSingleBodyHandle(1)->setFrictionCoefficient(benchmark::rolling::params.mjcBoxMu);
+
+  if(benchmark::rolling::options.gui)
+    sim->getSingleBodyHandle(1).visual()[0]->setColor({benchmark::mujoco::color[0],
+                                                       benchmark::mujoco::color[1],
+                                                       benchmark::mujoco::color[2]});
   for(int i = 2; i < sim->getNumObject(); i++) {
-    sim->getSingleBodyHandle(1)->setFrictionCoefficient(benchmark::rolling::params.mjcBallMu);
+    sim->getSingleBodyHandle(i)->setFrictionCoefficient(benchmark::rolling::params.mjcBallMu);
+
+    if(benchmark::rolling::options.gui)
+      sim->getSingleBodyHandle(i).visual()[0]->setColor({benchmark::mujoco::color[0],
+                                                         benchmark::mujoco::color[1],
+                                                         benchmark::mujoco::color[2]});
   }
 
   if(benchmark::rolling::options.gui) {
