@@ -155,7 +155,10 @@ void mujoco_sim::MjcWorld_RG::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity[0], gravity[1], gravity[2]});
 }
 
-void mujoco_sim::MjcWorld_RG::setERP(double erp, double erp2, double frictionErp) {}
+void mujoco_sim::MjcWorld_RG::setERP(double erp, double erp2, double frictionErp) {
+  RAIFATAL("no erp for mujoco")
+}
+
 benchmark::SingleBodyHandle mujoco_sim::MjcWorld_RG::getSingleBodyHandle(int index) {
   if(index > sbHandles_.size())
   RAIFATAL("get singlebody handle failed. invalid index");

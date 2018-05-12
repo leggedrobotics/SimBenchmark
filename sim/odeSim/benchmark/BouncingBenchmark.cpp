@@ -45,7 +45,7 @@ void setupWorld() {
 
   for(int i = 0; i < benchmark::bouncing::params.n; i++) {
     for(int j = 0; j < benchmark::bouncing::params.n; j++) {
-      auto ball = sim->addSphere(0.5, 1);
+      auto ball = sim->addSphere(benchmark::bouncing::params.R, benchmark::bouncing::params.m);
       ball->setPosition(i * 2.0, j * 2.0, benchmark::bouncing::params.H);
       ball->setFrictionCoefficient(benchmark::bouncing::params.mu_ball);
       ball->setRestitutionCoefficient(benchmark::bouncing::options.e);

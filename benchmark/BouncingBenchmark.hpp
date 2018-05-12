@@ -45,10 +45,10 @@ struct Parameter {
   double erpFriction = 0.1;     // for bullet
 
   // simulation parameters
-  double m = 1;             // mass of ball
-  double n = 1;
+  double m = 1500;              // mass of ball
+  int n = 1;                 // (num obj) = n x n
   double H = 10;
-  double R = 0.5;           // radius of ball
+  double R = 0.5;               // radius of ball
   double g = -9.8;
   double T = 10;
 
@@ -70,10 +70,11 @@ Parameter params;
  */
 std::string getMujocoXMLpath() {
 
+  const int nsq = (params.n) * (params.n);
   std::string xmlPath(__FILE__);
   while (xmlPath.back() != '/')
     xmlPath.erase(xmlPath.size() - 1, 1);
-  xmlPath += "../res/mujoco/Bouncing/bouncing.xml";
+  xmlPath += "../res/mujoco/Bouncing/bouncing" + std::to_string(nsq) + ".xml";
 
   return xmlPath;
 }
@@ -206,6 +207,7 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   params.m = constant["m"].as<double>();
   params.n = constant["n"].as<int>();
   params.g = constant["g"].as<double>();
+  params.R = constant["R"].as<double>();
   params.mu_ground = constant["mu_ground"].as<double>();
   params.mu_ball = constant["mu_ball"].as<double>();
   params.T = constant["T"].as<double>();

@@ -33,6 +33,10 @@ class MjcSingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
   const Eigen::Map<Eigen::Matrix<double, 3, 1> > getAngularVelocity() override ;
   void getPosition_W(benchmark::Vec<3>& pos_w) override ;
 
+  double getKineticEnergy() override ;
+  double getPotentialEnergy(const benchmark::Vec<3> &gravity) override ;
+  double getEnergy(const benchmark::Vec<3> &gravity) override ;
+
   void setExternalForce(Eigen::Vector3d force) override ;
   void setExternalTorque(Eigen::Vector3d torque) override ;
 
@@ -63,6 +67,9 @@ class MjcSingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
 
   mjtNum *getBodyLinearVelocity();
   mjtNum *getBodyAngularVelocity();
+
+  mjtNum getBodyMass();
+  mjtNum *getBodyInertia();
 
   void setGeomFriction(benchmark::Vec<3> friction);
 

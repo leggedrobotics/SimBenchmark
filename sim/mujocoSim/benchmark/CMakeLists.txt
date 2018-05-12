@@ -21,3 +21,8 @@ add_executable(MjcThousandBenchmark
         ThousandBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/ThousandBenchmark.hpp)
 target_link_libraries(MjcThousandBenchmark ${MjcSimLink})
+
+add_executable(MjcBouncingBenchmark
+        BouncingBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/BouncingBenchmark.hpp)
+target_link_libraries(MjcBouncingBenchmark ${MjcSimLink})

@@ -128,6 +128,49 @@ void MjcSingleBodyObject::setFrictionCoefficient(double friction) {
   setGeomFriction({friction, 0, 0});
 }
 
+mjtNum MjcSingleBodyObject::getBodyMass() {
+  return worldModel_->body_mass[bodyID_];
+}
+mjtNum *MjcSingleBodyObject::getBodyInertia() {
+  return worldModel_->body_inertia + 3 * bodyID_;
+}
+
+double MjcSingleBodyObject::getKineticEnergy() {
+  double mass = getBodyMass();
+  double *inertia = getBodyInertia();
+
+  getLinearVelocity();
+  getAngularVelocity();
+  benchmark::Mat<3,3> I;
+  I.e() << inertia[0], 0, 0,
+      0, inertia[1], 0,
+      0, 0, inertia[2];
+
+  // ang
+  double angEnergy = 0;
+  benchmark::Mat<3,3> I_w;
+  getRotationMatrix();
+  benchmark::similarityTransform(rotMatTemp_, I, I_w);
+  benchmark::vecTransposeMatVecMul(angVelTemp_, I_w, angEnergy);
+
+  // lin
+  double linEnergy = 0;
+  benchmark::vecDot(linVelTemp_, linVelTemp_, linEnergy);
+
+  return 0.5 * angEnergy + 0.5 * mass * linEnergy;
+}
+
+double MjcSingleBodyObject::getPotentialEnergy(const benchmark::Vec<3> &gravity) {
+  double potential = 0;
+  getPosition();
+  benchmark::vecDot(posTemp_, gravity, potential);
+  return -potential;
+}
+
+double MjcSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {
+  return getKineticEnergy() + getPotentialEnergy(gravity);
+}
+
 /// deprecated
 /// ===================================================================
 void MjcSingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
@@ -154,10 +197,10 @@ void MjcSingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Quatern
 void MjcSingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Matrix3d rotationMatrix) {
 
 }
+
 void MjcSingleBodyObject::setVelocity(Eigen::Vector3d linearVelocity, Eigen::Vector3d angularVelocity) {
 
 }
-
 void MjcSingleBodyObject::setVelocity(double dx, double dy, double dz, double wx, double wy, double wz) {
 
 }
