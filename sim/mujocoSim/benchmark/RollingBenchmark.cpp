@@ -71,35 +71,6 @@ void setupWorld() {
   }
 }
 
-Eigen::Vector3d computeAnalyticalSol(double t, bool isBall) {
-  const double g = -benchmark::rolling::params.g;
-  const double m = benchmark::rolling::params.m;
-  const double M = benchmark::rolling::params.M;
-  const double F = benchmark::rolling::params.F;
-  const int n = benchmark::rolling::params.n * benchmark::rolling::params.n;
-  const double mu1 = benchmark::rolling::params.raiGroundMu * benchmark::rolling::params.raiBoxMu;
-  const double mu2 = benchmark::rolling::params.raiBoxMu * benchmark::rolling::params.raiBallMu;
-
-  const double simTime = benchmark::rolling::params.T;
-  const double dt = benchmark::rolling::options.dt;
-
-  double f1 = mu1 * (M + n * m)  * g;
-  double f2 = 1 / M * (150 - f1) / (3.5 / m + 25 / M);
-  double a1 = (F - f1 - n * f2) / M;
-  double a2 = f2 / m;
-
-  double v = 0;
-  if (isBall)
-    v = a2 * t;
-  else
-    v = a1 * t;
-
-  if (benchmark::rolling::options.forceDirection == benchmark::rolling::FORCE_XY)
-    return {v * 0.707106781186547, v * 0.707106781186547, 0};
-  else
-    return {0, v, 0};
-}
-
 void simulationLoop() {
 
   // force
@@ -135,8 +106,8 @@ void simulationLoop() {
         ru::logger->appendData("posball", sim->getSingleBodyHandle(2)->getPosition().data());
       }
 
-      Eigen::Vector3d ballVec = computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
-      Eigen::Vector3d boxVec = computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
+      Eigen::Vector3d ballVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
+      Eigen::Vector3d boxVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
 
       double error = 0;
       error += pow((boxVec - sim->getSingleBodyHandle(1)->getLinearVelocity()).norm(), 2);
@@ -167,8 +138,8 @@ void simulationLoop() {
         ru::logger->appendData("posball", sim->getSingleBodyHandle(2)->getPosition().data());
       }
 
-      Eigen::Vector3d ballVec = computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
-      Eigen::Vector3d boxVec = computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
+      Eigen::Vector3d ballVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
+      Eigen::Vector3d boxVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
 
       double error = 0;
       error += pow((boxVec - sim->getSingleBodyHandle(1)->getLinearVelocity()).norm(), 2);
