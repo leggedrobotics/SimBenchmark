@@ -63,7 +63,7 @@ struct Parameter {
 
   // simulation parameters
   double m = 1;
-  double n = 25;
+  int n = 5;     // num balls = n x n
   double M = 10;
   double g = -9.8;
   double T = 4.0;

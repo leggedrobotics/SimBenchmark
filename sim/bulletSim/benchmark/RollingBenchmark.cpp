@@ -7,6 +7,7 @@
 #include "RollingBenchmark.hpp"
 #include "BtBenchmark.hpp"
 
+std::vector<double> errors;
 bullet_sim::BtWorld_RG *sim;
 std::vector<benchmark::SingleBodyHandle> objList;
 po::options_description desc;
@@ -49,8 +50,8 @@ void setupWorld() {
   box->setFrictionCoefficient(benchmark::rolling::params.btBoxMu);
   objList.push_back(box);
 
-  for(int i = 0; i < 5; i++) {
-    for(int j = 0; j < 5; j++) {
+  for(int i = 0; i < benchmark::rolling::params.n; i++) {
+    for(int j = 0; j < benchmark::rolling::params.n; j++) {
       auto ball = sim->addSphere(0.5, 1);
       ball->setPosition(i * 2.0 - 4.0,
                         j * 2.0 - 4.0,
@@ -71,6 +72,35 @@ void setupWorld() {
   }
 }
 
+Eigen::Vector3d computeAnalyticalSol(double t, bool isBall) {
+  const double g = -benchmark::rolling::params.g;
+  const double m = benchmark::rolling::params.m;
+  const double M = benchmark::rolling::params.M;
+  const double F = benchmark::rolling::params.F;
+  const int n = benchmark::rolling::params.n * benchmark::rolling::params.n;
+  const double mu1 = benchmark::rolling::params.raiGroundMu * benchmark::rolling::params.raiBoxMu;
+  const double mu2 = benchmark::rolling::params.raiBoxMu * benchmark::rolling::params.raiBallMu;
+
+  const double simTime = benchmark::rolling::params.T;
+  const double dt = benchmark::rolling::options.dt;
+
+  double f1 = mu1 * (M + n * m)  * g;
+  double f2 = 1 / M * (150 - f1) / (3.5 / m + 25 / M);
+  double a1 = (F - f1 - n * f2) / M;
+  double a2 = f2 / m;
+
+  double v = 0;
+  if (isBall)
+    v = a2 * t;
+  else
+    v = a1 * t;
+
+  if (benchmark::rolling::options.forceDirection == benchmark::rolling::FORCE_XY)
+    return {v * 0.707106781186547, v * 0.707106781186547, 0};
+  else
+    return {0, v, 0};
+}
+
 void simulationLoop() {
 
   // force
@@ -83,6 +113,9 @@ void simulationLoop() {
     force = {benchmark::rolling::params.F * 0.707106781186547,
              benchmark::rolling::params.F * 0.707106781186547,
              0};
+
+  // resever error vector
+  errors.reserve(unsigned(benchmark::rolling::params.T / benchmark::rolling::options.dt));
 
   if(benchmark::rolling::options.gui) {
     // gui
@@ -99,6 +132,14 @@ void simulationLoop() {
         ru::logger->appendData("posbox", objList[0]->getPosition().data());
         ru::logger->appendData("posball", objList[1]->getPosition().data());
       }
+
+      Eigen::Vector3d ballVec = computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
+      Eigen::Vector3d boxVec = computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
+
+      double error = 0;
+      error += pow((boxVec - objList[0]->getLinearVelocity()).norm(), 2);
+      error += pow((ballVec - objList[1]->getLinearVelocity()).norm(), 2);
+      errors.push_back(error);
 
       sim->integrate(benchmark::rolling::options.dt);
     }
@@ -120,6 +161,14 @@ void simulationLoop() {
         ru::logger->appendData("posbox", objList[0]->getPosition().data());
         ru::logger->appendData("posball", objList[1]->getPosition().data());
       }
+
+      Eigen::Vector3d ballVec = computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
+      Eigen::Vector3d boxVec = computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
+
+      double error = 0;
+      error += pow((boxVec - objList[0]->getLinearVelocity()).norm(), 2);
+      error += pow((ballVec - objList[1]->getLinearVelocity()).norm(), 2);
+      errors.push_back(error);
 
       sim->integrate(benchmark::rolling::options.dt);
     }
@@ -158,6 +207,8 @@ int main(int argc, const char* argv[]) {
   // time log
   if(benchmark::rolling::options.log)
     ru::timer->dumpToStdOuput();
+
+  RAIINFO("mean error = " << std::accumulate( errors.begin(), errors.end(), 0.0) / errors.size();)
 
   delete sim;
   return 0;
