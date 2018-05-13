@@ -4,17 +4,17 @@
     <option jacobian="sparse" cone="elliptic" tolerance="1e-10"/>
 
     <default>
-        <geom solimp=".9 .9 .01"/>
+        <geom solimp=".9 .9 .01" solref="0.02 1"/>
     </default>
 
     <worldbody>
-        <light directional="true" diffuse=".8 .8 .8" pos="0 0 10" dir="0 0 -10"/>
+        <light directional="true" diffuse=".8 .8 .8" pos="0 0 5" dir="0 0 -10"/>
 
         <geom pos="0 0 0" type="plane" size="200 200 5" friction="0 0 0"/>
-		<body pos="0.000000 0.000000 10.000000" quat="1 0 0 0"> 
-			<inertial pos="0 0 0" mass="1500.000000" diaginertia="150.000000 150.000000 150.000000"/>
+		<body pos="0.000000 0.000000 5.000000" quat="1 0 0 0"> 
+			<inertial pos="0 0 0" mass="10.000000" diaginertia="0.040000 0.040000 0.040000"/>
 			<freejoint/>
-			<geom type="sphere" size="0.500000" friction="0.000000 0 0"/>
+			<geom type="sphere" size="0.100000" friction="0.000000 0 0"/>
 		</body> 
 
     </worldbody>

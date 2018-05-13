@@ -136,12 +136,12 @@ erpY = plotoption;
 
 % error plot vs dt
 disp('plotting error vs timestep...')
-plot_error_dt(T, const, plotSpec, false, '-noerp-y', '(No ERP)', erpN);
-plot_error_dt(T, const, plotSpec, true, '-erp-y', '(ERP)', erpY);
+plot_error_dt(T, const, plotSpec, false, '-noerp', '(No ERP)', erpN);
+plot_error_dt(T, const, plotSpec, true, '-erp', '(ERP)', erpY);
 
 disp('plotting error vs real-time-factor...')
-plot_error_speed(T, const, plotSpec, false, '-noerp-y', '(No ERP)', erpN);
-plot_error_speed(T, const, plotSpec, true, '-erp-y', '(ERP)', erpY);
+plot_error_speed(T, const, plotSpec, false, '-noerp', '(No ERP)', erpN);
+plot_error_speed(T, const, plotSpec, true, '-erp', '(ERP)', erpY);
 
 %% bar plot (for min dt)
 % T2 = T(T.ERP == false & T.DIRECTION == true, :);
@@ -288,7 +288,8 @@ for i = 1:length(sims)
             data.ERROR, ...
             plotspec{1}, ...
             'DisplayName', plotspec{2}, ...
-            'color', plotspec{3})
+            'color', plotspec{3}, ...
+            'LineWidth', 1)
     end
     % end solvers
 end
@@ -297,6 +298,7 @@ hold off
 title(['Penetration Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
+xlim([1e-2 10^2.5])
 legend('Location', 'eastoutside');
 saveas(h, strcat('plots/thousand-error-speed', fileName, '.png'))
 saveas(h, strcat('plots/thousand-error-speed', fileName, '.eps'), 'epsc')

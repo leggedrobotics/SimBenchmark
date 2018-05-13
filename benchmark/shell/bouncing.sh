@@ -41,7 +41,7 @@ echo "====================================================================="
 # benchmark test
 for dt in ${DT_ARRAY[@]}
 do
-    for e in "1.0"
+    for e in "1.0" "0.8"
     do
         # rai sim
         if [ "$raisim_flag" == 'true' ]; then

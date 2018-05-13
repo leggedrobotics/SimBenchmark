@@ -84,7 +84,7 @@ for i = 1:length(testOptions)
         % ODE    : QUICK, STANDARD
         % DART   : DANTZIG, PGS
         % MUJOCO : PGS, CG, NEWTON
-        for k = 1:length(solvers)
+        parfor k = 1:length(solvers)
             
             solver = solvers{k};
             
@@ -166,7 +166,7 @@ sims = unique(dataTable.SIM);
 
 h = figure('Name','error','Position', [0, 0, 800, 600]);
 hold on
-set(gca, 'YScale', 'log')
+set(gca, 'YScale', 'log', 'XScale', 'log')
 for i = 1:length(sims)
     
     sim = sims(i);
@@ -206,7 +206,7 @@ hold off
 title(['Velocity Error ', plotTitle])
 xlabel('timestep size')
 ylabel('squared error (log scale)')
-legend('Location', 'eastoutside');
+legend('Location', 'eastoutside')
 saveas(h, strcat('plots/bounce-error-dt', fileName, '.png'))
 saveas(h, strcat('plots/bounce-error-dt', fileName, '.eps'), 'epsc')
 saveas(h, strcat('plots/bounce-error-dt', fileName, '.fig'), 'fig')
@@ -300,15 +300,17 @@ while true
     end
 end
 
-v = zeros(0, 2);
+v = zeros(length(0:dt:T), 2);
+cnt = 1;
 for t = 0:dt:T
     idx = find(t_accum >= t, 1);
-    v = [v; [t, E_array(idx)]];
+    v(cnt, :) = [t, E_array(idx)];
+    cnt = cnt + 1;
 end
 
 % error
 if eq(size(v, 2), size(data))
-    error = sum((v(:, 2) - data).^2, 2);
+    error = (v(:, 2) - data).^2;
     
     % error plots
     h = figure('Name','ball errors');
@@ -317,10 +319,11 @@ if eq(size(v, 2), size(data))
     hold on 
     plot(data)
     hold off
+    ylim([0, 2e5])
     saveas(h, strcat('subplot/', options.sim, '_', options.solver, '_', num2str(dt), ".png"))
 elseif abs(size(v, 1) - size(data, 1))
     minidx = min(size(v, 1), size(data, 1));
-    error = sum((v(1:minidx, 2) - data(1:minidx, :)).^2, 2);
+    error = (v(1:minidx, 2) - data(1:minidx)).^2;
     
     % error plots
     h = figure('Name','ball errors');
@@ -329,6 +332,7 @@ elseif abs(size(v, 1) - size(data, 1))
     hold on 
     plot(data)
     hold off
+    ylim([0, 2e5])
     saveas(h, strcat('subplot/', options.sim, '_', options.solver, '_', num2str(dt), ".png"))
 else
     % data size differs with analytical solution size

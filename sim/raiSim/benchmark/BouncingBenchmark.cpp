@@ -40,7 +40,7 @@ void setupWorld() {
   materials.setMaterialPairProp("ground", "ball",
                                 benchmark::bouncing::params.mu_ground * benchmark::bouncing::params.mu_ball,
                                 benchmark::bouncing::options.e,
-                                0.01);
+                                0);
   sim->updateMaterialProp(materials);
 
   // add objects
@@ -67,7 +67,7 @@ void setupWorld() {
     sim->setLightPosition((float)benchmark::bouncing::params.lightPosition[0],
                           (float)benchmark::bouncing::params.lightPosition[1],
                           (float)benchmark::bouncing::params.lightPosition[2]);
-    sim->cameraFollowObject(checkerboard, {20, 0, 10});
+    sim->cameraFollowObject(checkerboard, {10, 0, 10});
   }
 }
 

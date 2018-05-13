@@ -16,12 +16,12 @@ solver_params:
 
 # simulation constants
 constant:
-  m: 1500
+  m: 10
   n: 1                    # (num obj) = n x n
   g: -9.8
-  R: 0.5
+  R: 0.1
   mu_ground: 0
   mu_ball: 0
   T: 20
-  H: 10
+  H: 5
 ...

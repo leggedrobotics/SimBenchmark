@@ -45,12 +45,12 @@ struct Parameter {
   double erpFriction = 0.1;     // for bullet
 
   // simulation parameters
-  double m = 1500;              // mass of ball
+  double m = 10;              // mass of ball
   int n = 1;                 // (num obj) = n x n
-  double H = 10;
-  double R = 0.5;               // radius of ball
+  double H = 5;
+  double R = 0.1;               // radius of ball
   double g = -9.8;
-  double T = 10;
+  double T = 20;
 
   double mu_ground = 0;
   double mu_ball = 0;

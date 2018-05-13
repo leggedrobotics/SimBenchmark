@@ -7,7 +7,7 @@ yaml_path = '../../../benchmark/yaml/bouncing.yaml';
 
 %% parameters
 % option
-H = 10.0;               % drop height 
+H = 5.0;               % drop height 
 n = 1;
 
 % constants

@@ -4,9 +4,9 @@
 type = 1;
 
 %% parameters
-z_height = 5.501;    % drop height 
-number_one_dim = 8;
-gap = 1.1;
+z_height = 1.101;    % drop height 
+number_one_dim = 10;
+gap = 0.21;
 perturb = 0.001;
 
 %% code generation
@@ -18,7 +18,7 @@ if type == 1
     output = sprintf('sphere%d.xml', number_one_dim^3);
     
     % size
-    radius_ = 0.5;
+    radius_ = 0.1;
     
     % inertial
     mass = 1500;

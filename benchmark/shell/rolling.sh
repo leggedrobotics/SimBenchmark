@@ -9,7 +9,7 @@ odesim_installed="ON"
 mujocosim_installed="ON"
 dartsim_installed="ON"
 
-raisim_flag='false'
+raisim_flag='true'
 bullet_flag='false'
 ode_flag='false'
 mujoco_flag='true'
@@ -48,7 +48,7 @@ do
             if [ "$raisim_installed" == "ON" ]; then
                 for erpon in true false
                 do
-                    timeout 600 ../sim/raiSim/benchmark/RaiRollingBenchmark --nogui --erp-on=$erpon --dt=$dt --force=$forcedir
+                    timeout 600 ../sim/raiSim/benchmark/RaiRollingBenchmark --nogui --erp-on=$erpon --dt=$dt --force=$forcedir --log
                 done
             else
                 echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
@@ -62,7 +62,7 @@ do
                 do
                     for erpon in true false
                     do
-                        timeout 600 ../sim/bulletSim/benchmark/BtRollingBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force=$forcedir
+                        timeout 600 ../sim/bulletSim/benchmark/BtRollingBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force=$forcedir --log
                     done
                 done
             else
@@ -77,7 +77,7 @@ do
                 do
                     for erpon in true false
                     do
-                        timeout 600 ../sim/odeSim/benchmark/OdeRollingBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force=$forcedir
+                        timeout 600 ../sim/odeSim/benchmark/OdeRollingBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force=$forcedir --log
                     done
                 done
             else
@@ -90,11 +90,8 @@ do
             if [ "$mujocosim_installed" == "ON" ] ; then
                 for solver in pgs cg newton
                 do
-                    for erpon in true false
-                    do
-                        # note mujoco has no erp
-                        timeout 600 ../sim/mujocoSim/benchmark/MjcRollingBenchmark --nogui --dt=$dt --solver=$solver --force=$forcedir
-                    done
+                    # note mujoco has no erp
+                    timeout 600 ../sim/mujocoSim/benchmark/MjcRollingBenchmark --nogui --dt=$dt --solver=$solver --force=$forcedir --log
                 done
             else
                 echo "mujocosim is not built. turn on BENCHMARK_MUJOCOSIM option in cmake"
@@ -106,11 +103,8 @@ do
             if [ "$dartsim_installed" == "ON" ] ; then
                 for solver in dantzig pgs
                 do
-                    for erpon in true false
-                    do
-                        # note dart has no erp
-                        timeout 600 ../sim/dartSim/benchmark/DartRollingBenchmark --nogui --dt=$dt --solver=$solver --force=$forcedir
-                    done
+                    # note dart has no erp
+                    timeout 600 ../sim/dartSim/benchmark/DartRollingBenchmark --nogui --dt=$dt --solver=$solver --force=$forcedir --log
                 done
             else
                 echo "dartsim is not built. turn on BENCHMARK_DARTSIM option in cmake"

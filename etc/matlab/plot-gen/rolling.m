@@ -222,7 +222,7 @@ text(1:length(speed), ...
     'horiz','center', ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-ylim([0, 16])
+ylim([0, 25])
 saveas(h, strcat('plots/rollingbar.png'))
 saveas(h, strcat('plots/rollingbar.eps'), 'epsc')
 saveas(h, strcat('plots/rollingbar.fig'), 'fig')

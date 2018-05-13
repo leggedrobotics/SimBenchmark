@@ -90,7 +90,7 @@ void setupWorld() {
     sim->setLightPosition((float)benchmark::thousand::params.lightPosition[0],
                           (float)benchmark::thousand::params.lightPosition[1],
                           (float)benchmark::thousand::params.lightPosition[2]);
-    sim->cameraFollowObject(objList[objList.size() / 2], {0, 20, 10});
+    sim->cameraFollowObject(objList[objList.size() / 2], {0, 5, 2});
   }
 }
 
@@ -124,7 +124,7 @@ void simulationLoop() {
   if(benchmark::thousand::options.gui) {
     // gui
     if(benchmark::thousand::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "rai-building");
+      sim->startRecordingVideo("/tmp", "rai-thousand");
 
     for(int i = 0; i < (int) (benchmark::thousand::options.T / benchmark::thousand::options.dt)
         && sim->visualizerLoop(benchmark::thousand::options.dt); i++) {

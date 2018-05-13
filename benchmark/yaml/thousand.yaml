@@ -16,11 +16,11 @@ solver_params:
 
 # simulation constants
 constant:
-  ballR: 0.5
-  ballM: 1500
-  gap: 1.1
+  ballR: 0.1
+  ballM: 10
+  gap: 0.21
   perturbation: 0.001
-  H: 5.501
+  H: 1.101
   n: 6
 
 # randomseed

@@ -1,6 +1,26 @@
 ---
 layout: default
 ---
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+
+
 <h1>Bouncing test</h1>
 
 <img src="bouncing.gif" alt="bouncing-test">
@@ -45,6 +65,15 @@ layout: default
         </ul>
     </li>
 </ul>
+
+<div class="row">
+    <div class="column">
+        <img src="bouncing-mujoco-solref=1.0.gif" alt="bouncing-test-mujoco-solref=1.0" style="width:100%">
+    </div>
+    <div class="column">
+        <img src="bouncing-mujoco-solref=0.38.gif" alt="bouncing-test-mujoco-solref=0.38" style="width:100%">
+    </div>
+</div>
 
 <h2>Results</h2>
 

@@ -58,14 +58,14 @@ struct Parameter {
 
   // simulation parameters
   /// (num of object) = n * n * n
-  int n = 10;
+  int n = 6;
 
-  double gap = 1.1;
+  double gap = 0.21;
   double perturbation = 0.001;
-  double H = 0.501;
+  double H = 1.101;
 
-  double ballR = 0.5;     // radius of ball
-  double ballM = 1500;    // mass of ball
+  double ballR = 0.1;     // radius of ball
+  double ballM = 10;    // mass of ball
 
   int randomSeed = 42;
 };
