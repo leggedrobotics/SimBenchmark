@@ -106,7 +106,7 @@ ODE_mins = splitapply(...
 
 %% plot
 % linear
-figure('Name', 'linear', 'Position', [0, 0, 800, 400])
+figure('Name', 'linear', 'Position', [0, 0, 600, 450])
 plot(RAI_numrows.^2, ...
     numIter ./ RAI_mins ./ 1000, ...
     plotspec.RAIRAI{1}, ...
@@ -160,7 +160,7 @@ saveas(gcf,'plots/sampleplot.fig','fig')
 saveas(gcf,'plots/sampleplot.png')
 
 % log scale
-figure('Name', 'log', 'Position', [0, 0, 800, 400])
+figure('Name', 'log', 'Position', [0, 0, 600, 450])
 plot(RAI_numrows.^2, ...
     numIter ./ RAI_mins ./ 1000, ...
     plotspec.RAIRAI{1}, ...
@@ -206,7 +206,7 @@ plot(ODE_numrows.^2, ...
 % plot(DART_PGS_ODE_numrows.^2, DART_PGS_ODE_mins, '-mo') % redundant
 xlabel('number of robots (log n)')
 ylabel(sprintf('timestep per second (log kHz) \n FAST →'))
-legend('Location', 'eastoutside')
+legend('Location', 'northeast')
 hold off
 title('ANYmal PD control test (log scale)')
 ylim([0, 10^2.5])
@@ -244,7 +244,7 @@ T2 = sortrows(T2, 2, 'descend');
 
 T2.sim = reordercats(T2.sim,cellstr(T2.sim));
 
-figure('Name', 'speed', 'Position', [0, 0, 800, 400])
+figure('Name', 'speed', 'Position', [0, 0, 600, 450])
 bar(T2.sim(1), T2.speed(1), 'FaceColor', plotspec.RAIRAI{3})            
 hold on
 bar(T2.sim(2), T2.speed(2), 'FaceColor', plotspec.MUJOCOPGS{3})         
