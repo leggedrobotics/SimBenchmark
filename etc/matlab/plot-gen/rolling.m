@@ -79,7 +79,7 @@ for i = 1:length(testOptions)
     
     % simulators
     % RAI / BULLET / DART / MUJOCO / ODE
-    for j = 1:length(sims)
+    parfor j = 1:length(sims)
         sim = sims{j};
         
         simDir = strcat(optionDir, '/', sim);
@@ -358,7 +358,7 @@ function error = vel_error(consts, options, data, isBall)
 % analytical solution
 g = -consts.g;
 m = consts.m;
-n = consts.n;
+n = consts.n * consts.n;
 M = consts.M;
 F = consts.F;
 mu1 = consts.mu1;
@@ -398,17 +398,17 @@ if eq(size(v), size(data))
     end
     
     % error plots
-    h = figure('Name','ball errors');
-    set(h, 'Visible', 'off');
-    plot(error)
-    hold on
-    plot((v(:,1) - data(:,1)).^2)
-    plot((v(:,2) - data(:,2)).^2)
-    plot((v(:,3) - data(:,3)).^2)
-    hold off
-    title(strcat(options.sim, ' ', options.solver, ' ', num2str(options.dt)))
-    legend('sum', 'x error sq', 'y error sq', 'z error sq')
-    saveas(h, strcat(subplot_dir, options.sim, '_', options.solver, '_', num2str(options.dt), ".png"))
+%     h = figure('Name','ball errors');
+%     set(h, 'Visible', 'off');
+%     plot(error)
+%     hold on
+%     plot((v(:,1) - data(:,1)).^2)
+%     plot((v(:,2) - data(:,2)).^2)
+%     plot((v(:,3) - data(:,3)).^2)
+%     hold off
+%     title(strcat(options.sim, ' ', options.solver, ' ', num2str(options.dt)))
+%     legend('sum', 'x error sq', 'y error sq', 'z error sq')
+%     saveas(h, strcat(subplot_dir, options.sim, '_', options.solver, '_', num2str(options.dt), ".png"))
 elseif abs(size(v, 1) - size(data, 1))
     minidx = min(size(v, 1), size(data, 1));
     error = sum((v(1:minidx, :) - data(1:minidx, :)).^2, 2);
@@ -420,16 +420,17 @@ elseif abs(size(v, 1) - size(data, 1))
     end
     
     % error plots
-    h = figure('Name','ball errors');
-    set(h, 'Visible', 'off');
-    plot(error)
-    hold on
-    plot((v(1:minidx,1) - data(1:minidx,1)).^2)
-    plot((v(1:minidx,2) - data(1:minidx,2)).^2)
-    plot((v(1:minidx,3) - data(1:minidx,3)).^2)
-    hold off
-    title(strcat(options.sim, ' ', options.solver, ' ', num2str(options.dt)))
-    legend('sum', 'x error sq', 'y error sq', 'z error sq'    saveas(h, strcat(subplot_dir, options.sim, '_', options.solver, '_', num2str(options.dt), ".png"))
+%     h = figure('Name','ball errors');
+%     set(h, 'Visible', 'off');
+%     plot(error)
+%     hold on
+%     plot((v(1:minidx,1) - data(1:minidx,1)).^2)
+%     plot((v(1:minidx,2) - data(1:minidx,2)).^2)
+%     plot((v(1:minidx,3) - data(1:minidx,3)).^2)
+%     hold off
+%     title(strcat(options.sim, ' ', options.solver, ' ', num2str(options.dt)))
+%     legend('sum', 'x error sq', 'y error sq', 'z error sq')
+%     saveas(h, strcat(subplot_dir, options.sim, '_', options.solver, '_', num2str(options.dt), ".png"))
 else
     % data size differs with analytical solution size
     error = {nan};

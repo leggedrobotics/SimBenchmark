@@ -16,10 +16,9 @@ int main() {
 
   ode_sim::OdeWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 
-  /// NOTE erp should be set to 0.2 for articulated system simulation on ODE
-  sim.setERP(0.2, 0.2, 0.2);
-
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
+  checkerboard->setFrictionCoefficient(0.8);
+
   auto anymal = sim.addArticulatedSystem(urdfPath);
 
   anymal->setGeneralizedCoordinate(

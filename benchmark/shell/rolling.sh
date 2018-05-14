@@ -41,7 +41,7 @@ do
     do
         # rai sim
         if [ "$raisim_flag" == 'true' ]; then
-            if [ "$raisim_installed" == "ON" ]; then
+            if [ "$RAISIM_ON" == "ON" ]; then
                 for erpon in true false
                 do
                     timeout 600 ../sim/raiSim/benchmark/RaiRollingBenchmark --nogui --erp-on=$erpon --dt=$dt --force=$forcedir --log
@@ -53,7 +53,7 @@ do
 
         # bullet sim
         if [ "$bullet_flag" == 'true' ]; then
-            if [ "$bulletsim_installed" == "ON" ]; then
+            if [ "$BTSIM_ON" == "ON" ]; then
                 for solver in seqimp nncg pgs dantzig #lemke
                 do
                     for erpon in true false
@@ -68,7 +68,7 @@ do
 
         # ode sim
         if [ "$ode_flag" == 'true' ]; then
-            if [ "$odesim_installed" == "ON" ] ; then
+            if [ "$ODESIM_ON" == "ON" ] ; then
                 for solver in std quick
                 do
                     for erpon in true false
@@ -83,7 +83,7 @@ do
 
         # mujoco sim
         if [ "$mujoco_flag" == 'true' ]; then
-            if [ "$mujocosim_installed" == "ON" ] ; then
+            if [ "$MJCSIM_ON" == "ON" ] ; then
                 for solver in pgs cg newton
                 do
                     # note mujoco has no erp
@@ -96,7 +96,7 @@ do
 
         # dart sim
         if [ "$dart_flag" == 'true' ]; then
-            if [ "$dartsim_installed" == "ON" ] ; then
+            if [ "$DARTSIM_ON" == "ON" ] ; then
                 for solver in dantzig pgs
                 do
                     # note dart has no erp
