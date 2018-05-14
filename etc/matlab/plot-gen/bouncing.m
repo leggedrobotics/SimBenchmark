@@ -71,7 +71,7 @@ for i = 1:length(testOptions)
     
     % simulators
     % RAI / BULLET / DART / MUJOCO / ODE
-    for j = 1:length(sims)
+    parfor j = 1:length(sims)
         sim = sims{j};
         
         simDir = strcat(optionDir, '/', sim);
@@ -84,7 +84,7 @@ for i = 1:length(testOptions)
         % ODE    : QUICK, STANDARD
         % DART   : DANTZIG, PGS
         % MUJOCO : PGS, CG, NEWTON
-        parfor k = 1:length(solvers)
+        for k = 1:length(solvers)
             
             solver = solvers{k};
             
@@ -109,7 +109,7 @@ for i = 1:length(testOptions)
                     'solver', solver ...
                     );
                 
-                meanerror = mean(energy_error(const, opt, energy, false));
+                meanerror = mean(energy_error(const, opt, energy));
                 
                 data = {...
                     sim, ...
@@ -210,58 +210,10 @@ legend('Location', 'eastoutside')
 saveas(h, strcat('plots/bounce-error-dt', fileName, '.png'))
 saveas(h, strcat('plots/bounce-error-dt', fileName, '.eps'), 'epsc')
 saveas(h, strcat('plots/bounce-error-dt', fileName, '.fig'), 'fig')
-% 
-% % box
-% h = figure('Name','box error','Position', [0, 0, 800, 600]);
-% hold on
-% set(gca, 'YScale', 'log')
-% for i = 1:length(sims)
-%     
-%     sim = sims(i);
-%     Tsim = dataTable(dataTable.SIM == categorical(sim), :);
-%     
-%     solvers = unique(Tsim.SOLVER);
-%     
-%     for j = 1:length(solvers)
-%         
-%         solver = solvers(j);
-%         
-%         % e.g. RAIRAI or BULLETNNCG
-%         name = strcat(cellstr(sim), cellstr(solver));
-%         
-%         % check plot option
-%         if ~getfield(plotOption, char(name))
-%             continue;
-%         end
-%         
-%         % data
-%         data = Tsim(Tsim.SOLVER == categorical(solver), :);
-%         data = sortrows(data, 5);
-%         
-%         % plot
-%         plotspec = getfield(plotSpec, char(name));
-%         
-%         plot(data.TIMESTEP, ...
-%             data.BOXERROR + data.BOXERROR, ...
-%             plotspec{1}, ...
-%             'DisplayName', plotspec{2}, ...
-%             'color', plotspec{3})
-%     end
-%     % end solvers
-% end
-% % end sims
-% hold off
-% title(['Box Velocity Error ', plotTitle])
-% xlabel('timestep size')
-% ylabel('squared error (log scale)')
-% legend('Location', 'eastoutside');
-% saveas(h, strcat('plots/boxerror-dt', fileName, '.png'))
-% saveas(h, strcat('plots/boxerror-dt', fileName, '.epsc'), 'epsc')
-% saveas(h, strcat('plots/boxerror-dt', fileName, '.fig'), 'fig')
 
 end
 
-function error = energy_error(consts, options, data, isBall)
+function error = energy_error(consts, options, data)
 
 h0 = consts.H;
 R = consts.R;
@@ -269,6 +221,7 @@ g = abs(consts.g);
 T = consts.T;
 m = consts.m;
 
+erp = options.erp;
 e = options.e;
 dt = options.dt;
 
@@ -312,28 +265,60 @@ end
 if eq(size(v, 2), size(data))
     error = (v(:, 2) - data).^2;
     
+    % dir
+    energy_dir = strcat('subplot/', num2str(erp), '/', num2str(e), '/energy/');
+    error_dir = strcat('subplot/', num2str(erp), '/', num2str(e), '/error/');
+    
+    if (~exist(energy_dir))
+        mkdir(energy_dir);
+    end
+    if (~exist(error_dir))
+        mkdir(error_dir);
+    end
+    
     % error plots
-    h = figure('Name','ball errors');
+    h = figure('Name','ball energy');
     set(h, 'Visible', 'off');
     plot(v(:,2))
     hold on 
     plot(data)
     hold off
-    ylim([0, 2e5])
-    saveas(h, strcat('subplot/', options.sim, '_', options.solver, '_', num2str(dt), ".png"))
+    ylim([0, 2e3])
+    saveas(h, strcat(energy_dir, options.sim, '_', options.solver, '_', num2str(dt), ".png"))
+    
+    h = figure('Name','ball errors');
+    set(h, 'Visible', 'off');
+    plot(error)
+    saveas(h, strcat(error_dir, options.sim, '_', options.solver, '_', num2str(dt), ".png"))
 elseif abs(size(v, 1) - size(data, 1))
     minidx = min(size(v, 1), size(data, 1));
     error = (v(1:minidx, 2) - data(1:minidx)).^2;
     
+   % dir
+    energy_dir = strcat('subplot/', num2str(erp), '/', num2str(e), '/energy/');
+    error_dir = strcat('subplot/', num2str(erp), '/', num2str(e), '/error/');
+    
+    if (~exist(energy_dir))
+        mkdir(energy_dir);
+    end
+    if (~exist(error_dir))
+        mkdir(error_dir);
+    end
+    
     % error plots
-    h = figure('Name','ball errors');
+    h = figure('Name','ball energy');
     set(h, 'Visible', 'off');
     plot(v(:,2))
     hold on 
     plot(data)
     hold off
-    ylim([0, 2e5])
-    saveas(h, strcat('subplot/', options.sim, '_', options.solver, '_', num2str(dt), ".png"))
+    ylim([0, 2e3])
+    saveas(h, strcat(energy_dir, options.sim, '_', options.solver, '_', num2str(dt), ".png"))
+    
+    h = figure('Name','ball errors');
+    set(h, 'Visible', 'off');
+    plot(error)
+    saveas(h, strcat(error_dir, options.sim, '_', options.solver, '_', num2str(dt), ".png"))
 else
     % data size differs with analytical solution size
     error = {nan};

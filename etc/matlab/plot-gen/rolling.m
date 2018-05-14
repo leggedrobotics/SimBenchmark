@@ -288,54 +288,7 @@ legend('Location', 'eastoutside');
 saveas(h, strcat('plots/error-dt', fileName, '.png'))
 saveas(h, strcat('plots/error-dt', fileName, '.eps'), 'epsc')
 saveas(h, strcat('plots/error-dt', fileName, '.fig'), 'fig')
-% 
-% % box
-% h = figure('Name','box error','Position', [0, 0, 800, 600]);
-% hold on
-% set(gca, 'YScale', 'log')
-% for i = 1:length(sims)
-%     
-%     sim = sims(i);
-%     Tsim = dataTable(dataTable.SIM == categorical(sim), :);
-%     
-%     solvers = unique(Tsim.SOLVER);
-%     
-%     for j = 1:length(solvers)
-%         
-%         solver = solvers(j);
-%         
-%         % e.g. RAIRAI or BULLETNNCG
-%         name = strcat(cellstr(sim), cellstr(solver));
-%         
-%         % check plot option
-%         if ~getfield(plotOption, char(name))
-%             continue;
-%         end
-%         
-%         % data
-%         data = Tsim(Tsim.SOLVER == categorical(solver), :);
-%         data = sortrows(data, 5);
-%         
-%         % plot
-%         plotspec = getfield(plotSpec, char(name));
-%         
-%         plot(data.TIMESTEP, ...
-%             data.BOXERROR + data.BOXERROR, ...
-%             plotspec{1}, ...
-%             'DisplayName', plotspec{2}, ...
-%             'color', plotspec{3})
-%     end
-%     % end solvers
-% end
-% % end sims
-% hold off
-% title(['Box Velocity Error ', plotTitle])
-% xlabel('timestep size')
-% ylabel('squared error (log scale)')
-% legend('Location', 'eastoutside');
-% saveas(h, strcat('plots/boxerror-dt', fileName, '.png'))
-% saveas(h, strcat('plots/boxerror-dt', fileName, '.epsc'), 'epsc')
-% saveas(h, strcat('plots/boxerror-dt', fileName, '.fig'), 'fig')
+
 
 end
 
@@ -398,55 +351,6 @@ saveas(h, strcat('plots/error-speed', fileName, '.png'))
 saveas(h, strcat('plots/error-speed', fileName, '.eps'), 'epsc')
 saveas(h, strcat('plots/error-speed', fileName, '.fig'), 'fig')
 
-% box
-% h = figure('Name','box error','Position', [0, 0, 800, 600]);
-% hold on
-% set(gca, 'YScale', 'log', 'XScale', 'log')
-% for i = 1:length(sims)
-%     
-%     sim = sims(i);
-%     Tsim = dataTable(dataTable.SIM == categorical(sim), :);
-%     
-%     solvers = unique(Tsim.SOLVER);
-%     
-%     for j = 1:length(solvers)
-%         
-%         solver = solvers(j);
-%         
-%         % e.g. RAIRAI or BULLETNNCG
-%         name = strcat(cellstr(sim), cellstr(solver));
-%         
-%         % check plot option
-%         if ~getfield(plotOption, char(name))
-%             continue;
-%         end
-%         
-%         % data
-%         data = Tsim(Tsim.SOLVER == categorical(solver), :);
-%         data = sortrows(data, 12, 'descend');
-%         
-%         % plot
-%         plotspec = getfield(plotSpec, char(name));
-%         
-%         plot(...
-%             const.T ./ data.TIME, ...
-%             data.BOXERROR, ...
-%             plotspec{1}, ...
-%             'DisplayName', plotspec{2}, ...
-%             'color', plotspec{3})
-%     end
-%     % end solvers
-% end
-% % end sims
-% hold off
-% title(['Box Velocity Error ', plotTitle])
-% xlabel(sprintf('real time factor \n FAST →'))
-% ylabel(sprintf('squared error (log scale) \n ← ACCURATE'))
-% legend('Location', 'eastoutside');
-% saveas(h, strcat('plots/boxerror-speed', fileName, '.png'))
-% saveas(h, strcat('plots/boxerror-speed', fileName, '.epg'), 'epsc')
-% saveas(h, strcat('plots/boxerror-speed', fileName, '.fig'), 'fig')
-
 end
 
 function error = vel_error(consts, options, data, isBall)
@@ -487,23 +391,45 @@ end
 if eq(size(v), size(data))
     error = sum((v - data).^2, 2);
     
-    %     error plots
-    %     if save_subplots
-    %         h = figure('Name','ball errors');
-    %         set(h, 'Visible', 'off');
-    %         plot(error)
-    %         hold on
-    %         plot((v(:,1) - data(:,1)).^2)
-    %         plot((v(:,2) - data(:,2)).^2)
-    %         plot((v(:,3) - data(:,3)).^2)
-    %         hold off
-    %         title(strcat(sim, ' ', solver, ' ', dtstr))
-    %         legend('sum', 'x error sq', 'y error sq', 'z error sq')
-    %         saveas(h, strcat(plot_path, sim, '_', solver, '_', dtstr, "_velballerror.png"))
-    %     end
+    subplot_dir = strcat('rolling-subplot/', num2str(options.erp), '/', num2str(options.dir), '/');
+    
+    if (~exist(subplot_dir))
+        mkdir(subplot_dir);
+    end
+    
+    % error plots
+    h = figure('Name','ball errors');
+    set(h, 'Visible', 'off');
+    plot(error)
+    hold on
+    plot((v(:,1) - data(:,1)).^2)
+    plot((v(:,2) - data(:,2)).^2)
+    plot((v(:,3) - data(:,3)).^2)
+    hold off
+    title(strcat(options.sim, ' ', options.solver, ' ', num2str(options.dt)))
+    legend('sum', 'x error sq', 'y error sq', 'z error sq')
+    saveas(h, strcat(subplot_dir, options.sim, '_', options.solver, '_', num2str(options.dt), ".png"))
 elseif abs(size(v, 1) - size(data, 1))
     minidx = min(size(v, 1), size(data, 1));
     error = sum((v(1:minidx, :) - data(1:minidx, :)).^2, 2);
+    
+    subplot_dir = strcat('rolling-subplot/', num2str(options.erp), '/', num2str(options.dir), '/');
+    
+    if (~exist(subplot_dir))
+        mkdir(subplot_dir);
+    end
+    
+    % error plots
+    h = figure('Name','ball errors');
+    set(h, 'Visible', 'off');
+    plot(error)
+    hold on
+    plot((v(1:minidx,1) - data(1:minidx,1)).^2)
+    plot((v(1:minidx,2) - data(1:minidx,2)).^2)
+    plot((v(1:minidx,3) - data(1:minidx,3)).^2)
+    hold off
+    title(strcat(options.sim, ' ', options.solver, ' ', num2str(options.dt)))
+    legend('sum', 'x error sq', 'y error sq', 'z error sq'    saveas(h, strcat(subplot_dir, options.sim, '_', options.solver, '_', num2str(options.dt), ".png"))
 else
     % data size differs with analytical solution size
     error = {nan};

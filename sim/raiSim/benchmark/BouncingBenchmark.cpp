@@ -79,7 +79,6 @@ void simulationLoop() {
 
     for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt)
         && sim->visualizerLoop(benchmark::bouncing::options.dt); i++) {
-      sim->integrate(benchmark::bouncing::options.dt);
 
       // energy log
       if(benchmark::bouncing::options.log) {
@@ -89,6 +88,8 @@ void simulationLoop() {
         }
         rai::Utils::logger->appendData("energy", energy);
       }
+
+      sim->integrate(benchmark::bouncing::options.dt);
     }
 
     if(benchmark::bouncing::options.saveVideo)
@@ -97,7 +98,6 @@ void simulationLoop() {
   else {
     // no gui
     for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt); i++) {
-      sim->integrate(benchmark::bouncing::options.dt);
 
       if(benchmark::bouncing::options.log) {
         double energy = 0;
@@ -106,6 +106,8 @@ void simulationLoop() {
         }
         rai::Utils::logger->appendData("energy", energy);
       }
+
+      sim->integrate(benchmark::bouncing::options.dt);
     }
   }
 }

@@ -19,7 +19,7 @@ int main() {
   // add objects
   auto checkerboard = sim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
 
-  Object object = CAPSULE;
+  Object object = BALL;
   switch(object) {
     case BOX:
     {

@@ -16,10 +16,10 @@ add_executable(BtBuildingBenchmark
         ${CMAKE_SOURCE_DIR}/benchmark/BuildingBenchmark.hpp)
 target_link_libraries(BtBuildingBenchmark ${BtSimLink})
 
-add_executable(BtThousandBenchmark
-        ThousandBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/ThousandBenchmark.hpp)
-target_link_libraries(BtThousandBenchmark ${BtSimLink})
+add_executable(Bt666Benchmark
+        666Benchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/666Benchmark.hpp)
+target_link_libraries(Bt666Benchmark ${BtSimLink})
 
 add_executable(BtBouncingBenchmark
         BouncingBenchmark.cpp

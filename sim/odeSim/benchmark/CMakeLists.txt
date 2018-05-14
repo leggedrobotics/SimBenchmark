@@ -16,10 +16,10 @@ add_executable(OdeBuildingBenchmark
         ${CMAKE_SOURCE_DIR}/benchmark/BuildingBenchmark.hpp)
 target_link_libraries(OdeBuildingBenchmark ${OdeSimLink})
 
-add_executable(OdeThousandBenchmark
-        ThousandBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/ThousandBenchmark.hpp)
-target_link_libraries(OdeThousandBenchmark ${OdeSimLink})
+add_executable(Ode666Benchmark
+        666Benchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/666Benchmark.hpp)
+target_link_libraries(Ode666Benchmark ${OdeSimLink})
 
 add_executable(OdeBouncingBenchmark
         BouncingBenchmark.cpp

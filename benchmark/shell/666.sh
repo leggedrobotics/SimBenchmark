@@ -27,11 +27,12 @@ dart_flag='false'
 #done
 
 # logo (slant)
-echo "  ________  ______  __  _______ ___    _   ______     _______________________"
-echo " /_  __/ / / / __ \/ / / / ___//   |  / | / / __ \   /_  __/ ____/ ___/_  __/"
-echo "  / / / /_/ / / / / / / /\__ \/ /| | /  |/ / / / /    / / / __/  \__ \ / /   "
-echo " / / / __  / /_/ / /_/ /___/ / ___ |/ /|  / /_/ /    / / / /___ ___/ // /    "
-echo "/_/ /_/ /_/\____/\____//____/_/  |_/_/ |_/_____/    /_/ /_____//____//_/     "
+echo "   _____ _____ _____    _______________________"
+echo "  / ___// ___// ___/   /_  __/ ____/ ___/_  __/"
+echo " / __ \/ __ \/ __ \     / / / __/  \__ \ / /   "
+echo "/ /_/ / /_/ / /_/ /    / / / /___ ___/ // /    "
+echo "\____/\____/\____/    /_/ /_____//____//_/     "
+
 
 echo ""
 echo "====================================================================="
@@ -47,7 +48,6 @@ do
             for erpon in true false
             do
                 timeout 600 ../sim/raiSim/benchmark/RaiThousandBenchmark --nogui --erp-on=$erpon --dt=$dt --log --timer
-#                timeout 600 ../sim/raiSim/benchmark/RaiThousandBenchmark --nogui --erp-on=$erpon --dt=$dt --timer
             done
         else
             echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
@@ -62,7 +62,6 @@ do
                 for erpon in true false
                 do
                     timeout 600 ../sim/bulletSim/benchmark/BtThousandBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --log --timer
-#                    timeout 600 ../sim/bulletSim/benchmark/BtThousandBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --timer
                 done
             done
         else
@@ -78,7 +77,6 @@ do
                 for erpon in true false
                 do
                     timeout 600 ../sim/odeSim/benchmark/OdeThousandBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --log --timer
-#                    timeout 600 ../sim/odeSim/benchmark/OdeThousandBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --timer
                 done
             done
         else
@@ -93,7 +91,6 @@ do
             do
                 # note mujoco has no erp
                 timeout 600 ../sim/mujocoSim/benchmark/MjcThousandBenchmark --nogui --dt=$dt --solver=$solver --log --timer
-#                timeout 600 ../sim/mujocoSim/benchmark/MjcThousandBenchmark --nogui --dt=$dt --solver=$solver --timer
             done
         else
             echo "mujocosim is not built. turn on BENCHMARK_MUJOCOSIM option in cmake"
@@ -107,7 +104,6 @@ do
             do
                 # note dart has no erp
                 timeout 600 ../sim/dartSim/benchmark/DartThousandBenchmark --nogui --dt=$dt --solver=$solver --log --timer
-#                timeout 600 ../sim/dartSim/benchmark/DartThousandBenchmark --nogui --dt=$dt --solver=$solver --timer
             done
         else
             echo "dartsim is not built. turn on BENCHMARK_DARTSIM option in cmake"

@@ -22,7 +22,11 @@
 namespace po = boost::program_options;
 namespace ru = rai::Utils;
 
-namespace benchmark::thousand {
+namespace benchmark::sixsixsix {
+
+// data lists
+std::vector<double> errorList;
+std::vector<double> energyList;
 
 /**
  * options for building simulation
@@ -37,8 +41,8 @@ struct Option: benchmark::Option {
   // simulation time
   double T = 15.0;
 
-  // timer
-  bool timer = false;
+  // restitution
+  bool elasticCollision = false;   /// for elastic collision test
 };
 Option options;
 
@@ -68,6 +72,8 @@ struct Parameter {
   double ballM = 10;    // mass of ball
 
   int randomSeed = 42;
+
+  double g = -9.8;
 };
 Parameter params;
 
@@ -83,7 +89,7 @@ std::string getMujocoXMLpath() {
   std::string xmlPath(__FILE__);
   while (xmlPath.back() != '/')
     xmlPath.erase(xmlPath.size() - 1, 1);
-  xmlPath += "../res/mujoco/Thousand/sphere" + std::to_string(ncubic) + ".xml";
+  xmlPath += "../res/mujoco/666/sphere" + std::to_string(ncubic) + ".xml";
 
   return xmlPath;
 }
@@ -98,7 +104,7 @@ std::string getYamlpath() {
   std::string yamlPath(__FILE__);
   while (yamlPath.back() != '/')
     yamlPath.erase(yamlPath.size() - 1, 1);
-  yamlPath += "./yaml/thousand.yaml";
+  yamlPath += "./yaml/666.yaml";
 
   return yamlPath;
 }
@@ -109,21 +115,13 @@ std::string getYamlpath() {
  * @param erp
  * @return log directory path in string
  */
-std::string getLogDirpath(bool erpYN,
-                          std::string simulation,
-                          std::string solver,
-                          double dt) {
+std::string getLogFilepath() {
+  std::string logPath(__FILE__);
+  while (logPath.back() != '/')
+    logPath.erase(logPath.size() - 1, 1);
 
-  std::string dirPath(__FILE__);
-  while (dirPath.back() != '/')
-    dirPath.erase(dirPath.size() - 1, 1);
-
-  dirPath += "../data/thousand/erp=" + std::to_string(erpYN)
-      + "/" + simulation
-      + "/" + solver
-      + "/" + std::to_string(dt);
-
-  return dirPath;
+  logPath += "../data/666/log.csv";
+  return logPath;
 }
 
 /**
@@ -137,8 +135,8 @@ void addDescToOption(po::options_description &desc) {
       ("erp-on", po::value<bool>(), "erp on (true / false)")
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
       ("T", po::value<double>(), "simulation time (e.g. 15)")
-      ("timer", "timer on for speed check")
-      ;
+      ("elastic", "if elastic collision")
+    ;
 }
 
 /**
@@ -162,11 +160,6 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   // log option
   if(vm.count("log")) {
     options.log = true;
-  }
-
-  // timer option
-  if(vm.count("timer")) {
-    options.timer = true;
   }
 
   // nogui option
@@ -197,6 +190,11 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
     } else {
       options.erpYN = false;
     }
+  }
+
+  // elastic collision
+  if(vm.count("elastic")) {
+    options.elasticCollision = true;
   }
 }
 
@@ -248,25 +246,66 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   }
 }
 
-/**
- * set up logger and timer log
- *
- * @param path directory path of log files
- * @param name name of log file
- */
-void loggerSetup(std::string path, std::string name) {
-  // timer
-  ru::logger->setLogPath(path);
-  ru::logger->setLogFileName(name);
-  ru::logger->setOptions(ru::ONEFILE_FOR_ONEDATA);
-  ru::logger->addVariableToLog(1, "error", "penetration error");
+double computeMeanEnergyError(double E0) {
+  std::vector<double> energyErrors;
+  energyErrors.reserve(energyList.size());
 
-  std::string timer = name + "timer";
-  ru::timer->setLogPath(path);
-  ru::timer->setLogFileName(timer);
+  for(int i = 0; i < energyList.size(); i++) {
+    energyErrors.push_back(pow(energyList[i] - E0, 2));
+  }
+  return std::accumulate( energyErrors.begin(), energyErrors.end(), 0.0) / energyErrors.size();
 }
 
-} // benchmark::rolling
+/**
+ *
+ * @param E0 initial energy
+ */
+void printError(double E0) {
+  RAIINFO(
+      std::endl << "penetration error = "
+                << std::accumulate( errorList.begin(), errorList.end(), 0.0) / errorList.size() << std::endl)
+
+  if(benchmark::sixsixsix::options.elasticCollision) {
+    RAIINFO(
+        std::endl << "energy error = "
+                  << computeMeanEnergyError(E0) << std::endl
+    )
+  }
+}
+
+void printCSV(std::string filePath,
+              std::string sim,
+              std::string solver,
+              double time,
+              double E0) {
+  std::ofstream myfile;
+  myfile.open (filePath, std::ios_base::app);
+
+  if(options.elasticCollision)
+    myfile
+        << sim << ","
+        << solver << ","
+        << options.erpYN << ","
+        << options.elasticCollision << ","
+        << options.dt << ","
+        << std::accumulate( errorList.begin(), errorList.end(), 0.0) / errorList.size() << ","
+        << computeMeanEnergyError(E0) << ","
+        << time << std::endl;
+  else
+    myfile
+        << sim << ","
+        << solver << ","
+        << options.erpYN << ","
+        << options.elasticCollision << ","
+        << options.dt << ","
+        << std::accumulate( errorList.begin(), errorList.end(), 0.0) / errorList.size() << ","
+        << "" << ","
+        << time << std::endl;
+
+  myfile.close();
+}
+
+} // benchmark::sixsixsix
 
 
 #endif //BENCHMARK_THOUSANDBENCHMARK_HPP

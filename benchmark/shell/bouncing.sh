@@ -10,10 +10,10 @@ mujocosim_installed="ON"
 dartsim_installed="ON"
 
 raisim_flag='true'
-bullet_flag='true'
-ode_flag='true'
+bullet_flag='false'
+ode_flag='false'
 mujoco_flag='false'     # note that mujoco cannot simulate restitutional effect
-dart_flag='true'
+dart_flag='false'
 
 
 #while getopts 'rbom' flag; do

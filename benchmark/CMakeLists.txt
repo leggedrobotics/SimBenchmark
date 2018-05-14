@@ -7,7 +7,7 @@ file(COPY shell/rolling.sh
 file(COPY shell/building.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-file(COPY shell/thousand.sh
+file(COPY shell/666.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 file(COPY shell/bouncing.sh
