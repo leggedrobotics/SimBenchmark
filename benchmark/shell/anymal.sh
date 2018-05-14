@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 ########################################################################################################################
-## ANYMAL BENCHMARK
-##
-## This test is for measuring simulation speed of articulated system: 18-DOF quadrupedal robot ANYmal.
+##                                                                                                                    ##
+## ANYMAL BENCHMARK                                                                                                   ##
+##                                                                                                                    ##
 ########################################################################################################################
 
 # the number of test (for num_row <= 3)
@@ -29,6 +29,8 @@ echo "/_/  |_/_/ |_/   /_/_/  /_/_/  |_/_____/    /_/ /_____//____//_/     "
 echo ""
 echo "====================================================================="
 echo "The log file is saved in data/anymal-XXX directory"
+
+source sim.sh
 
 # RAI
 echo "====================================================================="

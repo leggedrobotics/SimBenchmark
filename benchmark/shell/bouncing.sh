@@ -3,18 +3,11 @@
 DT_ARRAY=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" "0.1" )
 
 # options
-raisim_installed="ON"
-bulletsim_installed="ON"
-odesim_installed="ON"
-mujocosim_installed="ON"
-dartsim_installed="ON"
-
 raisim_flag='true'
 bullet_flag='false'
 ode_flag='false'
 mujoco_flag='false'     # note that mujoco cannot simulate restitutional effect
 dart_flag='false'
-
 
 #while getopts 'rbom' flag; do
 #  case "${flag}" in
@@ -38,6 +31,8 @@ echo "====================================================================="
 echo "The log file is saved in data/rolling directory"
 echo "====================================================================="
 
+source sim.sh
+
 # benchmark test
 for dt in ${DT_ARRAY[@]}
 do
@@ -45,7 +40,7 @@ do
     do
         # rai sim
         if [ "$raisim_flag" == 'true' ]; then
-            if [ "$raisim_installed" == "ON" ]; then
+            if [ "$RAISIM_ON" == "ON" ]; then
                 for erpon in true false
                 do
                     timeout 600 ../sim/raiSim/benchmark/RaiBouncingBenchmark --nogui --erp-on="$erpon" --dt=$dt --e="$e" --log
@@ -57,7 +52,7 @@ do
 
         # bullet sim
         if [ "$bullet_flag" == 'true' ]; then
-            if [ "$bulletsim_installed" == "ON" ]; then
+            if [ "$BTSIM_ON" == "ON" ]; then
                 for solver in seqimp nncg pgs dantzig lemke
                 do
                     for erpon in true false
@@ -72,7 +67,7 @@ do
 
         # ode sim
         if [ "$ode_flag" == 'true' ]; then
-            if [ "$odesim_installed" == "ON" ] ; then
+            if [ "$ODESIM_ON" == "ON" ] ; then
                 for solver in std quick
                 do
                     for erpon in true false
@@ -87,7 +82,7 @@ do
 
         # mujoco sim
         if [ "$mujoco_flag" == 'true' ]; then
-            if [ "$mujocosim_installed" == "ON" ] ; then
+            if [ "$MJCSIM_ON" == "ON" ] ; then
                 for solver in pgs cg newton
                 do
                     # note mujoco has no erp
@@ -100,7 +95,7 @@ do
 
         # dart sim
         if [ "$dart_flag" == 'true' ]; then
-            if [ "$dartsim_installed" == "ON" ] ; then
+            if [ "$DARTSIM_ON" == "ON" ] ; then
                 for solver in dantzig pgs
                 do
                     # note dart has no erp

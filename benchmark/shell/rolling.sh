@@ -3,12 +3,6 @@
 DT_ARRAY=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" "0.1" )
 
 # options
-raisim_installed="ON"
-bulletsim_installed="ON"
-odesim_installed="ON"
-mujocosim_installed="ON"
-dartsim_installed="ON"
-
 raisim_flag='true'
 bullet_flag='false'
 ode_flag='false'
@@ -37,6 +31,8 @@ echo ""
 echo "====================================================================="
 echo "The log file is saved in data/rolling directory"
 echo "====================================================================="
+
+source sim.sh
 
 # benchmark test
 for dt in ${DT_ARRAY[@]}

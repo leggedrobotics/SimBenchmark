@@ -3,12 +3,6 @@
 DT_ARRAY=( "0.001" )
 
 # options
-raisim_installed="ON"
-bulletsim_installed="ON"
-odesim_installed="ON"
-mujocosim_installed="ON"
-dartsim_installed="ON"
-
 raisim_flag='false'
 bullet_flag='false'
 ode_flag='false'
@@ -33,12 +27,14 @@ echo "  / __  / / / // // /   / / / // //  |/ / / __     / / / __/  \__ \ / /   
 echo " / /_/ / /_/ // // /___/ /_/ // // /|  / /_/ /    / / / /___ ___/ // /    "
 echo "/_____/\____/___/_____/_____/___/_/ |_/\____/    /_/ /_____//____//_/     "
 
+source sim.sh
+
 # benchmark test
 for dt in ${DT_ARRAY[@]}
 do
     # rai sim
     if [ "$raisim_flag" == 'true' ]; then
-        if [ "$raisim_installed" == "ON" ]; then
+        if [ "$RAISIM_ON" == "ON" ]; then
             for erpon in true false
             do
                 timeout 600 ../sim/raiSim/benchmark/RaiBuildingBenchmark --nogui --erp-on=$erpon --dt=$dt
@@ -50,7 +46,7 @@ do
 
     # bullet sim
     if [ "$bullet_flag" == 'true' ]; then
-        if [ "$bulletsim_installed" == "ON" ]; then
+        if [ "$BTSIM_ON" == "ON" ]; then
             for solver in seqimp nncg pgs dantzig #lemke
             do
                 for erpon in true false
@@ -65,7 +61,7 @@ do
 
     # ode sim
     if [ "$ode_flag" == 'true' ]; then
-        if [ "$odesim_installed" == "ON" ] ; then
+        if [ "$ODESIM_ON" == "ON" ] ; then
             for solver in std quick
             do
                 for erpon in true false
@@ -80,7 +76,7 @@ do
 
     # mujoco sim
     if [ "$mujoco_flag" == 'true' ]; then
-        if [ "$mujocosim_installed" == "ON" ] ; then
+        if [ "$MJCSIM_ON" == "ON" ] ; then
             for solver in pgs cg newton
             do
                 for erpon in true false
@@ -96,7 +92,7 @@ do
 
     # dart sim
     if [ "$dart_flag" == 'true' ]; then
-        if [ "$dartsim_installed" == "ON" ] ; then
+        if [ "$DARTSIM_ON" == "ON" ] ; then
             for solver in dantzig pgs
             do
                 for erpon in true false

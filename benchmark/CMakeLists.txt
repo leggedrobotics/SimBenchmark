@@ -13,6 +13,9 @@ file(COPY shell/666.sh
 file(COPY shell/bouncing.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+configure_file(sim.sh.in ${CMAKE_CURRENT_BINARY_DIR}/sim.sh @ONLY)
+
+
 #if(BENCHMARK_BULLET)
 #    # rolling
 #    add_executable(rollingBulletSim rollingBulletSim.cpp rolling.hpp)
