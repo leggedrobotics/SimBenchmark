@@ -260,14 +260,15 @@ double computeMeanEnergyError(double E0) {
  *
  * @param E0 initial energy
  */
-void printError(double E0) {
+void printError(double E0, double time) {
   RAIINFO(
-      std::endl << "penetration error = "
+      std::endl << "time       = " << time << std::endl
+                << "pen. error = "
                 << std::accumulate( errorList.begin(), errorList.end(), 0.0) / errorList.size() << std::endl)
 
   if(benchmark::sixsixsix::options.elasticCollision) {
     RAIINFO(
-        std::endl << "energy error = "
+        std::endl << "E error    = "
                   << computeMeanEnergyError(E0) << std::endl
     )
   }
@@ -290,7 +291,8 @@ void printCSV(std::string filePath,
         << options.dt << ","
         << std::accumulate( errorList.begin(), errorList.end(), 0.0) / errorList.size() << ","
         << computeMeanEnergyError(E0) << ","
-        << time << std::endl;
+        << time
+        << std::endl;
   else
     myfile
         << sim << ","
@@ -300,7 +302,8 @@ void printCSV(std::string filePath,
         << options.dt << ","
         << std::accumulate( errorList.begin(), errorList.end(), 0.0) / errorList.size() << ","
         << "" << ","
-        << time << std::endl;
+        << time
+        << std::endl;
 
   myfile.close();
 }

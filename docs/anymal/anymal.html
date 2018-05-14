@@ -1,16 +1,41 @@
 ---
 layout: default
 ---
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+
 <h1>ANYmal PD control test</h1>
 
 <img src="anymal-test.png" alt="anymal-test">
 
-<p>ANYmal test is for testing articulated robot system. In this test, the 18 DOF quadruped robot [ANYmal](http://www.rsl.ethz.ch/) is feedback-controlled to stand on the flat ground.</p>
+<p>
+    ANYmal test is for testing articulated robot system. In this test, the 18 DOF quadruped robot <a href="http://www.rsl.ethz.ch/">ANYmal</a> is feedback-controlled to stand on the flat ground.
+</p>
 
+<p>
 The test focuses on:
+</p>
 
-1. Speed of the articulated system (multibody system with revolute joints) simulation
-2. Scalability of the simulators
+<ol>
+    <li>Speed of the articulated system (multibody system with revolute joints) simulation</li>
+    <li>Scalability of the simulators</li>
+</ol>
 
 <h2>Test scenario</h2>
 
@@ -29,11 +54,11 @@ The test focuses on:
     </li>
     <li>ODE
         <ul>
-            <li><strike>Quick</strike></li>
+            <li><strike>Quick</strike> <sup>[1]</sup></li>
             <li>Standard</li>
         </ul>
     </li>
-    <li>MuJoCo
+    <li>MuJoCo (no-slip enabled)<sup>[2]</sup>
         <ul>
             <li>PGS</li>
             <li>CG</li>
@@ -48,9 +73,14 @@ The test focuses on:
     </li>
 </ul>
 
-<p>Note that ODE quick solver easily fails for articulated system simulation as the following video, thus was exempted.</p>
+<p>Commentary:
+<ul>
+    <li>[1] ODE quick solver easily fails for articulated system simulation as the following video, thus was exempted.</li>
+    <li>[2] MuJoCo no slip solver.</li>
+</ul>
+</p>
 
- 
+
 <!---
 <div style="position:relative;padding-top:75%;">
     <iframe src="https://www.youtube.com/embed/X0lYN7bzoNk?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen
@@ -58,7 +88,14 @@ The test focuses on:
 </div>
 --->
 
-<img alt="anymal-test-ode-fail" src="anymal-ode-quicksolver-fail.gif">
+<div class="row">
+    <div class="column">
+        <img alt="anymal-test-ode-fail" src="anymal-ode-quicksolver-fail.gif">
+    </div>
+    <div class="column">
+        <img alt="anymal-test-mujoco-slip" src="anymal-mujoco-slip.gif">
+    </div>
+</div>
 
 
 <p>
@@ -71,15 +108,19 @@ The test focuses on:
 </blockquote>
 </p>
 
-<img alt="anymal-test-mujoco-slip" src="anymal-mujoco-slip.gif">
 
 
 <h2>Results</h2>
 
 <p>The results of the test are as following figures.</p>
 
-<img alt="anymal-test-speed-bar" src="anymal-speed-bar.png">
+<div class="row">
+    <div class="column">
+        <img alt="anymal-test-speed-bar" src="anymal-speed-bar.png">
+    </div>
+    <div class="column">
+        <img alt="anymal-test-speed-plot-log" src="anymal-plot-log.png">
+    </div>
+</div>
 
-<img alt="anymal-test-speed-plot" src="anymal-plot.png">
 
-<img alt="anymal-test-speed-plot-log" src="anymal-plot-log.png">

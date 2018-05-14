@@ -132,7 +132,8 @@ void simulationLoop() {
   }
   double time = watch.measure();
 
-  benchmark::sixsixsix::printError(0);
+  /// note. energy test is not available for mujoco
+  benchmark::sixsixsix::printError(0, time);
   if(benchmark::sixsixsix::options.log)
     benchmark::sixsixsix::printCSV(
         benchmark::sixsixsix::getLogFilepath(),

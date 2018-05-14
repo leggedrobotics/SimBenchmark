@@ -177,7 +177,7 @@ void simulationLoop() {
   }
   double time = watch.measure();
 
-  benchmark::sixsixsix::printError(E0);
+  benchmark::sixsixsix::printError(E0, time);
   if(benchmark::sixsixsix::options.log)
     benchmark::sixsixsix::printCSV(
         benchmark::sixsixsix::getLogFilepath(),

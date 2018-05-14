@@ -1,10 +1,12 @@
 # Benchmark Test
 
-The test scenario is as follows:
+## Test list 
 
-- Single Rigid body  
-    - Rolling test
-    - Bounce test
-    - 10 x 10 x 10 Ball test
-- Articulated System (multi rigid body)
-    - ...
+- Rolling test
+- Bouncing test
+- 666 test
+- ANYmal test (PD control)
+
+## Run sh script
+
+```bash <build-directory-path>/benchmark/<test-sh-file>```

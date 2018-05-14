@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-DT_ARRAY=( "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.02" "0.03" "0.04" "0.05" "0.06" "0.07" "0.08" "0.09" "0.1" )
+DT_ARRAY=( "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.02" "0.05" "0.1" )
 
 # options
 raisim_flag='true'
-bullet_flag='true'
+bullet_flag='false'
 ode_flag='true'
-mujoco_flag='false'
-dart_flag='true'
+mujoco_flag='false'     # mujoco cannot simulate elastic collision
+dart_flag='false'
 
 #while getopts 'rbom' flag; do
 #  case "${flag}" in
@@ -41,7 +41,7 @@ do
         if [ "$RAISIM_ON" == "ON" ]; then
             for erpon in true false
             do
-                timeout 600 ../sim/raiSim/benchmark/RaiThousandBenchmark --nogui --erp-on=$erpon --dt=$dt --log --timer
+                timeout 600 ../sim/raiSim/benchmark/Rai666Benchmark --nogui --erp-on=$erpon --dt=$dt --log --elastic
             done
         else
             echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
@@ -55,7 +55,7 @@ do
             do
                 for erpon in true false
                 do
-                    timeout 600 ../sim/bulletSim/benchmark/BtThousandBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --log --timer
+                    timeout 600 ../sim/bulletSim/benchmark/Bt666Benchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --log --elastic
                 done
             done
         else
@@ -70,7 +70,7 @@ do
             do
                 for erpon in true false
                 do
-                    timeout 600 ../sim/odeSim/benchmark/OdeThousandBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --log --timer
+                    timeout 600 ../sim/odeSim/benchmark/Ode666Benchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --log --elastic
                 done
             done
         else
@@ -84,7 +84,7 @@ do
             for solver in pgs cg newton
             do
                 # note mujoco has no erp
-                timeout 600 ../sim/mujocoSim/benchmark/MjcThousandBenchmark --nogui --dt=$dt --solver=$solver --log --timer
+                timeout 600 ../sim/mujocoSim/benchmark/Mjc666Benchmark --nogui --dt=$dt --solver=$solver --log --elastic
             done
         else
             echo "mujocosim is not built. turn on BENCHMARK_MUJOCOSIM option in cmake"
@@ -97,7 +97,7 @@ do
             for solver in dantzig pgs
             do
                 # note dart has no erp
-                timeout 600 ../sim/dartSim/benchmark/DartThousandBenchmark --nogui --dt=$dt --solver=$solver --log --timer
+                timeout 600 ../sim/dartSim/benchmark/Dart666Benchmark --nogui --dt=$dt --solver=$solver --log --elastic
             done
         else
             echo "dartsim is not built. turn on BENCHMARK_DARTSIM option in cmake"

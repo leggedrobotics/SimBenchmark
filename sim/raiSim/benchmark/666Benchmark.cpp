@@ -150,7 +150,7 @@ void simulationLoop() {
   if(benchmark::sixsixsix::options.gui) {
     // gui
     if(benchmark::sixsixsix::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "rai-thousand");
+      sim->startRecordingVideo("/tmp", "rai-666");
 
     for(int i = 0; i < (int) (benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt)
         && sim->visualizerLoop(benchmark::sixsixsix::options.dt); i++) {
@@ -184,7 +184,7 @@ void simulationLoop() {
   }
   double time = watch.measure();
 
-  benchmark::sixsixsix::printError(E0);
+  benchmark::sixsixsix::printError(E0, time);
   if(benchmark::sixsixsix::options.log)
     benchmark::sixsixsix::printCSV(
         benchmark::sixsixsix::getLogFilepath(),
