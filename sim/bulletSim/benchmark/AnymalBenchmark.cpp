@@ -68,7 +68,7 @@ void setupWorld() {
 void simulationLoop() {
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
-  const double kp = benchmark::anymal::params.kp;
+  const double kp = benchmark::anymal::params.kp * 1.5; /// for bullet 2.78
   const double kd = benchmark::anymal::params.kd;
 
   jointNominalConfig
