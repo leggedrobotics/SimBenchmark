@@ -53,6 +53,12 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
                    benchmark::Mat<3, 3> &orientation,
                    benchmark::Vec<3> &position);
 
+  void getComVelocity_W(int bodyId,
+                        benchmark::Vec<3> &velocity);
+
+  const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace() override;
+  double getTotalMass() override;
+
  private:
   void init();
 
@@ -133,6 +139,8 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   // the head of links_ is the pointer of rootLink
   std::vector<Link *> links_;
   std::vector<Joint *> joints_;
+
+  benchmark::Vec<3> linearMomentum_;
 
   Link rootLink_;
   Joint rootJoint_;

@@ -484,6 +484,11 @@ inline void matvecmul(const Mat<3, 3> &mat1, const Vec<3> &vec1, double *vec) {
     vec[j] = mat1[j] * vec1[0] + mat1[j + 3] * vec1[1] + mat1[j + 6] * vec1[2];
 }
 
+inline void matvecmulThenAdd(const Mat<3,3> &mat1, const Vec<3> &vec1, Vec<3> &vec) {
+  for (int j = 0; j < 3; j++) // col
+    vec[j] += mat1[j] * vec1[0] + mat1[j + 3] * vec1[1] + mat1[j + 6] * vec1[2];
+}
+
 template<int size>
 inline void vecsub(const Vec<size> &vec1, const Vec<size> &vec2, Vec<size> &vec) {
   for (int j = 0; j < size; j++) // col
@@ -633,6 +638,11 @@ inline void crossThenSub(const Vec<3> &vec1, const Vec<3> &vec2, Vec<3> &vec) {
   vec[0] -= vec1[1] * vec2[2] - vec1[2] * vec2[1];
   vec[1] -= vec1[2] * vec2[0] - vec1[0] * vec2[2];
   vec[2] -= vec1[0] * vec2[1] - vec1[1] * vec2[0];
+}
+
+inline void vecScalarMul(const double scalar, Vec<3> &product) {
+  for (int i = 0; i < 3; i++)
+    product[i] *= scalar;
 }
 
 inline void vecScalarMul(const double scalar, const Vec<3> &vec, Vec<3> &product) {
