@@ -6,6 +6,12 @@ add_executable(OdeAnymalBenchmark
         ${CMAKE_SOURCE_DIR}/benchmark/OdeBenchmark.hpp)
 target_link_libraries(OdeAnymalBenchmark ${OdeSimLink})
 
+add_executable(OdeAnymalZerogBenchmark
+        AnymalZerogBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AnymalZerogBenchmark.hpp
+        ${CMAKE_SOURCE_DIR}/benchmark/OdeBenchmark.hpp)
+target_link_libraries(OdeAnymalZerogBenchmark ${OdeSimLink})
+
 add_executable(OdeRollingBenchmark
         RollingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)

@@ -909,37 +909,36 @@ void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVe
 }
 
 void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
-  // TODO check if it works properly
-  RAIFATAL("not completed function implementation")
+  RAIINFO("set generalized velocity is not completed function (cannot set joint velocity)")
 
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
   if(isFixed_) {
     // fixed body
-    for(auto *joint: joints_) {
-      double rate = jointVel.begin()[joint->genvelIndex_];
-
-      switch (joint->type) {
-        case Joint::FIXED: {
-          continue;
-        }
-        case Joint::REVOLUTE: {
-          dReal axis[3];
-          dJointGetHingeAxis(joint->odeJoint_, axis);
-          dBodySetAngularVel(joint->childLink_->odeBody_,
-                             axis[0] * rate,
-                             axis[1] * rate,
-                             axis[2] * rate);
-          break;
-        }
-        case Joint::PRISMATIC: {
-          RAIFATAL("prismatic joint is not tested yet")
-//          dJointAddSliderForce(joint->odeJoint_, tau.begin()[i++]);
-          break;
-        }
-        default:
-        RAIINFO("not supported joint type")
-      }
-    }
+//    for(auto *joint: joints_) {
+//      double rate = jointVel.begin()[joint->genvelIndex_];
+//
+//      switch (joint->type) {
+//        case Joint::FIXED: {
+//          continue;
+//        }
+//        case Joint::REVOLUTE: {
+//          dReal axis[3];
+//          dJointGetHingeAxis(joint->odeJoint_, axis);
+//          dBodySetAngularVel(joint->childLink_->odeBody_,
+//                             axis[0] * rate,
+//                             axis[1] * rate,
+//                             axis[2] * rate);
+//          break;
+//        }
+//        case Joint::PRISMATIC: {
+//          RAIFATAL("prismatic joint is not tested yet")
+////          dJointAddSliderForce(joint->odeJoint_, tau.begin()[i++]);
+//          break;
+//        }
+//        default:
+//        RAIINFO("not supported joint type")
+//      }
+//    }
   }
   else {
     // floating body
@@ -952,33 +951,33 @@ void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> 
                        jointVel.begin()[4],
                        jointVel.begin()[5]);
 
-    for(auto *joint: joints_) {
-      double rate = jointVel.begin()[joint->genvelIndex_];
-
-      switch (joint->type) {
-        case Joint::FIXED: {
-          continue;
-        }
-        case Joint::REVOLUTE: {
-          dReal axis[3];
-          dJointGetHingeAxis(joint->odeJoint_, axis);
-          dBodySetAngularVel(joint->childLink_->odeBody_,
-                             axis[0] * rate,
-                             axis[1] * rate,
-                             axis[2] * rate);
-
-          const dReal *vel = dBodyGetAngularVel(joint->childLink_->odeBody_);
-          RAIINFO(vel[0] << " " << vel[1] << " " << vel[2])
-          break;
-        }
-        case Joint::PRISMATIC: {
-          RAIFATAL("not implemented yet")
-          break;
-        }
-        default:
-        RAIINFO("not supported joint type")
-      }
-    }
+//    for(auto *joint: joints_) {
+//      double rate = jointVel.begin()[joint->genvelIndex_];
+//
+//      switch (joint->type) {
+//        case Joint::FIXED: {
+//          continue;
+//        }
+//        case Joint::REVOLUTE: {
+//          dReal axis[3];
+//          dJointGetHingeAxis(joint->odeJoint_, axis);
+//          dBodySetAngularVel(joint->childLink_->odeBody_,
+//                             axis[0] * rate,
+//                             axis[1] * rate,
+//                             axis[2] * rate);
+//
+//          const dReal *vel = dBodyGetAngularVel(joint->childLink_->odeBody_);
+//          RAIINFO(vel[0] << " " << vel[1] << " " << vel[2])
+//          break;
+//        }
+//        case Joint::PRISMATIC: {
+//          RAIFATAL("not implemented yet")
+//          break;
+//        }
+//        default:
+//        RAIINFO("not supported joint type")
+//      }
+//    }
   }
 }
 
@@ -1129,6 +1128,40 @@ void OdeArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orienta
   orientation.e() << rot[0], rot[1], rot[2],
       rot[4], rot[5], rot[6],
       rot[8], rot[9], rot[10];
+}
+
+void OdeArticulatedSystem::getComVelocity_W(int bodyId, benchmark::Vec<3> &velocity) {
+  dReal *comvel;
+  benchmark::Mat<3, 3> bodyOrientation;
+  benchmark::Vec<3> comPosition;
+  getBodyPose(bodyId, bodyOrientation, comPosition);
+
+  benchmark::matvecmulThenAdd(bodyOrientation, links_[bodyId]->inertial_.pos_, comPosition);
+  dBodyGetPointVel(links_[bodyId]->odeBody_,
+                   comPosition[0],
+                   comPosition[1],
+                   comPosition[2],
+                   comvel);
+
+  velocity = {comvel[0], comvel[1], comvel[2]};
+}
+
+const Eigen::Map<Eigen::Matrix<double, 3, 1>> OdeArticulatedSystem::getLinearMomentumInCartesianSpace() {
+  linearMomentum_.setZero();
+  for(int i = 0; i < links_.size(); i++) {
+    benchmark::Vec<3> comPosition;
+    getComVelocity_W(i, comPosition);
+    benchmark::vecScalarMul(links_[i]->inertial_.odeMass_.mass, comPosition);
+    benchmark::vecadd(comPosition, linearMomentum_);
+  }
+  return linearMomentum_.e();
+}
+double OdeArticulatedSystem::getTotalMass() {
+  double totalMass = 0;
+  for(int i = 0; i < links_.size(); i++) {
+    totalMass += links_[i]->inertial_.odeMass_.mass;
+  }
+  return totalMass;
 }
 
 } // object
