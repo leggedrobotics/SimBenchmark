@@ -7,7 +7,6 @@
 #include "RollingBenchmark.hpp"
 #include "DartBenchmark.hpp"
 
-std::vector<double> errors;
 dart_sim::DartWorld_RG *sim;
 std::vector<benchmark::SingleBodyHandle> objList;
 po::options_description desc;
@@ -83,7 +82,7 @@ void setupWorld() {
   }
 }
 
-void simulationLoop() {
+double simulationLoop() {
 
   // force
   Eigen::Vector3d force;
@@ -97,8 +96,10 @@ void simulationLoop() {
              0};
 
   // resever error vector
-  errors.reserve(unsigned(benchmark::rolling::params.T / benchmark::rolling::options.dt));
+  benchmark::rolling::errors.reserve(unsigned(benchmark::rolling::params.T / benchmark::rolling::options.dt));
 
+  StopWatch watch;
+  watch.start();
   if(benchmark::rolling::options.gui) {
     // gui
     if(benchmark::rolling::options.saveVideo)
@@ -124,7 +125,7 @@ void simulationLoop() {
       double error = 0;
       error += pow((boxVec - objList[0]->getLinearVelocity()).norm(), 2);
       error += pow((ballVec - objList[1]->getLinearVelocity()).norm(), 2);
-      errors.push_back(error);
+      benchmark::rolling::errors.push_back(error);
       sim->integrate();
     }
 
@@ -155,13 +156,15 @@ void simulationLoop() {
       double error = 0;
       error += pow((boxVec - objList[0]->getLinearVelocity()).norm(), 2);
       error += pow((ballVec - objList[1]->getLinearVelocity()).norm(), 2);
-      errors.push_back(error);
+      benchmark::rolling::errors.push_back(error);
       sim->integrate();
     }
 
     if(benchmark::rolling::options.log)
       ru::timer->stopTimer("rolling");
   }
+
+  return watch.measure();
 }
 
 int main(int argc, const char* argv[]) {
@@ -188,13 +191,20 @@ int main(int argc, const char* argv[]) {
 
   setupSimulation();
   setupWorld();
-  simulationLoop();
+  double time = simulationLoop();
 
-  // time log
-  if(benchmark::rolling::options.log)
-    ru::timer->dumpToStdOuput();
+  if(benchmark::rolling::options.csv)
+    benchmark::rolling::printCSV(
+        benchmark::rolling::getCSVpath(),
+        benchmark::dart::options.simName,
+        benchmark::dart::options.solverName,
+        time);
 
-  RAIINFO("mean error = " << std::accumulate( errors.begin(), errors.end(), 0.0) / errors.size();)
+  RAIINFO(
+      std::endl << "time       : " << time << std::endl
+                << "mean error : " << benchmark::rolling::computeMeanError() << std::endl
+                << "=======================" << std::endl
+  )
 
   delete sim;
   return 0;

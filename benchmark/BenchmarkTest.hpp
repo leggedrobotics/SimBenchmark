@@ -33,6 +33,10 @@ struct Option {
 
   // print log on/off
   bool log = false;
+
+  // print csv on/off
+  bool csv = false;
+  std::string csvName = "log.csv";
 };
 
 void addDescToOption(po::options_description &desc) {
@@ -41,6 +45,7 @@ void addDescToOption(po::options_description &desc) {
       ("nogui", "no visualization")
       ("log", "create log files")
       ("video", "save a video file (only available when gui is on)")
+      ("csv", po::value<std::string>(), "name of csv file (save csv when this option is given)")
       ;
 }
 

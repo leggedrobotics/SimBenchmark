@@ -27,6 +27,9 @@ namespace ru = rai::Utils;
 
 namespace benchmark::rolling {
 
+// error list
+std::vector<double> errors;
+
 enum ForceDirection {
   FORCE_Y,    // force along the y axis
   FORCE_XY    // force along the diagonal direction
@@ -155,6 +158,17 @@ std::string getLogDirpath(bool erpYN,
   return dirPath;
 }
 
+std::string getCSVpath() {
+
+  std::string csvPath(__FILE__);
+  while (csvPath.back() != '/')
+    csvPath.erase(csvPath.size() - 1, 1);
+
+  csvPath += "../data/rolling/" + options.csvName;
+
+  return csvPath;
+}
+
 /**
  * add options to desc
  *
@@ -226,6 +240,12 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
     } else {
       options.erpYN = false;
     }
+  }
+
+  // csv
+  if(vm.count("csv")) {
+    options.csv = true;
+    options.csvName = vm["csv"].as<std::string>() + ".csv";
   }
 }
 
@@ -342,6 +362,28 @@ Eigen::Vector3d computeAnalyticalSol(double t, bool isBall) {
     return {v * 0.707106781186547, v * 0.707106781186547, 0};
   else
     return {0, v, 0};
+}
+
+double computeMeanError() {
+  return std::accumulate(benchmark::rolling::errors.begin(), benchmark::rolling::errors.end(), 0.0)
+      / benchmark::rolling::errors.size();
+}
+
+void printCSV(std::string filePath,
+              std::string sim,
+              std::string solver,
+              double time) {
+  std::ofstream myfile;
+  myfile.open (filePath, std::ios_base::app);
+
+  myfile << sim << ","
+         << solver << ","
+         << options.erpYN << ","
+         << options.forceDirection << ","
+         << options.dt << ","
+         << computeMeanError()
+         << time << std::endl;
+  myfile.close();
 }
 
 } // benchmark::rolling
