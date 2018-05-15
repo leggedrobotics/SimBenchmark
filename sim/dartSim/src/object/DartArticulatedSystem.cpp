@@ -228,9 +228,22 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec DartArticulatedSys
 
 const benchmark::object::ArticulatedSystemInterface::EigenVec DartArticulatedSystem::getGeneralizedVelocity() {
   Eigen::VectorXd vel = skeletonPtr_->getVelocities();
-  for(int i = 0; i < dof_; i++) {
-    genVelocity_[i] = vel[i];
-  }
+  if(isFixed_) {
+    for(int i = 0; i < dof_; i++) {
+      genVelocity_[i] = vel[i];
+    }
+  } else {
+    genVelocity_[0] = vel[3];
+    genVelocity_[1] = vel[4];
+    genVelocity_[2] = vel[5];
+    genVelocity_[3] = vel[0];
+    genVelocity_[4] = vel[1];
+    genVelocity_[5] = vel[2];
+
+    for(int i = 6; i < dof_; i++) {
+      genVelocity_[i] = vel[i];
+    }
+  };
   return genVelocity_.e();
 }
 
@@ -314,7 +327,20 @@ void DartArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<doubl
 
 void DartArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
-  skeletonPtr_->setVelocities(jointVel);
+  if(isFixed_)
+    skeletonPtr_->setVelocities(jointVel);
+  else {
+    skeletonPtr_->setVelocity(0, jointVel[3]);
+    skeletonPtr_->setVelocity(1, jointVel[4]);
+    skeletonPtr_->setVelocity(2, jointVel[5]);
+    skeletonPtr_->setVelocity(3, jointVel[0]);
+    skeletonPtr_->setVelocity(4, jointVel[1]);
+    skeletonPtr_->setVelocity(5, jointVel[2]);
+    for(int i = 6; i < dof_; i++) {
+      skeletonPtr_->setVelocity(i, jointVel[i]);
+    }
+  }
+
   for(int i = 0; i < dof_; i++) {
     genVelocity_[i] = jointVel[i];
   }
@@ -322,9 +348,25 @@ void DartArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointV
 
 void DartArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
+  if(isFixed_) {
+    for(int i = 0; i < dof_; i++) {
+      skeletonPtr_->setVelocity(i, jointVel.begin()[i]);
+    }
+  }
+  else {
+    skeletonPtr_->setVelocity(0, jointVel.begin()[3]);
+    skeletonPtr_->setVelocity(1, jointVel.begin()[4]);
+    skeletonPtr_->setVelocity(2, jointVel.begin()[5]);
+    skeletonPtr_->setVelocity(3, jointVel.begin()[0]);
+    skeletonPtr_->setVelocity(4, jointVel.begin()[1]);
+    skeletonPtr_->setVelocity(5, jointVel.begin()[2]);
+    for(int i = 6; i < dof_; i++) {
+      skeletonPtr_->setVelocity(i, jointVel.begin()[i]);
+    }
+  }
+
   for(int i = 0; i < dof_; i++) {
     genVelocity_[i] = jointVel.begin()[i];
-    skeletonPtr_->setVelocity(i, jointVel.begin()[i]);
   }
 }
 

@@ -213,7 +213,7 @@ for i = 1:size(T2, 1)
         'FaceColor', spec{3})
 end
 hold off
-title(sprintf('Rolling test speed (timestep = %f)', dt))
+title(sprintf('Rolling test speed'))
 % numbers on bars
 text(1:length(speed), ...
     speed, ...

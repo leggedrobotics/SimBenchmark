@@ -2,22 +2,25 @@
 // Created by kangd on 14.05.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <DartWorld_RG.hpp>
 
 #include "AnymalZerogBenchmark.hpp"
-#include "OdeBenchmark.hpp"
+#include "DartBenchmark.hpp"
 
-ode_sim::OdeWorld_RG *sim;
-std::vector<ode_sim::ArticulatedSystemHandle> anymals;
+dart_sim::DartWorld_RG *sim;
+std::vector<dart_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::zerogravity::options.gui)
-    sim = new ode_sim::OdeWorld_RG(800, 600, 0.5,
-                                   benchmark::NO_BACKGROUND,
-                                   benchmark::ode::options.solverOption);
+    sim = new dart_sim::DartWorld_RG(800, 600, 0.5,
+                                     benchmark::NO_BACKGROUND,
+                                     benchmark::dart::options.solverOption);
   else
-    sim = new ode_sim::OdeWorld_RG(benchmark::ode::options.solverOption);
+    sim = new dart_sim::DartWorld_RG(benchmark::dart::options.solverOption);
+
+  // set time step
+  sim->setTimeStep(benchmark::anymal::zerogravity::options.dt);
 }
 
 void setupWorld() {
@@ -82,7 +85,7 @@ double simulationLoop() {
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt, 1.0); t++) {
 
-      sim->integrate(benchmark::anymal::zerogravity::options.dt);
+      sim->integrate();
 
       Eigen::Vector3d linearMomentum;
       linearMomentum.setZero();
@@ -98,7 +101,7 @@ double simulationLoop() {
     }
   } else {
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); t++) {
-      sim->integrate(benchmark::anymal::zerogravity::options.dt);
+      sim->integrate();
 
       Eigen::Vector3d linearMomentum;
       linearMomentum.setZero();
@@ -126,12 +129,16 @@ double computeMeanError() {
 int main(int argc, const char* argv[]) {
 
   benchmark::anymal::zerogravity::addDescToOption(desc);
+  benchmark::dart::addDescToOption(desc);
+
   benchmark::anymal::zerogravity::getOptionsFromArg(argc, argv, desc);
+  benchmark::dart::getOptionsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: RAI" << std::endl
+                << "Simulator: DART" << std::endl
                 << "GUI      : " << benchmark::anymal::zerogravity::options.gui << std::endl
+                << "Solver   : " << benchmark::dart::options.solverOption << std::endl
                 << "Timestep : " << benchmark::anymal::zerogravity::options.dt << std::endl
                 << "-----------------------"
   )

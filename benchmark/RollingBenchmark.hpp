@@ -381,7 +381,7 @@ void printCSV(std::string filePath,
          << options.erpYN << ","
          << options.forceDirection << ","
          << options.dt << ","
-         << computeMeanError()
+         << computeMeanError() << ","
          << time << std::endl;
   myfile.close();
 }
