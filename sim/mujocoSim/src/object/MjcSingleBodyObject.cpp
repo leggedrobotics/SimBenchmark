@@ -209,6 +209,12 @@ void MjcSingleBodyObject::setVelocity(double dx, double dy, double dz, double wx
 void MjcSingleBodyObject::setRestitutionCoefficient(double restitution) {
 
 }
+double MjcSingleBodyObject::getMass() {
+  return getBodyMass();
+}
+bool MjcSingleBodyObject::isMovable() const {
+  return isMovable_;
+}
 
 } // object
 } // mujoco_sim

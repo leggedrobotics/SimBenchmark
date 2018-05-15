@@ -46,6 +46,9 @@ class MjcWorld_RG: public benchmark::World_RG {
   int getWorldNumContacts() override ;
   int getNumObject() override ;
 
+  const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace();
+  double getTotalMass();
+
   /// the functions below are articulated system related.
   /// ===================================
   const EigenVec getGeneralizedCoordinate();

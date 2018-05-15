@@ -74,8 +74,12 @@ class MjcWorld: public benchmark::WorldInterface {
 
   mjModel *getWorldModel() const;
   mjData *getWorldData() const;
+
   int getWorldNumContacts();
   int getNumObject() override ;
+
+  const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace();
+  double getTotalMass();
 
   void integrate();
 
@@ -117,6 +121,9 @@ class MjcWorld: public benchmark::WorldInterface {
   benchmark::VecDyn generalizedCoordinate_;
   benchmark::VecDyn generalizedVelocity_;
   benchmark::VecDyn generalizedForce_;
+
+  // linear momentum
+  benchmark::Vec<3> linearMomentum_;
 
   // dim
   int dof_ = 0;

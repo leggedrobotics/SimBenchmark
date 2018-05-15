@@ -268,4 +268,25 @@ void MjcWorld::integrate() {
   mj_step(worldModel_, worldData_);
 }
 
+const Eigen::Map<Eigen::Matrix<double, 3, 1>> MjcWorld::getLinearMomentumInCartesianSpace() {
+  Eigen::Vector3d linearMomentum;
+  linearMomentum.setZero();
+  for(int i = 0; i < objectList_.size(); i++) {
+    if(!static_cast<object::MjcSingleBodyObject *>(objectList_[i])->isMovable()) continue;
+
+    linearMomentum += objectList_[i]->getMass() * objectList_[i] -> getLinearVelocity();
+  }
+  linearMomentum_ = {linearMomentum.x(), linearMomentum.y(), linearMomentum.z()};
+  return linearMomentum_.e();
+}
+
+double MjcWorld::getTotalMass() {
+  double mass = 0;
+  for(int i = 0; i < objectList_.size(); i++) {
+    if(!static_cast<object::MjcSingleBodyObject *>(objectList_[i])->isMovable()) continue;
+    mass += objectList_[i]->getMass();
+  }
+  return mass;
+}
+
 } // mujoco_sim

@@ -36,6 +36,17 @@ void mujoco_sim::MjcWorld_RG::initFromModel() {
     const int geomNumInBody = model->body_geomnum[i];
     const int geomAddrInBody = model->body_geomadr[i];
 
+    std::stringstream bodyname;
+    for(int j = model->name_bodyadr[i]; i+1 <= model->nbody && j < model->name_bodyadr[i+1] - 1; j++) {
+      bodyname << model->names[j];
+    }
+
+    if(bodyname.str() == "ground") {
+      // checkerboard if the name of the body is ground
+      addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, i, 0, bo::GRID);
+      return;
+    }
+
     for(int j = 0; j < geomNumInBody; j++) {
       const int geomIndex = geomAddrInBody + j;
 
@@ -234,4 +245,10 @@ void mujoco_sim::MjcWorld_RG::loop(double realTimeFactor) {
 }
 void mujoco_sim::MjcWorld_RG::integrate() {
   world_.integrate();
+}
+const Eigen::Map<Eigen::Matrix<double, 3, 1>> mujoco_sim::MjcWorld_RG::getLinearMomentumInCartesianSpace() {
+  return world_.getLinearMomentumInCartesianSpace();
+}
+double mujoco_sim::MjcWorld_RG::getTotalMass() {
+  return world_.getTotalMass();
 }

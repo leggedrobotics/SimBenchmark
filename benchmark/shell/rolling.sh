@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
-DT_ARRAY=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" "0.1" )
+# DT_ARRAY=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" "0.1" )
+DT_ARRAY=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" )
 
 # options
 raisim_flag='true'
 bullet_flag='false'
 ode_flag='false'
-mujoco_flag='true'
+mujoco_flag='false'
 dart_flag='false'
 
+# csv file name
+csv_file=$( date +"%Y-%m-%d-%H:%M:%S" )
 
 #while getopts 'rbom' flag; do
 #  case "${flag}" in
@@ -44,7 +47,8 @@ do
             if [ "$RAISIM_ON" == "ON" ]; then
                 for erpon in true false
                 do
-                    timeout 600 ../sim/raiSim/benchmark/RaiRollingBenchmark --nogui --erp-on=$erpon --dt=$dt --force=$forcedir --log
+                    timeout 600 ../sim/raiSim/benchmark/RaiRollingBenchmark \
+                    --nogui --erp-on=$erpon --dt=$dt --force=$forcedir --log --csv=$csv_file
                 done
             else
                 echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
@@ -58,7 +62,8 @@ do
                 do
                     for erpon in true false
                     do
-                        timeout 600 ../sim/bulletSim/benchmark/BtRollingBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force=$forcedir --log
+                        timeout 600 ../sim/bulletSim/benchmark/BtRollingBenchmark \
+                        --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force=$forcedir --log --csv=$csv_file
                     done
                 done
             else
@@ -73,7 +78,8 @@ do
                 do
                     for erpon in true false
                     do
-                        timeout 600 ../sim/odeSim/benchmark/OdeRollingBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force=$forcedir --log
+                        timeout 600 ../sim/odeSim/benchmark/OdeRollingBenchmark \
+                        --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force=$forcedir --log --csv=$csv_file
                     done
                 done
             else
@@ -87,7 +93,8 @@ do
                 for solver in pgs cg newton
                 do
                     # note mujoco has no erp
-                    timeout 600 ../sim/mujocoSim/benchmark/MjcRollingBenchmark --nogui --dt=$dt --solver=$solver --force=$forcedir --log
+                    timeout 600 ../sim/mujocoSim/benchmark/MjcRollingBenchmark \
+                    --nogui --dt=$dt --solver=$solver --force=$forcedir --log --csv=$csv_file
                 done
             else
                 echo "mujocosim is not built. turn on BENCHMARK_MUJOCOSIM option in cmake"
@@ -100,7 +107,8 @@ do
                 for solver in dantzig pgs
                 do
                     # note dart has no erp
-                    timeout 600 ../sim/dartSim/benchmark/DartRollingBenchmark --nogui --dt=$dt --solver=$solver --force=$forcedir --log
+                    timeout 600 ../sim/dartSim/benchmark/DartRollingBenchmark \
+                    --nogui --dt=$dt --solver=$solver --force=$forcedir --log --csv=$csv_file
                 done
             else
                 echo "dartsim is not built. turn on BENCHMARK_DARTSIM option in cmake"

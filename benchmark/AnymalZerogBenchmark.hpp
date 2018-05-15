@@ -68,13 +68,12 @@ std::string getURDFpath() {
  * @param rowNum # of row
  * @return urdfPath in string
  */
-std::string getMujocoURDFpath(int rowNum) {
+std::string getMujocoURDFpath() {
 
-  // TODO
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/mujoco/ANYmal/robot" + std::to_string(rowNum * rowNum) + ".urdf";
+  urdfPath += "../res/mujoco/ANYmal/robot-momentum.urdf";
 
   return urdfPath;
 }

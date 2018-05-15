@@ -42,6 +42,9 @@ class MjcSingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
 
   void setFrictionCoefficient(double friction) override ;
 
+  double getMass();
+  bool isMovable() const;
+
  private:
   /// deprecated overrided functions
   /// ===================================
@@ -86,6 +89,8 @@ class MjcSingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
   benchmark::Vec<3> posTemp_ = {0.0, 0.0, 0.0};
   benchmark::Vec<3> linVelTemp_ = {0.0, 0.0, 0.0};
   benchmark::Vec<3> angVelTemp_ = {0.0, 0.0, 0.0};
+
+  bool isMovable_ = true;
 
 };
 
