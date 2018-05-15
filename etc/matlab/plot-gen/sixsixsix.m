@@ -58,12 +58,12 @@ erpY = plotoption;
 
 % error plot vs dt
 disp('plotting penetration error vs timestep...')
-plot_error_dt(T, const, plotSpec, false, false, '-noerp', '(No ERP)', erpN);
-plot_error_dt(T, const, plotSpec, true, false, '-erp', '(ERP)', erpY);
+% plot_error_dt(T, const, plotSpec, false, false, '-noerp', '(No ERP)', erpN);
+% plot_error_dt(T, const, plotSpec, true, false, '-erp', '(ERP)', erpY);
 
 disp('plotting penetration error vs real-time-factor...')
-plot_error_speed(T, const, plotSpec, false, false, '-noerp', '(No ERP)', erpN);
-plot_error_speed(T, const, plotSpec, true, false, '-erp', '(ERP)', erpY);
+% plot_error_speed(T, const, plotSpec, false, false, '-noerp', '(No ERP)', erpN);
+% plot_error_speed(T, const, plotSpec, true, false, '-erp', '(ERP)', erpY);
 
 % error energy plot (only for elastic collision)
 disp('plotting penetration error vs real-time-factor...')
@@ -242,7 +242,7 @@ dataTable = dataTable(...
 % ball + box
 sims = unique(dataTable.SIM);
 
-h = figure('Name','error','Position', [0, 0, 800, 600]);
+h = figure('Name','error','Position', [0, 0, 800, 400]);
 hold on
 set(gca, 'YScale', 'log', 'XScale', 'log', 'Ydir', 'reverse')
 for i = 1:length(sims)
@@ -286,8 +286,10 @@ hold off
 title(['Energy Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
-xlim([1e-2 10^2.5])
-legend('Location', 'eastoutside');
+xlim([10^-1.5 10^2.5])
+ylim([10^-4 10^9])
+% legend('Location', 'eastoutside');
+legend('Location', 'northeast');
 saveas(h, strcat('plots/thousand-energy-error-speed', fileName, '.png'))
 saveas(h, strcat('plots/thousand-energy-error-speed', fileName, '.eps'), 'epsc')
 saveas(h, strcat('plots/thousand-energy-error-speed', fileName, '.fig'), 'fig')

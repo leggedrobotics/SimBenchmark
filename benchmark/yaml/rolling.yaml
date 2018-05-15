@@ -22,7 +22,7 @@ constant:
   g: -9.8
   T: 4.0
   F: 150
-  penentration0: 1e-5   # initial penetration
+  penentration0: 2e-5   # initial penetration
   raiSim:
     mu_ground: 0.5
     mu_ball: 1.0

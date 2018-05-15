@@ -67,6 +67,10 @@ class ArticulatedSystemInterface {
   /// r, g, b, alpha
   virtual void setColor(Eigen::Vector4d color) = 0;
 
+  virtual const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace() = 0;
+
+  virtual double getTotalMass() = 0;
+
  public:
   // orientation, position, link_id, shape, color
   std::vector<std::tuple<benchmark::Mat<3, 3>, benchmark::Vec<3>, int, Shape>> visColObj;
