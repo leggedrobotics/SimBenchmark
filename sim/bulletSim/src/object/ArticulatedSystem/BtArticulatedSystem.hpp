@@ -69,6 +69,9 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
                    benchmark::Mat<3, 3> &orientation,
                    benchmark::Vec<3> &position);
 
+  const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace() override;
+  double getTotalMass() override;
+
  private:
   void init();
   void initVisuals();
@@ -86,6 +89,9 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
   BulletURDFImporter *importer_;
 
   std::vector<int> movableLinkIdx_;
+
+  benchmark::Vec<3> linearMomentum_;
+
   double maxJointTorque_ = 1000.0;
 };
 

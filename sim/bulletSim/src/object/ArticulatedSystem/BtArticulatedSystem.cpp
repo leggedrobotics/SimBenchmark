@@ -581,6 +581,18 @@ void BtArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orientat
                 bodyTf.getOrigin().z()};
   }
 }
+const Eigen::Map<Eigen::Matrix<double, 3, 1>> BtArticulatedSystem::getLinearMomentumInCartesianSpace() {
+  RAIFATAL("not implemented")
+  linearMomentum_.setZero();
+  return linearMomentum_.e();
+}
+
+double BtArticulatedSystem::getTotalMass() {
+  double mass = multiBody_->getBaseMass();
+  for(int i = 0; i < multiBody_->getNumLinks(); i++)
+    mass += multiBody_->getLinkMass(i);
+  return mass;
+}
 
 } // object
 } // bulet_sim

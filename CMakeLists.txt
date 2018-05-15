@@ -40,7 +40,7 @@ include_directories(${RAI_GRAPHICS_OPENGL_INCLUDE_DIRS})
 
 # eigen
 find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
 # yaml-cpp
 find_package(YAML-CPP REQUIRED)
@@ -48,7 +48,7 @@ include_directories(${YAML_CPP_INCLUDE_DIR})
 
 # boost
 find_package( Boost COMPONENTS system filesystem program_options REQUIRED )
-include_directories( ${Boost_INCLUDE_DIR} )
+include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
 ## =========================== LINK ===========================

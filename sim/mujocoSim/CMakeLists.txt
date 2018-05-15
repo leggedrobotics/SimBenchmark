@@ -5,6 +5,7 @@ set(CMAKE_CXX_FLAGS_RELEASE
         "-Wl,--no-as-needed -O3 -mtune=native -march=native")
 
 set(MUJOCO_LIB_DIR ${CMAKE_SOURCE_DIR}/lib/mjpro150)
+
 include_directories(${MUJOCO_LIB_DIR}/include)
 
 # mujoco shared libraries
