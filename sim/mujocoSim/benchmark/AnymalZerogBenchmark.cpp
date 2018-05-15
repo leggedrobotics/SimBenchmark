@@ -64,7 +64,7 @@ void setupWorld() {
   sim->setGravity({0, 0, 0});
 
   // mass
-  benchmark::anymal::zerogravity::params.m = sim->getTotalMass();
+  benchmark::anymal::zerogravity::params.m = sim->getTotalMass() * 0.5; /// since two anymals
   if(benchmark::anymal::zerogravity::options.gui)
     sim->cameraFollowObject(
         sim->getSingleBodyHandle(26), {10.0, 0.0, 1.0});  // focus on ground
