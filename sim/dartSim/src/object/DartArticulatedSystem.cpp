@@ -361,5 +361,19 @@ int DartArticulatedSystem::getStateDimension() {
   return stateDimension_;
 }
 
+const Eigen::Map<Eigen::Matrix<double, 3, 1>> DartArticulatedSystem::getLinearMomentumInCartesianSpace() {
+  double mass = skeletonPtr_->getMass();
+  Eigen::Vector3d comvel = skeletonPtr_->getCOMLinearVelocity();
+
+  linearMomentum_ = {mass * comvel.x(),
+                     mass * comvel.y(),
+                     mass * comvel.z()};
+  return linearMomentum_.e();
+}
+
+double DartArticulatedSystem::getTotalMass() {
+  return skeletonPtr_->getMass();
+}
+
 } // object
 } // dart_sim
