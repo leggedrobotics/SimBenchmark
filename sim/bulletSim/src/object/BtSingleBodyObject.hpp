@@ -40,6 +40,8 @@ class BtSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   double getPotentialEnergy(const benchmark::Vec<3> &gravity) override ;
   double getEnergy(const benchmark::Vec<3> &gravity) override ;
 
+  virtual const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentum() override;
+
   virtual void setPosition(Eigen::Vector3d originPosition);
   virtual void setPosition(double x, double y, double z);
   virtual void setOrientation(Eigen::Quaterniond quaternion);
@@ -71,6 +73,8 @@ class BtSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   benchmark::Vec<3> posTemp_ = {0.0, 0.0, 0.0};
   benchmark::Vec<3> linVelTemp_ = {0.0, 0.0, 0.0};
   benchmark::Vec<3> angVelTemp_ = {0.0, 0.0, 0.0};
+
+  benchmark::Vec<3> linearMomentum_ = {0, 0, 0};
 
   rai::RandomNumberGenerator<double> rn_;
 };

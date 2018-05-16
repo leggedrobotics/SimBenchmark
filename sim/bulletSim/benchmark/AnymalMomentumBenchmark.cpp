@@ -2,23 +2,23 @@
 // Created by kangd on 14.05.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <BtWorld_RG.hpp>
 
 #include "AnymalMomentumBenchmark.hpp"
-#include "OdeBenchmark.hpp"
+#include "BtBenchmark.hpp"
 
-ode_sim::OdeWorld_RG *sim;
+bullet_sim::BtWorld_RG *sim;
 std::vector<benchmark::SingleBodyHandle> balls;
-std::vector<ode_sim::ArticulatedSystemHandle> anymals;
+std::vector<bullet_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::zerogravity::options.gui)
-    sim = new ode_sim::OdeWorld_RG(800, 600, 0.5,
-                                   benchmark::NO_BACKGROUND,
-                                   benchmark::ode::options.solverOption);
+    sim = new bullet_sim::BtWorld_RG(800, 600, 0.5,
+                                     benchmark::NO_BACKGROUND,
+                                     bullet_sim::SOLVER_MULTI_BODY);
   else
-    sim = new ode_sim::OdeWorld_RG(benchmark::ode::options.solverOption);
+    sim = new bullet_sim::BtWorld_RG(bullet_sim::SOLVER_MULTI_BODY);
 }
 
 void setupWorld() {
@@ -46,6 +46,7 @@ void setupWorld() {
                                     -0.03, 0.4, -0.8,
                                     0.03, -0.4, 0.8,
                                     -0.03, -0.4, 0.8});
+
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
   anymals.push_back(anymal);
 
@@ -121,9 +122,8 @@ int main(int argc, const char* argv[]) {
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: RAI" << std::endl
+                << "Simulator: BULLET" << std::endl
                 << "GUI      : " << benchmark::anymal::zerogravity::options.gui << std::endl
-                << "Solver   : " << benchmark::ode::options.solverOption << std::endl
                 << "Timestep : " << benchmark::anymal::zerogravity::options.dt << std::endl
                 << "-----------------------"
   )

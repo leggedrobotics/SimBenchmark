@@ -6,6 +6,12 @@ add_executable(BtAnymalBenchmark
         ${CMAKE_SOURCE_DIR}/benchmark/BtBenchmark.hpp)
 target_link_libraries(BtAnymalBenchmark ${BtSimLink})
 
+add_executable(BtAnymalMomentumBenchmark
+        AnymalMomentumBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AnymalMomentumBenchmark.hpp
+        ${CMAKE_SOURCE_DIR}/benchmark/BtBenchmark.hpp)
+target_link_libraries(BtAnymalMomentumBenchmark ${BtSimLink})
+
 add_executable(BtRollingBenchmark
         RollingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)

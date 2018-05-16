@@ -6,3 +6,6 @@ target_link_libraries(BtAnymalDemo ${BtSimLink})
 
 add_executable(BtBuildingDemo BuildingDemo.cpp)
 target_link_libraries(BtBuildingDemo ${BtSimLink})
+
+add_executable(BtURDFDemo URDFDemo.cpp)
+target_link_libraries(BtURDFDemo ${BtSimLink})

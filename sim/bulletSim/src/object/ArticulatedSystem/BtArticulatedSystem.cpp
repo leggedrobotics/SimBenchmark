@@ -28,6 +28,10 @@ BtArticulatedSystem::BtArticulatedSystem(std::string urdfFile, btMultiBodyDynami
     RAIFATAL("failed to load URDF")
   }
 
+  // no damping (default)
+  multiBody_->setAngularDamping(0);
+  multiBody_->setLinearDamping(0);
+
   delete importer_;
 }
 
@@ -582,8 +586,24 @@ void BtArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orientat
   }
 }
 const Eigen::Map<Eigen::Matrix<double, 3, 1>> BtArticulatedSystem::getLinearMomentumInCartesianSpace() {
-  RAIFATAL("not implemented")
   linearMomentum_.setZero();
+
+  int num_links = multiBody_->getNumLinks();
+  btAlignedObjectArray<btVector3> omega;omega.resize(num_links+1);
+  btAlignedObjectArray<btVector3> vel;vel.resize(num_links+1);
+  btAlignedObjectArray<btQuaternion> rot_from_world;rot_from_world.resize(num_links+1);
+  multiBody_->compTreeLinkVelocities(&omega[0], &vel[0]);
+
+  rot_from_world[0] = multiBody_->getWorldToBaseRot();
+  btVector3 result = multiBody_->getBaseMass() * multiBody_->getBaseVel();
+
+  for (int i = 0; i < num_links; ++i) {
+    btMultibodyLink &link = multiBody_->getLink(i);
+    rot_from_world[i+1] = link.m_cachedRotParentToThis * rot_from_world[link.m_parent+1];
+    result += multiBody_->getLinkMass(i) * quatRotate(rot_from_world[i+1].inverse(),vel[i+1]);
+  }
+
+  linearMomentum_ = {result.x(), result.y(), result.z()};
   return linearMomentum_.e();
 }
 

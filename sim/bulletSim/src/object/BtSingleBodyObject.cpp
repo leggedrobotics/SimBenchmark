@@ -179,3 +179,9 @@ double bullet_sim::object::BtSingleBodyObject::getPotentialEnergy(const benchmar
 double bullet_sim::object::BtSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {
   return getKineticEnergy() + getPotentialEnergy(gravity);
 }
+
+const Eigen::Map<Eigen::Matrix<double, 3, 1>> bullet_sim::object::BtSingleBodyObject::getLinearMomentum() {
+  getLinearVelocity();
+  benchmark::vecScalarMul(mass_, linVelTemp_, linearMomentum_);
+  return linearMomentum_.e();
+}
