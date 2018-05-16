@@ -105,19 +105,23 @@ double simulationLoop() {
     }
   }
 
-  return watch.measure();
-}
-
-double computeMeanError() {
-  return std::accumulate(benchmark::anymal::zerogravity::errorList.begin(),
-                         benchmark::anymal::zerogravity::errorList.end(), 0.0)
-      / benchmark::anymal::zerogravity::errorList.size();
+  double time = watch.measure();
+  if(benchmark::anymal::zerogravity::options.csv)
+    benchmark::anymal::zerogravity::printCSV(
+        benchmark::anymal::zerogravity::getCSVpath(),
+        benchmark::ode::options.simName,
+        benchmark::ode::options.solverName,
+        time);
+  return time;
 }
 
 int main(int argc, const char* argv[]) {
 
   benchmark::anymal::zerogravity::addDescToOption(desc);
+  benchmark::ode::addDescToOption(desc);
+
   benchmark::anymal::zerogravity::getOptionsFromArg(argc, argv, desc);
+  benchmark::ode::getOptionsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
@@ -133,7 +137,7 @@ int main(int argc, const char* argv[]) {
 
   RAIINFO(
       std::endl << "Timer    : " << simulationLoop() << std::endl
-                << "Mean Error: " << computeMeanError() << std::endl
+                << "Mean Error: " << benchmark::anymal::zerogravity::computeMeanError() << std::endl
                 << "======================="
   )
 

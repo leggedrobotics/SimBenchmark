@@ -9,7 +9,6 @@ int main() {
   // sim
   rai_sim::World_RG sim(1280, 720, 0.1, rai_sim::NO_BACKGROUND);
   sim.setERP(0.01);
-  sim.setContactSolverParam(1.0, 1.0, 1.0, 100, 1e-7);
 
   // object
   auto checkerboard = sim.addCheckerboard(10.0, 400.0, 400.0, 0.1, 1, -1, rai_sim::GRID);

@@ -101,7 +101,14 @@ double simulationLoop() {
     }
   }
 
-  return watch.measure();
+  double time = watch.measure();
+  if(benchmark::anymal::zerogravity::options.csv)
+    benchmark::anymal::zerogravity::printCSV(
+        benchmark::anymal::zerogravity::getCSVpath(),
+        benchmark::dart::options.simName,
+        benchmark::dart::options.solverName,
+        time);
+  return time;
 }
 
 double computeMeanError() {
@@ -132,7 +139,7 @@ int main(int argc, const char* argv[]) {
 
   RAIINFO(
       std::endl << "Timer    : " << simulationLoop() << std::endl
-                << "Mean Error: " << computeMeanError() << std::endl
+                << "Mean Error: " << benchmark::anymal::zerogravity::computeMeanError() << std::endl
                 << "======================="
   )
 

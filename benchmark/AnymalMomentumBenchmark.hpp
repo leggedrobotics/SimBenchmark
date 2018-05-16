@@ -95,6 +95,17 @@ std::string getLogFilepath(bool feedback) {
   return logPath;
 }
 
+std::string getCSVpath() {
+
+  std::string csvPath(__FILE__);
+  while (csvPath.back() != '/')
+    csvPath.erase(csvPath.size() - 1, 1);
+
+  csvPath += "../data/anymal-zeroG/" + options.csvName;
+
+  return csvPath;
+}
+
 /**
  * add options to desc
  *
@@ -104,7 +115,6 @@ void addDescToOption(po::options_description &desc) {
   benchmark::addDescToOption(desc);
 
   desc.add_options()
-      ("row", po::value<int>(), "the number of rows")
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
       ;
 }
@@ -147,17 +157,31 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
   if(vm.count("dt")) {
     options.dt = vm["dt"].as<double>();
   }
+
+  // csv
+  if(vm.count("csv")) {
+    options.csv = true;
+    options.csvName = vm["csv"].as<std::string>();
+  }
+}
+
+double computeMeanError() {
+  return std::accumulate(benchmark::anymal::zerogravity::errorList.begin(),
+                         benchmark::anymal::zerogravity::errorList.end(), 0.0)
+      / benchmark::anymal::zerogravity::errorList.size();
 }
 
 void printCSV(std::string filePath,
               std::string sim,
               std::string solver,
-              std::string detector,
-              int rownum,
               double time) {
   std::ofstream myfile;
   myfile.open (filePath, std::ios_base::app);
-  myfile << sim << "," << solver << "," << detector << "," << rownum << "," << time << std::endl;
+  myfile << sim << ","
+         << solver << ","
+         << options.dt << ","
+         << computeMeanError() << ","
+         << time << std::endl;
   myfile.close();
 }
 

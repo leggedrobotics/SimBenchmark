@@ -22,10 +22,6 @@ void setupSimulation() {
   else
     sim->setERP(0);
 
-  sim->setContactSolverParam(1.0, 1.0, 1.0,
-                             benchmark::building::params.raiMaxIter,
-                             benchmark::building::params.raiThreshold);
-
   // set up logger and timer
   if(benchmark::building::options.log)
     benchmark::building::loggerSetup(

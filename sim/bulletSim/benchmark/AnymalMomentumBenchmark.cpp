@@ -106,7 +106,14 @@ double simulationLoop() {
     }
   }
 
-  return watch.measure();
+  double time = watch.measure();
+  if(benchmark::anymal::zerogravity::options.csv)
+    benchmark::anymal::zerogravity::printCSV(
+        benchmark::anymal::zerogravity::getCSVpath(),
+        benchmark::bullet::options.simName,
+        benchmark::bullet::options.solverName,
+        time);
+  return time;
 }
 
 double computeMeanError() {
@@ -117,13 +124,18 @@ double computeMeanError() {
 
 int main(int argc, const char* argv[]) {
 
+
   benchmark::anymal::zerogravity::addDescToOption(desc);
+  benchmark::bullet::addDescToOption(desc);
+
   benchmark::anymal::zerogravity::getOptionsFromArg(argc, argv, desc);
+  benchmark::bullet::getOptionsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: BULLET" << std::endl
                 << "GUI      : " << benchmark::anymal::zerogravity::options.gui << std::endl
+                << "Solver   : " << benchmark::bullet::options.solverOption << std::endl
                 << "Timestep : " << benchmark::anymal::zerogravity::options.dt << std::endl
                 << "-----------------------"
   )
@@ -133,7 +145,7 @@ int main(int argc, const char* argv[]) {
 
   RAIINFO(
       std::endl << "Timer    : " << simulationLoop() << std::endl
-                << "Mean Error: " << computeMeanError() << std::endl
+                << "Mean Error: " << benchmark::anymal::zerogravity::computeMeanError() << std::endl
                 << "======================="
   )
 
