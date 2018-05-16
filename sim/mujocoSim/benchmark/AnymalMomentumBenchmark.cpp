@@ -28,32 +28,24 @@ void setupSimulation() {
 
 void setupWorld() {
 
-  Eigen::VectorXd genCoord(38);
-  genCoord << 0, benchmark::anymal::zerogravity::params.x0, benchmark::anymal::zerogravity::params.H,
+  Eigen::VectorXd genCoord(26);
+  genCoord << 0, 0, benchmark::anymal::zerogravity::params.H,
       1.0, 0.0, 0.0, 0.0,
       0.03, 0.4, -0.8,
       -0.03, 0.4, -0.8,
       0.03, -0.4, 0.8,
       -0.03, -0.4, 0.8,
-      0, 0, benchmark::anymal::zerogravity::params.H,
-      1.0, 0.0, 0.0, 0.0,
-      0.03, 0.4, -0.8,
-      -0.03, 0.4, -0.8,
-      0.03, -0.4, 0.8,
-      -0.03, -0.4, 0.8;
+      0, benchmark::anymal::zerogravity::params.x0, benchmark::anymal::zerogravity::params.H,
+      1.0, 0.0, 0.0, 0.0;
 
-  Eigen::VectorXd genVelocity(36);
-  genVelocity << 0, benchmark::anymal::zerogravity::params.v0, 0,
+  Eigen::VectorXd genVelocity(24);
+  genVelocity << 0, 0, 0,
       0, 0, 0,
       0, 0, 0,
       0, 0, 0,
       0, 0, 0,
       0, 0, 0,
-      0, 0, 0,
-      0, 0, 0,
-      0, 0, 0,
-      0, 0, 0,
-      0, 0, 0,
+      0, benchmark::anymal::zerogravity::params.v0, 0,
       0, 0, 0;
 
   sim->setGeneralizedCoordinate(genCoord);
@@ -64,11 +56,20 @@ void setupWorld() {
   sim->setGravity({0, 0, 0});
 
   // mass
-  benchmark::anymal::zerogravity::params.M = sim->getTotalMass() * 0.5; /// since two anymals
+  benchmark::anymal::zerogravity::params.M = sim->getTotalMass() - benchmark::anymal::zerogravity::params.m;
   if(benchmark::anymal::zerogravity::options.gui)
     sim->cameraFollowObject(
-        sim->getSingleBodyHandle(26), {10.0, 0.0, 1.0});  // focus on ground
+        sim->getSingleBodyHandle(sim->getNumObject()-1), {10.0, 0.0, 1.0});  // focus on ground
 }
+
+double computeLinearMomentumError() {
+  // compute linear momentum
+  Eigen::Vector3d linearMomentum = sim->getLinearMomentumInCartesianSpace();
+  Eigen::Vector3d analyticSol(0, benchmark::anymal::zerogravity::params.m * benchmark::anymal::zerogravity::params.v0, 0);
+
+  return pow((linearMomentum - analyticSol).norm(), 2);
+}
+
 
 double simulationLoop() {
 
@@ -84,24 +85,12 @@ double simulationLoop() {
         sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt, 1.0); t++) {
 
       sim->integrate();
-
-      benchmark::anymal::zerogravity::errorList.push_back(
-          pow((sim->getLinearMomentumInCartesianSpace()
-              - Eigen::Vector3d(0,
-                                benchmark::anymal::zerogravity::params.M * benchmark::anymal::zerogravity::params.v0,
-                                0)).norm(), 2)
-      );
+      benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
     }
   } else {
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); t++) {
       sim->integrate();
-
-      benchmark::anymal::zerogravity::errorList.push_back(
-          pow((sim->getLinearMomentumInCartesianSpace()
-              - Eigen::Vector3d(0,
-                                benchmark::anymal::zerogravity::params.M * benchmark::anymal::zerogravity::params.v0,
-                                0)).norm(), 2)
-      );
+      benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
     }
   }
 

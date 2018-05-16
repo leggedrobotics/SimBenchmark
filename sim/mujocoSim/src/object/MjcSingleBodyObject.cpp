@@ -215,6 +215,12 @@ double MjcSingleBodyObject::getMass() {
 bool MjcSingleBodyObject::isMovable() const {
   return isMovable_;
 }
+const Eigen::Map<Eigen::Matrix<double, 3, 1>> MjcSingleBodyObject::getLinearMomentum() {
+  getLinearVelocity();
+  double mass = getMass();
+  benchmark::vecScalarMul(mass, linVelTemp_, linearMomentum_);
+  return linearMomentum_.e();
+}
 
 } // object
 } // mujoco_sim

@@ -37,6 +37,8 @@ class MjcSingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
   double getPotentialEnergy(const benchmark::Vec<3> &gravity) override ;
   double getEnergy(const benchmark::Vec<3> &gravity) override ;
 
+  const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentum() override;
+
   void setExternalForce(Eigen::Vector3d force) override ;
   void setExternalTorque(Eigen::Vector3d torque) override ;
 
@@ -89,6 +91,8 @@ class MjcSingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
   benchmark::Vec<3> posTemp_ = {0.0, 0.0, 0.0};
   benchmark::Vec<3> linVelTemp_ = {0.0, 0.0, 0.0};
   benchmark::Vec<3> angVelTemp_ = {0.0, 0.0, 0.0};
+
+  benchmark::Vec<3> linearMomentum_ = {0, 0, 0};
 
   bool isMovable_ = true;
 
