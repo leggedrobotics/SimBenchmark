@@ -133,6 +133,9 @@ struct Link {
 
   Joint parentJoint_;
 
+  // temp variable for set generalized velocity
+  benchmark::Vec<3> velocityTemp_;
+
   std::string name_;
   std::string parentName_;
   std::string parentJointName_;
@@ -152,6 +155,20 @@ struct Link {
     for (auto &ch : childrenLinks_)
       nbody += ch.numberOfBodiesFromHere();
     return nbody;
+  }
+
+  void setVelocityZero() {
+    velocityTemp_.setZero();
+  }
+
+  void addVelocityFromHere(benchmark::Vec<3> &velocity) {
+    for (auto &ch : childrenLinks_)
+      ch.addVelocityFromHere(velocity);
+  }
+
+  void setBodyVelocity() {
+    // set ode body velocity from velocityTemp_;
+//    dsetBody
   }
 };
 

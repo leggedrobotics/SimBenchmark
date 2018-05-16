@@ -38,9 +38,15 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   int getStateDimension() override;
 
   void setGeneralizedCoordinate(const Eigen::VectorXd &jointState) override;
+
+ private:
+  /// these functions are not implemented yet
   void setGeneralizedVelocity(const Eigen::VectorXd &jointVel) override;
-  void setGeneralizedCoordinate(std::initializer_list<double> jointState) override;
   void setGeneralizedVelocity(std::initializer_list<double> jointVel) override;
+  //////////////////////////////////////////
+
+ public:
+  void setGeneralizedCoordinate(std::initializer_list<double> jointState) override;
   void setGeneralizedForce(std::initializer_list<double> tau) override;
   void setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) override;
   void setGeneralizedForce(const Eigen::VectorXd &tau) override;

@@ -43,6 +43,8 @@ class OdeSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   double getPotentialEnergy(const benchmark::Vec<3> &gravity) override ;
   double getEnergy(const benchmark::Vec<3> &gravity) override ;
 
+  const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentum() override;
+
   virtual void setPosition(Eigen::Vector3d originPosition);
   virtual void setPosition(double x, double y, double z);
   virtual void setOrientation(Eigen::Quaterniond quaternion);
@@ -77,6 +79,9 @@ class OdeSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   benchmark::Vec<3> posTemp_ = {0.0, 0.0, 0.0};
   benchmark::Vec<3> linVelTemp_ = {0.0, 0.0, 0.0};
   benchmark::Vec<3> angVelTemp_ = {0.0, 0.0, 0.0};
+
+  // linear momentum
+  benchmark::Vec<3> linMomentum_ = {0, 0, 0};
 
   rai::RandomNumberGenerator<double> rn_;
 };

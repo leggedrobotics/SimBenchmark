@@ -183,8 +183,15 @@ double DartSingleBodyObject::getPotentialEnergy(const benchmark::Vec<3> &gravity
   Eigen::Vector3d gravityE = {gravity[0], gravity[1], gravity[2]};
   return bodyPtr_->computePotentialEnergy(gravityE);
 }
+
 double DartSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {
   return getKineticEnergy() + getPotentialEnergy(gravity);
+}
+
+const Eigen::Map<Eigen::Matrix<double, 3, 1>> DartSingleBodyObject::getLinearMomentum() {
+  getLinearVelocity();
+  benchmark::vecScalarMul(mass_, linVelTemp_, linMomentum);
+  return linMomentum.e();
 }
 
 } // object

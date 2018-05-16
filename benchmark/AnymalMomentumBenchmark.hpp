@@ -43,7 +43,8 @@ struct Parameter {
   double H = 2;
   double x0 = -5;
   double v0 = 2;
-  double m = 0;       // will be updated!
+  double M = 0;       // will be updated!
+  double m = 10; 
 };
 Parameter params;
 

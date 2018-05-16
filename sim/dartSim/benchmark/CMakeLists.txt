@@ -7,12 +7,12 @@ add_executable(DartAnymalBenchmark
         )
 target_link_libraries(DartAnymalBenchmark ${DartSimLink})
 
-add_executable(DartAnymalZerogBenchmark
-        AnymalZerogBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/AnymalZerogBenchmark.hpp
+add_executable(DartAnymalMomentumBenchmark
+        AnymalMomentumBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AnymalMomentumBenchmark.hpp
         ${CMAKE_SOURCE_DIR}/benchmark/DartBenchmark.hpp
         )
-target_link_libraries(DartAnymalZerogBenchmark ${DartSimLink})
+target_link_libraries(DartAnymalMomentumBenchmark ${DartSimLink})
 
 add_executable(DartRollingBenchmark
         RollingBenchmark.cpp

@@ -4,7 +4,7 @@
 
 #include <MjcWorld_RG.hpp>
 
-#include "AnymalZerogBenchmark.hpp"
+#include "AnymalMomentumBenchmark.hpp"
 #include "MjcBenchmark.hpp"
 
 mujoco_sim::MjcWorld_RG *sim;
@@ -64,7 +64,7 @@ void setupWorld() {
   sim->setGravity({0, 0, 0});
 
   // mass
-  benchmark::anymal::zerogravity::params.m = sim->getTotalMass() * 0.5; /// since two anymals
+  benchmark::anymal::zerogravity::params.M = sim->getTotalMass() * 0.5; /// since two anymals
   if(benchmark::anymal::zerogravity::options.gui)
     sim->cameraFollowObject(
         sim->getSingleBodyHandle(26), {10.0, 0.0, 1.0});  // focus on ground
@@ -88,7 +88,7 @@ double simulationLoop() {
       benchmark::anymal::zerogravity::errorList.push_back(
           pow((sim->getLinearMomentumInCartesianSpace()
               - Eigen::Vector3d(0,
-                                benchmark::anymal::zerogravity::params.m * benchmark::anymal::zerogravity::params.v0,
+                                benchmark::anymal::zerogravity::params.M * benchmark::anymal::zerogravity::params.v0,
                                 0)).norm(), 2)
       );
     }
@@ -99,7 +99,7 @@ double simulationLoop() {
       benchmark::anymal::zerogravity::errorList.push_back(
           pow((sim->getLinearMomentumInCartesianSpace()
               - Eigen::Vector3d(0,
-                                benchmark::anymal::zerogravity::params.m * benchmark::anymal::zerogravity::params.v0,
+                                benchmark::anymal::zerogravity::params.M * benchmark::anymal::zerogravity::params.v0,
                                 0)).norm(), 2)
       );
     }

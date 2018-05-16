@@ -4,10 +4,11 @@
 
 #include <OdeWorld_RG.hpp>
 
-#include "AnymalZerogBenchmark.hpp"
+#include "AnymalMomentumBenchmark.hpp"
 #include "OdeBenchmark.hpp"
 
 ode_sim::OdeWorld_RG *sim;
+std::vector<benchmark::SingleBodyHandle> balls;
 std::vector<ode_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
@@ -25,48 +26,53 @@ void setupWorld() {
   // add objects
   auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
 
+  // ball
+  auto ball = sim->addSphere(0.2, benchmark::anymal::zerogravity::params.m);
+  ball->setPosition(0,
+                    benchmark::anymal::zerogravity::params.x0,
+                    benchmark::anymal::zerogravity::params.H);
+  ball->setVelocity(0, benchmark::anymal::zerogravity::params.v0, 0, 0, 0, 0);
+  balls.push_back(ball);
+
+  // anymal
   auto anymal = sim->addArticulatedSystem(
       benchmark::anymal::zerogravity::getURDFpath()
   );
   anymal->setGeneralizedCoordinate({0,
-                                    benchmark::anymal::zerogravity::params.x0,
+                                    0,
                                     benchmark::anymal::zerogravity::params.H,
                                     1.0, 0.0, 0.0, 0.0,
                                     0.03, 0.4, -0.8,
                                     -0.03, 0.4, -0.8,
                                     0.03, -0.4, 0.8,
                                     -0.03, -0.4, 0.8});
-  anymal->setGeneralizedVelocity({0, benchmark::anymal::zerogravity::params.v0, 0,
-                                  0, 0, 0,
-                                  0, 0, 0,
-                                  0, 0, 0,
-                                  0, 0, 0,
-                                  0, 0, 0});
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
   anymals.push_back(anymal);
-
-  auto anymal2 = sim->addArticulatedSystem(
-      benchmark::anymal::zerogravity::getURDFpath()
-  );
-  anymal2->setGeneralizedCoordinate({0,
-                                     0,
-                                     benchmark::anymal::zerogravity::params.H,
-                                     1.0, 0.0, 0.0, 0.0,
-                                     0.03, 0.4, -0.8,
-                                     -0.03, 0.4, -0.8,
-                                     0.03, -0.4, 0.8,
-                                     -0.03, -0.4, 0.8});
-  anymal2->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal2->getDOF()));
-  anymal2->setGeneralizedForce(Eigen::VectorXd::Zero(anymal2->getDOF()));
-  anymals.push_back(anymal2);
 
   // gravity
   sim->setGravity({0, 0, 0});
 
   // mass
-  benchmark::anymal::zerogravity::params.m = anymal->getTotalMass();
+  benchmark::anymal::zerogravity::params.M = anymal->getTotalMass();
   if(benchmark::anymal::zerogravity::options.gui)
     sim->cameraFollowObject(checkerboard, {10.0, 0.0, 1.0});
+}
+
+double computeLinearMomentumError() {
+  // compute linear momentum
+  Eigen::Vector3d linearMomentum;
+  linearMomentum.setZero();
+
+  for(int i = 0; i < anymals.size(); i++) {
+    linearMomentum += anymals[i]->getLinearMomentumInCartesianSpace();
+  }
+  for(int i = 0; i < balls.size(); i++) {
+    linearMomentum += balls[i]->getLinearMomentum();
+  }
+
+  Eigen::Vector3d analyticSol(0, benchmark::anymal::zerogravity::params.m * benchmark::anymal::zerogravity::params.v0, 0);
+
+  return pow((linearMomentum - analyticSol).norm(), 2);
 }
 
 double simulationLoop() {
@@ -79,38 +85,23 @@ double simulationLoop() {
   watch.start();
   if(benchmark::anymal::zerogravity::options.gui) {
     // gui
+    if(benchmark::anymal::zerogravity::options.saveVideo)
+      sim->startRecordingVideo("/tmp", "ode-rolling");
+
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt, 1.0); t++) {
 
       sim->integrate(benchmark::anymal::zerogravity::options.dt);
-
-      Eigen::Vector3d linearMomentum;
-      linearMomentum.setZero();
-      for(int i = 0; i < anymals.size(); i++) {
-        linearMomentum += anymals[i]->getLinearMomentumInCartesianSpace();
-      }
-      benchmark::anymal::zerogravity::errorList.push_back(
-          pow((linearMomentum
-              - Eigen::Vector3d(0,
-                                benchmark::anymal::zerogravity::params.m * benchmark::anymal::zerogravity::params.v0,
-                                0)).norm(), 2)
-      );
+      benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
     }
+
+    if(benchmark::anymal::zerogravity::options.saveVideo)
+      sim->stopRecordingVideo();
+
   } else {
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); t++) {
       sim->integrate(benchmark::anymal::zerogravity::options.dt);
-
-      Eigen::Vector3d linearMomentum;
-      linearMomentum.setZero();
-      for(int i = 0; i < anymals.size(); i++) {
-        linearMomentum += anymals[i]->getLinearMomentumInCartesianSpace();
-      }
-      benchmark::anymal::zerogravity::errorList.push_back(
-          pow((linearMomentum
-              - Eigen::Vector3d(0,
-                                benchmark::anymal::zerogravity::params.m * benchmark::anymal::zerogravity::params.v0,
-                                0)).norm(), 2)
-      );
+      benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
     }
   }
 

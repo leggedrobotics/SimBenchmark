@@ -7,12 +7,12 @@ add_executable(MjcAnymalBenchmark
         )
 target_link_libraries(MjcAnymalBenchmark ${MjcSimLink})
 
-add_executable(MjcAnymalZerogBenchmark
-        AnymalZerogBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/AnymalZerogBenchmark.hpp
+add_executable(MjcAnymalMomentumBenchmark
+        AnymalMomentumBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AnymalMomentumBenchmark.hpp
         ${CMAKE_SOURCE_DIR}/benchmark/MjcBenchmark.hpp
         )
-target_link_libraries(MjcAnymalZerogBenchmark ${MjcSimLink})
+target_link_libraries(MjcAnymalMomentumBenchmark ${MjcSimLink})
 
 add_executable(MjcRollingBenchmark
         RollingBenchmark.cpp

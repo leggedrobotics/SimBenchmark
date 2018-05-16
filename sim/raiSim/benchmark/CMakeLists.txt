@@ -5,10 +5,10 @@ add_executable(RaiAnymalBenchmark
         ${CMAKE_SOURCE_DIR}/benchmark/AnymalBenchmark.hpp)
 target_link_libraries(RaiAnymalBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
 
-add_executable(RaiAnymalZerogBenchmark
-        AnymalZerogBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/AnymalZerogBenchmark.hpp)
-target_link_libraries(RaiAnymalZerogBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+add_executable(RaiAnymalMomentumBenchmark
+        AnymalMomentumBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AnymalMomentumBenchmark.hpp)
+target_link_libraries(RaiAnymalMomentumBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
 
 add_executable(RaiRollingBenchmark
         RollingBenchmark.cpp

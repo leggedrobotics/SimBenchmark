@@ -61,11 +61,11 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::OdeSingleBodyObj
   const dReal *linearVelocity;
   if(body_) {
     linearVelocity = dBodyGetLinearVel(body_);
+    linVelTemp_ = {linearVelocity[0], linearVelocity[1], linearVelocity[2]};
   }
   else {
     RAIFATAL('cannot get velocity from static object');
   }
-  linVelTemp_ = {linearVelocity[0], linearVelocity[1], linearVelocity[2]};
   return linVelTemp_.e();
 }
 
@@ -221,6 +221,20 @@ double object::OdeSingleBodyObject::getPotentialEnergy(const benchmark::Vec<3> &
 
 double object::OdeSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {
   return getKineticEnergy() + getPotentialEnergy(gravity);
+}
+
+const Eigen::Map<Eigen::Matrix<double, 3, 1>> object::OdeSingleBodyObject::getLinearMomentum() {
+  const dReal *linearVelocity;
+  if(body_) {
+    linearVelocity = dBodyGetLinearVel(body_);
+    linMomentum_ = {linearVelocity[0] * mass_.mass,
+                    linearVelocity[1] * mass_.mass,
+                    linearVelocity[2] * mass_.mass};
+  }
+  else {
+    RAIFATAL('cannot get velocity from static object');
+  }
+  return linMomentum_.e();
 }
 
 } // ode_sim

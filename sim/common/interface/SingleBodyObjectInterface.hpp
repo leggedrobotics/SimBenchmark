@@ -44,6 +44,8 @@ class SingleBodyObjectInterface {
   virtual double getPotentialEnergy(const benchmark::Vec<3> &gravity) = 0;
   virtual double getEnergy(const benchmark::Vec<3> &gravity) = 0;
 
+  virtual const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentum() = 0;
+
   virtual bool isVisualizeFramesAndCom() const = 0;
 
  protected:
