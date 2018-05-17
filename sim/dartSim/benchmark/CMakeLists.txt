@@ -14,6 +14,13 @@ add_executable(DartAnymalMomentumBenchmark
         )
 target_link_libraries(DartAnymalMomentumBenchmark ${DartSimLink})
 
+add_executable(DartAnymalEnergyBenchmark
+        AnymalEnergyBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AnymalEnergyBenchmark.hpp
+        ${CMAKE_SOURCE_DIR}/benchmark/DartBenchmark.hpp
+        )
+target_link_libraries(DartAnymalEnergyBenchmark ${DartSimLink})
+
 add_executable(DartRollingBenchmark
         RollingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)

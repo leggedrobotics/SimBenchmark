@@ -42,6 +42,7 @@ class MjcWorld_RG: public benchmark::World_RG {
   void integrate();
   void integrate1();
   void integrate2();
+  void forwardKinematics();
   void setTimeStep(double timeStep);
 
   benchmark::SingleBodyHandle getSingleBodyHandle(int index);
@@ -50,6 +51,14 @@ class MjcWorld_RG: public benchmark::World_RG {
 
   const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace();
   double getTotalMass();
+
+  /**
+   * Get energy of the world.
+   * Note. Gravity should be set to world with same value of param &gravity
+   *
+   * @param gravity this parameter is deprecated!
+   * @return returm world energy
+   */
   double getEnergy(const benchmark::Vec<3> &gravity);
 
   /// the functions below are articulated system related.

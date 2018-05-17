@@ -57,6 +57,9 @@ mujoco_sim::MjcWorld::MjcWorld(const char *modelPath,
   generalizedVelocity_.setZero();
   generalizedForce_.resize(dof_);
   generalizedForce_.setZero();
+
+  // energy calculation
+  simOption_->enableflags |= mjENBL_ENERGY;
 }
 
 mujoco_sim::MjcWorld::~MjcWorld() {
@@ -295,7 +298,7 @@ double MjcWorld::getTotalMass() {
 }
 
 double MjcWorld::getEnergy(const benchmark::Vec<3> &gravity) {
-  return 0;
+  return worldData_->energy[0] + worldData_->energy[1];
 }
 
 void mujoco_sim::MjcWorld::integrate(double dt) {
@@ -306,6 +309,9 @@ void MjcWorld::integrate1(double dt) {
 }
 void MjcWorld::integrate2(double dt) {
   RAIFATAL("use setTimeStep(double dt) + integrate2() instead")
+}
+void MjcWorld::forwardKinematics() {
+  mj_forward(worldModel_, worldData_);
 }
 
 } // mujoco_sim

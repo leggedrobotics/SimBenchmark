@@ -2,25 +2,25 @@
 // Created by kangd on 14.05.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <DartWorld_RG.hpp>
 
 #include "AnymalEnergyBenchmark.hpp"
-#include "OdeBenchmark.hpp"
+#include "DartBenchmark.hpp"
 
-ode_sim::OdeWorld_RG *sim;
-std::vector<ode_sim::ArticulatedSystemHandle> anymals;
+dart_sim::DartWorld_RG *sim;
+std::vector<dart_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::freedrop::options.gui)
-    sim = new ode_sim::OdeWorld_RG(800, 600, 0.5,
-                                   benchmark::NO_BACKGROUND,
-                                   benchmark::ode::options.solverOption);
+    sim = new dart_sim::DartWorld_RG(800, 600, 0.5,
+                                     benchmark::NO_BACKGROUND,
+                                     benchmark::dart::options.solverOption);
   else
-    sim = new ode_sim::OdeWorld_RG(benchmark::ode::options.solverOption);
+    sim = new dart_sim::DartWorld_RG(benchmark::dart::options.solverOption);
 
-  // set erp 0
-  sim->setERP(0, 0, 0);
+  // set time step
+  sim->setTimeStep(benchmark::anymal::freedrop::options.dt);
 }
 
 void setupWorld() {
@@ -37,8 +37,8 @@ void setupWorld() {
                                     benchmark::anymal::freedrop::params.H,
                                     1.0, 0.0, 0.0, 0.0,
                                     0.03, 0.4, -0.8,
+                                    0.03, -0.4, +0.8,
                                     -0.03, 0.4, -0.8,
-                                    0.03, -0.4, 0.8,
                                     -0.03, -0.4, 0.8});
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
   anymals.push_back(anymal);
@@ -66,7 +66,6 @@ double computeEnergyError(double E0) {
   return pow(computeEnergy() - E0, 2);
 }
 
-
 double simulationLoop() {
 
   // error list
@@ -84,12 +83,12 @@ double simulationLoop() {
         sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor); t++) {
 
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
-      sim->integrate(benchmark::anymal::freedrop::options.dt);
+      sim->integrate();
     }
   } else {
     for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt); t++) {
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
-      sim->integrate(benchmark::anymal::freedrop::options.dt);
+      sim->integrate();
     }
   }
 
@@ -97,8 +96,8 @@ double simulationLoop() {
   if(benchmark::anymal::freedrop::options.csv)
     benchmark::anymal::freedrop::printCSV(
         benchmark::anymal::freedrop::getCSVpath(),
-        benchmark::ode::options.simName,
-        benchmark::ode::options.solverName,
+        benchmark::dart::options.simName,
+        benchmark::dart::options.solverName,
         time);
   return time;
 }
@@ -106,15 +105,16 @@ double simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::anymal::freedrop::addDescToOption(desc);
-  benchmark::ode::addDescToOption(desc);
+  benchmark::dart::addDescToOption(desc);
 
   benchmark::anymal::freedrop::getOptionsFromArg(argc, argv, desc);
-  benchmark::ode::getOptionsFromArg(argc, argv, desc);
+  benchmark::dart::getOptionsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: ODE" << std::endl
-                << "GUI      : " << benchmark::anymal::freedrop::options.gui << std::endl << "Solver   : " << benchmark::ode::options.solverOption << std::endl
+                << "Simulator: DART" << std::endl
+                << "GUI      : " << benchmark::anymal::freedrop::options.gui << std::endl
+                << "Solver   : " << benchmark::dart::options.solverOption << std::endl
                 << "Timestep : " << benchmark::anymal::freedrop::options.dt << std::endl
                 << "-----------------------"
   )

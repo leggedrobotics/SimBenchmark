@@ -82,6 +82,7 @@ class MjcWorld: public benchmark::WorldInterface {
   double getTotalMass();
   double getEnergy(const benchmark::Vec<3> &gravity);
 
+  void forwardKinematics();
   void integrate();
   void integrate1();
   void integrate2();

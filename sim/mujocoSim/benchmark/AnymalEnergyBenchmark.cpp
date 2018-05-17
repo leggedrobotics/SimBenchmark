@@ -2,70 +2,61 @@
 // Created by kangd on 14.05.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <MjcWorld_RG.hpp>
 
 #include "AnymalEnergyBenchmark.hpp"
-#include "OdeBenchmark.hpp"
+#include "MjcBenchmark.hpp"
 
-ode_sim::OdeWorld_RG *sim;
-std::vector<ode_sim::ArticulatedSystemHandle> anymals;
+mujoco_sim::MjcWorld_RG *sim;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::freedrop::options.gui)
-    sim = new ode_sim::OdeWorld_RG(800, 600, 0.5,
-                                   benchmark::NO_BACKGROUND,
-                                   benchmark::ode::options.solverOption);
+    sim = new mujoco_sim::MjcWorld_RG(800, 600, 0.5,
+                                      benchmark::anymal::freedrop::getMujocoURDFpath().c_str(),
+                                      benchmark::mujoco::getKeypath().c_str(),
+                                      benchmark::NO_BACKGROUND,
+                                      benchmark::mujoco::options.solverOption);
   else
-    sim = new ode_sim::OdeWorld_RG(benchmark::ode::options.solverOption);
+    sim = new mujoco_sim::MjcWorld_RG(benchmark::anymal::freedrop::getMujocoURDFpath().c_str(),
+                                      benchmark::mujoco::getKeypath().c_str(),
+                                      benchmark::mujoco::options.solverOption);
 
-  // set erp 0
-  sim->setERP(0, 0, 0);
+  // set time step
+  sim->setTimeStep(benchmark::anymal::freedrop::options.dt);
 }
 
 void setupWorld() {
 
-  // add objects
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
-
-  // anymal
-  auto anymal = sim->addArticulatedSystem(
-      benchmark::anymal::freedrop::getURDFpath()
-  );
-  anymal->setGeneralizedCoordinate({0,
-                                    0,
-                                    benchmark::anymal::freedrop::params.H,
-                                    1.0, 0.0, 0.0, 0.0,
-                                    0.03, 0.4, -0.8,
-                                    -0.03, 0.4, -0.8,
-                                    0.03, -0.4, 0.8,
-                                    -0.03, -0.4, 0.8});
-  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
-  anymals.push_back(anymal);
+  sim->setGeneralizedCoordinate({0,
+                                 0,
+                                 benchmark::anymal::freedrop::params.H,
+                                 1.0, 0.0, 0.0, 0.0,
+                                 0.03, 0.4, -0.8,
+                                 0.03, -0.4, +0.8,
+                                 -0.03, 0.4, -0.8,
+                                 -0.03, -0.4, 0.8});
+  sim->setGeneralizedForce(Eigen::VectorXd::Zero(sim->getDOF()));
 
   // gravity
   sim->setGravity({0, 0, benchmark::anymal::freedrop::params.g});
 
   // mass
-  benchmark::anymal::freedrop::params.M = anymal->getTotalMass();
+  benchmark::anymal::freedrop::params.M = sim->getTotalMass();
 
   if(benchmark::anymal::freedrop::options.gui)
-    sim->cameraFollowObject(checkerboard, {10.0, 0.0, 30.0});
+    sim->cameraFollowObject(
+        sim->getSingleBodyHandle(sim->getNumObject()-1), {10.0, 0.0, 30.0});
 }
 
 double computeEnergy() {
-  double energy = 0;
-  for(int i = 0; i < anymals.size(); i++) {
-    energy += anymals[i]->getEnergy({0, 0, benchmark::anymal::freedrop::params.g});
-  }
-  return energy;
+  return sim->getEnergy({0, 0, benchmark::anymal::freedrop::params.g});
 }
 
 double computeEnergyError(double E0) {
   // compute linear momentum
   return pow(computeEnergy() - E0, 2);
 }
-
 
 double simulationLoop() {
 
@@ -74,6 +65,7 @@ double simulationLoop() {
       unsigned(benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt));
 
   // E0
+  sim->forwardKinematics();
   double E0 = computeEnergy();
 
   StopWatch watch;
@@ -83,13 +75,15 @@ double simulationLoop() {
     for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor); t++) {
 
+      sim->integrate1();
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
-      sim->integrate(benchmark::anymal::freedrop::options.dt);
+      sim->integrate2();
     }
   } else {
     for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt); t++) {
+      sim->integrate1();
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
-      sim->integrate(benchmark::anymal::freedrop::options.dt);
+      sim->integrate2();
     }
   }
 
@@ -97,8 +91,8 @@ double simulationLoop() {
   if(benchmark::anymal::freedrop::options.csv)
     benchmark::anymal::freedrop::printCSV(
         benchmark::anymal::freedrop::getCSVpath(),
-        benchmark::ode::options.simName,
-        benchmark::ode::options.solverName,
+        benchmark::mujoco::options.simName,
+        benchmark::mujoco::options.solverName,
         time);
   return time;
 }
@@ -106,15 +100,16 @@ double simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::anymal::freedrop::addDescToOption(desc);
-  benchmark::ode::addDescToOption(desc);
+  benchmark::mujoco::addDescToOption(desc);
 
   benchmark::anymal::freedrop::getOptionsFromArg(argc, argv, desc);
-  benchmark::ode::getOptionsFromArg(argc, argv, desc);
+  benchmark::mujoco::getOptionsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: ODE" << std::endl
-                << "GUI      : " << benchmark::anymal::freedrop::options.gui << std::endl << "Solver   : " << benchmark::ode::options.solverOption << std::endl
+                << "Simulator: MUJOCO" << std::endl
+                << "GUI      : " << benchmark::anymal::freedrop::options.gui << std::endl
+                << "Solver   : " << benchmark::mujoco::options.solverOption << std::endl
                 << "Timestep : " << benchmark::anymal::freedrop::options.dt << std::endl
                 << "-----------------------"
   )

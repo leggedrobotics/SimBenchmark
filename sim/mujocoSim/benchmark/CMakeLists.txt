@@ -14,6 +14,13 @@ add_executable(MjcAnymalMomentumBenchmark
         )
 target_link_libraries(MjcAnymalMomentumBenchmark ${MjcSimLink})
 
+add_executable(MjcAnymalEnergyBenchmark
+        AnymalEnergyBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AnymalEnergyBenchmark.hpp
+        ${CMAKE_SOURCE_DIR}/benchmark/MjcBenchmark.hpp
+        )
+target_link_libraries(MjcAnymalEnergyBenchmark ${MjcSimLink})
+
 add_executable(MjcRollingBenchmark
         RollingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)
