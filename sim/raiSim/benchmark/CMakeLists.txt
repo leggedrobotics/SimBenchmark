@@ -10,6 +10,11 @@ add_executable(RaiAnymalMomentumBenchmark
         ${CMAKE_SOURCE_DIR}/benchmark/AnymalMomentumBenchmark.hpp)
 target_link_libraries(RaiAnymalMomentumBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
 
+add_executable(RaiAnymalEnergyBenchmark
+        AnymalEnergyBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AnymalEnergyBenchmark.hpp)
+target_link_libraries(RaiAnymalEnergyBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+
 add_executable(RaiRollingBenchmark
         RollingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)

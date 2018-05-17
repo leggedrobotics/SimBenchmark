@@ -32,11 +32,8 @@ do
     # rai sim
     if [ "$test_rai" == 'ON' ]; then
         if [ "$RAISIM_ON" == "ON" ]; then
-            for erpon in true false
-            do
-                timeout 600 ../sim/raiSim/benchmark/RaiAnymalMomentumBenchmark \
-                --nogui --dt=$dt --csv=$csv_file #--log
-            done
+            timeout 600 ../sim/raiSim/benchmark/RaiAnymalMomentumBenchmark \
+            --nogui --dt=$dt --csv=$csv_file #--log
         else
             echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
         fi
@@ -45,11 +42,8 @@ do
     # bullet sim
     if [ "$test_bt" == 'ON' ]; then
         if [ "$BTSIM_ON" == "ON" ]; then
-            for erpon in true false
-            do
-                timeout 600 ../sim/bulletSim/benchmark/BtAnymalMomentumBenchmark \
-                --nogui --dt=$dt --csv=$csv_file #--log
-            done
+            timeout 600 ../sim/bulletSim/benchmark/BtAnymalMomentumBenchmark \
+            --nogui --dt=$dt --csv=$csv_file #--log
         else
             echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
         fi
@@ -60,11 +54,8 @@ do
         if [ "$ODESIM_ON" == "ON" ] ; then
             for solver in std quick
             do
-                for erpon in true false
-                do
-                    timeout 600 ../sim/odeSim/benchmark/OdeAnymalMomentumBenchmark \
-                    --nogui --dt=$dt --solver=$solver --csv=$csv_file #--log
-                done
+                timeout 600 ../sim/odeSim/benchmark/OdeAnymalMomentumBenchmark \
+                --nogui --dt=$dt --solver=$solver --csv=$csv_file #--log
             done
         else
             echo "odesim is not built. turn on BENCHMARK_ODESIM option in cmake"

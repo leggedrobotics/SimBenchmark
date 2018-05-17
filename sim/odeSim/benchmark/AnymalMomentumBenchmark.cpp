@@ -125,7 +125,7 @@ int main(int argc, const char* argv[]) {
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: RAI" << std::endl
+                << "Simulator: ODE" << std::endl
                 << "GUI      : " << benchmark::anymal::zerogravity::options.gui << std::endl
                 << "Solver   : " << benchmark::ode::options.solverOption << std::endl
                 << "Timestep : " << benchmark::anymal::zerogravity::options.dt << std::endl

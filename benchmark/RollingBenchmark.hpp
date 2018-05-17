@@ -11,13 +11,12 @@
 #include "BenchmarkTest.hpp"
 
 /**
- * Rolling test is for testing frictional contact solving.
+ * Rolling test investigates accuracy of frictional contact solving.
  * The error is measured by comparing the simulation with analytical solution.
  * The test focuses on:
  *
  * 1. Frictional cone (diagonal, elliptic)
- * 2. The accuracy of frictional contact simulation
- * 3. The violation of hard-contact constraint (penetration)
+ * 2. The accuracy of frictional contact solving vs simulation speed trade-off
  *
  * Please read docs for more details
  */

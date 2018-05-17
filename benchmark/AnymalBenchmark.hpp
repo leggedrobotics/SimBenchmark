@@ -11,7 +11,7 @@
 #include "BenchmarkTest.hpp"
 
 /**
- * ANYmal test is for testing articulated robot system.
+ * ANYmal test (PD control) is articulated robot system test.
  * The test focuses on:
  *
  * 1. Speed of simulation

@@ -11,17 +11,17 @@
 #include "BenchmarkTest.hpp"
 
 /**
- * ANYmal momentum test (zero gravity) investigates momentum conservation of articulated system collision.
+ * ANYmal Energy test (free drop) checks energy conservation of articulated system model
  * The test focuses on:
  *
- * 1. Momentum conservation vs simulation speed trade-off
+ * 1. Energy conservation vs simulation speed trade-off
  *
  * Please read docs for more details
  */
 
 namespace po = boost::program_options;
 
-namespace benchmark::anymal::zerogravity {
+namespace benchmark::anymal::freedrop {
 
 // data lists
 std::vector<double> errorList;
@@ -31,6 +31,7 @@ std::vector<double> errorList;
  */
 struct Option: benchmark::Option {
   double dt = 0.005;  // timestep (sec)
+  double guiRealtimeFactor = 0.2;
 };
 Option options;
 
@@ -38,12 +39,10 @@ Option options;
  * parameter for ANYmal simulation
  */
 struct Parameter {
-  double T = 10;      // simulation time (sec)
-  double H = 2;
-  double x0 = -5;
-  double v0 = 2;
+  double T = 2;      // simulation time (sec)
+  double H = 20;      // drop height
   double M = 0;       // will be updated!
-  double m = 10; 
+  double g = -9.8;
 };
 Parameter params;
 
@@ -65,7 +64,6 @@ std::string getURDFpath() {
 /**
  * get URDF file path of ANYmal for Mujoco
  *
- * @param rowNum # of row
  * @return urdfPath in string
  */
 std::string getMujocoURDFpath() {
@@ -73,24 +71,24 @@ std::string getMujocoURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/mujoco/ANYmal/robot-momentum.urdf";
+  urdfPath += "../res/mujoco/ANYmal/robot1.urdf";
 
   return urdfPath;
 }
 
 /**
- * get CSV log file path of test result
+ * get rlog file path of test result
  *
  * @param feedback
  * @return log file path in string
  */
-std::string getLogFilepath(bool feedback) {
+std::string getLogDirpath(bool feedback) {
 
   std::string logPath(__FILE__);
   while (logPath.back() != '/')
     logPath.erase(logPath.size() - 1, 1);
 
-  logPath += "../data/anymal-zero-g/log.csv";
+  logPath += "../data/anymal-feedrop/";
   return logPath;
 }
 
@@ -100,7 +98,7 @@ std::string getCSVpath() {
   while (csvPath.back() != '/')
     csvPath.erase(csvPath.size() - 1, 1);
 
-  csvPath += "../data/anymal-zeroG/" + options.csvName;
+  csvPath += "../data/anymal-feedrop/" + options.csvName;
 
   return csvPath;
 }
@@ -165,9 +163,9 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
 }
 
 double computeMeanError() {
-  return std::accumulate(benchmark::anymal::zerogravity::errorList.begin(),
-                         benchmark::anymal::zerogravity::errorList.end(), 0.0)
-      / benchmark::anymal::zerogravity::errorList.size();
+  return std::accumulate(benchmark::anymal::freedrop::errorList.begin(),
+                         benchmark::anymal::freedrop::errorList.end(), 0.0)
+      / benchmark::anymal::freedrop::errorList.size();
 }
 
 void printCSV(std::string filePath,
