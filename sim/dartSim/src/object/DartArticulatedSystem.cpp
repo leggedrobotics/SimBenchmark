@@ -417,5 +417,9 @@ double DartArticulatedSystem::getTotalMass() {
   return skeletonPtr_->getMass();
 }
 
+double DartArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
+  return skeletonPtr_->computePotentialEnergy() + skeletonPtr_->computeKineticEnergy();
+}
+
 } // object
 } // dart_sim

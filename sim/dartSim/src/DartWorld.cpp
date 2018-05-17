@@ -148,10 +148,6 @@ void DartWorld::setTimeStep(double timeStep) {
   dynamicsWorld_->setTimeStep(timeStep);
 }
 
-void DartWorld::integrate(double dt) {
-  RAIFATAL("use setTimeStep(double dt) + integrate() instead")
-}
-
 int DartWorld::getNumObject() {
   return objectList_.size();
 }
@@ -162,6 +158,16 @@ void DartWorld::setMaxContacts(int maxContacts) {
 
 const std::vector<Single3DContactProblem> &DartWorld::getCollisionProblem() {
   return contactProblemList_;
+}
+
+void DartWorld::integrate(double dt) {
+  RAIFATAL("use setTimeStep(double dt) + integrate() instead")
+}
+void DartWorld::integrate1(double dt) {
+  RAIFATAL("not supported for dart")
+}
+void DartWorld::integrate2(double dt) {
+  RAIFATAL("not supported for dart")
 }
 
 } // dart_sim

@@ -92,6 +92,9 @@ class BtWorld_RG: public benchmark::World_RG {
   void setMultipointIteration(int convexconvex, int convexplane);
 
  private:
+  void integrate1(double dt) override;
+  void integrate2(double dt) override;
+
   bullet_sim::BtWorld world_;
 
   // solver type

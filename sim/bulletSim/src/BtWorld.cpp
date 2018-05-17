@@ -232,5 +232,11 @@ void BtWorld::setMultipointIteration(int convexconvex, int convexplane) {
   collisionConfiguration_->setPlaneConvexMultipointIterations(convexplane);
 }
 
+void BtWorld::integrate1(double dt) {
+  RAIFATAL("not supported for bullet")
+}
+void BtWorld::integrate2(double dt) {
+  RAIFATAL("not supported for bullet")
+}
 
 } // bullet_sim

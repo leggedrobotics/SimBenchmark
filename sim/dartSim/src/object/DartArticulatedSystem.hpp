@@ -62,6 +62,15 @@ class DartArticulatedSystem: public DartObject,
 
   double getTotalMass() override;
 
+  /**
+   * Get energy of the robot system.
+   * Note. Gravity should be set to world with same value of param &gravity
+   *
+   * @param gravity this parameter is deprecated
+   * @return
+   */
+  double getEnergy(const benchmark::Vec<3> &gravity) override;
+
  private:
   void init();
   void initVisual(dart::dynamics::BodyNode *body);

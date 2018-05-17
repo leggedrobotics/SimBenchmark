@@ -559,7 +559,7 @@ void BtArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orientat
 
   if(bodyId == 0) {
     // base
-    // TODO this is not link's pose but the inertial of the link's pose
+    // TODO this is not link's pose but the inertial of the link's pose (there's function in multibody) - not urgent!
     btTransform tf = multiBody_->getBaseWorldTransform();
     orientation.e() << tf.getBasis().getRow(0).x(), tf.getBasis().getRow(0).y(), tf.getBasis().getRow(0).z(),
         tf.getBasis().getRow(1).x(), tf.getBasis().getRow(1).y(), tf.getBasis().getRow(1).z(),
@@ -612,6 +612,19 @@ double BtArticulatedSystem::getTotalMass() {
   for(int i = 0; i < multiBody_->getNumLinks(); i++)
     mass += multiBody_->getLinkMass(i);
   return mass;
+}
+double BtArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
+  double kinetic = multiBody_->getKineticEnergy();
+
+  btVector3 g = {gravity[0], gravity[1], gravity[2]};
+  double potential = -multiBody_->getBasePos().dot(g) * multiBody_->getBaseMass();
+
+  for(int i = 0; i < multiBody_->getNumLinks(); i++) {
+    btVector3 compos = multiBody_->localPosToWorld(i, multiBody_->getLink(i).m_dVector);
+    potential -= g.dot(compos) * multiBody_->getLinkMass(i);
+  }
+
+  return kinetic + potential;
 }
 
 } // object

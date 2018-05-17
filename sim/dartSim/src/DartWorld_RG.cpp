@@ -417,4 +417,12 @@ int DartWorld_RG::getWorldNumContacts() {
   return (int) world_.getCollisionProblem().size();
 }
 
+void DartWorld_RG::integrate1(double dt) {
+  RAIFATAL("not supported for dart")
+}
+
+void DartWorld_RG::integrate2(double dt) {
+  RAIFATAL("not supported for dart")
+}
+
 } // dart_sim

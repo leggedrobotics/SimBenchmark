@@ -417,5 +417,11 @@ int BtWorld_RG::getWorldNumContacts() {
 void BtWorld_RG::setMultipointIteration(int convexconvex, int convexplane) {
   world_.setMultipointIteration(convexconvex, convexplane);
 }
+void BtWorld_RG::integrate1(double dt) {
+  RAIFATAL("not supported for bullet")
+}
+void BtWorld_RG::integrate2(double dt) {
+  RAIFATAL("not supported for bullet")
+}
 
 } // bullet_sim

@@ -104,6 +104,8 @@ class BtWorld: public benchmark::WorldInterface {
   void setMultipointIteration(int convexconvex, int convexplane);
 
  private:
+  void integrate1(double dt) override;
+  void integrate2(double dt) override;
 
   // dynamics world
   btDiscreteDynamicsWorld* dynamicsWorld_;

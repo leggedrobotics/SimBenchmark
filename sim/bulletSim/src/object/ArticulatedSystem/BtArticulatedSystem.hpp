@@ -72,6 +72,7 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
   const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace() override;
 
   double getTotalMass() override;
+  double getEnergy(const benchmark::Vec<3> &gravity) override;
 
  private:
   void init();

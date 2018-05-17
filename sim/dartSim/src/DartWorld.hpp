@@ -104,6 +104,8 @@ class DartWorld: benchmark::WorldInterface {
 
  private:
   void integrate(double dt) override ;
+  void integrate1(double dt) override;
+  void integrate2(double dt) override;
 
   dart::simulation::WorldPtr dynamicsWorld_;
 

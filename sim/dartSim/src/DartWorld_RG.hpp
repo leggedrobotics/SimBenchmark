@@ -89,6 +89,8 @@ class DartWorld_RG: public benchmark::World_RG {
   virtual void loop(double dt, double realTimeFactor) override ;
   void setERP(double erp, double erp2, double frictionErp) override ;
   virtual void integrate(double dt) override ;
+  void integrate1(double dt) override;
+  void integrate2(double dt) override;
 
   dart_sim::DartWorld world_;
 
