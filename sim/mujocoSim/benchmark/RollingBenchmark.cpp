@@ -97,6 +97,7 @@ double simulationLoop() {
         sim->visualizerLoop(benchmark::rolling::options.dt); i++) {
 
       // set force to box
+      sim->integrate1();
       sim->getSingleBodyHandle(1)->setExternalForce(force);
 
       // log
@@ -114,7 +115,7 @@ double simulationLoop() {
       error += pow((boxVec - sim->getSingleBodyHandle(1)->getLinearVelocity()).norm(), 2);
       error += pow((ballVec - sim->getSingleBodyHandle(2)->getLinearVelocity()).norm(), 2);
       benchmark::rolling::errors.push_back(error);
-      sim->integrate();
+      sim->integrate2();
     }
 
     if(benchmark::rolling::options.saveVideo)
@@ -129,6 +130,7 @@ double simulationLoop() {
     for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt); i++) {
 
       // set force to box
+      sim->integrate1();
       sim->getSingleBodyHandle(1)->setExternalForce(force);
 
       // log
@@ -146,7 +148,7 @@ double simulationLoop() {
       error += pow((boxVec - sim->getSingleBodyHandle(1)->getLinearVelocity()).norm(), 2);
       error += pow((ballVec - sim->getSingleBodyHandle(2)->getLinearVelocity()).norm(), 2);
       benchmark::rolling::errors.push_back(error);
-      sim->integrate();
+      sim->integrate2();
     }
 
     if(benchmark::rolling::options.log)
