@@ -80,6 +80,7 @@ class MjcWorld: public benchmark::WorldInterface {
 
   const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace();
   double getTotalMass();
+  double getEnergy(const benchmark::Vec<3> &gravity);
 
   void integrate();
   void integrate1();

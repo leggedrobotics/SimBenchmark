@@ -116,6 +116,7 @@ void addDescToOption(po::options_description &desc) {
 
   desc.add_options()
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
+      ("plot", "plot momentum error")
       ;
 }
 
@@ -163,6 +164,11 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
     options.csv = true;
     options.csvName = vm["csv"].as<std::string>();
   }
+
+  // plot
+  if(vm.count("plot")) {
+    options.plot = true;
+  }
 }
 
 double computeMeanError() {
@@ -183,6 +189,27 @@ void printCSV(std::string filePath,
          << computeMeanError() << ","
          << time << std::endl;
   myfile.close();
+}
+
+void showPlot() {
+  int n = benchmark::anymal::zerogravity::errorList.size();
+  Eigen::MatrixXd ydata(n, 1);
+  Eigen::MatrixXd xdata(n, 1);
+
+  for(int i = 0; i < n; i++) {
+    xdata(i, 0) = i;
+    ydata(i, 0) = benchmark::anymal::zerogravity::errorList[i];
+  }
+
+  rai::Utils::Graph::FigProp2D figure1properties("step", "squared momentum error", "momentum error");
+  rai::Utils::graph->figure(1, figure1properties);
+  rai::Utils::graph->appendData(1,
+                                xdata.data(),
+                                ydata.data(),
+                                n,
+                                "momentum error");
+  rai::Utils::graph->drawFigure(1);
+  rai::Utils::graph->waitForEnter();
 }
 
 } // benchmark::anymal

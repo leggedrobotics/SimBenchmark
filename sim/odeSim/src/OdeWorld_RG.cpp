@@ -434,4 +434,11 @@ int OdeWorld_RG::getWorldNumContacts() {
   return (int)world_.getCollisionProblem()->size();
 }
 
+void OdeWorld_RG::integrate1(double dt) {
+RAIFATAL("not supported for ode")
+}
+void OdeWorld_RG::integrate2(double dt) {
+  RAIFATAL("not supported for ode")
+}
+
 } // ode_sim

@@ -12,6 +12,12 @@ add_executable(OdeAnymalMomentumBenchmark
         ${CMAKE_SOURCE_DIR}/benchmark/OdeBenchmark.hpp)
 target_link_libraries(OdeAnymalMomentumBenchmark ${OdeSimLink})
 
+add_executable(OdeAnymalEnergyBenchmark
+        AnymalEnergyBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AnymalEnergyBenchmark.hpp
+        ${CMAKE_SOURCE_DIR}/benchmark/OdeBenchmark.hpp)
+target_link_libraries(OdeAnymalEnergyBenchmark ${OdeSimLink})
+
 add_executable(OdeRollingBenchmark
         RollingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)

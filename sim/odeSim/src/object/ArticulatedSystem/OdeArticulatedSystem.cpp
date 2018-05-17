@@ -1007,10 +1007,10 @@ void OdeArticulatedSystem::getComVelocity_W(int bodyId, benchmark::Vec<3> &veloc
 const Eigen::Map<Eigen::Matrix<double, 3, 1>> OdeArticulatedSystem::getLinearMomentumInCartesianSpace() {
   linearMomentum_.setZero();
   for(int i = 0; i < links_.size(); i++) {
-    benchmark::Vec<3> comPosition;
-    getComVelocity_W(i, comPosition);
-    benchmark::vecScalarMul(links_[i]->inertial_.odeMass_.mass, comPosition);
-    benchmark::vecadd(comPosition, linearMomentum_);
+    benchmark::Vec<3> comvel;
+    getComVelocity_W(i, comvel);
+    benchmark::vecScalarMul(links_[i]->inertial_.odeMass_.mass, comvel);
+    benchmark::vecadd(comvel, linearMomentum_);
   }
   return linearMomentum_.e();
 }
@@ -1022,6 +1022,50 @@ double OdeArticulatedSystem::getTotalMass() {
   return totalMass;
 }
 
+void OdeArticulatedSystem::getBodyOmega_W(int bodyId, benchmark::Vec<3> &omega) {
+  const dReal *angvel = dBodyGetAngularVel(links_[bodyId]->odeBody_);
+  benchmark::Mat<3, 3> bodyOrientation;
+  benchmark::Vec<3> temp;
+  getBodyPose(bodyId, bodyOrientation, temp); // temp here is just for dummy
+
+  temp = {angvel[0], angvel[1], angvel[2]};
+  benchmark::matvecmul(bodyOrientation, temp, omega);
+}
+
+void OdeArticulatedSystem::getComPos_W(int bodyId, benchmark::Vec<3> &comPos) {
+  benchmark::Vec<3> bodyPos;
+  benchmark::Mat<3, 3> bodyOrientation;
+  getBodyPose(bodyId, bodyOrientation, bodyPos);
+
+  comPos = bodyPos;
+  benchmark::matvecmulThenAdd(bodyOrientation, links_[bodyId]->inertial_.pos_, comPos);
+}
+
+double OdeArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
+  double kinetic = 0;
+  for(int i = 0; i < links_.size(); i++) {
+    benchmark::Vec<3> comvel;
+    getComVelocity_W(i, comvel);
+    kinetic += pow(comvel.norm(), 2) * links_[i]->inertial_.odeMass_.mass;
+
+    double angular;
+    benchmark::Vec<3> omega;
+    getBodyOmega_W(i, omega);
+    benchmark::vecTransposeMatVecMul(omega, links_[i]->inertial_.inertia_, angular);
+    kinetic += angular;
+  }
+
+  double potential = 0;
+  for(int i = 0; i < links_.size(); i++) {
+    double linkPotential = 0;
+    benchmark::Vec<3> temp;
+    getComPos_W(i, temp);
+    benchmark::vecDot(gravity, temp, linkPotential);
+    potential -= linkPotential * links_[i]->inertial_.mass_;
+  }
+
+  return potential + 0.5 * kinetic;
+}
 void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
   RAIFATAL("not implemented yet")
 //  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
@@ -1091,7 +1135,6 @@ void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVe
 //    }
 //  }
 }
-
 void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
   RAIFATAL("not implemented yet")
 //  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")

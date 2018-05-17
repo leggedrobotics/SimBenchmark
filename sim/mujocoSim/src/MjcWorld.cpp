@@ -294,6 +294,9 @@ double MjcWorld::getTotalMass() {
   return mass;
 }
 
+double MjcWorld::getEnergy(const benchmark::Vec<3> &gravity) {
+  return 0;
+}
 
 void mujoco_sim::MjcWorld::integrate(double dt) {
   RAIFATAL("use setTimeStep(double dt) + integrate() instead")

@@ -90,6 +90,8 @@ class OdeWorld_RG: public benchmark::World_RG {
   void setERP(double erp, double erp2, double frictionErp) override ;
 
  private:
+  void integrate1(double dt) override;
+  void integrate2(double dt) override;
   ode_sim::OdeWorld world_;
 
   std::vector<ArticulatedSystemHandle> asHandles_;

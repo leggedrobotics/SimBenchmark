@@ -135,6 +135,11 @@ int main(int argc, const char* argv[]) {
                 << "======================="
   )
 
+  // show plot
+  if(benchmark::anymal::zerogravity::options.plot) {
+    benchmark::anymal::zerogravity::showPlot();
+  }
+
   delete sim;
   return 0;
 }

@@ -50,6 +50,7 @@ class MjcWorld_RG: public benchmark::World_RG {
 
   const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace();
   double getTotalMass();
+  double getEnergy(const benchmark::Vec<3> &gravity);
 
   /// the functions below are articulated system related.
   /// ===================================

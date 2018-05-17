@@ -2,28 +2,31 @@
 // Created by kangd on 14.05.18.
 //
 
-#include <raiSim/World_RG.hpp>
+#include <BtWorld_RG.hpp>
 
 #include "AnymalEnergyBenchmark.hpp"
+#include "BtBenchmark.hpp"
 
-rai_sim::World_RG *sim;
-std::vector<rai_sim::ArticulatedSystemHandle> anymals;
+bullet_sim::BtWorld_RG *sim;
+std::vector<bullet_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::freedrop::options.gui)
-    sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+    sim = new bullet_sim::BtWorld_RG(800, 600, 0.5,
+                                     benchmark::NO_BACKGROUND,
+                                     bullet_sim::SOLVER_MULTI_BODY);
   else
-    sim = new rai_sim::World_RG();
+    sim = new bullet_sim::BtWorld_RG(bullet_sim::SOLVER_MULTI_BODY);
 
   // set erp 0
-  sim->setERP(0);
+  sim->setERP(0, 0, 0);
 }
 
 void setupWorld() {
 
   // add objects
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
+  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
 
   // anymal
   auto anymal = sim->addArticulatedSystem(
@@ -44,8 +47,7 @@ void setupWorld() {
   sim->setGravity({0, 0, benchmark::anymal::freedrop::params.g});
 
   // mass
-  benchmark::anymal::freedrop::params.M =
-      std::accumulate( anymal->getMass().begin(), anymal->getMass().end(), 0.0);
+  benchmark::anymal::freedrop::params.M = anymal->getTotalMass();
 
   if(benchmark::anymal::freedrop::options.gui)
     sim->cameraFollowObject(checkerboard, {10.0, 0.0, 30.0});
@@ -70,7 +72,7 @@ double simulationLoop() {
   benchmark::anymal::freedrop::errorList.reserve(
       unsigned(benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt));
 
-  // init E
+  // E0
   double E0 = computeEnergy();
 
   StopWatch watch;
@@ -80,15 +82,13 @@ double simulationLoop() {
     for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor); t++) {
 
-      sim->integrate1(benchmark::anymal::freedrop::options.dt);
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
-      sim->integrate2(benchmark::anymal::freedrop::options.dt);
+      sim->integrate(benchmark::anymal::freedrop::options.dt);
     }
   } else {
     for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt); t++) {
-      sim->integrate1(benchmark::anymal::freedrop::options.dt);
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
-      sim->integrate2(benchmark::anymal::freedrop::options.dt);
+      sim->integrate(benchmark::anymal::freedrop::options.dt);
     }
   }
 
@@ -96,8 +96,8 @@ double simulationLoop() {
   if(benchmark::anymal::freedrop::options.csv)
     benchmark::anymal::freedrop::printCSV(
         benchmark::anymal::freedrop::getCSVpath(),
-        "RAI",
-        "RAI",
+        benchmark::bullet::options.simName,
+        "MULTIBODY",
         time);
   return time;
 }
@@ -105,12 +105,16 @@ double simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::anymal::freedrop::addDescToOption(desc);
+  benchmark::bullet::addDescToOption(desc);
+
   benchmark::anymal::freedrop::getOptionsFromArg(argc, argv, desc);
+  benchmark::bullet::getOptionsFromArg(argc, argv, desc);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: RAI" << std::endl
+                << "Simulator: BULLET" << std::endl
                 << "GUI      : " << benchmark::anymal::freedrop::options.gui << std::endl
+                << "Solver   : " << "MULTIBODY" << std::endl
                 << "Timestep : " << benchmark::anymal::freedrop::options.dt << std::endl
                 << "-----------------------"
   )

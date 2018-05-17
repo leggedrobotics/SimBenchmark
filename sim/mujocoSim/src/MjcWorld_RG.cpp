@@ -257,6 +257,10 @@ double mujoco_sim::MjcWorld_RG::getTotalMass() {
 }
 
 
+double mujoco_sim::MjcWorld_RG::getEnergy(const benchmark::Vec<3> &gravity) {
+  return 0;
+}
+
 void mujoco_sim::MjcWorld_RG::loop(double dt, double realTimeFactor) {
   RAIFATAL("use setTimeStep(double dt) + loop() instead")
 }
@@ -268,7 +272,6 @@ void mujoco_sim::MjcWorld_RG::integrate(double dt) {
 void mujoco_sim::MjcWorld_RG::integrate1(double dt) {
   RAIFATAL("use setTimeStep(double dt) + integrate1() instead")
 }
-
 void mujoco_sim::MjcWorld_RG::integrate2(double dt) {
   RAIFATAL("use setTimeStep(double dt) + integrate2() instead")
 }

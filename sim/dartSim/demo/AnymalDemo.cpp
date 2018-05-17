@@ -33,13 +33,11 @@ int main() {
   anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
-//  sim.setGravity({0, 0, 0});
-
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
   const double kp = 40.0, kd = 1.0;
 
-  jointNominalConfig << 0, 0, 0.54,
+  jointNominalConfig << 0, 0, 0,
       1.0, 0.0, 0.0, 0.0,
       0.03, 0.4, -0.8,
       0.03, -0.4, +0.8,

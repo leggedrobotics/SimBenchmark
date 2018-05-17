@@ -99,6 +99,9 @@ class OdeWorld: public benchmark::WorldInterface {
   // call back
   static void nearCallback(void *data, dGeomID o1, dGeomID o2);
 
+  void integrate1(double dt) override;
+  void integrate2(double dt) override;
+
   // collision problem list
   static std::vector<Single3DContactProblem> contactProblemList_;
 

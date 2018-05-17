@@ -37,6 +37,9 @@ struct Option {
   // print csv on/off
   bool csv = false;
   std::string csvName = "log.csv";
+
+  // plot (show plot if exists)
+  bool plot = false;
 };
 
 void addDescToOption(po::options_description &desc) {

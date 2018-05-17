@@ -71,6 +71,8 @@ class ArticulatedSystemInterface {
 
   virtual double getTotalMass() = 0;
 
+  virtual double getEnergy(const benchmark::Vec<3> &gravity) = 0;
+
  public:
   // orientation, position, link_id, shape, color
   std::vector<std::tuple<benchmark::Mat<3, 3>, benchmark::Vec<3>, int, Shape>> visColObj;

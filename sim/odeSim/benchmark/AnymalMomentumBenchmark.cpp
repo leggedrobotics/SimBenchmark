@@ -94,8 +94,8 @@ double simulationLoop() {
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt, 1.0); t++) {
 
-      sim->integrate(benchmark::anymal::zerogravity::options.dt);
       benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
+      sim->integrate(benchmark::anymal::zerogravity::options.dt);
     }
 
     if(benchmark::anymal::zerogravity::options.saveVideo)
@@ -103,8 +103,8 @@ double simulationLoop() {
 
   } else {
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); t++) {
-      sim->integrate(benchmark::anymal::zerogravity::options.dt);
       benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
+      sim->integrate(benchmark::anymal::zerogravity::options.dt);
     }
   }
 
@@ -143,6 +143,11 @@ int main(int argc, const char* argv[]) {
                 << "Mean Error: " << benchmark::anymal::zerogravity::computeMeanError() << std::endl
                 << "======================="
   )
+
+  // show plot
+  if(benchmark::anymal::zerogravity::options.plot) {
+    benchmark::anymal::zerogravity::showPlot();
+  }
 
   delete sim;
   return 0;

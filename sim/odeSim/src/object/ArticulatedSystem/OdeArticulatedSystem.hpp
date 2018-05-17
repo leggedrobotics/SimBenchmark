@@ -62,8 +62,15 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   void getComVelocity_W(int bodyId,
                         benchmark::Vec<3> &velocity);
 
+  void getBodyOmega_W(int bodyId,
+                      benchmark::Vec<3> &omega);
+
+  void getComPos_W(int bodyId,
+                   benchmark::Vec<3> &comPos);
+
   const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace() override;
   double getTotalMass() override;
+  double getEnergy(const benchmark::Vec<3> &gravity) override;
 
  private:
   void init();
