@@ -76,13 +76,15 @@ double simulationLoop() {
     for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor); t++) {
 
-      sim->integrate(benchmark::anymal::freedrop::options.dt);
+      sim->integrate1(benchmark::anymal::freedrop::options.dt);
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError());
+      sim->integrate2(benchmark::anymal::freedrop::options.dt);
     }
   } else {
     for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt); t++) {
-      sim->integrate(benchmark::anymal::freedrop::options.dt);
+      sim->integrate1(benchmark::anymal::freedrop::options.dt);
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError());
+      sim->integrate2(benchmark::anymal::freedrop::options.dt);
     }
   }
 
