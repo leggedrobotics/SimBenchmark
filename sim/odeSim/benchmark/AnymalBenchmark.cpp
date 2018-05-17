@@ -150,6 +150,10 @@ int main(int argc, const char* argv[]) {
   benchmark::anymal::getOptionsFromArg(argc, argv, desc);
   benchmark::ode::getOptionsFromArg(argc, argv, desc);
 
+
+  benchmark::anymal::getParamsFromYAML(benchmark::anymal::getYamlpath().c_str(),
+                                       benchmark::ODE);
+
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: ODE" << std::endl

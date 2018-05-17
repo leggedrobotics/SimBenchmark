@@ -6,6 +6,7 @@
 #define BENCHMARK_ANYMAL_HPP
 
 #include <raiCommon/rai_utils.hpp>
+#include <yaml-cpp/yaml.h>
 #include <boost/program_options.hpp>
 
 #include "BenchmarkTest.hpp"
@@ -40,6 +41,11 @@ Option options;
  * parameter for ANYmal simulation
  */
 struct Parameter {
+
+  // sim properties
+  double lightPosition[3] = {30.0, 0, 10.0};
+
+  // constans
   double kp = 40;     // kp gain
   double kd = 1.0;    // kd gain
   double H = 0.54;    // starting height
@@ -82,6 +88,21 @@ std::string getURDFpath() {
   urdfPath += "../res/ANYmal-nomesh/";
 
   return urdfPath;
+}
+
+/**
+ * get YAML file path for parameter
+ *
+ * @return yaml path in string
+ */
+std::string getYamlpath() {
+
+  std::string yamlPath(__FILE__);
+  while (yamlPath.back() != '/')
+    yamlPath.erase(yamlPath.size() - 1, 1);
+  yamlPath += "./yaml/anymal.yaml";
+
+  return yamlPath;
 }
 
 /**
@@ -176,6 +197,59 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
   // feed-back (PD control)
   if(vm.count("feedback")) {
     options.feedback = vm["feedback"].as<bool>();
+  }
+}
+
+/**
+ * get params from YAML
+ *
+ * @param yamlfile
+ */
+void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
+  /// parameters from yaml
+  YAML::Node yaml = YAML::LoadFile(yamlfile);
+
+  // sim properties
+  YAML::Node props = yaml["sim_properties"];
+  params.lightPosition[0] = props["light_position"].as<std::vector<double>>()[0];
+  params.lightPosition[1] = props["light_position"].as<std::vector<double>>()[1];
+  params.lightPosition[2] = props["light_position"].as<std::vector<double>>()[2];
+
+  // simulation constants
+  YAML::Node constant = yaml["constant"];
+  params.kp = constant["kp"].as<double>();
+  params.kd = constant["kd"].as<double>();
+  params.g = constant["g"].as<double>();
+  params.H = constant["H"].as<double>();
+  params.dt = constant["dt"].as<double>();
+  params.T = constant["T"].as<double>();
+
+  for(int i = 0; i < 12; i ++) {
+    params.jointPos[i] = constant["jointPos"].as<std::vector<double>>()[i];
+    params.dartjointPos[i] = constant["jointPosDart"].as<std::vector<double>>()[i];
+  }
+
+  params.baseQuat[0] = constant["baseQuat"].as<std::vector<double >>()[0];
+  params.baseQuat[1] = constant["baseQuat"].as<std::vector<double >>()[1];
+  params.baseQuat[2] = constant["baseQuat"].as<std::vector<double >>()[2];
+  params.baseQuat[3] = constant["baseQuat"].as<std::vector<double >>()[3];
+
+  // solver parameters
+  YAML::Node solver_params = yaml["solver_params"];
+
+  switch (simulator) {
+    case benchmark::RAI:
+      break;
+    case benchmark::BULLET:
+      break;
+    case benchmark::ODE:
+      break;
+    case benchmark::MUJOCO:
+      break;
+    case benchmark::DART:
+      break;
+    default:
+    RAIFATAL("invalid simulator value")
   }
 }
 

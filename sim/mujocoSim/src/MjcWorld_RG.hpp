@@ -40,6 +40,8 @@ class MjcWorld_RG: public benchmark::World_RG {
 
   void loop(double realTimeFactor = 1.0);
   void integrate();
+  void integrate1();
+  void integrate2();
   void setTimeStep(double timeStep);
 
   benchmark::SingleBodyHandle getSingleBodyHandle(int index);
@@ -80,6 +82,8 @@ class MjcWorld_RG: public benchmark::World_RG {
   /// deprecated functions
   void setERP(double erp, double erp2, double frictionErp) override ;
   void integrate(double dt) override ;
+  void integrate1(double dt) override;
+  void integrate2(double dt) override;
   void loop(double dt, double realTimeFactor) override ;
 
   //////////////////////////////////

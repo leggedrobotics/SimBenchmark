@@ -55,6 +55,10 @@ class WorldInterface {
 
   virtual void integrate(double dt) = 0;
 
+  virtual void integrate1(double dt) = 0;
+
+  virtual void integrate2(double dt) = 0;
+
 };
 
 }

@@ -82,6 +82,8 @@ class MjcWorld: public benchmark::WorldInterface {
   double getTotalMass();
 
   void integrate();
+  void integrate1();
+  void integrate2();
 
   /// the functions below are articulated system related.
   /// ===================================
@@ -108,7 +110,9 @@ class MjcWorld: public benchmark::WorldInterface {
  private:
 
   /// deprecated function
-  void integrate(double dt);
+  void integrate(double dt) override ;
+  void integrate1(double dt) override;
+  void integrate2(double dt) override;
 
   mjModel *worldModel_;
   mjData *worldData_;

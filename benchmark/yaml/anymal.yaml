@@ -4,26 +4,26 @@ sim_properties:
   light_position: [0.0, 10.0, 10.0]
 
 # solver parameters
-solver_params:
-  raiSim:
-    erp: 0.2    # when erp_on = true
-  bullet:
-    erp: 0.2              # when erp_on = true
-    erp2: 0.1             # when erp_on = true
-    erp_friction: 0.01    # when erp_on = true
-  ode:
-    erp: 0.2    # when erp_on = true
+#solver_params:
+#  raiSim:
+#    erp: 0.2    # when erp_on = true
+#  bullet:
+#    erp: 0.2              # when erp_on = true
+#    erp2: 0.1             # when erp_on = true
+#    erp_friction: 0.01    # when erp_on = true
+#  ode:
+#    erp: 0.2    # when erp_on = true
 
 # simulation constants
 constant:
-  ballR: 0.1
-  ballM: 10
-  gap: 0.21
-  perturbation: 0.001
-  H: 1.101
-  n: 6
+  kp: 40
+  kd: 1.0
+  H: 0.54
+  dt: 0.005
+  T: 250
   g: -9.81
+  baseQuat: [1.0, 0.0, 0.0, 0.0]
+  jointPos: [0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8]
+  jointPosDart: [ 0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, 0.4, -0.8, -0.03, -0.4, 0.8]
 
-# randomseed
-random_seed: 42
 ...

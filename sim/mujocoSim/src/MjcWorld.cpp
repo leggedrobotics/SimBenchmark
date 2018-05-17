@@ -79,9 +79,6 @@ mjData *mujoco_sim::MjcWorld::getWorldData() const {
   return worldData_;
 }
 
-void mujoco_sim::MjcWorld::integrate(double dt) {
-  RAIFATAL("use setTimeStep(double dt) + integrate() instead")
-}
 
 object::MjcSphere *MjcWorld::addSphere(double radius,
                                  double mass,
@@ -268,6 +265,14 @@ void MjcWorld::integrate() {
   mj_step(worldModel_, worldData_);
 }
 
+void MjcWorld::integrate1() {
+  mj_step1(worldModel_, worldData_);
+}
+
+void MjcWorld::integrate2() {
+  mj_step2(worldModel_, worldData_);
+}
+
 const Eigen::Map<Eigen::Matrix<double, 3, 1>> MjcWorld::getLinearMomentumInCartesianSpace() {
   Eigen::Vector3d linearMomentum;
   linearMomentum.setZero();
@@ -287,6 +292,17 @@ double MjcWorld::getTotalMass() {
     mass += objectList_[i]->getMass();
   }
   return mass;
+}
+
+
+void mujoco_sim::MjcWorld::integrate(double dt) {
+  RAIFATAL("use setTimeStep(double dt) + integrate() instead")
+}
+void MjcWorld::integrate1(double dt) {
+  RAIFATAL("use setTimeStep(double dt) + integrate1() instead")
+}
+void MjcWorld::integrate2(double dt) {
+  RAIFATAL("use setTimeStep(double dt) + integrate2() instead")
 }
 
 } // mujoco_sim

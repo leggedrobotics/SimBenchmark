@@ -155,6 +155,9 @@ int main(int argc, const char* argv[]) {
   benchmark::anymal::getOptionsFromArg(argc, argv, desc);
   benchmark::dart::getOptionsFromArg(argc, argv, desc);
 
+  benchmark::anymal::getParamsFromYAML(benchmark::anymal::getYamlpath().c_str(),
+                                       benchmark::DART);
+
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: DART" << std::endl

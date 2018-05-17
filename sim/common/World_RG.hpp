@@ -87,6 +87,8 @@ class World_RG {
 
   /// pure virtual simulation methods
   virtual void integrate(double dt) = 0;
+  virtual void integrate1(double dt) = 0; // velocity updates
+  virtual void integrate2(double dt) = 0; // position updates
   virtual void setGravity(Eigen::Vector3d gravity) = 0;
   virtual void setERP(double erp, double erp2, double frictionErp) = 0;
 

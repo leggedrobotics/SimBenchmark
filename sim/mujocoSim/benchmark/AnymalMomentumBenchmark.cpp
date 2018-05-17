@@ -84,13 +84,15 @@ double simulationLoop() {
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt, 1.0); t++) {
 
-      sim->integrate();
+      sim->integrate1();
       benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
+      sim->integrate2();
     }
   } else {
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); t++) {
-      sim->integrate();
+      sim->integrate1();
       benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
+      sim->integrate2();
     }
   }
 

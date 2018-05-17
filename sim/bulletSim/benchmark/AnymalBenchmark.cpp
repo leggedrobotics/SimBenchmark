@@ -148,6 +148,9 @@ int main(int argc, const char* argv[]) {
   benchmark::anymal::addDescToOption(desc);
   benchmark::anymal::getOptionsFromArg(argc, argv, desc);
 
+  benchmark::anymal::getParamsFromYAML(benchmark::anymal::getYamlpath().c_str(),
+                                       benchmark::BULLET);
+
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: BULLET" << std::endl
