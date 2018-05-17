@@ -19,6 +19,9 @@ void setupSimulation() {
                                      bullet_sim::SOLVER_MULTI_BODY);
   else
     sim = new bullet_sim::BtWorld_RG(bullet_sim::SOLVER_MULTI_BODY);
+
+  // set erp 0
+  sim->setERP(0, 0, 0);
 }
 
 void setupWorld() {

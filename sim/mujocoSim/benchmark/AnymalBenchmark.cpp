@@ -68,7 +68,7 @@ void setupWorld() {
   sim->setGeneralizedVelocity(Eigen::VectorXd::Zero(sim->getDOF()));
   sim->setGeneralizedForce(Eigen::VectorXd::Zero(sim->getDOF()));
 
-  sim->setGravity({0, 0, -9.8});
+  sim->setGravity({0, 0, benchmark::anymal::params.g});
 
   if(benchmark::anymal::options.gui)
     sim->cameraFollowObject(

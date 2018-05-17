@@ -73,7 +73,7 @@ struct Parameter {
 
   int randomSeed = 42;
 
-  double g = -9.8;
+  double g = -9.81;
 };
 Parameter params;
 
@@ -221,6 +221,7 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   params.perturbation = constant["perturbation"].as<double>();
   params.H = constant["H"].as<double>();
   params.n = constant["n"].as<int>();
+  params.g = constant["g"].as<double>();
 
   // solver parameters
   YAML::Node solver_params = yaml["solver_params"];

@@ -19,7 +19,7 @@ constant:
   m: 1
   n: 5   # num balls = n x n
   M: 10
-  g: -9.8
+  g: -9.81
   T: 4.0
   F: 150
   penentration0: 2e-5   # initial penetration

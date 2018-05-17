@@ -16,6 +16,9 @@ void setupSimulation() {
     sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
   else
     sim = new rai_sim::World_RG();
+
+  // set erp 0
+  sim->setERP(0);
 }
 
 void setupWorld() {

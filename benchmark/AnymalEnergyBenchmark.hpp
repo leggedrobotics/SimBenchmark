@@ -42,7 +42,7 @@ struct Parameter {
   double T = 2;      // simulation time (sec)
   double H = 20;      // drop height
   double M = 0;       // will be updated!
-  double g = -9.8;
+  double g = -9.81;
 };
 Parameter params;
 

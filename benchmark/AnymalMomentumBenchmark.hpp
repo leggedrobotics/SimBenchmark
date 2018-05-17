@@ -2,8 +2,8 @@
 // Created by kangd on 14.05.18.
 //
 
-#ifndef BENCHMARK_ANYMALZEROGBENCHMARK_HPP
-#define BENCHMARK_ANYMALZEROGBENCHMARK_HPP
+#ifndef BENCHMARK_ANYMALMOMENTUMBENCHMARK_HPP
+#define BENCHMARK_ANYMALMOMENTUMBENCHMARK_HPP
 
 #include <raiCommon/rai_utils.hpp>
 #include <boost/program_options.hpp>
@@ -44,6 +44,7 @@ struct Parameter {
   double v0 = 2;
   double M = 0;       // will be updated!
   double m = 10; 
+  double g = -9.81;
 };
 Parameter params;
 
@@ -186,4 +187,4 @@ void printCSV(std::string filePath,
 
 } // benchmark::anymal
 
-#endif //BENCHMARK_ANYMALZEROGBENCHMARK_HPP
+#endif //BENCHMARK_ANYMALMOMENTUMBENCHMARK_HPP

@@ -18,7 +18,7 @@ solver_params:
 constant:
   m: 10
   n: 1                    # (num obj) = n x n
-  g: -9.8
+  g: -9.81
   R: 0.1
   mu_ground: 0
   mu_ball: 0

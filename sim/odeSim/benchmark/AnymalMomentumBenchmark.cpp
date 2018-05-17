@@ -19,6 +19,9 @@ void setupSimulation() {
                                    benchmark::ode::options.solverOption);
   else
     sim = new ode_sim::OdeWorld_RG(benchmark::ode::options.solverOption);
+
+  // set erp 0
+  sim->setERP(0, 0, 0);
 }
 
 void setupWorld() {

@@ -67,7 +67,7 @@ struct Parameter {
   double m = 1;
   int n = 5;     // num balls = n x n
   double M = 10;
-  double g = -9.8;
+  double g = -9.81;
   double T = 4.0;
   double F = 150;
 
@@ -266,7 +266,7 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   // simulation constants
   YAML::Node constant = yaml["constant"];
   params.m = constant["m"].as<double>();
-  params.n = constant["n"].as<double>();
+  params.n = constant["n"].as<int>();
   params.M = constant["M"].as<double>();
   params.g = constant["g"].as<double>();
   params.T = constant["T"].as<double>();

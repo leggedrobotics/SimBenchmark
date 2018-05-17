@@ -54,7 +54,7 @@ void setupWorld() {
     }
   }
 
-  sim->setGravity({0, 0, -9.8});
+  sim->setGravity({0, 0, benchmark::anymal::params.g});
 
   if(benchmark::anymal::options.gui)
     sim->cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
@@ -130,7 +130,7 @@ void simulationLoop() {
       benchmark::anymal::printCSV(
           benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
           "RAI",
-          "",
+          "RAI",
           "",
           benchmark::anymal::options.numRow,
           time

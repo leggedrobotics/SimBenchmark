@@ -49,7 +49,7 @@ struct Parameter {
   int n = 1;                 // (num obj) = n x n
   double H = 5;
   double R = 0.1;               // radius of ball
-  double g = -9.8;
+  double g = -9.81;
   double T = 20;
 
   double mu_ground = 0;
