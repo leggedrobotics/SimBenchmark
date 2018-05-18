@@ -41,8 +41,9 @@ class MjcSingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
 
   void setExternalForce(Eigen::Vector3d force) override ;
   void setExternalTorque(Eigen::Vector3d torque) override ;
-
   void setFrictionCoefficient(double friction) override ;
+
+  void setCollisionGroupAndMask(int collisionGroup, int collisionMask);
 
   double getMass();
   bool isMovable() const;

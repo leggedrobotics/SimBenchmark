@@ -7,6 +7,7 @@
 
 #include <raiCommon/rai_utils.hpp>
 #include <boost/program_options.hpp>
+#include <yaml-cpp/yaml.h>
 
 #include "BenchmarkTest.hpp"
 
@@ -39,10 +40,16 @@ Option options;
  * parameter for ANYmal simulation
  */
 struct Parameter {
-  double T = 2;      // simulation time (sec)
-  double H = 22;      // drop height
-  double M = 0;       // will be updated!
+
+  // sim properties
+  double lightPosition[3] = {30.0, 0, 10.0};
+
+  double T1 = 1;      // force applying time
+  double T2 = 2;      // free drop time
+  double H = 2;       // initial height
+  double M = 0;       // will be updated! (anymal mass)
   double g = -9.81;
+  double F = 0;
 };
 Parameter params;
 
@@ -172,6 +179,48 @@ double computeMeanError() {
   return std::accumulate(benchmark::anymal::freedrop::errorList.begin(),
                          benchmark::anymal::freedrop::errorList.end(), 0.0)
       / benchmark::anymal::freedrop::errorList.size();
+}
+
+
+/**
+ * get params from YAML
+ *
+ * @param yamlfile
+ */
+void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
+  /// parameters from yaml
+  YAML::Node yaml = YAML::LoadFile(yamlfile);
+
+  // sim properties
+  YAML::Node props = yaml["sim_properties"];
+  params.lightPosition[0] = props["light_position"].as<std::vector<double>>()[0];
+  params.lightPosition[1] = props["light_position"].as<std::vector<double>>()[1];
+  params.lightPosition[2] = props["light_position"].as<std::vector<double>>()[2];
+
+  // simulation constants
+  YAML::Node constant = yaml["constant"];
+  params.g = constant["g"].as<double>();
+  params.H = constant["H"].as<double>();
+  params.T1 = constant["T1"].as<double>();
+  params.T2 = constant["T2"].as<double>();
+
+  // solver parameters
+  YAML::Node solver_params = yaml["solver_params"];
+
+  switch (simulator) {
+    case benchmark::RAI:
+      break;
+    case benchmark::BULLET:
+      break;
+    case benchmark::ODE:
+      break;
+    case benchmark::MUJOCO:
+      break;
+    case benchmark::DART:
+      break;
+    default:
+    RAIFATAL("invalid simulator value")
+  }
 }
 
 void printCSV(std::string filePath,

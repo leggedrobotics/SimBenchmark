@@ -70,7 +70,7 @@ double simulationLoop() {
 
   // error list
   benchmark::anymal::freedrop::errorList.reserve(
-      unsigned(benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt));
+      unsigned(benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt));
 
   // E0
   double E0 = computeEnergy();
@@ -79,14 +79,14 @@ double simulationLoop() {
   watch.start();
   if(benchmark::anymal::freedrop::options.gui) {
     // gui
-    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt) &&
+    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor); t++) {
 
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
       sim->integrate(benchmark::anymal::freedrop::options.dt);
     }
   } else {
-    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt); t++) {
+    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt); t++) {
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
       sim->integrate(benchmark::anymal::freedrop::options.dt);
     }

@@ -11,6 +11,7 @@
 #include <urdf_parser/urdf_parser.h>
 
 #include "common/interface/ArticulatedSystemInterface.hpp"
+#include "common/Configure.hpp"
 
 #include "object/OdeObject.hpp"
 #include "OdeLinkJoint.hpp"
@@ -26,7 +27,9 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
  public:
   OdeArticulatedSystem(std::string urdfFile,
                        const dWorldID worldID,
-                       const dSpaceID spaceID);
+                       const dSpaceID spaceID,
+                       benchmark::CollisionGroupType collisionGroup,
+                       benchmark::CollisionGroupType collisionMask);
   virtual ~OdeArticulatedSystem();
 
   const EigenVec getGeneralizedCoordinate() override;
@@ -105,10 +108,10 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
    * @param props
    */
   void initCollisions(Link &link,
-                        benchmark::Mat<3, 3> &parentRot_w,
-                        benchmark::Vec<3> &parentPos_w,
-                        std::vector<AlternativeVisualObjectData> &collect,
-                        std::vector<VisualObjectProperty> &props);
+                      benchmark::Mat<3, 3> &parentRot_w,
+                      benchmark::Vec<3> &parentPos_w,
+                      std::vector<AlternativeVisualObjectData> &collect,
+                      std::vector<VisualObjectProperty> &props);
 
   void initInertials(Link &link);
 
@@ -122,8 +125,8 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   void initJoints(Link &link, benchmark::Mat<3, 3> &parentRot_w, benchmark::Vec<3> &parentPos_w);
 
   void processLinkFromUrdf(boost::shared_ptr<const urdf::Link> urdfLink,
-                             Link &raiLink,
-                             std::vector<std::string> &jointsOrder);
+                           Link &raiLink,
+                           std::vector<std::string> &jointsOrder);
 
   /**
    * update joint position recursively from generalized coordinate
@@ -160,6 +163,9 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
 
   dWorldID worldID_ = 0;
   dSpaceID spaceID_ = 0;
+
+  benchmark::CollisionGroupType collisionGroup_;
+  benchmark::CollisionGroupType collisionMask_;
 
 };
 

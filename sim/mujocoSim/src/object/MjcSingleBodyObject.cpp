@@ -222,5 +222,11 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1>> MjcSingleBodyObject::getLinearMome
   return linearMomentum_.e();
 }
 
+void MjcSingleBodyObject::setCollisionGroupAndMask(int collisionGroup, int collisionMask) {
+  int geomIndex = worldModel_->body_geomadr[bodyID_] + geomID_;
+  worldModel_->geom_contype[geomIndex] = collisionGroup;
+  worldModel_->geom_conaffinity[geomIndex] = collisionMask;
+}
+
 } // object
 } // mujoco_sim

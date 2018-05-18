@@ -9,8 +9,10 @@ namespace object {
 
 OdeArticulatedSystem::OdeArticulatedSystem(std::string urdfFile,
                                            const dWorldID worldID,
-                                           const dSpaceID spaceID)
-    : worldID_(worldID), spaceID_(spaceID) {
+                                           const dSpaceID spaceID,
+                                           int collisionGroup,
+                                           int collisionMask)
+    : worldID_(worldID), spaceID_(spaceID), collisionGroup_(collisionGroup), collisionMask_(collisionMask) {
 
   urdfFile += "robot.urdf";
   std::ifstream model_file(urdfFile);
@@ -376,16 +378,22 @@ void OdeArticulatedSystem::initCollisions(Link &link,
       case bo::Shape::Cylinder: {
         link.collision_.odeGeometries_.push_back(dCreateCylinder(spaceID_, size[0], size[1]));
         dGeomSetBody(link.collision_.odeGeometries_.back(), link.odeBody_);
+        dGeomSetCategoryBits(link.collision_.odeGeometries_.back(), collisionGroup_);
+        dGeomSetCollideBits(link.collision_.odeGeometries_.back(), collisionMask_);
         break;
       }
       case bo::Shape::Sphere: {
         link.collision_.odeGeometries_.push_back(dCreateSphere(spaceID_, size[0]));
         dGeomSetBody(link.collision_.odeGeometries_.back(), link.odeBody_);
+        dGeomSetCategoryBits(link.collision_.odeGeometries_.back(), collisionGroup_);
+        dGeomSetCollideBits(link.collision_.odeGeometries_.back(), collisionMask_);
         break;
       }
       case bo::Shape::Box: {
         link.collision_.odeGeometries_.push_back(dCreateBox(spaceID_, size[0], size[1], size[2]));
         dGeomSetBody(link.collision_.odeGeometries_.back(), link.odeBody_);
+        dGeomSetCategoryBits(link.collision_.odeGeometries_.back(), collisionGroup_);
+        dGeomSetCollideBits(link.collision_.odeGeometries_.back(), collisionMask_);
         break;
       }
       default: {
@@ -393,6 +401,9 @@ void OdeArticulatedSystem::initCollisions(Link &link,
         break;
       }
     }
+
+    // gyro mode
+    dBodySetGyroscopicMode(link.odeBody_, true);
 
     // set body position
     dMatrix3 bodyR;

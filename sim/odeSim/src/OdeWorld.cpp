@@ -160,9 +160,8 @@ ode_sim::object::OdeCheckerBoard *ode_sim::OdeWorld::addCheckerboard(double grid
 ode_sim::object::OdeArticulatedSystem *ode_sim::OdeWorld::addArticulatedSystem(std::string urdfPath,
                                                                                benchmark::CollisionGroupType collisionGroup,
                                                                                benchmark::CollisionGroupType collisionMask) {
-  object::OdeArticulatedSystem *articulatedSystem = new object::OdeArticulatedSystem(urdfPath,
-                                                                                     dynamicsWorld_,
-                                                                                     space_);
+  object::OdeArticulatedSystem *articulatedSystem =
+      new object::OdeArticulatedSystem(urdfPath, dynamicsWorld_, space_, collisionGroup, collisionMask);
   objectList_.push_back(articulatedSystem);
   return articulatedSystem;
 }

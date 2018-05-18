@@ -1,0 +1,23 @@
+---
+# simulation properties
+sim_properties:
+  light_position: [0.0, 10.0, 10.0]
+
+# solver parameters
+#solver_params:
+#  raiSim:
+#    erp: 0.2    # when erp_on = true
+#  bullet:
+#    erp: 0.2              # when erp_on = true
+#    erp2: 0.1             # when erp_on = true
+#    erp_friction: 0.01    # when erp_on = true
+#  ode:
+#    erp: 0.2    # when erp_on = true
+
+# simulation constants
+constant:
+  T1: 1;      # force applying time
+  T2: 2;      # free drop time
+  H: 2;       # initial height
+  g: -9.81;
+...

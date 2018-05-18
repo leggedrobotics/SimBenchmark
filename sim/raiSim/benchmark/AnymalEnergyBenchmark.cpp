@@ -7,7 +7,7 @@
 #include "AnymalEnergyBenchmark.hpp"
 
 rai_sim::World_RG *sim;
-std::vector<rai_sim::ArticulatedSystemHandle> anymals;
+rai_sim::ArticulatedSystemHandle anymal;
 po::options_description desc;
 
 void setupSimulation() {
@@ -25,9 +25,9 @@ void setupWorld() {
   // add objects
   auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
 
-  // anymal
-  auto anymal = sim->addArticulatedSystem(
-      benchmark::anymal::freedrop::getURDFpath()
+  // anymal (internal collision disabled)
+  anymal = sim->addArticulatedSystem(
+      benchmark::anymal::freedrop::getURDFpath(), 1, 0
   );
   anymal->setGeneralizedCoordinate({0,
                                     0,
@@ -38,25 +38,23 @@ void setupWorld() {
                                     0.03, -0.4, 0.8,
                                     -0.03, -0.4, 0.8});
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
-  anymals.push_back(anymal);
 
   // gravity
   sim->setGravity({0, 0, benchmark::anymal::freedrop::params.g});
 
-  // mass
+  // mass and force update
   benchmark::anymal::freedrop::params.M =
       std::accumulate( anymal->getMass().begin(), anymal->getMass().end(), 0.0);
 
+  benchmark::anymal::freedrop::params.F =
+      benchmark::anymal::freedrop::params.M * (-benchmark::anymal::freedrop::params.g) * 2;
+
   if(benchmark::anymal::freedrop::options.gui)
-    sim->cameraFollowObject(checkerboard, {10.0, 0.0, 30.0});
+    sim->cameraFollowObject(checkerboard, {25.0, 0.0, 7.0});
 }
 
 double computeEnergy() {
-  double energy = 0;
-  for(int i = 0; i < anymals.size(); i++) {
-    energy += anymals[i]->getEnergy({0, 0, benchmark::anymal::freedrop::params.g});
-  }
-  return energy;
+  return anymal->getEnergy({0, 0, benchmark::anymal::freedrop::params.g});
 }
 
 double computeEnergyError(double E0) {
@@ -68,25 +66,77 @@ double simulationLoop() {
 
   // error list
   benchmark::anymal::freedrop::errorList.reserve(
-      unsigned(benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt));
-
-  // init E
-  double E0 = computeEnergy();
+      unsigned(benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt));
 
   StopWatch watch;
   watch.start();
   if(benchmark::anymal::freedrop::options.gui) {
     // gui
-    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt) &&
+    if(benchmark::anymal::freedrop::options.saveVideo)
+      sim->startRecordingVideo("/tmp", "rai-anymal-freedrop");
+
+    // step1: applying force
+    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T1 / benchmark::anymal::freedrop::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor); t++) {
 
       sim->integrate1(benchmark::anymal::freedrop::options.dt);
+      anymal->setGeneralizedForce({
+          0, 0, benchmark::anymal::freedrop::params.F,
+          0, 0, 0,
+          0, 0, 0,
+          0, 0, 0,
+          0, 0, 0});
+      sim->integrate2(benchmark::anymal::freedrop::options.dt);
+    }
+
+    // step2: freedrop
+    double E0 = 0;
+    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt) &&
+        sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor); t++) {
+
+      sim->integrate1(benchmark::anymal::freedrop::options.dt);
+      if(t == 0)
+        E0 = computeEnergy();
+      anymal->setGeneralizedForce({
+                                      0, 0, 0,
+                                      0, 0, 0,
+                                      0, 0, 0,
+                                      0, 0, 0,
+                                      0, 0, 0});
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
       sim->integrate2(benchmark::anymal::freedrop::options.dt);
     }
+
+    if(benchmark::anymal::freedrop::options.saveVideo)
+      sim->stopRecordingVideo();
+
   } else {
-    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt); t++) {
+    // step1: applying force
+    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T1 / benchmark::anymal::freedrop::options.dt); t++) {
+
       sim->integrate1(benchmark::anymal::freedrop::options.dt);
+      anymal->setGeneralizedForce({
+                                      0, 0, benchmark::anymal::freedrop::params.F,
+                                      0, 0, 0,
+                                      0, 0, 0,
+                                      0, 0, 0,
+                                      0, 0, 0});
+      sim->integrate2(benchmark::anymal::freedrop::options.dt);
+    }
+
+    // step2: freedrop
+    double E0 = 0;
+    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T1 / benchmark::anymal::freedrop::options.dt); t++) {
+
+      sim->integrate1(benchmark::anymal::freedrop::options.dt);
+      if(t == 0)
+        E0 = computeEnergy();
+      anymal->setGeneralizedForce({
+                                      0, 0, 0,
+                                      0, 0, 0,
+                                      0, 0, 0,
+                                      0, 0, 0,
+                                      0, 0, 0});
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
       sim->integrate2(benchmark::anymal::freedrop::options.dt);
     }

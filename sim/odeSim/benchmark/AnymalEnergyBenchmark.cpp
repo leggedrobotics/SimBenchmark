@@ -30,7 +30,7 @@ void setupWorld() {
 
   // anymal
   auto anymal = sim->addArticulatedSystem(
-      benchmark::anymal::freedrop::getURDFpath()
+      benchmark::anymal::freedrop::getURDFpath(), 1, 0
   );
   anymal->setGeneralizedCoordinate({0,
                                     0,
@@ -49,8 +49,11 @@ void setupWorld() {
   // mass
   benchmark::anymal::freedrop::params.M = anymal->getTotalMass();
 
+  benchmark::anymal::freedrop::params.F =
+      benchmark::anymal::freedrop::params.M * (-benchmark::anymal::freedrop::params.g) * 2;
+
   if(benchmark::anymal::freedrop::options.gui)
-    sim->cameraFollowObject(checkerboard, {10.0, 0.0, 30.0});
+    sim->cameraFollowObject(checkerboard, {25.0, 0.0, 7.0});
 }
 
 double computeEnergy() {
@@ -71,7 +74,7 @@ double simulationLoop() {
 
   // error list
   benchmark::anymal::freedrop::errorList.reserve(
-      unsigned(benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt));
+      unsigned(benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt));
 
   // E0
   double E0 = computeEnergy();
@@ -80,18 +83,65 @@ double simulationLoop() {
   watch.start();
   if(benchmark::anymal::freedrop::options.gui) {
     // gui
-    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt) &&
+    // step1: applying force
+    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T1 / benchmark::anymal::freedrop::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor); t++) {
 
+      anymals[0]->setGeneralizedForce({0, 0, benchmark::anymal::freedrop::params.F,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0});
+      sim->integrate(benchmark::anymal::freedrop::options.dt);
+    }
+
+    // init E
+    double E0 = computeEnergy();
+
+    // step2: freedrop
+    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt) &&
+        sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor); t++) {
+
+      anymals[0]->setGeneralizedForce({0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0});
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
       sim->integrate(benchmark::anymal::freedrop::options.dt);
     }
   } else {
-    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T / benchmark::anymal::freedrop::options.dt); t++) {
+    // step1: applying force
+    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T1 / benchmark::anymal::freedrop::options.dt); t++) {
+
+      anymals[0]->setGeneralizedForce({0, 0, benchmark::anymal::freedrop::params.F,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0});
+      sim->integrate(benchmark::anymal::freedrop::options.dt);
+    }
+
+    // init E
+    double E0 = computeEnergy();
+
+    // step2: freedrop
+    for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T1 / benchmark::anymal::freedrop::options.dt); t++) {
+
+      anymals[0]->setGeneralizedForce({0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0,
+                                       0, 0, 0});
       benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
       sim->integrate(benchmark::anymal::freedrop::options.dt);
     }
   }
+
 
   double time = watch.measure();
   if(benchmark::anymal::freedrop::options.csv)
@@ -114,7 +164,8 @@ int main(int argc, const char* argv[]) {
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: ODE" << std::endl
-                << "GUI      : " << benchmark::anymal::freedrop::options.gui << std::endl << "Solver   : " << benchmark::ode::options.solverOption << std::endl
+                << "GUI      : " << benchmark::anymal::freedrop::options.gui << std::endl
+                << "Solver   : " << benchmark::ode::options.solverOption << std::endl
                 << "Timestep : " << benchmark::anymal::freedrop::options.dt << std::endl
                 << "-----------------------"
   )
