@@ -1,4 +1,4 @@
 theme: jekyll-theme-cayman
-title: "SIMBENCH"
+title: "SimBenchmark"
 description: "Collision simulator benchmark for robotics applications: RaiSim vs Bullet vs ODE vs MuJoCo vs DartSim"
 show_downloads: "true"
