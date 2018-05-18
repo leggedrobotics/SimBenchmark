@@ -161,6 +161,9 @@ int main(int argc, const char* argv[]) {
   benchmark::anymal::freedrop::getOptionsFromArg(argc, argv, desc);
   benchmark::ode::getOptionsFromArg(argc, argv, desc);
 
+  benchmark::anymal::freedrop::getParamsFromYAML(benchmark::anymal::freedrop::getYamlpath().c_str(),
+                                                 benchmark::ODE);
+
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: ODE" << std::endl
@@ -176,6 +179,7 @@ int main(int argc, const char* argv[]) {
   RAIINFO(
       std::endl << "Timer    : " << simulationLoop() << std::endl
                 << "Mean Error: " << benchmark::anymal::freedrop::computeMeanError() << std::endl
+                << "Contacts  : " << sim->getWorldNumContacts() << std::endl
                 << "======================="
   )
 

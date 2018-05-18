@@ -84,6 +84,21 @@ std::string getMujocoURDFpath() {
 }
 
 /**
+ * get YAML file path for parameter
+ *
+ * @return yaml path in string
+ */
+std::string getYamlpath() {
+
+  std::string yamlPath(__FILE__);
+  while (yamlPath.back() != '/')
+    yamlPath.erase(yamlPath.size() - 1, 1);
+  yamlPath += "./yaml/anymal-freedrop.yaml";
+
+  return yamlPath;
+}
+
+/**
  * get rlog file path of test result
  *
  * @param feedback

@@ -627,5 +627,9 @@ double BtArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
   return kinetic + potential;
 }
 
+void BtArticulatedSystem::setInternalCollision(bool Yn) {
+  multiBody_->setHasSelfCollision(Yn);
+}
+
 } // object
 } // bulet_sim

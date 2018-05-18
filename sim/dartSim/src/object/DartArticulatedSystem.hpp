@@ -50,6 +50,8 @@ class DartArticulatedSystem: public DartObject,
 
   virtual void setGeneralizedForce(const Eigen::VectorXd &tau) override;
 
+  void setInternalCollision(bool Yn);
+
   virtual const EigenVec getGeneralizedForce() override;
 
   virtual int getDOF() override ;

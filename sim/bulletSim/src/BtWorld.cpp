@@ -170,7 +170,7 @@ object::BtArticulatedSystem *BtWorld::addArticulatedSystem(std::string urdfPath,
                                                        benchmark::CollisionGroupType collisionGroup,
                                                        benchmark::CollisionGroupType collisionMask) {
   object::BtArticulatedSystem *articulatedSystem = new bullet_sim::object::BtArticulatedSystem(urdfPath,
-                                                                                           (btMultiBodyDynamicsWorld* )dynamicsWorld_);
+                                                                                               (btMultiBodyDynamicsWorld* )dynamicsWorld_);
   objectList_.push_back(articulatedSystem);
   return articulatedSystem;
 }

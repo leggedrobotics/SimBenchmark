@@ -16,8 +16,8 @@ sim_properties:
 
 # simulation constants
 constant:
-  T1: 1;      # force applying time
-  T2: 2;      # free drop time
-  H: 2;       # initial height
-  g: -9.81;
+  T1: 1      # force applying time
+  T2: 2      # free drop time
+  H: 2       # initial height
+  g: -9.81
 ...

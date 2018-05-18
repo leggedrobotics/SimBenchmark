@@ -81,11 +81,11 @@ double simulationLoop() {
 
       sim->integrate1(benchmark::anymal::freedrop::options.dt);
       anymal->setGeneralizedForce({
-          0, 0, benchmark::anymal::freedrop::params.F,
-          0, 0, 0,
-          0, 0, 0,
-          0, 0, 0,
-          0, 0, 0});
+                                      0, 0, benchmark::anymal::freedrop::params.F,
+                                      0, 0, 0,
+                                      0, 0, 0,
+                                      0, 0, 0,
+                                      0, 0, 0});
       sim->integrate2(benchmark::anymal::freedrop::options.dt);
     }
 
@@ -156,6 +156,9 @@ int main(int argc, const char* argv[]) {
 
   benchmark::anymal::freedrop::addDescToOption(desc);
   benchmark::anymal::freedrop::getOptionsFromArg(argc, argv, desc);
+
+  benchmark::anymal::freedrop::getParamsFromYAML(benchmark::anymal::freedrop::getYamlpath().c_str(),
+                                                 benchmark::RAI);
 
   RAIINFO(
       std::endl << "=======================" << std::endl

@@ -64,6 +64,8 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
   virtual int getStateDimension() override ; 
 
   virtual void setColor(Eigen::Vector4d color) override ;
+  
+  void setInternalCollision(bool Yn);
 
   void getBodyPose(int bodyId,
                    benchmark::Mat<3, 3> &orientation,

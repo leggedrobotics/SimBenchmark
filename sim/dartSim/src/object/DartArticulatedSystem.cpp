@@ -249,9 +249,22 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec DartArticulatedSys
 
 const benchmark::object::ArticulatedSystemInterface::EigenVec DartArticulatedSystem::getGeneralizedForce() {
   Eigen::VectorXd force = skeletonPtr_->getForces();
-  for(int i = 0; i < dof_; i++) {
-    genForce_[i] = force[i];
-  }
+  if(isFixed_) {
+    for(int i = 0; i < dof_; i++) {
+      genForce_[i] = force[i];
+    }
+  } else {
+    genForce_[0] = force[3];
+    genForce_[1] = force[4];
+    genForce_[2] = force[5];
+    genForce_[3] = force[0];
+    genForce_[4] = force[1];
+    genForce_[5] = force[2];
+
+    for(int i = 6; i < dof_; i++) {
+      genForce_[i] = force[i];
+    }
+  };
   return genForce_.e();
 }
 
@@ -372,15 +385,43 @@ void DartArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double>
 
 void DartArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
   RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
+  if(isFixed_) {
+    for(int i = 0; i < dof_; i++) {
+      skeletonPtr_->setForce(i, tau.begin()[i]);
+    }
+  }
+  else {
+    Eigen::Vector3d force(tau.begin()[0], tau.begin()[1], tau.begin()[2]);
+    Eigen::Vector3d torque(tau.begin()[3], tau.begin()[4], tau.begin()[5]);
+    skeletonPtr_->getBodyNode(0)->setExtForce(force);
+    skeletonPtr_->getBodyNode(0)->setExtTorque(torque);
+    for(int i = 6; i < dof_; i++) {
+      skeletonPtr_->setForce(i, tau.begin()[i]);
+    }
+  }
+
   for(int i = 0; i < dof_; i++) {
     genForce_[i] = tau.begin()[i];
-    skeletonPtr_->setForce(i, tau.begin()[i]);
   }
 }
 
 void DartArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
   RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
-  skeletonPtr_->setForces(tau);
+  if(isFixed_) {
+    for(int i = 0; i < dof_; i++) {
+      skeletonPtr_->setForce(i, tau[i]);
+    }
+  }
+  else {
+    Eigen::Vector3d force(tau[0], tau[1], tau[2]);
+    Eigen::Vector3d torque(tau[3], tau[4], tau[5]);
+    skeletonPtr_->getBodyNode(0)->setExtForce(force);
+    skeletonPtr_->getBodyNode(0)->setExtTorque(torque);
+    for(int i = 6; i < dof_; i++) {
+      skeletonPtr_->setForce(i, tau[i]);
+    }
+  }
+
   for(int i = 0; i < dof_; i++) {
     genForce_[i] = tau[i];
   }
@@ -419,6 +460,10 @@ double DartArticulatedSystem::getTotalMass() {
 
 double DartArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
   return skeletonPtr_->computePotentialEnergy() + skeletonPtr_->computeKineticEnergy();
+}
+
+void DartArticulatedSystem::setInternalCollision(bool Yn) {
+  skeletonPtr_->setSelfCollisionCheck(Yn);
 }
 
 } // object
