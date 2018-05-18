@@ -254,12 +254,13 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec DartArticulatedSys
       genForce_[i] = force[i];
     }
   } else {
-    genForce_[0] = force[3];
-    genForce_[1] = force[4];
-    genForce_[2] = force[5];
-    genForce_[3] = force[0];
-    genForce_[4] = force[1];
-    genForce_[5] = force[2];
+    Eigen::Vector6d baseForce = skeletonPtr_->getBodyNode(0)->getExternalForceGlobal();
+    genForce_[0] = baseForce[3];
+    genForce_[1] = baseForce[4];
+    genForce_[2] = baseForce[5];
+    genForce_[3] = baseForce[0];
+    genForce_[4] = baseForce[1];
+    genForce_[5] = baseForce[2];
 
     for(int i = 6; i < dof_; i++) {
       genForce_[i] = force[i];
