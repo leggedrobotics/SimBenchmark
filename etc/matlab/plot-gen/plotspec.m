@@ -3,20 +3,23 @@ classdef plotspec
     %   plot line marker, color etc.
     
     properties (Constant)
-        RAIRAI =                {'-d', 'Rai',           [137, 165, 78] ./ 255};
-        BULLETSEQUENCEIMPULSE = {'-s', 'BtSeqImp',     [170, 70, 67] ./ 255};
-        BULLETNNCG =            {'-*', 'BtNNCG',       [170, 70, 67] ./ 255};
-        BULLETMLCPDANTZIG =     {'-o', 'BtDantzig',    [170, 70, 67] ./ 255};
-        BULLETMLCPLEMKE =       {'-p', 'BtLemke',      [170, 70, 67] ./ 255};
-        BULLETMLCPPGS =         {'-h', 'BtPGS',        [170, 70, 67] ./ 255};
-        BULLETMULTIBODY =       {'-d', 'BtMultibody',  [170, 70, 67] ./ 255};
-        ODESTANDARD =           {'-o', 'OdeStd',       [219, 132, 61] ./ 255};
-        ODEQUICK =              {'-*', 'OdeQuick',     [219, 132, 61] ./ 255};
-        MUJOCOPGS =             {'-s', 'MjcPGS',       [69, 114, 167] ./ 255};
-        MUJOCOCG =              {'-*', 'MjcCG',        [69, 114, 167] ./ 255};
-        MUJOCONEWTON =          {'-o', 'MjcNewton',    [69, 114, 167] ./ 255};
-        DARTDANTZIG =           {'-o', 'DartDantzig',  [128, 105, 155] ./ 255};
-        DARTPGS =               {'-*', 'DartPGS',      [128, 105, 155] ./ 255};
+        RAIRAIRAI =                     {'-d', 'Rai',           [137, 165, 78] ./ 255};
+        BULLETSEQUENCEIMPULSEBULLET =   {'-s', 'BtSeqImp',     [170, 70, 67] ./ 255};
+        BULLETNNCGBULLET =              {'-*', 'BtNNCG',       [170, 70, 67] ./ 255};
+        BULLETMLCPDANTZIGBULLET =       {'-o', 'BtDantzig',    [170, 70, 67] ./ 255};
+        BULLETMLCPLEMKEBULLET =         {'-p', 'BtLemke',      [170, 70, 67] ./ 255};
+        BULLETMLCPPGSBULLET =           {'-h', 'BtPGS',        [170, 70, 67] ./ 255};
+        BULLETMULTIBODYBULLET =         {'-d', 'BtMultibody',  [170, 70, 67] ./ 255};
+        ODESTANDARDODE =                {'-o', 'OdeStd',       [219, 132, 61] ./ 255};
+        ODEQUICKODE =                   {'-*', 'OdeQuick',     [219, 132, 61] ./ 255};
+        MUJOCOPGSEULER =                {'-s', 'MjcPGS',       [69, 114, 167] ./ 255};
+        MUJOCOCGEULER =                 {'-*', 'MjcCG',        [69, 114, 167] ./ 255};
+        MUJOCONEWTONEULER =             {'-o', 'MjcNewton',    [69, 114, 167] ./ 255};
+        MUJOCOPGSRK4 =                  {'-d', 'MjcPGS-RK4',       [69, 114, 167] ./ 255};
+        MUJOCOCGRK4 =                   {'-p', 'MjcCG-RK4',        [69, 114, 167] ./ 255};
+        MUJOCONEWTONRK4 =               {'-h', 'MjcNewton-RK4',    [69, 114, 167] ./ 255};
+        DARTDANTZIGDART =               {'-o', 'DartDantzig',  [128, 105, 155] ./ 255};
+        DARTPGSDART =                   {'-*', 'DartPGS',      [128, 105, 155] ./ 255};
     end
     
 %     methods

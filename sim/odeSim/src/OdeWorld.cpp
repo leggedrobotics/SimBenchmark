@@ -44,6 +44,9 @@ ode_sim::OdeWorld::OdeWorld(SolverOption solverOption) : solverOption_(solverOpt
   dWorldSetERP(dynamicsWorld_, 0);
   dWorldSetCFM(dynamicsWorld_, 0);
 
+  // num iteration of quick solver. (default value is 20.)
+//  dWorldSetQuickStepNumIterations(dynamicsWorld_, 50);
+
   // no debug message
   dSetMessageHandler(message);
 }

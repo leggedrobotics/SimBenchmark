@@ -142,6 +142,8 @@ std::string getLogDirpath(bool erpYN,
                           ForceDirection forceDirection,
                           std::string simulation,
                           std::string solver,
+                          std::string detector,
+                          std::string integrator,
                           double dt) {
 
   std::string dirPath(__FILE__);
@@ -152,6 +154,8 @@ std::string getLogDirpath(bool erpYN,
       + "-dir=" + std::to_string(forceDirection)
       + "/" + simulation
       + "/" + solver
+      + "/" + detector
+      + "/" + integrator
       + "/" + std::to_string(dt);
 
   return dirPath;
@@ -244,7 +248,7 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   // csv
   if(vm.count("csv")) {
     options.csv = true;
-    options.csvName = vm["csv"].as<std::string>() + ".csv";
+    options.csvName = vm["csv"].as<std::string>();
   }
 }
 
@@ -371,12 +375,16 @@ double computeMeanError() {
 void printCSV(std::string filePath,
               std::string sim,
               std::string solver,
+              std::string detector,
+              std::string integrator,
               double time) {
   std::ofstream myfile;
   myfile.open (filePath, std::ios_base::app);
 
   myfile << sim << ","
          << solver << ","
+         << detector << ","
+         << integrator << ","
          << options.erpYN << ","
          << options.forceDirection << ","
          << options.dt << ","

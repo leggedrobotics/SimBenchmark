@@ -24,6 +24,7 @@ struct Option {
   dart_sim::CollisionDetectorOption detectorOption = dart_sim::COLLISION_DETECTOR_BULLET;
   std::string solverName = "DANTZIG";
   std::string detectorName = "BULLET";
+  std::string integratorName = "DART";
 };
 Option options;
 

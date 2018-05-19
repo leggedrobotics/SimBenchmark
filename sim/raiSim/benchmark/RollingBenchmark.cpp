@@ -30,6 +30,8 @@ void setupSimulation() {
                                           benchmark::rolling::options.forceDirection,
                                           "RAI",
                                           "RAI",
+                                          "RAI",
+                                          "RAI",
                                           benchmark::rolling::options.dt), "var"
     );
 }
@@ -193,11 +195,12 @@ int main(int argc, const char* argv[]) {
   double time = simulationLoop();
 
   if(benchmark::rolling::options.csv)
-    benchmark::rolling::printCSV(
-        benchmark::rolling::getCSVpath(),
-        "RAI",
-        "RAI",
-        time);
+    benchmark::rolling::printCSV(benchmark::rolling::getCSVpath(),
+                                 "RAI",
+                                 "RAI",
+                                 "RAI", // defualt rai detector is modified ode
+                                 "RAI",
+                                 time);
 
   RAIINFO(
       std::endl << "time       : " << time << std::endl

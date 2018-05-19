@@ -136,14 +136,14 @@ void simulationLoop() {
 
   /// note. energy test is not available for mujoco
   benchmark::sixsixsix::printError(0, time);
-  if(benchmark::sixsixsix::options.log)
-    benchmark::sixsixsix::printCSV(
-        benchmark::sixsixsix::getLogFilepath(),
-        benchmark::mujoco::options.simName,
-        benchmark::mujoco::options.solverName,
-        time,
-        0
-    );
+  if(benchmark::sixsixsix::options.csv)
+    benchmark::sixsixsix::printCSV(benchmark::sixsixsix::getCSVpath(),
+                                   benchmark::mujoco::options.simName,
+                                   benchmark::mujoco::options.solverName,
+                                   benchmark::mujoco::options.detectorName,
+                                   benchmark::mujoco::options.integratorName,
+                                   time,
+                                   0);
 }
 
 int main(int argc, const char* argv[]) {

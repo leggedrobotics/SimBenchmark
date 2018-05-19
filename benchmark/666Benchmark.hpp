@@ -115,12 +115,12 @@ std::string getYamlpath() {
  * @param erp
  * @return log directory path in string
  */
-std::string getLogFilepath() {
+std::string getCSVpath() {
   std::string logPath(__FILE__);
   while (logPath.back() != '/')
     logPath.erase(logPath.size() - 1, 1);
 
-  logPath += "../data/666/log.csv";
+  logPath += "../data/666/" + options.csvName;
   return logPath;
 }
 
@@ -157,9 +157,10 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
     exit(0);
   }
 
-  // log option
-  if(vm.count("log")) {
-    options.log = true;
+  // csv
+  if(vm.count("csv")) {
+    options.csv = true;
+    options.csvName = vm["csv"].as<std::string>();
   }
 
   // nogui option
@@ -247,6 +248,10 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   }
 }
 
+double computeMeanPenetrationError() {
+  return std::accumulate( errorList.begin(), errorList.end(), 0.0) / errorList.size();
+}
+
 double computeMeanEnergyError(double E0) {
   std::vector<double> energyErrors;
   energyErrors.reserve(energyList.size());
@@ -265,7 +270,8 @@ void printError(double E0, double time) {
   RAIINFO(
       std::endl << "time       = " << time << std::endl
                 << "pen. error = "
-                << std::accumulate( errorList.begin(), errorList.end(), 0.0) / errorList.size() << std::endl)
+                << computeMeanPenetrationError() << std::endl
+  )
 
   if(benchmark::sixsixsix::options.elasticCollision) {
     RAIINFO(
@@ -278,6 +284,8 @@ void printError(double E0, double time) {
 void printCSV(std::string filePath,
               std::string sim,
               std::string solver,
+              std::string detector,
+              std::string integrator,
               double time,
               double E0) {
   std::ofstream myfile;
@@ -287,10 +295,12 @@ void printCSV(std::string filePath,
     myfile
         << sim << ","
         << solver << ","
+        << detector << ","
+        << integrator << ","
         << options.erpYN << ","
         << options.elasticCollision << ","
         << options.dt << ","
-        << std::accumulate( errorList.begin(), errorList.end(), 0.0) / errorList.size() << ","
+        << computeMeanPenetrationError() << ","
         << computeMeanEnergyError(E0) << ","
         << time
         << std::endl;
@@ -298,10 +308,12 @@ void printCSV(std::string filePath,
     myfile
         << sim << ","
         << solver << ","
+        << detector << ","
+        << integrator << ","
         << options.erpYN << ","
         << options.elasticCollision << ","
         << options.dt << ","
-        << std::accumulate( errorList.begin(), errorList.end(), 0.0) / errorList.size() << ","
+        << computeMeanPenetrationError() << ","
         << "" << ","
         << time
         << std::endl;

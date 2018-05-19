@@ -178,14 +178,14 @@ void simulationLoop() {
   double time = watch.measure();
 
   benchmark::sixsixsix::printError(E0, time);
-  if(benchmark::sixsixsix::options.log)
-    benchmark::sixsixsix::printCSV(
-        benchmark::sixsixsix::getLogFilepath(),
-        benchmark::bullet::options.simName,
-        benchmark::bullet::options.solverName,
-        time,
-        E0
-    );
+  if(benchmark::sixsixsix::options.csv)
+    benchmark::sixsixsix::printCSV(benchmark::sixsixsix::getCSVpath(),
+                                   benchmark::bullet::options.simName,
+                                   benchmark::bullet::options.solverName,
+                                   benchmark::bullet::options.detectorName,
+                                   benchmark::bullet::options.integratorName,
+                                   time,
+                                   E0);
 }
 
 int main(int argc, const char* argv[]) {

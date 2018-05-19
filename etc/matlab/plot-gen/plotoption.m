@@ -3,20 +3,23 @@ classdef plotoption
     %   can on/off data plotting from sim-solver
     
     properties
-        RAIRAI =                true;
-        BULLETSEQUENCEIMPULSE = true;
-        BULLETNNCG =            true;
-        BULLETMLCPDANTZIG =     true;
-        BULLETMLCPLEMKE =       true;
-        BULLETMLCPPGS =         true;
-        BULLETMULTIBODY =       true;
-        ODESTANDARD =           true;
-        ODEQUICK =              true;
-        MUJOCOPGS =             true;
-        MUJOCOCG =              true;
-        MUJOCONEWTON =          true;
-        DARTDANTZIG =           true;
-        DARTPGS =               true;
+        RAIRAIRAI =                true;
+        BULLETSEQUENCEIMPULSEBULLET = true;
+        BULLETNNCGBULLET =            true;
+        BULLETMLCPDANTZIGBULLET =     true;
+        BULLETMLCPLEMKEBULLET =       true;
+        BULLETMLCPPGSBULLET =         true;
+        BULLETMULTIBODYBULLET =       true;
+        ODESTANDARDODE =           true;
+        ODEQUICKODE =              true;
+        MUJOCOPGSEULER =             true;
+        MUJOCOCGEULER =              true;
+        MUJOCONEWTONEULER =          true;
+        MUJOCOPGSRK4 =             true;
+        MUJOCOCGRK4 =              true;
+        MUJOCONEWTONRK4 =          true;
+        DARTDANTZIGDART =           true;
+        DARTPGSDART =               true;
     end
     
 %     methods

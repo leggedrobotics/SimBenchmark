@@ -21,8 +21,9 @@ int main() {
 
   // add objects
   auto checkerboard = sim.addCheckerboard(5.0, 100.0, 100.0, 0.1);
+  sim.setERP(0.2, 0, 0);
 
-  Object object = Cylinder;
+  Object object = BALL;
   switch(object) {
     case BOX:
     {
@@ -39,13 +40,13 @@ int main() {
     case BALL:
     {
       auto ball1 = sim.addSphere(0.5, 1);
-      ball1->setPosition(0, 0, 0.5);
+      ball1->setPosition(0, 0, 0.6);
       auto ball2 = sim.addSphere(0.5, 1);
-      ball2->setPosition(0, 0, 1.5);
+      ball2->setPosition(0, 0, 1.7);
       auto ball3 = sim.addSphere(0.5, 1);
-      ball3->setPosition(0, 0, 2.5);
+      ball3->setPosition(0, 0, 2.8);
       auto ball4 = sim.addSphere(0.5, 1);
-      ball4->setPosition(0, 0, 3.5);
+      ball4->setPosition(0, 0, 3.9);
       break;
     }
     case CAPSULE:

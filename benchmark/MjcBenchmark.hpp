@@ -30,6 +30,8 @@ struct Option {
   mujoco_sim::IntegratorOption integratorOption = mujoco_sim::INTEGRATOR_EULER;
   std::string integratorName = "EULER";
 
+  std::string detectorName = "MUJOCO";
+
   bool noSlip = false;
 };
 Option options;

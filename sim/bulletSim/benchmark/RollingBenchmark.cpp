@@ -34,6 +34,8 @@ void setupSimulation() {
                                           benchmark::rolling::options.forceDirection,
                                           benchmark::bullet::options.simName,
                                           benchmark::bullet::options.solverName,
+                                          benchmark::bullet::options.detectorName,
+                                          benchmark::bullet::options.integratorName,
                                           benchmark::rolling::options.dt), "var"
     );
 }
@@ -179,11 +181,12 @@ int main(int argc, const char* argv[]) {
   double time = simulationLoop();
 
   if(benchmark::rolling::options.csv)
-    benchmark::rolling::printCSV(
-        benchmark::rolling::getCSVpath(),
-        benchmark::bullet::options.simName,
-        benchmark::bullet::options.solverName,
-        time);
+    benchmark::rolling::printCSV(benchmark::rolling::getCSVpath(),
+                                 benchmark::bullet::options.simName,
+                                 benchmark::bullet::options.solverName,
+                                 benchmark::bullet::options.detectorName,
+                                 benchmark::bullet::options.integratorName,
+                                 time);
 
   RAIINFO(
       std::endl << "time       : " << time << std::endl

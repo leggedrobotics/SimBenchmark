@@ -25,6 +25,9 @@ struct Option {
 
   ode_sim::SolverOption solverOption = ode_sim::SOLVER_STANDARD;
   std::string solverName = "STANDARD";
+
+  std::string detectorName = "ODE";
+  std::string integratorName = "ODE";
 };
 Option options;
 

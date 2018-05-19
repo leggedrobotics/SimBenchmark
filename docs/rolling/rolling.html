@@ -24,14 +24,15 @@ layout: default
 
 <img src="rolling.gif" alt="rolling-test">
 
-<p>Rolling test is for testing frictional contact behavior. The error is measured by comparing the simulation with analytical solution. The test focuses on:</p>
+<p>Rolling test is for testing frictional contact behaviors. The error is measured by comparing the simulation with the analytical solution. </p>
 
-<ol>
-    <li>Frictional cone (diagonal, elliptic)</li>
-    <li>The accuracy of frictional contact simulation</li>
-    <li>The violation of hard-contact constraint (penetration)</li>
-    <li>The effect of ERP (error-correcting)</li>
-</ol>
+<p>The test focuses on:
+  <ol>
+      <li>The quality of the friction cone (linear or elliptic)</li>
+      <li>The accuracy of frictional contact simulation</li>
+      <li>The violation of hard-contact constraint (penetration)</li>
+  </ol>
+</p>
 
 <h2>Test scenario</h2>
 
@@ -51,7 +52,7 @@ layout: default
 <h2>Tested solver list</h2>
 
 <ul>
-    <li>Rau
+    <li>Rai
         <ul>
             <li>Bisection solver (Rai solver)</li>
         </ul>
@@ -88,7 +89,7 @@ layout: default
 
 <h2>Results</h2>
 
-<img src="../img/error-speed-noerp-xy.png" alt="rolling-test-error-plot">
+<img src="rolling-error-speed.png" alt="rolling-test-error-plot">
 
 <p>The pushing force resulted in no motion in ODE and Dart. However as the force is applied to y direction, the objects move. This is due to the pyramid shaped friction cone.</p>
 

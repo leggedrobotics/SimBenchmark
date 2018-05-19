@@ -185,14 +185,14 @@ void simulationLoop() {
   double time = watch.measure();
 
   benchmark::sixsixsix::printError(E0, time);
-  if(benchmark::sixsixsix::options.log)
-    benchmark::sixsixsix::printCSV(
-        benchmark::sixsixsix::getLogFilepath(),
-        "RAI",
-        "RAI",
-        time,
-        E0
-    );
+  if(benchmark::sixsixsix::options.csv)
+    benchmark::sixsixsix::printCSV(benchmark::sixsixsix::getCSVpath(),
+                                   "RAI",
+                                   "RAI",
+                                   "RAI",
+                                   "RAI",
+                                   time,
+                                   E0);
 }
 
 int main(int argc, const char* argv[]) {

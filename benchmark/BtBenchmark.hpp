@@ -25,6 +25,9 @@ struct Option {
 
   bullet_sim::SolverOption solverOption = bullet_sim::SOLVER_SEQUENTIAL_IMPULSE;
   std::string solverName = "SEQUENCEIMPULSE";
+
+  std::string detectorName = "BULLET";
+  std::string integratorName = "BULLET";
 };
 Option options;
 

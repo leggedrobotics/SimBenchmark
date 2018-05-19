@@ -8,46 +8,51 @@ echo ""
 echo "====================================================================="
 
 while true; do
-    read -p "Test RaiSim [y/n]? " yn
+    read -p "Test RaiSim [Y/n]? " yn
     case $yn in
         [Yy]* ) test_rai='ON'; break;;
         [Nn]* ) test_rai='OFF'; break;;
+        []* ) test_rai='ON'; break;;
         * ) echo "Please answer y or n.";;
     esac
 done
 
 while true; do
-    read -p "Test Bullet [y/n]? " yn
+    read -p "Test Bullet [Y/n]? " yn
     case $yn in
         [Yy]* ) test_bt='ON'; break;;
         [Nn]* ) test_bt='OFF'; break;;
+        []* ) test_rai='ON'; break;;
         * ) echo "Please answer y or n.";;
     esac
 done
 
 while true; do
-    read -p "Test ODE [y/n]? " yn
+    read -p "Test ODE [Y/n]? " yn
     case $yn in
         [Yy]* ) test_ode='ON'; break;;
         [Nn]* ) test_ode='OFF'; break;;
+        []* ) test_rai='ON'; break;;
         * ) echo "Please answer y or n.";;
     esac
 done
 
 while true; do
-    read -p "Test MuJoCo [y/n]? " yn
+    read -p "Test MuJoCo [Y/n]? " yn
     case $yn in
         [Yy]* ) test_mjc='ON'; break;;
         [Nn]* ) test_mjc='OFF'; break;;
+        []* ) test_rai='ON'; break;;
         * ) echo "Please answer y or n.";;
     esac
 done
 
 while true; do
-    read -p "Test Dart [y/n]? " yn
+    read -p "Test Dart [Y/n]? " yn
     case $yn in
         [Yy]* ) test_dart='ON'; break;;
         [Nn]* ) test_dart='OFF'; break;;
+        []* ) test_rai='ON'; break;;
         * ) echo "Please answer y or n.";;
     esac
 done

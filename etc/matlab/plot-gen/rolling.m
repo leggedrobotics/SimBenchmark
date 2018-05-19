@@ -41,127 +41,130 @@ testOptions = {testOptions{:, dirflags}};
 
 %% save data to table
 
-% create table
+% csv format
+formatSpec = '%C%C%C%C%d%d%f%f%f';
+
+% load csv
+T = readtable(...
+    '../../../data/rolling/2018-05-19-15:49:29.csv', ...
+    'Delimiter', ',', ...
+    'Format',formatSpec ...
+    );
+
 entry = {...
     'SIM', ...
     'SOLVER', ...
+    'DETECTOR', ...
+    'INTEGRATOR', ...
     'ERP', ...
     'DIRECTION', ...
     'TIMESTEP', ...
-    'BOXVELOCITY', ...
-    'BALLVELOCITY', ...
-    'BOXPOSITION', ...
-    'BALLPOSITION', ...
-    'BOXERROR', ...
-    'BALLERROR', ...
+    'ERROR', ...
     'TIME' ...
     };
-
+T.Properties.VariableNames = entry;
 plotSpec = plotspec;
 
-T = cell2table(cell(0, length(entry)));
-T.Properties.VariableNames = entry;
-
-% testOptions
-for i = 1:length(testOptions)
-    
-    % erp: 1/0
-    % dir: 1/0
-    testOption = testOptions{i};
-    erp = regexp(testOption, 'erp=([0-9])', 'tokens');
-    erp = str2num(erp{1}{1});                % 0: false / 1: true
-    direction = regexp(testOption, 'dir=([0-9])', 'tokens');
-    direction = str2num(direction{1}{1});    % 0: y     / 1: xy
-    
-    optionDir = strcat(data_dir, '/', testOption);
-    sims = strsplit(ls(optionDir));
-    sims = sims(1:end-1);
-    
-    % simulators
-    % RAI / BULLET / DART / MUJOCO / ODE
-    parfor j = 1:length(sims)
-        sim = sims{j};
-        
-        simDir = strcat(optionDir, '/', sim);
-        solvers = strsplit(ls(simDir));
-        solvers = solvers(1:end-1);
-        
-        % solvers
-        % RAI    : RAI
-        % BULLET : SEQUENCEIMPULSE, NNCG, ...
-        % ODE    : QUICK, STANDARD
-        % DART   : DANTZIG, PGS
-        % MUJOCO : PGS, CG, NEWTON
-        for k = 1:length(solvers)
-            
-            solver = solvers{k};
-            
-            solverDir = strcat(simDir, '/', solver);
-            timesteps = strsplit(ls(solverDir));
-            timesteps = timesteps(1:end-1);
-            
-            % timesteps
-            % 0.00010, 0.000040 ...
-            for l = 1:length(timesteps)
-                
-                timestep = timesteps{l};
-                
-                curr = strcat(solverDir, '/', timestep);
-                
-                velBox = data_values(curr, 'var_velbox.rlog');
-                velBall = data_values(curr, 'var_velball.rlog');
-                posBox = data_values(curr, 'var_posbox.rlog');
-                posBall = data_values(curr, 'var_posball.rlog');
-                
-                time = timer_value(curr);
-                
-                opt = struct(...
-                    'erp', logical(erp), ...
-                    'dir', logical(direction), ...
-                    'dt', str2double(timestep), ...
-                    'sim', sim, ...
-                    'solver', solver ...
-                    );
-                
-                errorBox = mean(vel_error(const, opt, velBox, false));
-                errorBall = mean(vel_error(const, opt, velBall, true));
-                
-                data = {...
-                    sim, ...
-                    solver, ...
-                    logical(erp), ...
-                    logical(direction), ...
-                    str2double(timestep), ...
-                    0, ...                 % too much memory consumption!
-                    0, ...                 % too much memory consumption!
-                    0, ...                 % too much memory consumption!
-                    0, ...                 % too much memory consumption!
-                    errorBox, ...
-                    errorBall, ...
-                    time ...
-                    };
-                T = [T; data];
-            end
-            % end timesteps
-        end
-        % end solvers
-    end
-    % end sims
-end
-% end testOtions
-
-% save table to csv file
-writetable(T, 'rolling-log.csv', 'Delimiter', ',', 'QuoteStrings', true)
+% % testOptions
+% for i = 1:length(testOptions)
+%
+%     % erp: 1/0
+%     % dir: 1/0
+%     testOption = testOptions{i};
+%     erp = regexp(testOption, 'erp=([0-9])', 'tokens');
+%     erp = str2num(erp{1}{1});                % 0: false / 1: true
+%     direction = regexp(testOption, 'dir=([0-9])', 'tokens');
+%     direction = str2num(direction{1}{1});    % 0: y     / 1: xy
+%
+%     optionDir = strcat(data_dir, '/', testOption);
+%     sims = strsplit(ls(optionDir));
+%     sims = sims(1:end-1);
+%
+%     % simulators
+%     % RAI / BULLET / DART / MUJOCO / ODE
+%     parfor j = 1:length(sims)
+%         sim = sims{j};
+%
+%         simDir = strcat(optionDir, '/', sim);
+%         solvers = strsplit(ls(simDir));
+%         solvers = solvers(1:end-1);
+%
+%         % solvers
+%         % RAI    : RAI
+%         % BULLET : SEQUENCEIMPULSE, NNCG, ...
+%         % ODE    : QUICK, STANDARD
+%         % DART   : DANTZIG, PGS
+%         % MUJOCO : PGS, CG, NEWTON
+%         for k = 1:length(solvers)
+%
+%             solver = solvers{k};
+%
+%             solverDir = strcat(simDir, '/', solver);
+%             timesteps = strsplit(ls(solverDir));
+%             timesteps = timesteps(1:end-1);
+%
+%             % timesteps
+%             % 0.00010, 0.000040 ...
+%             for l = 1:length(timesteps)
+%
+%                 timestep = timesteps{l};
+%
+%                 curr = strcat(solverDir, '/', timestep);
+%
+%                 velBox = data_values(curr, 'var_velbox.rlog');
+%                 velBall = data_values(curr, 'var_velball.rlog');
+%                 posBox = data_values(curr, 'var_posbox.rlog');
+%                 posBall = data_values(curr, 'var_posball.rlog');
+%
+%                 time = timer_value(curr);
+%
+%                 opt = struct(...
+%                     'erp', logical(erp), ...
+%                     'dir', logical(direction), ...
+%                     'dt', str2double(timestep), ...
+%                     'sim', sim, ...
+%                     'solver', solver ...
+%                     );
+%
+%                 errorBox = mean(vel_error(const, opt, velBox, false));
+%                 errorBall = mean(vel_error(const, opt, velBall, true));
+%
+%                 data = {...
+%                     sim, ...
+%                     solver, ...
+%                     logical(erp), ...
+%                     logical(direction), ...
+%                     str2double(timestep), ...
+%                     0, ...                 % too much memory consumption!
+%                     0, ...                 % too much memory consumption!
+%                     0, ...                 % too much memory consumption!
+%                     0, ...                 % too much memory consumption!
+%                     errorBox, ...
+%                     errorBall, ...
+%                     time ...
+%                     };
+%                 T = [T; data];
+%             end
+%             % end timesteps
+%         end
+%         % end solvers
+%     end
+%     % end sims
+% end
+% % end testOtions
+%
+% % save table to csv file
+% writetable(T, 'rolling-log.csv', 'Delimiter', ',', 'QuoteStrings', true)
 
 
 
 %% error plot
 % plot option
 erpNdirY = plotoption;
-erpNdirY.ODESTANDARD = false;   % ODE-std fails
+% erpNdirY.ODESTANDARD = false;   % ODE-std fails
 
 erpNdirXY = plotoption;
-erpNdirXY.ODESTANDARD = false;  % ODE is pyramid friction cone (and simulation fails)
+erpNdirXY.ODESTANDARDODE = false;  % ODE is pyramid friction cone (and simulation fails)
 % erpNdirXY.ODEQUICK = false;     % ODE is pyramid friction cone
 % erpNdirXY.DARTDANTZIG = false;  % DART is pyramid friction cone
 % erpNdirXY.DARTPGS = false;      % DART is pyramid friction cone
@@ -169,22 +172,15 @@ erpNdirXY.ODESTANDARD = false;  % ODE is pyramid friction cone (and simulation f
 erpYdirY = plotoption;
 
 erpYdirXY = plotoption;
-erpYdirXY.ODESTANDARD = false;  % ODE is pyramid friction cone (and simulation fails)
+% erpYdirXY.ODESTANDARD = false;  % ODE is pyramid friction cone (and simulation fails)
 % erpYdirXY.ODEQUICK = false;     % ODE is pyramid friction cone
 % erpYdirXY.DARTDANTZIG = false;  % DART is pyramid friction cone
 % erpYdirXY.DARTPGS = false;      % DART is pyramid friction cone
 
-% error plot vs dt
-disp('plotting error vs timestep...')
-plot_error_dt(T, const, plotSpec, false, false, '-noerp-y', '(No Erp / Y force)', erpNdirY);
-plot_error_dt(T, const, plotSpec, false, true, '-noerp-xy', '(No Erp / XY force)', erpNdirXY);
-plot_error_dt(T, const, plotSpec, true, false, '-erp-y', '(Erp / Y force)', erpYdirY);
-plot_error_dt(T, const, plotSpec, true, true, '-erp-xy', '(Erp / XY force)', erpYdirXY);
-
 disp('plotting error vs real-time-factor...')
-plot_error_speed(T, const, plotSpec, false, false, '-noerp-y', '(No Erp / Y force)', erpNdirY);
+% plot_error_speed(T, const, plotSpec, false, false, '-noerp-y', '(No Erp / Y force)', erpNdirY);
 plot_error_speed(T, const, plotSpec, false, true, '-noerp-xy', '(No Erp / XY force)', erpNdirXY);
-plot_error_speed(T, const, plotSpec, true, false, '-erp-y', '(Erp / Y force)', erpYdirY);
+% plot_error_speed(T, const, plotSpec, true, false, '-erp-y', '(Erp / Y force)', erpYdirY);
 plot_error_speed(T, const, plotSpec, true, true, '-erp-xy', '(Erp / XY force)', erpYdirXY);
 
 %% bar plot (for min dt)
@@ -196,17 +192,17 @@ numIter = simTime / dt;
 
 % filtering
 T2 = T2(T2.TIMESTEP == dt, :);
-T2 = sortrows(T2, 12);
+T2 = sortrows(T2, 9);
 
 speed = numIter ./ T2.TIME ./ 1000;
 
 disp('plotting bar graph')
-h = figure('Name', 'speed', 'Position', [0, 0, 800, 600])
+h = figure('Name', 'speed', 'Position', [0, 0, 720, 600]);
 hold on
 for i = 1:size(T2, 1)
     data = T2(i, :);
     
-    spec = getfield(plotSpec, char(strcat(data.SIM, data.SOLVER)));
+    spec = getfield(plotSpec, strcat(char(data.SIM), char(data.SOLVER), char(data.INTEGRATOR)));
     
     bar(categorical(cellstr(spec{2})), ...
         speed(i), ...
@@ -223,75 +219,13 @@ text(1:length(speed), ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
 ylim([0, 25])
-saveas(h, strcat('plots/rollingbar.png'))
-saveas(h, strcat('plots/rollingbar.eps'), 'epsc')
-saveas(h, strcat('plots/rollingbar.fig'), 'fig')
+saveas(h, strcat('rolling-plots/rollingbar.png'))
+saveas(h, strcat('rolling-plots/rollingbar.eps'), 'epsc')
+saveas(h, strcat('rolling-plots/rollingbar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function plot_error_dt(dataTable, const, plotSpec, erpYN, dir, fileName, plotTitle, plotOption)
-
-% filter
-dataTable = dataTable(...
-    dataTable.ERP == erpYN & ...
-    dataTable.DIRECTION == dir ...
-    ,:);
-
-% ball + box
-sims = unique(dataTable.SIM);
-
-h = figure('Name','error','Position', [0, 0, 800, 600]);
-hold on
-set(gca, 'YScale', 'log')
-for i = 1:length(sims)
-    
-    sim = sims(i);
-    Tsim = dataTable(dataTable.SIM == categorical(sim), :);
-    
-    solvers = unique(Tsim.SOLVER);
-    
-    for j = 1:length(solvers)
-        
-        solver = solvers(j);
-        
-        % e.g. RAIRAI or BULLETNNCG
-        name = strcat(cellstr(sim), cellstr(solver));
-        
-        % check plot option
-        if ~getfield(plotOption, char(name))
-            continue;
-        end
-        
-        % data
-        data = Tsim(Tsim.SOLVER == categorical(solver), :);
-        data = sortrows(data, 5);
-        
-        % plot
-        plotspec = getfield(plotSpec, char(name));
-        
-        plot(data.TIMESTEP, ...
-            data.BALLERROR + data.BOXERROR, ...
-            plotspec{1}, ...
-            'DisplayName', plotspec{2}, ...
-            'color', plotspec{3})
-    end
-    % end solvers
-end
-% end sims
-hold off
-title(['Velocity Error ', plotTitle])
-xlabel('timestep size')
-ylabel('squared error (log scale)')
-legend('Location', 'eastoutside');
-saveas(h, strcat('plots/error-dt', fileName, '.png'))
-saveas(h, strcat('plots/error-dt', fileName, '.eps'), 'epsc')
-saveas(h, strcat('plots/error-dt', fileName, '.fig'), 'fig')
-
-
-end
-
 function plot_error_speed(dataTable, const, plotSpec, erpYN, dir, fileName, plotTitle, plotOption)
 
 % filter
@@ -303,7 +237,7 @@ dataTable = dataTable(...
 % ball + box
 sims = unique(dataTable.SIM);
 
-h = figure('Name','error','Position', [0, 0, 800, 600]);
+h = figure('Name','error','Position', [0, 0, 600, 500]);
 hold on
 set(gca, 'YScale', 'log', 'XScale', 'log', 'Ydir', 'reverse')
 for i = 1:length(sims)
@@ -316,28 +250,37 @@ for i = 1:length(sims)
     for j = 1:length(solvers)
         
         solver = solvers(j);
+        Tsimsol = Tsim(Tsim.SOLVER == categorical(solver), :);
         
-        % e.g. RAIRAI or BULLETNNCG
-        name = strcat(cellstr(sim), cellstr(solver));
+        integrators = unique(Tsimsol.INTEGRATOR);
         
-        % check plot option
-        if ~getfield(plotOption, char(name))
-            continue;
+        for k = 1:length(integrators)
+            
+            integrator = integrators(k);
+            
+            % e.g. RAIRAI or BULLETNNCG
+            name = strcat(cellstr(sim), cellstr(solver), cellstr(integrator));
+            
+            % check plot option
+            if ~getfield(plotOption, char(name))
+                continue;
+            end
+            
+            % data
+            data = Tsimsol(Tsimsol.INTEGRATOR == categorical(integrator), :);
+            data = sortrows(data, 9, 'descend');
+            
+            % plot
+            plotspec = getfield(plotSpec, char(name));
+            
+            plot(...
+                const.T ./ data.TIME, ...
+                data.ERROR, ...
+                plotspec{1}, ...
+                'DisplayName', plotspec{2}, ...
+                'color', plotspec{3})
         end
-        
-        % data
-        data = Tsim(Tsim.SOLVER == categorical(solver), :);
-        data = sortrows(data, 12, 'descend');
-        
-        % plot
-        plotspec = getfield(plotSpec, char(name));
-        
-        plot(...
-            const.T ./ data.TIME, ...
-            data.BALLERROR + data.BOXERROR, ...
-            plotspec{1}, ...
-            'DisplayName', plotspec{2}, ...
-            'color', plotspec{3})
+        % end of integrator
     end
     % end solvers
 end
@@ -346,10 +289,11 @@ hold off
 title(['Velocity Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
-legend('Location', 'eastoutside');
-saveas(h, strcat('plots/error-speed', fileName, '.png'))
-saveas(h, strcat('plots/error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('plots/error-speed', fileName, '.fig'), 'fig')
+lgd = legend('Location', 'northeast');
+lgd.NumColumns = 2;
+saveas(h, strcat('rolling-plots/error-speed', fileName, '.png'))
+saveas(h, strcat('rolling-plots/error-speed', fileName, '.eps'), 'epsc')
+saveas(h, strcat('rolling-plots/error-speed', fileName, '.fig'), 'fig')
 
 end
 
@@ -398,17 +342,17 @@ if eq(size(v), size(data))
     end
     
     % error plots
-%     h = figure('Name','ball errors');
-%     set(h, 'Visible', 'off');
-%     plot(error)
-%     hold on
-%     plot((v(:,1) - data(:,1)).^2)
-%     plot((v(:,2) - data(:,2)).^2)
-%     plot((v(:,3) - data(:,3)).^2)
-%     hold off
-%     title(strcat(options.sim, ' ', options.solver, ' ', num2str(options.dt)))
-%     legend('sum', 'x error sq', 'y error sq', 'z error sq')
-%     saveas(h, strcat(subplot_dir, options.sim, '_', options.solver, '_', num2str(options.dt), ".png"))
+    %     h = figure('Name','ball errors');
+    %     set(h, 'Visible', 'off');
+    %     plot(error)
+    %     hold on
+    %     plot((v(:,1) - data(:,1)).^2)
+    %     plot((v(:,2) - data(:,2)).^2)
+    %     plot((v(:,3) - data(:,3)).^2)
+    %     hold off
+    %     title(strcat(options.sim, ' ', options.solver, ' ', num2str(options.dt)))
+    %     legend('sum', 'x error sq', 'y error sq', 'z error sq')
+    %     saveas(h, strcat(subplot_dir, options.sim, '_', options.solver, '_', num2str(options.dt), ".png"))
 elseif abs(size(v, 1) - size(data, 1))
     minidx = min(size(v, 1), size(data, 1));
     error = sum((v(1:minidx, :) - data(1:minidx, :)).^2, 2);
@@ -420,17 +364,17 @@ elseif abs(size(v, 1) - size(data, 1))
     end
     
     % error plots
-%     h = figure('Name','ball errors');
-%     set(h, 'Visible', 'off');
-%     plot(error)
-%     hold on
-%     plot((v(1:minidx,1) - data(1:minidx,1)).^2)
-%     plot((v(1:minidx,2) - data(1:minidx,2)).^2)
-%     plot((v(1:minidx,3) - data(1:minidx,3)).^2)
-%     hold off
-%     title(strcat(options.sim, ' ', options.solver, ' ', num2str(options.dt)))
-%     legend('sum', 'x error sq', 'y error sq', 'z error sq')
-%     saveas(h, strcat(subplot_dir, options.sim, '_', options.solver, '_', num2str(options.dt), ".png"))
+    %     h = figure('Name','ball errors');
+    %     set(h, 'Visible', 'off');
+    %     plot(error)
+    %     hold on
+    %     plot((v(1:minidx,1) - data(1:minidx,1)).^2)
+    %     plot((v(1:minidx,2) - data(1:minidx,2)).^2)
+    %     plot((v(1:minidx,3) - data(1:minidx,3)).^2)
+    %     hold off
+    %     title(strcat(options.sim, ' ', options.solver, ' ', num2str(options.dt)))
+    %     legend('sum', 'x error sq', 'y error sq', 'z error sq')
+    %     saveas(h, strcat(subplot_dir, options.sim, '_', options.solver, '_', num2str(options.dt), ".png"))
 else
     % data size differs with analytical solution size
     error = {nan};

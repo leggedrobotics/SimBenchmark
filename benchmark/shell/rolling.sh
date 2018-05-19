@@ -12,44 +12,28 @@ echo "  / /_/ / / / / /   / /    / //  |/ / / __     / / / __/  \__ \ / /   "
 echo " / _, _/ /_/ / /___/ /____/ // /|  / /_/ /    / / / /___ ___/ // /    "
 echo "/_/ |_|\____/_____/_____/___/_/ |_/\____/    /_/ /_____//____//_/     "
 
+
+########################################################################################################################
+# select sims
+########################################################################################################################
+source selectsim.sh
+
+
+########################################################################################################################
+# test
+########################################################################################################################
+# dt_array=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" "0.1" )
+dt_array=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" )
+csv_file=$( date +"%Y-%m-%d-%H:%M:%S.csv" )
+
 echo ""
 echo "====================================================================="
-echo "The log file is saved in data/rolling directory"
-echo "====================================================================="
-
-
-# DT_ARRAY=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" "0.1" )
-DT_ARRAY=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" )
-
-# options
-raisim_flag='true'
-bullet_flag='false'
-ode_flag='false'
-mujoco_flag='false'
-dart_flag='false'
-
-# csv file name
-csv_file=$( date +"%Y-%m-%d-%H:%M:%S" )
-
-#while getopts 'rbom' flag; do
-#  case "${flag}" in
-#    r) raisim_flag='true'; echo "Test raisim" ;;
-#    b) bullet_flag='true'; echo "Test bullet" ;;
-#    o) ode_flag='true'; echo "Test ode" ;;
-#    m) mujoco_flag='true'; echo "Test mujoco" ;;
-#    *) error "Unexpected option ${flag}" ;;
-#  esac
-#done
-
-source sim.sh
-
-# benchmark test
-for dt in ${DT_ARRAY[@]}
+for dt in ${dt_array[@]}
 do
     for forcedir in xy y
     do
         # rai sim
-        if [ "$raisim_flag" == 'true' ]; then
+        if [ "$test_rai" == 'ON' ]; then
             if [ "$RAISIM_ON" == "ON" ]; then
                 for erpon in true false
                 do
@@ -62,7 +46,7 @@ do
         fi
 
         # bullet sim
-        if [ "$bullet_flag" == 'true' ]; then
+        if [ "$test_bt" == 'ON' ]; then
             if [ "$BTSIM_ON" == "ON" ]; then
                 for solver in seqimp nncg pgs dantzig #lemke
                 do
@@ -78,7 +62,7 @@ do
         fi
 
         # ode sim
-        if [ "$ode_flag" == 'true' ]; then
+        if [ "$test_ode" == 'ON' ]; then
             if [ "$ODESIM_ON" == "ON" ] ; then
                 for solver in std quick
                 do
@@ -94,13 +78,16 @@ do
         fi
 
         # mujoco sim
-        if [ "$mujoco_flag" == 'true' ]; then
+        if [ "$test_mjc" == 'ON' ]; then
             if [ "$MJCSIM_ON" == "ON" ] ; then
                 for solver in pgs cg newton
                 do
-                    # note mujoco has no erp
-                    timeout 600 ../sim/mujocoSim/benchmark/MjcRollingBenchmark \
-                    --nogui --dt=$dt --solver=$solver --force=$forcedir --log --csv=$csv_file
+                    for integrator in euler rk4
+                    do
+                        # note mujoco has no erp
+                        timeout 600 ../sim/mujocoSim/benchmark/MjcRollingBenchmark \
+                        --nogui --dt=$dt --solver=$solver --force=$forcedir --log --csv=$csv_file --integrator=$integrator
+                    done
                 done
             else
                 echo "mujocosim is not built. turn on BENCHMARK_MUJOCOSIM option in cmake"
@@ -108,7 +95,7 @@ do
         fi
 
         # dart sim
-        if [ "$dart_flag" == 'true' ]; then
+        if [ "$test_dart" == 'ON' ]; then
             if [ "$DARTSIM_ON" == "ON" ] ; then
                 for solver in dantzig pgs
                 do
@@ -122,3 +109,5 @@ do
         fi
     done
 done
+
+echo "Rolling test finished."
