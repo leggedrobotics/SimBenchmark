@@ -24,11 +24,17 @@ namespace po = boost::program_options;
 
 namespace benchmark::anymal::freedrop {
 
-// data lists
-std::vector<double> errorList;
+/**
+ * data for simulation
+ */
+struct Data {
+  std::vector<double> errorList;
+  std::vector<double> EList;
+};
+Data data;
 
 /**
- * options for ANYmal simulation
+ * options for simulation
  */
 struct Option: benchmark::Option {
   double dt = 0.005;  // timestep (sec)
@@ -37,7 +43,7 @@ struct Option: benchmark::Option {
 Option options;
 
 /**
- * parameter for ANYmal simulation
+ * parameter for simulation
  */
 struct Parameter {
 
@@ -191,9 +197,9 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
 }
 
 double computeMeanError() {
-  return std::accumulate(benchmark::anymal::freedrop::errorList.begin(),
-                         benchmark::anymal::freedrop::errorList.end(), 0.0)
-      / benchmark::anymal::freedrop::errorList.size();
+  return std::accumulate(benchmark::anymal::freedrop::data.errorList.begin(),
+                         benchmark::anymal::freedrop::data.errorList.end(), 0.0)
+      / benchmark::anymal::freedrop::data.errorList.size();
 }
 
 
@@ -253,23 +259,34 @@ void printCSV(std::string filePath,
 }
 
 void showPlot() {
-  int n = benchmark::anymal::freedrop::errorList.size();
-  Eigen::MatrixXd ydata(n, 1);
-  Eigen::MatrixXd xdata(n, 1);
+  int n = data.errorList.size();
+  Eigen::MatrixXd edata(n, 1);
+  Eigen::MatrixXd tdata(n, 1);
+  Eigen::MatrixXd Edata(n, 1);
 
   for(int i = 0; i < n; i++) {
-    xdata(i, 0) = i;
-    ydata(i, 0) = benchmark::anymal::freedrop::errorList[i];
+    tdata(i, 0) = i;
+    edata(i, 0) = data.errorList[i];
+    Edata(i, 0) = data.EList[i];
   }
 
   rai::Utils::Graph::FigProp2D figure1properties("step", "squared energy error", "energy error");
   rai::Utils::graph->figure(1, figure1properties);
   rai::Utils::graph->appendData(1,
-                                xdata.data(),
-                                ydata.data(),
+                                tdata.data(),
+                                edata.data(),
                                 n,
                                 "energy error");
   rai::Utils::graph->drawFigure(1);
+
+  rai::Utils::Graph::FigProp2D figure2properties("step", "energy", "energy");
+  rai::Utils::graph->figure(2, figure2properties);
+  rai::Utils::graph->appendData(2,
+                                tdata.data(),
+                                Edata.data(),
+                                n,
+                                "energy");
+  rai::Utils::graph->drawFigure(2);
   rai::Utils::graph->waitForEnter();
 }
 

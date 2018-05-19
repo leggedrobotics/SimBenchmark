@@ -27,46 +27,52 @@ enum SolverOption {
   SOLVER_NEWTON
 };
 
+enum IntegratorOption {
+  INTEGRATOR_EULER,
+  INTEGRATOR_RK4
+};
+
 class MjcWorld: public benchmark::WorldInterface {
 
  public:
   MjcWorld(const char *modelPath,
-          const char *keyPath,
-          SolverOption solverOption);
+           const char *keyPath,
+           SolverOption solver,
+           IntegratorOption integrator);
   virtual ~MjcWorld();
 
   /// note: use last two parameters as bodyId and geomId rather than collisionGroup and collisionMask
   object::MjcSphere *addSphere(double radius,
-                            double mass,
-                            int bodyId,
-                            int geomId) override ;
+                               double mass,
+                               int bodyId,
+                               int geomId) override ;
 
   object::MjcBox *addBox(double xLength,
-                      double yLength,
-                      double zLength,
-                      double mass,
-                      int bodyId,
-                      int geomId) override;
+                         double yLength,
+                         double zLength,
+                         double mass,
+                         int bodyId,
+                         int geomId) override;
 
   object::MjcCheckerBoard *addCheckerboard(double gridSize,
-                                        double xLength,
-                                        double yLength,
-                                        double reflectanceI,
-                                        bo::CheckerboardShape shape,
-                                        int bodyId,
-                                        int geomId) override;
+                                           double xLength,
+                                           double yLength,
+                                           double reflectanceI,
+                                           bo::CheckerboardShape shape,
+                                           int bodyId,
+                                           int geomId) override;
 
   object::MjcCapsule *addCapsule(double radius,
-                              double height,
-                              double mass,
-                              int bodyId,
-                              int geomId) override;
+                                 double height,
+                                 double mass,
+                                 int bodyId,
+                                 int geomId) override;
 
   object::MjcCylinder *addCylinder(double radius,
-                                double height,
-                                double mass,
-                                int bodyId,
-                                int geomId) override;
+                                   double height,
+                                   double mass,
+                                   int bodyId,
+                                   int geomId) override;
 
   void setGravity(const benchmark::Vec<3> &gravity) override ;
   void setNoSlipParameter(int maxIter);

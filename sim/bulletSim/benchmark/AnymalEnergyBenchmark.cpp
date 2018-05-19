@@ -72,7 +72,9 @@ double computeEnergyError(double E0) {
 double simulationLoop() {
 
   // error list
-  benchmark::anymal::freedrop::errorList.reserve(
+  benchmark::anymal::freedrop::data.errorList.reserve(
+      unsigned(benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt));
+  benchmark::anymal::freedrop::data.EList.reserve(
       unsigned(benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt));
 
   StopWatch watch;
@@ -105,7 +107,8 @@ double simulationLoop() {
                                        0, 0, 0,
                                        0, 0, 0,
                                        0, 0, 0});
-      benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
+      benchmark::anymal::freedrop::data.errorList.push_back(computeEnergyError(E0));
+      benchmark::anymal::freedrop::data.EList.push_back(computeEnergy());
       sim->integrate(benchmark::anymal::freedrop::options.dt);
     }
   } else {
@@ -133,7 +136,8 @@ double simulationLoop() {
                                        0, 0, 0,
                                        0, 0, 0,
                                        0, 0, 0});
-      benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
+      benchmark::anymal::freedrop::data.errorList.push_back(computeEnergyError(E0));
+      benchmark::anymal::freedrop::data.EList.push_back(computeEnergy());
       sim->integrate(benchmark::anymal::freedrop::options.dt);
     }
   }

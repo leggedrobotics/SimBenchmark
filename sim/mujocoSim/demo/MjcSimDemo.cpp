@@ -19,12 +19,11 @@ int main() {
 
   // load model from file and check for errors
   mujoco_sim::MjcWorld_RG sim(800,
-                           600,
-                           0.5,
-                           xmlPath.c_str(),
-                           keyPath.c_str(),
-                           benchmark::NO_BACKGROUND,
-                           mujoco_sim::SOLVER_NEWTON);
+                              600,
+                              0.5,
+                              xmlPath.c_str(),
+                              keyPath.c_str(),
+                              benchmark::NO_BACKGROUND);
   sim.cameraFollowObject(sim.getSingleBodyHandle(0), {10, 0, 5});
 
   // run simulation for 10 seconds

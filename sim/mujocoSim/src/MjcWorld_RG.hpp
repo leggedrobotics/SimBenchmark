@@ -19,17 +19,19 @@ class MjcWorld_RG: public benchmark::World_RG {
 
   /* constructor for visualization */
   MjcWorld_RG(int windowWidth,
-           int windowHeight,
-           float cms,
-           const char *modelPath,
-           const char *keyPath,
-           int flags,
-           mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS);
+              int windowHeight,
+              float cms,
+              const char *modelPath,
+              const char *keyPath,
+              int flags,
+              SolverOption solver = SOLVER_PGS,
+              IntegratorOption integrator = INTEGRATOR_EULER);
 
   /* constructor for no visualization */
   MjcWorld_RG(const char *modelPath,
-           const char *keyPath,
-           mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS);
+              const char *keyPath,
+              SolverOption solver = SOLVER_PGS,
+              IntegratorOption integrator = INTEGRATOR_EULER);
   virtual ~MjcWorld_RG();
 
   //////////////////////////

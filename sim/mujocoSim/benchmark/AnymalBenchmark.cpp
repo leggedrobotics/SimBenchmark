@@ -20,11 +20,13 @@ void setupSimulation() {
                                       benchmark::anymal::getMujocoURDFpath(numRow).c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
                                       benchmark::NO_BACKGROUND,
-                                      benchmark::mujoco::options.solverOption);
+                                      benchmark::mujoco::options.solverOption,
+                                      benchmark::mujoco::options.integratorOption);
   else
     sim = new mujoco_sim::MjcWorld_RG(benchmark::anymal::getMujocoURDFpath(numRow).c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
-                                      benchmark::mujoco::options.solverOption);
+                                      benchmark::mujoco::options.solverOption,
+                                      benchmark::mujoco::options.integratorOption);
 
   // no slip parameter
   if(benchmark::mujoco::options.noSlip)

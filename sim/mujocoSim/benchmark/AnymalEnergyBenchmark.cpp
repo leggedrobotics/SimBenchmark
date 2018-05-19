@@ -16,11 +16,13 @@ void setupSimulation() {
                                       benchmark::anymal::freedrop::getMujocoURDFpath().c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
                                       benchmark::NO_BACKGROUND,
-                                      benchmark::mujoco::options.solverOption);
+                                      benchmark::mujoco::options.solverOption,
+                                      benchmark::mujoco::options.integratorOption);
   else
     sim = new mujoco_sim::MjcWorld_RG(benchmark::anymal::freedrop::getMujocoURDFpath().c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
-                                      benchmark::mujoco::options.solverOption);
+                                      benchmark::mujoco::options.solverOption,
+                                      benchmark::mujoco::options.integratorOption);
 
   // set time step
   sim->setTimeStep(benchmark::anymal::freedrop::options.dt);
@@ -67,7 +69,9 @@ double computeEnergyError(double E0) {
 double simulationLoop() {
 
   // error list
-  benchmark::anymal::freedrop::errorList.reserve(
+  benchmark::anymal::freedrop::data.errorList.reserve(
+      unsigned(benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt));
+  benchmark::anymal::freedrop::data.EList.reserve(
       unsigned(benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt));
 
   StopWatch watch;
@@ -105,7 +109,8 @@ double simulationLoop() {
                                 0, 0, 0,
                                 0, 0, 0,
                                 0, 0, 0});
-      benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
+      benchmark::anymal::freedrop::data.errorList.push_back(computeEnergyError(E0));
+      benchmark::anymal::freedrop::data.EList.push_back(computeEnergy());
       sim->integrate2();
     }
 
@@ -137,7 +142,8 @@ double simulationLoop() {
                                 0, 0, 0,
                                 0, 0, 0,
                                 0, 0, 0});
-      benchmark::anymal::freedrop::errorList.push_back(computeEnergyError(E0));
+      benchmark::anymal::freedrop::data.errorList.push_back(computeEnergyError(E0));
+      benchmark::anymal::freedrop::data.EList.push_back(computeEnergy());
       sim->integrate2();
     }
   }

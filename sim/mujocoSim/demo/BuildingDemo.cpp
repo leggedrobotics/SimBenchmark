@@ -18,10 +18,8 @@ int main() {
   keyPath += "../../../lib/mjpro150/mjkey.txt";
 
   // sim
-  mujoco_sim::MjcWorld_RG sim(1280, 720, 0.1,
-                              urdfPath.c_str(),
-                              keyPath.c_str(),
-                              benchmark::NO_BACKGROUND);
+  mujoco_sim::MjcWorld_RG
+      sim(1280, 720, 0.1, urdfPath.c_str(), keyPath.c_str(), benchmark::NO_BACKGROUND);
 
   RAIINFO("number of blocks "<< sim.getNumObject()-1);
 

@@ -7,8 +7,9 @@
 namespace mujoco_sim {
 
 mujoco_sim::MjcWorld::MjcWorld(const char *modelPath,
-                         const char *keyPath,
-                         SolverOption solverOption) {
+                               const char *keyPath,
+                               SolverOption solver,
+                               IntegratorOption integrator) {
 
   // activate MuJoCo Pro
   mj_activate(keyPath);
@@ -23,7 +24,7 @@ mujoco_sim::MjcWorld::MjcWorld(const char *modelPath,
   }
 
   // set solver
-  switch (solverOption) {
+  switch (solver) {
     case SOLVER_PGS:
       worldModel_->opt.solver = mjSOL_PGS;
       break;
@@ -35,6 +36,18 @@ mujoco_sim::MjcWorld::MjcWorld(const char *modelPath,
       break;
     default:
       worldModel_->opt.solver = mjSOL_PGS;
+  }
+
+  // set integrator
+  switch (integrator) {
+    case INTEGRATOR_EULER:
+      worldModel_->opt.integrator = mjINT_EULER;
+      break;
+    case INTEGRATOR_RK4:
+      worldModel_->opt.integrator = mjINT_RK4;
+      break;
+    default:
+      worldModel_->opt.integrator = mjINT_EULER;
   }
 
   // make data corresponding to model

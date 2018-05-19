@@ -27,6 +27,9 @@ struct Option {
   mujoco_sim::SolverOption solverOption = mujoco_sim::SOLVER_PGS;
   std::string solverName = "PGS";
 
+  mujoco_sim::IntegratorOption integratorOption = mujoco_sim::INTEGRATOR_EULER;
+  std::string integratorName = "EULER";
+
   bool noSlip = false;
 };
 Option options;
@@ -49,6 +52,7 @@ std::string getKeypath() {
 void addDescToOption(po::options_description &desc) {
   desc.add_options()
       ("solver", po::value<std::string>(), "constraint solver type (pgs / cg / newton)")
+      ("integrator", po::value<std::string>(), "integrator type (euler / rk4)")
       ("noslip", "no-slip solver")
       ;
 }
@@ -65,7 +69,7 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
   po::variables_map vm;
   po::store(po::parse_command_line(argc, argv, desc), vm);
 
-  // help option
+  // solver option
   if(vm.count("solver")) {
     if(vm["solver"].as<std::string>().compare("pgs") == 0) {
       options.solverOption = mujoco_sim::SOLVER_PGS;
@@ -81,6 +85,21 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
     }
     else {
       RAIFATAL("invalid solver input")
+    }
+  }
+
+  // integrator
+  if(vm.count("integrator")) {
+    if(vm["integrator"].as<std::string>().compare("euler") == 0) {
+      options.integratorOption = mujoco_sim::INTEGRATOR_EULER;
+      options.integratorName = "EULER";
+    }
+    else if (vm["integrator"].as<std::string>().compare("rk4") == 0) {
+      options.integratorOption = mujoco_sim::INTEGRATOR_RK4;
+      options.integratorName = "RK4";
+    }
+    else {
+      RAIFATAL("invalid integrator input")
     }
   }
 

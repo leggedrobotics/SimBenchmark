@@ -1,7 +1,38 @@
 ---
 layout: default
 ---
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+
+
 <h1>What is RaiSim?</h1>
+
+<div class="row">
+    <div class="column">
+        <img src="anymal.gif">
+        <!--<figcaption>ANYmal PD control simulation (articulated robot system simulation)</figcaption>-->
+    </div>
+    <div class="column">
+        <img src="zerogravity.gif">
+        <!--<figcaption>Zero gravity demo (Single body objects collision simulation)</figcaption>-->
+    </div>
+</div>
 
 <p>
     RaiSim is a rigid body simulator developed by researchers at RSL, ETH Zurich (Jemin Hwangbo and Dongho Kang).
@@ -10,3 +41,7 @@ layout: default
     All the systems presented here are simulated with the default setup.
     RaiSim is currently unreleased and only the researchers at RSL, ETH Zurich have an access.
 </p>
+
+
+
+

@@ -24,12 +24,8 @@ int main(int argc, const char* argv[]) {
     keyPath.erase(keyPath.size() - 1, 1);
   keyPath += "../../../lib/mjpro150/mjkey.txt";
 
-  mujoco_sim::MjcWorld_RG sim(800,
-                              600,
-                              0.5,
-                              urdfPath.c_str(),
-                              keyPath.c_str(),
-                              benchmark::NO_BACKGROUND);
+  mujoco_sim::MjcWorld_RG
+      sim(800, 600, 0.5, urdfPath.c_str(), keyPath.c_str(), benchmark::NO_BACKGROUND);
   sim.cameraFollowObject(sim.getSingleBodyHandle(sim.getNumObject()-1), {1.0, 1.0, 1.0});
 
   /// no slip parameter should be set in order to make anymal stands

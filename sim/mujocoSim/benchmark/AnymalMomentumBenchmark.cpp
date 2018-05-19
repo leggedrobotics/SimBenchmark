@@ -16,11 +16,13 @@ void setupSimulation() {
                                       benchmark::anymal::zerogravity::getMujocoURDFpath().c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
                                       benchmark::NO_BACKGROUND,
-                                      benchmark::mujoco::options.solverOption);
+                                      benchmark::mujoco::options.solverOption,
+                                      benchmark::mujoco::options.integratorOption);
   else
     sim = new mujoco_sim::MjcWorld_RG(benchmark::anymal::zerogravity::getMujocoURDFpath().c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
-                                      benchmark::mujoco::options.solverOption);
+                                      benchmark::mujoco::options.solverOption,
+                                      benchmark::mujoco::options.integratorOption);
 
   // set time step
   sim->setTimeStep(benchmark::anymal::zerogravity::options.dt);

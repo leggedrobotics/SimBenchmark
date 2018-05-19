@@ -16,11 +16,13 @@ void setupSimulation() {
                                       benchmark::sixsixsix::getMujocoXMLpath().c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
                                       benchmark::NO_BACKGROUND,
-                                      benchmark::mujoco::options.solverOption);
+                                      benchmark::mujoco::options.solverOption,
+                                      benchmark::mujoco::options.integratorOption);
   else
     sim = new mujoco_sim::MjcWorld_RG(benchmark::sixsixsix::getMujocoXMLpath().c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
-                                      benchmark::mujoco::options.solverOption);
+                                      benchmark::mujoco::options.solverOption,
+                                      benchmark::mujoco::options.integratorOption);
 
   // timestep and max contact
   sim->setTimeStep(benchmark::sixsixsix::options.dt);

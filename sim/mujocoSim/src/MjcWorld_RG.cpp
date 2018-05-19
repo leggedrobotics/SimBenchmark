@@ -8,21 +8,23 @@
 #define MJC_MASS_FROM_XML -1
 
 mujoco_sim::MjcWorld_RG::MjcWorld_RG(int windowWidth,
-                               int windowHeight,
-                               float cms,
-                               const char *modelPath,
-                               const char *keyPath,
-                               int flags,
-                               mujoco_sim::SolverOption solverOption) :
-    world_(modelPath, keyPath, solverOption),
+                                     int windowHeight,
+                                     float cms,
+                                     const char *modelPath,
+                                     const char *keyPath,
+                                     int flags,
+                                     SolverOption solver,
+                                     IntegratorOption integrator) :
+    world_(modelPath, keyPath, solver, INTEGRATOR_RK4),
     benchmark::World_RG(windowWidth, windowHeight, cms, flags) {
   initFromModel();
 }
 
 mujoco_sim::MjcWorld_RG::MjcWorld_RG(const char *modelPath,
-                               const char *keyPath,
-                               mujoco_sim::SolverOption solverOption) :
-    world_(modelPath, keyPath, solverOption),
+                                     const char *keyPath,
+                                     SolverOption solver,
+                                     IntegratorOption integrator) :
+    world_(modelPath, keyPath, solver, INTEGRATOR_RK4),
     benchmark::World_RG() {
   initFromModel();
 }

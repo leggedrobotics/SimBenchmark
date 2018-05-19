@@ -23,8 +23,7 @@ int main() {
                               0.5,
                               xmlPath.c_str(),
                               keyPath.c_str(),
-                              benchmark::NO_BACKGROUND,
-                              mujoco_sim::SOLVER_PGS);
+                              benchmark::NO_BACKGROUND);
   sim.cameraFollowObject(sim.getSingleBodyHandle(0), {10, 0, 5});
 
   // run simulation for 10 seconds
