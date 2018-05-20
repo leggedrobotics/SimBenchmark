@@ -86,7 +86,7 @@ BtWorld::BtWorld(SolverOption solverOption) : solverOption_(solverOption) {
 //  dynamicsWorld_->getSolverInfo().m_minimumSolverBatchSize = 128; //try to combine islands until the amount of constraints reaches this limit
 //  dynamicsWorld_->getSolverInfo().m_singleAxisRollingFrictionThreshold = 1e30f;///if the velocity is above this threshold, it will use a single constraint row (axis), otherwise 3 rows.
 //  dynamicsWorld_->getSolverInfo().m_leastSquaresResidualThreshold = 0.f;
-//  dynamicsWorld_->getSolverInfo().m_restitutionVelocityThreshold = 0.2f;//if the relative velocity is below this threshold, there is zero restitution
+  dynamicsWorld_->getSolverInfo().m_restitutionVelocityThreshold = 0.0f;//if the relative velocity is below this threshold, there is zero restitution
 
 }
 

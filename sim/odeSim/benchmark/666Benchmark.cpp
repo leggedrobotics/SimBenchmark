@@ -211,6 +211,9 @@ int main(int argc, const char* argv[]) {
   setupWorld();
   simulationLoop();
 
+  if(benchmark::sixsixsix::options.plot)
+    benchmark::sixsixsix::showPlot();
+
   delete sim;
   return 0;
 

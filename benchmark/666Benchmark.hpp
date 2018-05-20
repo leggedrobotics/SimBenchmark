@@ -339,13 +339,13 @@ void showPlot() {
     Edata(i, 0) = energyList[i];
   }
 
-  rai::Utils::Graph::FigProp2D figure1properties("step", "squared energy error", "energy error");
+  rai::Utils::Graph::FigProp2D figure1properties("step", "squared penetration error", "penetration error");
   rai::Utils::graph->figure(1, figure1properties);
   rai::Utils::graph->appendData(1,
                                 tdata.data(),
                                 edata.data(),
                                 n,
-                                "energy error");
+                                "penetration error");
   rai::Utils::graph->drawFigure(1);
 
   if(options.elasticCollision) {

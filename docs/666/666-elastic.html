@@ -1,9 +1,34 @@
 ---
 layout: default
 ---
-<h1>666 test</h1>
+<style>
+    * {
+        box-sizing: border-box;
+    }
 
-<img src="666.gif" alt="666-test">
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+</style>
+
+<h1>Elastic 666 test</h1>
+
+<img src="666-elastic.gif" alt="666-elastic-test">
 
 <h2>Test scenario</h2>
 
@@ -31,14 +56,14 @@ layout: default
             <li>Standard</li>
         </ul>
     </li>
-    <li><strike>MuJoCo</strike><sup><a href="666-elastic.html#[1]">[1]</a></sup>
+    <li><strike>MuJoCo</strike><sup><a href="#[1]">[1]</a></sup>
         <strike><ul>
             <li>PGS</li>
             <li>CG</li>
             <li>Newton</li>
         </ul></strike>
     </li>
-    <li><strike>Dart</strike><sup><a href="666-elastic.html#[2]">[2]</a></sup>
+    <li><strike>Dart</strike><sup><a href="#[2]">[2]</a></sup>
         <strike><ul>
             <li>Dantzig</li>
             <li>PGS</li>
@@ -49,11 +74,11 @@ layout: default
 <h3>Commentary</h3>
 
 <ul>
-    <li>
-        <a id="[1]">[1] Elastic collision cannot be simulated in MuJoCo. See Bouncing test page for more details.</a>
+    <li id="[1]">
+        [1] Elastic collision cannot be simulated in MuJoCo. See <a href="../bouncing/bouncing.html">Bouncing test page</a> for more details.
     </li>
-    <li>
-        <a id="[2]">[2] Dart simulation fails in this test. The solver stopped with an error message and finally terminates with segmentation fault error.</a>
+    <li id="[2]">
+        [2] Dart simulation fails in this test. The solver stopped with an error message and finally terminates with segmentation fault error.
     </li>
 </ul>
 

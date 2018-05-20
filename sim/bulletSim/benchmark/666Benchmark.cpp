@@ -53,7 +53,7 @@ void setupWorld() {
         // set position
         double x =
             double(i) * benchmark::sixsixsix::params.gap
-                + rand.sampleUniform01() * benchmark::sixsixsix::params.perturbation;
+                + rand.sampleUniform01() * benchmark::sixsixsix::params.perturbation -0.6;
         double y =
             double(j) * benchmark::sixsixsix::params.gap
                 + rand.sampleUniform01() * benchmark::sixsixsix::params.perturbation;
@@ -96,7 +96,7 @@ void setupWorld() {
     sim->setLightPosition((float)benchmark::sixsixsix::params.lightPosition[0],
                           (float)benchmark::sixsixsix::params.lightPosition[1],
                           (float)benchmark::sixsixsix::params.lightPosition[2]);
-    sim->cameraFollowObject(objList[objList.size() / 2], {0, 5, 2});
+    sim->cameraFollowObject(checkerboard, {0, 5, 2});
   }
 }
 

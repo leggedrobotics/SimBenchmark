@@ -1,6 +1,31 @@
 ---
 layout: default
 ---
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+</style>
+
 <h1>666 test</h1>
 
 <img src="666.gif" alt="666-test">
@@ -38,7 +63,7 @@ layout: default
             <li>Newton</li>
         </ul>
     </li>
-    <li><strike>Dart</strike><sup>[1]</sup>
+    <li><strike>Dart</strike><sup><a href="#[1]">[1]</a></sup>
         <strike><ul>
             <li>Dantzig</li>
             <li>PGS</li>
@@ -49,7 +74,7 @@ layout: default
 <h3>Commentary</h3>
 
 <ul>
-    <li>
+    <li id="[1]">
         [1] Dart simulation fails in this test. The solver stopped with an error message and finally terminates with segmentation fault error.
     </li>
 </ul>
