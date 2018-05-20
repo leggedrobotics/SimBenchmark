@@ -76,7 +76,7 @@ do
     fi
 
     # mujoco sim
-     if [ "$test_mjc" == 'ON' ]; then
+    if [ "$test_mjc" == 'ON' ]; then
         echo "elastic 666 test is not available for mujoco."
     fi
 

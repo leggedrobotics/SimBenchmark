@@ -29,10 +29,18 @@ layout: default
 
 <h1>Bouncing test</h1>
 
-<img src="bouncing.gif" alt="bouncing-test">
+<img src="bouncing-elastic.gif" alt="bouncing-elastic-test">
 
 <h2>Test scenario</h2>
 
+<!--<div class="row">-->
+    <!--<div class="column">-->
+        <!--<img src="bouncing-elastic.gif" alt="bouncing-elastic-test" style="width:100%">-->
+    <!--</div>-->
+    <!--<div class="column">-->
+        <!--<img src="bouncing-inelastic.gif" alt="bouncing-test-mujoco-solref=0.38" style="width:100%">-->
+    <!--</div>-->
+<!--</div>-->
 
 <h2>Tested solver list</h2>
 
@@ -57,8 +65,8 @@ layout: default
             <li>Standard</li>
         </ul>
     </li>
-    <li><strike>MuJoCo
-        <ul>
+    <li><strike>MuJoCo</strike><sup><a href="">[1]</a></sup>
+        <strike><ul>
             <li>PGS</li>
             <li>CG</li>
             <li>Newton</li>
@@ -72,13 +80,24 @@ layout: default
     </li>
 </ul>
 
-<div class="row">
-    <div class="column">
-        <img src="bouncing-mujoco-solref=1.0.gif" alt="bouncing-test-mujoco-solref=1.0" style="width:100%">
-    </div>
-    <div class="column">
-        <img src="bouncing-mujoco-solref=0.38.gif" alt="bouncing-test-mujoco-solref=0.38" style="width:100%">
-    </div>
-</div>
+<h3>Commentary</h3>
+
+<ul>
+    <li id="[1]">
+        [1] MuJoCo cannot simulate elastic collision. Furthermore, it is not possible to set specific restitutional coefficient in MuJoCo. The only way to make bouncy contact is adjusting solref parameter (damping parameter), however there is no one-to-one correspondence between solref and restitutional coefficient.
+
+        <p>
+            <div class="row">
+                <div class="column">
+                    <img src="bouncing-mujoco-solref=1.0.gif" alt="bouncing-test-mujoco-solref=1.0" style="width:100%">
+                </div>
+                <div class="column">
+                    <img src="bouncing-mujoco-solref=0.38.gif" alt="bouncing-test-mujoco-solref=0.38" style="width:100%">
+                </div>
+            </div>
+        </p>
+    </li>
+</ul>
+
 
 <h2>Results</h2>

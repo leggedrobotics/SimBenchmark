@@ -27,6 +27,9 @@ struct Option: benchmark::Option {
 
   // restitution coefficient
   double e = 1.0;
+
+  // friction option
+  bool friction = false;
 };
 Option options;
 
@@ -46,12 +49,13 @@ struct Parameter {
 
   // simulation parameters
   double m = 10;              // mass of ball
-  int n = 1;                 // (num obj) = n x n
+  int n = 11;                 // (num obj) = n x n
   double H = 5;
   double R = 0.1;               // radius of ball
   double g = -9.81;
   double T = 20;
 
+  // only when friction is on (if not both are zero)
   double mu_ground = 0;
   double mu_ball = 0;
 
@@ -130,6 +134,7 @@ void addDescToOption(po::options_description &desc) {
       ("erp-on", po::value<bool>(), "erp on (true / false)")
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
       ("e", po::value<double>(), "restitution coefficient (0-1)")
+      ("friction", "non-zero friction")
       ;
 }
 
@@ -184,6 +189,11 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
     } else {
       options.erpYN = false;
     }
+  }
+
+  // friction
+  if(vm.count("friction")) {
+    options.friction = true;
   }
 }
 

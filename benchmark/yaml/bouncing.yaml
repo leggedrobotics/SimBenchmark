@@ -17,7 +17,8 @@ solver_params:
 # simulation constants
 constant:
   m: 10
-  n: 1                    # (num obj) = n x n
+  n: 11
+                      # (num obj) = n x n
   g: -9.81
   R: 0.1
   mu_ground: 0
