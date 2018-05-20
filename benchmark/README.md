@@ -1,12 +1,17 @@
 # Benchmark Test
 
-## Test list 
+## Tests
 
 - Rolling test
 - Bouncing test
 - 666 test
-- ANYmal test (PD control)
+- Elastic 666 test
+- ANYmal PD control test
+- ANYmal zero gravity test
+- ANYmal free drop test
 
-## Run sh script
+## Run bash script
+
+You can run benchmark test by bash script.
 
 ```bash <build-directory-path>/benchmark/<test-sh-file>```
