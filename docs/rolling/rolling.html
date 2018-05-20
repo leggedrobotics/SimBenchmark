@@ -38,16 +38,22 @@ layout: default
 
 <img src="rolling-scenario.png" alt="rolling-test-scenario">
 
+<p>
+The setup of the test is as follows:
 <ul>
     <li>static ground</li>
     <li>10 kg box on the ground</li>
     <li>25 number of 1 kg balls on the box</li>
-    <li>the friction coefficient</li>
-    <li>0.8 for ball-box pair</li>
-    <li>0.4 for box-ground pari</li>
-    <li>150 N force applied to box in the xy direction</li>
-    <li>no error correcting (ERP)</li>
+    <li>the friction coefficient
+      <ul>
+        <li>0.8 for ball-box pair</li>
+        <li>0.4 for box-ground pari</li>
+        <li>150 N force applied to box in the xy direction</li>
+      </ul>
+    </li>
+    <li>ERP = 0 and CFM = 0</li>
 </ul>
+</p>
 
 <h2>Tested solver list</h2>
 
@@ -67,6 +73,7 @@ layout: default
     </li>
     <li>ODE
         <ul>
+            <li><strike>Standard</strike></li>
             <li>Quick</li>
         </ul>
     </li>
@@ -90,6 +97,9 @@ layout: default
 <h2>Results</h2>
 
 <img src="rolling-error-speed.png" alt="rolling-test-error-plot">
+<p>
+  The accuracy of RaiSim is bound by the contact solver threshold. This hyperparameter was not tunned for this test.
+</p>
 
 <p>The pushing force resulted in no motion in ODE and Dart. However as the force is applied to y direction, the objects move. This is due to the pyramid shaped friction cone.</p>
 
@@ -114,7 +124,7 @@ layout: default
 </div>
 --->
 
-<p>The objects oscillates significantly in MuJoCo as the time step size increases. It leads to inaccurate solution.</p>
+<p>The objects oscillate significantly in MuJoCo as the time step size increases. It leads to an inaccurate solution.</p>
 
 <!---
 <div style="position:relative;padding-top:75%;">
@@ -125,7 +135,7 @@ layout: default
 
 <img src="rolling-mujoco-dt=0.04.gif" alt="rolling-test-mujoco">
 
-<p>Besides, Bullet and Rai are stable, accurate and fast as the following figure.</p>
+<p>Bullet and Rai are stable, accurate and fast as the following figure.</p>
 
 <img src="rolling-speed-bar.png" alt="rolling-test-speed-bar">
 

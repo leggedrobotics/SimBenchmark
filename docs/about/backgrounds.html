@@ -1,0 +1,72 @@
+<h1>Rigid Body Simulators and Contact Solvers</h1>
+
+<h2>RaiSim</h2>
+
+<hr>
+<h2>Bullet Physics</h2>
+
+Bullet Physics(Bullet) is physics engine developed by Erwin Coumans. It is one of the most commonly used simulator in computer games, computer graphics and robotics.
+Bullet is open-source subject to the terms of the zlib license.
+
+<h3>Sequence Impulse solver</h3>
+<h3>NNCG solver</h3>
+<h3>Multibody solver</h3>
+
+<hr>
+<h2>ODE</h2>
+
+The Open Dynamics Engine (ODE) is a free library for simulating articulated rigid body dynamics. Proven applications include simulating ground vehicles, legged creatures, and moving objects in VR environments. It is fast, flexible and robust, and has built-in collision detection. ODE is being developed by Russell Smith with help from several contributors.
+
+<h3>Standard solver</h3>
+<h3>Quick solver</h3>
+
+<hr>
+<h2>MuJoCo</h2>
+
+MuJoCo is a physics engine for robotics, biomechanics, graphics applications. It offers a unique combination of speed, accuracy and modeling power, yet it is not merely a better simulator. Instead it is the first full-featured simulator designed from the ground up for the purpose of model-based optimization, and in particular optimization through contacts. MuJoCo makes it possible to scale up computationally-intensive techniques such optimal control, physically-consistent state estimation, system identification and automated mechanism design, and apply them to complex dynamical systems in contact-rich behaviors. It also has more traditional applications such as testing and validation of control schemes before deployment on physical robots, interactive scientific visualization, virtual environments, animation and gaming.
+
+MuJoCo was developed by Emo Todorov for Roboti LLC. Initially it was used at the Movement Control Laboratory, University of Washington, and has more recently been adopted by the wider research community. Additional resources as well as support are available on the Forum. There is also extensive Documentation formatted as an online book.
+
+<h3>Projected Gauss Seidel solver</h3>
+<h3>CG solver</h3>
+<h3>Newton solver</h3>
+
+<hr>
+<h2>DART Sim</h2>
+
+DART (Dynamic Animation and Robotics Toolkit) is a collaborative, cross-platform, open source library created by the Graphics Lab and Humanoid Robotics Lab at Georgia Institute of Technology with ongoing contributions from the Personal Robotics Lab at University of Washington and Open Source Robotics Foundation. The library provides data structures and algorithms for kinematic and dynamic applications in robotics and computer animation. DART is distinguished by its accuracy and stability due to its use of generalized coordinates to represent articulated rigid body systems and Featherstone’s Articulated Body Algorithm to compute the dynamics of motion. For developers, in contrast to many popular physics engines which view the simulator as a black box, DART gives full access to internal kinematic and dynamic quantities, such as the mass matrix, Coriolis and centrifugal forces, transformation matrices and their derivatives. DART also provides an efficient computation of Jacobian matrices for arbitrary body points and coordinate frames. The frame semantics of DART allows users to define arbitrary reference frames (both inertial and non-inertial) and use those frames to specify or request data. For air-tight code safety, forward kinematics and dynamics values are updated automatically through lazy evaluation, making DART suitable for real-time controllers. In addition, DART provides flexibility to extend the API for embedding user-provided classes into DART data structures. Contacts and collisions are handled using an implicit time-stepping, velocity-based LCP (linear complementarity problem) to guarantee non-penetration, directional friction, and approximated Coulomb friction cone conditions. DART has applications in robotics and computer animation because it features a multibody dynamic simulator and various kinematic tools for control and motion planning.
+
+<h3>LCP Dantzig solver</h3>
+<h3>LCP PGS solver</h3>
+
+<hr>
+<h1>What is ERP and CFM?</h1>
+
+<p>
+  ERP stands for Error Reduction Parameter that fixes position error after one simulation step. RaiSim, ODE and Bullet supports ERP. As ERP is set to non-zero value, simulation attempts to fix the position drift by applying additional force. This prevents inevitable position drift from contact solvers. For example, as ERP set to non-zero value, the penetration error is significantly reduced as the following figure.
+</p>
+<p>
+  However, we set ERP to zero for most cases due to the following reasons:
+
+  <ul>
+    <li>Error correction algorithm is not based on physics and may lead to inaccurate simulation (plot1)</li>
+    <li>In the most benchmark tests, we focused on the solution from contact solver. Since error correcting is post-process, there's no means of using it in the benchmark tests.</li>
+  </ul>
+</p>
+
+<p>
+  CFM is the abbreviation of Constraint Force Mixing. If the CFM set to positive value, the hard-contact constraint is softened which means that the constraint is allowed to be violated in certain amount. This helps simulation to be more stable.
+</p>
+
+<p>
+  In our benchmark tests, CFM value was always set to zero since we investigates hard-contact constraint violation of each simulators.
+</p>
+
+<p>http://bulletphysics.org/mediawiki-1.5.8/index.php/Definitions<p/>
+
+<h2>References</h2>
+
+<ul>
+  <li>http://mujoco.org/</li>
+  <li>https://dartsim.github.io/</li>
+</ul>

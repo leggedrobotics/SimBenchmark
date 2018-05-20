@@ -80,9 +80,12 @@ do
         if [ "$MJCSIM_ON" == "ON" ] ; then
             for solver in pgs cg newton
             do
-                # note mujoco has no erp
-                timeout 600 ../sim/mujocoSim/benchmark/Mjc666Benchmark \
-                --nogui --dt=$dt --solver=$solver --csv=$csv_file
+                for integrator in euler rk4
+                do
+                    # note mujoco has no erp
+                    timeout 600 ../sim/mujocoSim/benchmark/Mjc666Benchmark \
+                    --nogui --dt=$dt --solver=$solver --csv=$csv_file --integrator=$integrator
+                done
             done
         else
             echo "mujocosim is not built. turn on BENCHMARK_MUJOCOSIM option in cmake"
