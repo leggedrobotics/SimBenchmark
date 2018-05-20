@@ -1,9 +1,42 @@
 ---
 layout: default
 ---
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+
 <h1>Rigid Body Simulators and Contact Solvers</h1>
 
 <h2>RaiSim</h2>
+
+<p>
+    RaiSim is a rigid body simulator developed by researchers at <a href="http://www.rsl.ethz.ch/">RSL, ETH Zurich</a> (Jemin Hwangbo and Dongho Kang).
+    RaiSim features efficient recursive algorithms for articulated systems as well as the new novel contact solver described in [1].
+    The goal of RaiSim project is to provide simulation for data-driven robotics and animation research. Since the robotics community needs quality data that reflects the reality, RaiSim is designed for uncompromising accuracy. It is also designed to be nearly tuning-free to ease the pain of manual parameter tuning.
+    All the systems presented here are simulated with the default setup.
+    RaiSim is currently unreleased and only the researchers at RSL, ETH Zurich have an access.
+</p>
+
+<hr>
+
+<ul>
+  <li>[1] Hwangbo, Jemin, Joonho Lee, and Marco Hutter. "Per-Contact Iteration Method for Solving Contact Dynamics." IEEE Robotics and Automation Letters (2018).
+</ul>
 
 <hr>
 <h2>Bullet Physics</h2>
