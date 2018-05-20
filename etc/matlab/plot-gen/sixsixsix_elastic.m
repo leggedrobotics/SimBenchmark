@@ -6,7 +6,7 @@ addpath(genpath('../lib/yamlmatlab'))
 
 % data path
 data_dir = '../../../data/666/';
-file_name = 'sample.csv';
+file_name = 'sample-elastic.csv';
 
 % yaml path
 yaml_path = '../../../benchmark/yaml/666.yaml';
@@ -58,6 +58,9 @@ plotSpec = plotspec;
 erpN = plotoption;
 erpN.DARTDANTZIGDART = false;
 erpN.DARTPGSDART = false;
+erpN.MUJOCOCGEULER = false;
+erpN.MUJOCONEWTONEULER = false;
+erpN.MUJOCOPGSEULER = false;
 erpN.MUJOCOCGRK4 = false;
 erpN.MUJOCONEWTONRK4 = false;
 erpN.MUJOCOPGSRK4 = false;
@@ -65,14 +68,17 @@ erpN.MUJOCOPGSRK4 = false;
 erpY = plotoption;
 erpY.DARTDANTZIGDART = false;
 erpY.DARTPGSDART = false;
+erpY.MUJOCOCGEULER = false;
+erpY.MUJOCONEWTONEULER = false;
+erpY.MUJOCOPGSEULER = false;
 erpY.MUJOCOCGRK4 = false;
 erpY.MUJOCONEWTONRK4 = false;
 erpY.MUJOCOPGSRK4 = false;
 
-% error plot vs dt
-disp('plotting penetration error vs real-time-factor...')
-plot_error_speed(T, const, plotSpec, false, false, '-noerp', '(No ERP)', erpN);
-plot_error_speed(T, const, plotSpec, true, false, '-erp', '(ERP)', erpY);
+% error energy plot (only for elastic collision)
+disp('plotting energy error vs real-time-factor...')
+plot_error_speed(T, const, plotSpec, false, '-noerp', '(No ERP)', erpN)
+plot_error_speed(T, const, plotSpec, true, '-erp', '(ERP)', erpY)
 
 %% bar plot (for min dt)
 T2 = T(T.ERP == false & isnan(T.ENERGYERROR), :);
@@ -110,18 +116,18 @@ text(1:length(speed), ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
 ylim([0, 16])
-saveas(h, strcat('plots/rollingbar.png'))
-saveas(h, strcat('plots/rollingbar.eps'), 'epsc')
-saveas(h, strcat('plots/rollingbar.fig'), 'fig')
+saveas(h, strcat('666-plots/rollingbar.png'))
+saveas(h, strcat('666-plots/rollingbar.eps'), 'epsc')
+saveas(h, strcat('666-plots/rollingbar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function plot_error_speed(dataTable, const, plotSpec, erpYN, elastic, fileName, plotTitle, plotOption)
+function plot_error_speed(dataTable, const, plotSpec, erpYN, fileName, plotTitle, plotOption)
 
 % filter
 dataTable = dataTable(...
-    dataTable.ERP == erpYN & dataTable.ELASTIC == elastic, :);
+    dataTable.ERP == erpYN & dataTable.ELASTIC == true, :);
 
 % ball + box
 sims = unique(dataTable.SIM);
@@ -164,7 +170,7 @@ for i = 1:length(sims)
             
             plot(...
                 const.T ./ data.TIME, ...
-                data.PENETRATION, ...
+                data.ENERGYERROR, ...
                 plotspec{1}, ...
                 'DisplayName', plotspec{2}, ...
                 'color', plotspec{3}, ...
@@ -176,14 +182,16 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title(['Penetration Error ', plotTitle])
+title(['Energy Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
-xlim([1e-2 10^2.5])
+% xlim([10^-1.5 10^2.5])
+% ylim([10^-4 10^9])
+% legend('Location', 'eastoutside');
 legend('Location', 'northeast');
-saveas(h, strcat('666-plots/error-speed', fileName, '.png'))
-saveas(h, strcat('666-plots/error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('666-plots/error-speed', fileName, '.fig'), 'fig')
+saveas(h, strcat('666-plots/energy-error-speed', fileName, '.png'))
+saveas(h, strcat('666-plots/energy-error-speed', fileName, '.eps'), 'epsc')
+saveas(h, strcat('666-plots/energy-error-speed', fileName, '.fig'), 'fig')
 
 end
 

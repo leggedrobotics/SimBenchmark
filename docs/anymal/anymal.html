@@ -73,40 +73,22 @@ The test focuses on:
     </li>
 </ul>
 
-<p>Commentary:
+<h3>Commentary</h3>
 <ul>
-    <li>[1] ODE quick solver easily fails for articulated system simulation as the following video, thus was exempted.</li>
-    <li>[2] MuJoCo no slip solver.</li>
-</ul>
-</p>
+    <li>
+        [1] ODE quick solver fails as shown in the following video, and was exempted. According to the manual this is due to the solver's property:
+        <blockquote>
+            <p>QuickStep is great for stacks of objects especially when the auto-disable feature is used as well. However, it has poor accuracy for near-singular systems. Near-singular systems can occur when using high-friction contacts, motors, or certain articulated structures. For example, a robot with multiple legs sitting on the ground may be near-singular.</p>
 
-
-<!---
-<div style="position:relative;padding-top:75%;">
-    <iframe src="https://www.youtube.com/embed/X0lYN7bzoNk?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen
- style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
-</div>
---->
-
-<div class="row">
-    <div class="column">
+            <i>from <a href="https://www.ode-wiki.org/wiki/index.php?title=Manual:_World">ODE wiki</a></i>
+        </blockquote>
         <img alt="anymal-test-ode-fail" src="anymal-ode-quicksolver-fail.gif">
-    </div>
-    <div class="column">
+    </li>
+    <li>
+        [2] MuJoCo no slip solver.
         <img alt="anymal-test-mujoco-slip" src="anymal-mujoco-slip.gif">
-    </div>
-</div>
-
-
-<p>
-    According to the manual this is due to the solver's property:
-
-<blockquote>
-    <p>QuickStep is great for stacks of objects especially when the auto-disable feature is used as well. However, it has poor accuracy for near-singular systems. Near-singular systems can occur when using high-friction contacts, motors, or certain articulated structures. For example, a robot with multiple legs sitting on the ground may be near-singular.</p>
-
-    <i>from <a href="https://www.ode-wiki.org/wiki/index.php?title=Manual:_World">ODE wiki</a></i>
-</blockquote>
-</p>
+    </li>
+</ul>
 
 
 

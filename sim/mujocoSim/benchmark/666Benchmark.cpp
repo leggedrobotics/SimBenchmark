@@ -157,6 +157,9 @@ int main(int argc, const char* argv[]) {
   benchmark::sixsixsix::getParamsFromYAML(benchmark::sixsixsix::getYamlpath().c_str(),
                                          benchmark::MUJOCO);
 
+  if(benchmark::sixsixsix::options.elasticCollision)
+    RAIFATAL("Elastic 666 test is not available for MUJOCO")
+
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: MUJOCO" << std::endl
@@ -170,6 +173,9 @@ int main(int argc, const char* argv[]) {
   setupSimulation();
   setupWorld();
   simulationLoop();
+
+  if(benchmark::sixsixsix::options.plot)
+    benchmark::sixsixsix::showPlot();
 
   delete sim;
   return 0;

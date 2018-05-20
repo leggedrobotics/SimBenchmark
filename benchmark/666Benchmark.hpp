@@ -135,6 +135,7 @@ void addDescToOption(po::options_description &desc) {
       ("erp-on", po::value<bool>(), "erp on (true / false)")
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
       ("T", po::value<double>(), "simulation time (e.g. 15)")
+      ("plot", "plot energy and pen error")
       ("elastic", "if elastic collision")
     ;
 }
@@ -196,6 +197,11 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   // elastic collision
   if(vm.count("elastic")) {
     options.elasticCollision = true;
+  }
+
+  // plot
+  if(vm.count("plot")) {
+    options.plot = true;
   }
 }
 
@@ -319,6 +325,41 @@ void printCSV(std::string filePath,
         << std::endl;
 
   myfile.close();
+}
+
+void showPlot() {
+  int n = errorList.size();
+  Eigen::MatrixXd edata(n, 1);
+  Eigen::MatrixXd tdata(n, 1);
+  Eigen::MatrixXd Edata(n, 1);
+
+  for(int i = 0; i < n; i++) {
+    tdata(i, 0) = i;
+    edata(i, 0) = errorList[i];
+    Edata(i, 0) = energyList[i];
+  }
+
+  rai::Utils::Graph::FigProp2D figure1properties("step", "squared energy error", "energy error");
+  rai::Utils::graph->figure(1, figure1properties);
+  rai::Utils::graph->appendData(1,
+                                tdata.data(),
+                                edata.data(),
+                                n,
+                                "energy error");
+  rai::Utils::graph->drawFigure(1);
+
+  if(options.elasticCollision) {
+    rai::Utils::Graph::FigProp2D figure2properties("step", "energy", "energy");
+    rai::Utils::graph->figure(2, figure2properties);
+    rai::Utils::graph->appendData(2,
+                                  tdata.data(),
+                                  Edata.data(),
+                                  n,
+                                  "energy");
+    rai::Utils::graph->drawFigure(2);
+  }
+
+  rai::Utils::graph->waitForEnter();
 }
 
 } // benchmark::sixsixsix

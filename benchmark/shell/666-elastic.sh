@@ -77,19 +77,7 @@ do
 
     # mujoco sim
      if [ "$test_mjc" == 'ON' ]; then
-        if [ "$MJCSIM_ON" == "ON" ] ; then
-            for solver in pgs cg newton
-            do
-                for integrator in euler rk4
-                do
-                    # note mujoco has no erp
-                    timeout 600 ../sim/mujocoSim/benchmark/Mjc666Benchmark \
-                    --nogui --dt=$dt --solver=$solver --csv=$csv_file --elastic --integrator=$integrator
-                done
-            done
-        else
-            echo "mujocosim is not built. turn on BENCHMARK_MUJOCOSIM option in cmake"
-        fi
+        echo "elastic 666 test is not available for mujoco."
     fi
 
     # dart sim

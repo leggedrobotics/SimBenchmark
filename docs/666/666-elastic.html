@@ -31,14 +31,14 @@ layout: default
             <li>Standard</li>
         </ul>
     </li>
-    <li>MuJoCo
-        <ul>
+    <li><strike>MuJoCo</strike><sup><a href="666-elastic.html#[1]">[1]</a></sup>
+        <strike><ul>
             <li>PGS</li>
             <li>CG</li>
             <li>Newton</li>
-        </ul>
+        </ul></strike>
     </li>
-    <li><strike>Dart</strike><sup>[1]</sup>
+    <li><strike>Dart</strike><sup><a href="666-elastic.html#[2]">[2]</a></sup>
         <strike><ul>
             <li>Dantzig</li>
             <li>PGS</li>
@@ -50,14 +50,12 @@ layout: default
 
 <ul>
     <li>
-        [1] Dart simulation fails in this test. The solver stopped with an error message and finally terminates with segmentation fault error.
+        <a id="[1]">[1] Elastic collision cannot be simulated in MuJoCo. See Bouncing test page for more details.</a>
+    </li>
+    <li>
+        <a id="[2]">[2] Dart simulation fails in this test. The solver stopped with an error message and finally terminates with segmentation fault error.</a>
     </li>
 </ul>
 
 
-
 <h2>Results</h2>
-
-<img src="666-mujoco-dt=0.01.gif" alt="666-test-mujoco">
-
-<img src="666-error-speed.png" alt="666-error-speed">
