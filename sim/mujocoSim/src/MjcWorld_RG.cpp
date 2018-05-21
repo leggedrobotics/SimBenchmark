@@ -15,7 +15,7 @@ mujoco_sim::MjcWorld_RG::MjcWorld_RG(int windowWidth,
                                      int flags,
                                      SolverOption solver,
                                      IntegratorOption integrator) :
-    world_(modelPath, keyPath, solver, INTEGRATOR_RK4),
+    world_(modelPath, keyPath, solver, integrator),
     benchmark::World_RG(windowWidth, windowHeight, cms, flags) {
   initFromModel();
 }
@@ -24,7 +24,7 @@ mujoco_sim::MjcWorld_RG::MjcWorld_RG(const char *modelPath,
                                      const char *keyPath,
                                      SolverOption solver,
                                      IntegratorOption integrator) :
-    world_(modelPath, keyPath, solver, INTEGRATOR_RK4),
+    world_(modelPath, keyPath, solver, integrator),
     benchmark::World_RG() {
   initFromModel();
 }

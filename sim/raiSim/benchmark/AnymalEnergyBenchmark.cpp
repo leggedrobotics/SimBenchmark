@@ -39,6 +39,11 @@ void setupWorld() {
                                     -0.03, -0.4, 0.8});
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
+  // color
+  for(int i = 0; i < anymal.visual().size(); i++) {
+    anymal.visual()[i]->setColor({0.5373, 0.6471, 0.3059});
+  }
+
   // gravity
   sim->setGravity({0, 0, benchmark::anymal::freedrop::params.g});
 
@@ -148,11 +153,12 @@ double simulationLoop() {
 
   double time = watch.measure();
   if(benchmark::anymal::freedrop::options.csv)
-    benchmark::anymal::freedrop::printCSV(
-        benchmark::anymal::freedrop::getCSVpath(),
-        "RAI",
-        "RAI",
-        time);
+    benchmark::anymal::freedrop::printCSV(benchmark::anymal::freedrop::getCSVpath(),
+                                          "RAI",
+                                          "RAI",
+                                          "RAI",
+                                          "RAI",
+                                          time);
   return time;
 }
 

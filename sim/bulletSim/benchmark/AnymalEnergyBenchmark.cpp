@@ -144,11 +144,12 @@ double simulationLoop() {
 
   double time = watch.measure();
   if(benchmark::anymal::freedrop::options.csv)
-    benchmark::anymal::freedrop::printCSV(
-        benchmark::anymal::freedrop::getCSVpath(),
-        benchmark::bullet::options.simName,
-        "MULTIBODY",
-        time);
+    benchmark::anymal::freedrop::printCSV(benchmark::anymal::freedrop::getCSVpath(),
+                                          benchmark::bullet::options.simName,
+                                          "MULTIBODY",
+                                          "BULLET",
+                                          "BULLET",
+                                          time);
   return time;
 }
 

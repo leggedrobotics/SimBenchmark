@@ -7,6 +7,7 @@
 
 #include <raiCommon/rai_utils.hpp>
 #include <boost/program_options.hpp>
+#include <yaml-cpp/yaml.h>
 
 #include "BenchmarkTest.hpp"
 
@@ -38,6 +39,9 @@ Option options;
  * parameter for ANYmal simulation
  */
 struct Parameter {
+  // sim properties
+  double lightPosition[3] = {30.0, 0, 10.0};
+
   double T = 10;      // simulation time (sec)
   double H = 2;
   double x0 = -5;
@@ -177,14 +181,61 @@ double computeMeanError() {
       / benchmark::anymal::zerogravity::errorList.size();
 }
 
+/**
+ * get params from YAML
+ *
+ * @param yamlfile
+ */
+void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
+  /// parameters from yaml
+  YAML::Node yaml = YAML::LoadFile(yamlfile);
+
+  // sim properties
+  YAML::Node props = yaml["sim_properties"];
+  params.lightPosition[0] = props["light_position"].as<std::vector<double>>()[0];
+  params.lightPosition[1] = props["light_position"].as<std::vector<double>>()[1];
+  params.lightPosition[2] = props["light_position"].as<std::vector<double>>()[2];
+
+  // simulation constants
+  YAML::Node constant = yaml["constant"];
+  params.g = constant["g"].as<double>();
+  params.H = constant["H"].as<double>();
+  params.T = constant["T"].as<double>();
+  params.x0 = constant["x0"].as<double>();
+  params.v0 = constant["v0"].as<double>();
+  params.m = constant["m"].as<double>();
+
+  // solver parameters
+  YAML::Node solver_params = yaml["solver_params"];
+
+  switch (simulator) {
+    case benchmark::RAI:
+      break;
+    case benchmark::BULLET:
+      break;
+    case benchmark::ODE:
+      break;
+    case benchmark::MUJOCO:
+      break;
+    case benchmark::DART:
+      break;
+    default:
+    RAIFATAL("invalid simulator value")
+  }
+}
+
 void printCSV(std::string filePath,
               std::string sim,
               std::string solver,
+              std::string detector,
+              std::string integrator,
               double time) {
   std::ofstream myfile;
   myfile.open (filePath, std::ios_base::app);
   myfile << sim << ","
          << solver << ","
+         << detector << ","
+         << integrator << ","
          << options.dt << ","
          << computeMeanError() << ","
          << time << std::endl;

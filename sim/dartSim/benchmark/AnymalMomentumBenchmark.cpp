@@ -103,11 +103,12 @@ double simulationLoop() {
 
   double time = watch.measure();
   if(benchmark::anymal::zerogravity::options.csv)
-    benchmark::anymal::zerogravity::printCSV(
-        benchmark::anymal::zerogravity::getCSVpath(),
-        benchmark::dart::options.simName,
-        benchmark::dart::options.solverName,
-        time);
+    benchmark::anymal::zerogravity::printCSV(benchmark::anymal::zerogravity::getCSVpath(),
+                                             benchmark::dart::options.simName,
+                                             benchmark::dart::options.solverName,
+                                             benchmark::dart::options.detectorName,
+                                             benchmark::dart::options.integratorName,
+                                             time);
   return time;
 }
 

@@ -149,11 +149,12 @@ double simulationLoop() {
 
   double time = watch.measure();
   if(benchmark::anymal::freedrop::options.csv)
-    benchmark::anymal::freedrop::printCSV(
-        benchmark::anymal::freedrop::getCSVpath(),
-        benchmark::ode::options.simName,
-        benchmark::ode::options.solverName,
-        time);
+    benchmark::anymal::freedrop::printCSV(benchmark::anymal::freedrop::getCSVpath(),
+                                          benchmark::ode::options.simName,
+                                          benchmark::ode::options.solverName,
+                                          benchmark::ode::options.detectorName,
+                                          benchmark::ode::options.integratorName,
+                                          time);
   return time;
 }
 

@@ -111,11 +111,12 @@ double simulationLoop() {
 
   double time = watch.measure();
   if(benchmark::anymal::zerogravity::options.csv)
-    benchmark::anymal::zerogravity::printCSV(
-        benchmark::anymal::zerogravity::getCSVpath(),
-        benchmark::bullet::options.simName,
-        benchmark::bullet::options.solverName,
-        time);
+    benchmark::anymal::zerogravity::printCSV(benchmark::anymal::zerogravity::getCSVpath(),
+                                             benchmark::bullet::options.simName,
+                                             "MULTIBODY",
+                                             "BULLET",
+                                             "BULLET",
+                                             time);
   return time;
 }
 

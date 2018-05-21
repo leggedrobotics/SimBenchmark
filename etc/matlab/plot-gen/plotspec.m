@@ -15,9 +15,9 @@ classdef plotspec
         MUJOCOPGSEULER =                {'-s', 'MjcPGS',       [69, 114, 167] ./ 255};
         MUJOCOCGEULER =                 {'-*', 'MjcCG',        [69, 114, 167] ./ 255};
         MUJOCONEWTONEULER =             {'-o', 'MjcNewton',    [69, 114, 167] ./ 255};
-        MUJOCOPGSRK4 =                  {'-d', 'MjcPGS-RK4',       [69, 114, 167] ./ 255};
-        MUJOCOCGRK4 =                   {'-p', 'MjcCG-RK4',        [69, 114, 167] ./ 255};
-        MUJOCONEWTONRK4 =               {'-h', 'MjcNewton-RK4',    [69, 114, 167] ./ 255};
+        MUJOCOPGSRK4 =                  {':d', 'MjcPGS-RK4',       [69, 114, 167] ./ 255};
+        MUJOCOCGRK4 =                   {':p', 'MjcCG-RK4',        [69, 114, 167] ./ 255};
+        MUJOCONEWTONRK4 =               {':h', 'MjcNewton-RK4',    [69, 114, 167] ./ 255};
         DARTDANTZIGDART =               {'-o', 'DartDantzig',  [128, 105, 155] ./ 255};
         DARTPGSDART =                   {'-*', 'DartPGS',      [128, 105, 155] ./ 255};
     end

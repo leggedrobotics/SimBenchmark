@@ -97,3 +97,5 @@ do
         fi
     done
 done
+
+echo "Bouncing test is finished."

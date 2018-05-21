@@ -16,7 +16,10 @@ file(COPY shell/bouncing.sh
 file(COPY shell/666-elastic.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-file(COPY shell/zeroG.sh
+file(COPY shell/zero-gravity.sh
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+file(COPY shell/freedrop.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 file(COPY shell/selectsim.sh

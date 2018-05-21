@@ -100,9 +100,10 @@ double simulationLoop() {
     for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor); t++) {
 
-      sim->integrate1();
+      sim->forwardKinematics();
       if(t == 0)
         E0 = computeEnergy();
+
       sim->setGeneralizedForce({0, 0, 0,
                                 0, 0, 0,
                                 0, 0, 0,
@@ -111,7 +112,7 @@ double simulationLoop() {
                                 0, 0, 0});
       benchmark::anymal::freedrop::data.errorList.push_back(computeEnergyError(E0));
       benchmark::anymal::freedrop::data.EList.push_back(computeEnergy());
-      sim->integrate2();
+      sim->integrate();
     }
 
     if(benchmark::anymal::freedrop::options.saveVideo)
@@ -126,6 +127,7 @@ double simulationLoop() {
                                 0, 0, 0,
                                 0, 0, 0,
                                 0, 0, 0,
+                                0, 0, 0,
                                 0, 0, 0});
       sim->integrate2();
     }
@@ -134,27 +136,29 @@ double simulationLoop() {
     double E0 = 0;
     for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T1 / benchmark::anymal::freedrop::options.dt); t++) {
 
-      sim->integrate1();
+      sim->forwardKinematics();
       if(t == 0)
         E0 = computeEnergy();
       sim->setGeneralizedForce({0, 0, 0,
                                 0, 0, 0,
                                 0, 0, 0,
                                 0, 0, 0,
+                                0, 0, 0,
                                 0, 0, 0});
       benchmark::anymal::freedrop::data.errorList.push_back(computeEnergyError(E0));
       benchmark::anymal::freedrop::data.EList.push_back(computeEnergy());
-      sim->integrate2();
+      sim->integrate();
     }
   }
 
   double time = watch.measure();
   if(benchmark::anymal::freedrop::options.csv)
-    benchmark::anymal::freedrop::printCSV(
-        benchmark::anymal::freedrop::getCSVpath(),
-        benchmark::mujoco::options.simName,
-        benchmark::mujoco::options.solverName,
-        time);
+    benchmark::anymal::freedrop::printCSV(benchmark::anymal::freedrop::getCSVpath(),
+                                          benchmark::mujoco::options.simName,
+                                          benchmark::mujoco::options.solverName,
+                                          benchmark::mujoco::options.detectorName,
+                                          benchmark::mujoco::options.integratorName,
+                                          time);
   return time;
 }
 

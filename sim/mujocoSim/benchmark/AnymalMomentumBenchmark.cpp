@@ -86,13 +86,14 @@ double simulationLoop() {
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt, 1.0); t++) {
 
-      sim->integrate1();
+      sim->forwardKinematics();
       benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
-      sim->integrate2();
+      sim->integrate();
     }
   } else {
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); t++) {
-      sim->integrate1();
+
+      sim->forwardKinematics();
       benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
       sim->integrate2();
     }
@@ -100,11 +101,12 @@ double simulationLoop() {
 
   double time = watch.measure();
   if(benchmark::anymal::zerogravity::options.csv)
-    benchmark::anymal::zerogravity::printCSV(
-        benchmark::anymal::zerogravity::getCSVpath(),
-        benchmark::mujoco::options.simName,
-        benchmark::mujoco::options.solverName,
-        time);
+    benchmark::anymal::zerogravity::printCSV(benchmark::anymal::zerogravity::getCSVpath(),
+                                             benchmark::mujoco::options.simName,
+                                             benchmark::mujoco::options.solverName,
+                                             benchmark::mujoco::options.detectorName,
+                                             benchmark::mujoco::options.integratorName,
+                                             time);
   return time;
 }
 

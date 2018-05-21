@@ -126,7 +126,7 @@ std::string getCSVpath() {
   while (csvPath.back() != '/')
     csvPath.erase(csvPath.size() - 1, 1);
 
-  csvPath += "../data/anymal-feedrop/" + options.csvName;
+  csvPath += "../data/anymal-freedrop/" + options.csvName;
 
   return csvPath;
 }
@@ -247,11 +247,15 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
 void printCSV(std::string filePath,
               std::string sim,
               std::string solver,
+              std::string detector,
+              std::string integrator,
               double time) {
   std::ofstream myfile;
   myfile.open (filePath, std::ios_base::app);
   myfile << sim << ","
          << solver << ","
+         << detector << ","
+         << integrator << ","
          << options.dt << ","
          << computeMeanError() << ","
          << time << std::endl;

@@ -105,11 +105,12 @@ double simulationLoop() {
 
   double time = watch.measure();
   if(benchmark::anymal::zerogravity::options.csv)
-    benchmark::anymal::zerogravity::printCSV(
-        benchmark::anymal::zerogravity::getCSVpath(),
-        "RAI",
-        "RAI",
-        time);
+    benchmark::anymal::zerogravity::printCSV(benchmark::anymal::zerogravity::getCSVpath(),
+                                             "RAI",
+                                             "RAI",
+                                             "RAI",
+                                             "RAI",
+                                             time);
   return time;
 }
 
