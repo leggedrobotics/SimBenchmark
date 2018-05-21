@@ -3,6 +3,20 @@ layout: default
 ---
 <h1>Methodology</h1>
 
+<h2>Tests and Metric</h2>
+
+<p>
+  We are focusing on velocity, position, energy and momentum drift of rigid body objects. Specifically, we investigates the accuracy of the contact solvers and integrators in the terms of position/velocity drift and momentum/energy conservation.
+  For single rigid body object, we compared the simulation with analytical solutions when they are applicable. For an example, an analytical solution of Rolling test is obtained by solving Newton dynamics and the velocity error of simulation was computed.
+  Besides, for more complex systems such as many objects or articulated robotic systems it is not possible to get analytical solution thus we investigates if the system preserve energy, and momentum since these quantities affect to stability of the simulation.
+</p>
+
+<p>
+  The numerical error of constraint solvers and integrators are rely on time-step and the number of iterations. For the iterative solvers, accuracy is typically improved as the number of the iteration is increased. A numerical integrator of order n has error proportional to h<sup>n</sup>.
+  Therefore we considered speed-accuracy trade-off as it is proposed in <a href="#[1]">[1]</a>. The better simulator is positioned in upper-right side of accuracy-speed plot.
+</p>
+
+<hr>
 <h2>What is ERP and CFM?</h2>
 
 <p>
@@ -26,3 +40,20 @@ layout: default
 </p>
 
 <p>http://bulletphysics.org/mediawiki-1.5.8/index.php/Definitions<p/>
+
+<hr>
+<h2>Test Machine</h2>
+
+<ul>
+<li>Intel Core i7-7700HQ CPU @ 2.80 GHz processor</li>
+<li>15.4 GiB memory</li>
+<li>Ubuntu 16.04 LTS 64-bit</li>
+</ul>
+
+
+<hr>
+<h2>References</h2>
+
+<ul>
+  <li><a href="" id="[1]">[1]</a></li>.
+</ul>

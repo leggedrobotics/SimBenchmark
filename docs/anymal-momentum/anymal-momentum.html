@@ -1,0 +1,125 @@
+---
+layout: default
+---
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+</style>
+
+<h1>ANYmal zero gravity test</h1>
+
+<p>
+</p>
+
+<p>
+The test focuses on:
+</p>
+
+<ol>
+    <li>Momentum conservation</li>
+</ol>
+
+<h2>Test scenario</h2>
+
+<h2>Tested solver list</h2>
+
+<ul>
+    <li>Rai
+        <ul>
+            <li>Bisection solver (Rai solver)</li>
+        </ul>
+    </li>
+    <li>Bullet
+        <ul>
+            <li>Multibody solver (Featherstone implementation on Sequential impulse)</li>
+        </ul>
+    </li>
+    <li>ODE
+        <ul>
+            <li><strike>Quick</strike> <sup><a href="#[1]">[1]</a></sup></li>
+            <li>Standard</li>
+        </ul>
+    </li>
+    <li>MuJoCo (no-slip enabled)<sup><a href="#[2]">[2]</a></sup>
+        <ul>
+            <li>PGS</li>
+            <li>CG</li>
+            <li>Newton</li>
+        </ul>
+    </li>
+    <li>Dart
+        <ul>
+            <li>Dantzig</li>
+            <li>PGS</li>
+        </ul>
+    </li>
+</ul>
+
+<h3>Commentary</h3>
+<ul>
+    <li id="[1]">
+        [1] ODE quick solver fails as shown in the following video, and was exempted. According to the manual this is due to the solver's property:
+
+        <p>
+          <blockquote>
+              <p>QuickStep is great for stacks of objects especially when the auto-disable feature is used as well. However, it has poor accuracy for near-singular systems. Near-singular systems can occur when using high-friction contacts, motors, or certain articulated structures. For example, a robot with multiple legs sitting on the ground may be near-singular.</p>
+
+              <i>from <a href="https://www.ode-wiki.org/wiki/index.php?title=Manual:_World">ODE wiki</a></i>
+          </blockquote>
+        </p>
+
+        <p>
+          <img alt="anymal-test-ode-fail" src="anymal-ode-quicksolver-fail.gif">
+        </p>
+    </li>
+    <li id="[2]">
+        [2] MuJoCo no slip solver is a post-processing step that is prevent the slip caused by soft-constraint model. In the test without the noslip solver option, the robot flops into the ground in few seconds as the following video. Thus, in order to maintain 4 contact points between each robot and ground, we turned on the no slip solver option though it is computationally more expensive.
+
+        <p>
+          <blockquote>
+              <p>The main solver updates all unknowns. In contrast, the Noslip solver updates only the constraint forces in friction dimensions, and ignores constraint regularization. This has the effect of suppressing the drift or slip caused by the soft-constraint model. However, this cascade of optimization steps is no longer solving a well-defined optimization problem (or any other problem); instead it is just an adhoc mechanism. While it usually does its job, we have seen some instabilities in models with more complex interactions among multiple contacts. </p>
+
+              <i>from <a href="http://www.mujoco.org/book/index.html">MuJoCo documentation</a></i>
+          </blockquote>
+        </p>
+
+        <p>
+          <img alt="anymal-test-mujoco-slip" src="anymal-mujoco-slip.gif">
+        </p>
+    </li>
+</ul>
+
+
+
+<h2>Results</h2>
+
+<p>The results of the test are as following figures.</p>
+
+<div class="row">
+    <div class="column">
+        <img alt="anymal-test-speed-bar" src="anymal-speed-bar.png">
+    </div>
+    <div class="column">
+        <img alt="anymal-test-speed-plot-log" src="anymal-plot-log.png">
+    </div>
+</div>
