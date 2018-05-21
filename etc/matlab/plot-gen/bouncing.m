@@ -6,7 +6,7 @@ format long
 addpath(genpath('../lib/yamlmatlab'))
 
 % data path
-data_dir = '../../../data/bouncing/';
+data_dir = '../../../data/bouncing';
 % plot_path = strcat(data_dir, 'plots/');
 
 % yaml path
@@ -46,7 +46,8 @@ entry = {...
     'ERP', ...
     'RESTITUTION', ...
     'TIMESTEP', ...
-    'ERROR'
+    'ERROR', ...
+    'TIME'
     };
 
 plotSpec = plotspec;
@@ -110,6 +111,7 @@ for i = 1:length(testOptions)
                     );
                 
                 meanerror = mean(energy_error(const, opt, energy));
+                time = timer_value(curr);
                 
                 data = {...
                     sim, ...
@@ -117,7 +119,8 @@ for i = 1:length(testOptions)
                     logical(erp), ...
                     res, ...
                     str2double(timestep), ...
-                    meanerror...
+                    meanerror, ...
+                    timer ...
                     };
                 T = [T; data];
             end
@@ -143,17 +146,17 @@ erpYe08 = plotoption;
 
 % error plot vs dt
 disp('plotting error vs timestep...')
-plot_error_dt(T, const, plotSpec, false, 1.0, '-noerp-e=1.0', '(No Erp / e = 1.0)', erpNe1);
-plot_error_dt(T, const, plotSpec, false, 0.8, '-noerp-e=0.8', '(No Erp / e = 0.8)', erpNe08);
-plot_error_dt(T, const, plotSpec, true, 1.0, '-erp-e=1.0', '(Erp / e = 1.0)', erpYe1);
-plot_error_dt(T, const, plotSpec, true, 0.8, '-erp-e=0.8', '(Erp / e = 0.8)', erpYe08);
+plot_error_speed(T, const, plotSpec, false, 1.0, '-noerp-e=1.0', '(No Erp / e = 1.0)', erpNe1);
+plot_error_speed(T, const, plotSpec, false, 0.8, '-noerp-e=0.8', '(No Erp / e = 0.8)', erpNe08);
+plot_error_speed(T, const, plotSpec, true, 1.0, '-erp-e=1.0', '(Erp / e = 1.0)', erpYe1);
+plot_error_speed(T, const, plotSpec, true, 0.8, '-erp-e=0.8', '(Erp / e = 0.8)', erpYe08);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function plot_error_dt(dataTable, const, plotSpec, erpYN, e, fileName, plotTitle, plotOption)
+function plot_error_speed(dataTable, const, plotSpec, erpYN, e, fileName, plotTitle, plotOption)
 
 % filter
 dataTable = dataTable(...
@@ -179,7 +182,7 @@ for i = 1:length(sims)
         solver = solvers(j);
         
         % e.g. RAIRAI or BULLETNNCG
-        name = strcat(cellstr(sim), cellstr(solver));
+        name = strcat(cellstr(sim), cellstr(solver), cellstr(sim));
         
         % check plot option
         if ~getfield(plotOption, char(name))
@@ -193,7 +196,7 @@ for i = 1:length(sims)
         % plot
         plotspec = getfield(plotSpec, char(name));
         
-        plot(data.TIMESTEP, ...
+        plot(const.T ./ data.TIME, ...
             data.ERROR, ...
             plotspec{1}, ...
             'DisplayName', plotspec{2}, ...
@@ -220,6 +223,7 @@ R = consts.R;
 g = abs(consts.g);
 T = consts.T;
 m = consts.m;
+n = consts.n * consts.n;
 
 erp = options.erp;
 e = options.e;
@@ -230,7 +234,7 @@ t_tol = 1e-5;
 
 % init
 t0 = sqrt(2 * (h0 - R) / g);
-E0 = m * g * h0;
+E0 = m * g * h0 * n;
 
 h_array = [h0];
 E_array = [E0];

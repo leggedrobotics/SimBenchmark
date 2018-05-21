@@ -259,6 +259,11 @@ void loggerSetup(std::string path, std::string name) {
   ru::logger->setLogFileName(name);
   ru::logger->setOptions(ru::ONEFILE_FOR_ONEDATA);
   ru::logger->addVariableToLog(1, "energy", "energy of balls");
+
+  // timer
+  std::string timer = name + "timer";
+  ru::timer->setLogPath(path);
+  ru::timer->setLogFileName(timer);
 }
 
 } // benchmark::bouncing

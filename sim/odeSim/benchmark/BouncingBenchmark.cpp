@@ -96,6 +96,9 @@ void simulationLoop() {
   }
   else {
     // no gui
+    if(benchmark::bouncing::options.log)
+      ru::timer->startTimer("bouncing");
+
     for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt); i++) {
       sim->integrate(benchmark::bouncing::options.dt);
 
@@ -107,6 +110,9 @@ void simulationLoop() {
         rai::Utils::logger->appendData("energy", energy);
       }
     }
+
+    if(benchmark::bouncing::options.log)
+      ru::timer->stopTimer("bouncing");
   }
 }
 

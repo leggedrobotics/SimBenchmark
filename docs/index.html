@@ -23,19 +23,104 @@ layout: default
 
 <h2>Methodology</h2>
 
+<blockquote>
+<p>
+  We are focusing on velocity, position, energy and momentum drift of rigid body objects. Specifically, we investigates the accuracy of the contact solvers and integrators in the terms of position/velocity drift and momentum/energy conservation.
+</p>
+<p>
+  The numerical error of constraint solvers and integrators are rely on time-step and the number of iterations. For the iterative solvers, accuracy is typically improved as the number of the iteration is increased. A numerical integrator of order n has error proportional to h<sup>n</sup>.
+  Therefore we considered speed-accuracy trade-off. The better simulator is positioned in upper-right side.
+</p>
+</blockquote>
+
 More details of benchmark methodology is <a href="about/methodology.html">here</a>.
 
 <h2>Test results</h2>
 
+<p>
+  <table style="width:100%">
+   <tr>
+     <th>Sim</th>
+     <th>Rolling</th>
+     <th>Bouncing</th>
+     <th>666</th>
+     <th>Elastic 666</th>
+     <th>ANYmal PD</th>
+     <th>ANYmal zero g</th>
+     <th>ANYmal free drop</th>
+   </tr>
+   <tr>
+     <td>RaiSim</td>
+     <td><font color="green"><b>+++</b></font></td>
+     <td></td>
+     <td><font color="green"><b>++++</b></font></td>
+     <td><font color="green"><b>++</b></font></td>
+     <td><font color="green"><b>+++++</b></font></td>
+     <td></td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>Bullet</td>
+     <td><font color="green"><b>+++</b></font></td>
+     <td><font color="red">-</font></td>
+     <td>+++</td>
+     <td><font color="red">-</font></td>
+     <td>+++</td>
+     <td></td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>ODE</td>
+     <td><font color="red">-</font></td>
+     <td></td>
+     <td>++</td>
+     <td>+</td>
+     <td>+</td>
+     <td></td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>MuJoCo</td>
+     <td>+</td>
+     <td><font color="red">-</font></td>
+     <td>+</td>
+     <td><font color="red">-</font></td>
+     <td>++++</td>
+     <td></td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>DART</td>
+     <td><font color="red">-</font></td>
+     <td></td>
+     <td><font color="red">x</font></td>
+     <td><font color="red">x</font></td>
+     <td>++</td>
+     <td></td>
+     <td></td>
+   </tr>
+  </table>
+</p>
+
 <ul>
-    <li><a href="rolling/rolling.html">Rolling test</a>: friction model test</li>
-    <li><a href="bouncing/bouncing.html">Bouncing test</a>: single-body elastic/inelastic collision test</li>
-    <li><a href="666/666.html">666 balls test</a>: single-body hard contact test</li>
-    <li><a href="666/666-elastic.html">Elastic 666 balls test</a>: single-body energy test</li>
-    <li><a href="anymal/anymal.html">ANYmal PD control test</a>: articulated-robot-system speed test</li>
-    <li><a href="anymal-momentum/anymal-momentum.html">ANYmal zero gravity test</a>: articulated-robot-system momentum test</li>
-    <li><a href="anymal-energy/anymal-energy.html">ANYmal free drop test</a>: articulated-robot-system energy test</li>
+  <li>more + is better
+  <li><font color="green"><b>+</b></font>: best results
+  <li><font color="red">-</font>: cannot simulate due to inaccurate model
+  <li><font color="red">x</font>: simulation fails due to error
 </ul>
+
+<hr>
+<p>
+  <ul>
+      <li><a href="rolling/rolling.html">Rolling test</a>: friction model test</li>
+      <li><a href="bouncing/bouncing.html">Bouncing test</a>: single-body elastic/inelastic collision test</li>
+      <li><a href="666/666.html">666 balls test</a>: single-body hard contact test</li>
+      <li><a href="666/666-elastic.html">Elastic 666 balls test</a>: single-body energy test</li>
+      <li><a href="anymal/anymal.html">ANYmal PD control test</a>: articulated-robot-system speed test</li>
+      <li><a href="anymal-momentum/anymal-momentum.html">ANYmal zero gravity test</a>: articulated-robot-system momentum test</li>
+      <li><a href="anymal-energy/anymal-energy.html">ANYmal free drop test</a>: articulated-robot-system energy test</li>
+  </ul>
+</p>
 
 <h2>Commentary</h2>
 
