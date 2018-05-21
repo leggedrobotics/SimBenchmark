@@ -50,13 +50,13 @@ layout: default
             <li>Bisection solver (Rai solver)</li>
         </ul>
     </li>
-    <li>Bullet
+    <li>Bullet<sup><a href="#[1]">[1]</a></sup>
         <ul>
             <li>Sequence impulse</li>
             <li>NNCG</li>
             <li>MLCP Dantzig</li>
             <li>MLCP PGS</li>
-            <li>MLCP Lemke</li>
+            <li><strike>MLCP Lemke</strike><sup><a href="#[2]">[2]</a></sup></li>
         </ul>
     </li>
     <li>ODE
@@ -65,7 +65,7 @@ layout: default
             <li>Standard</li>
         </ul>
     </li>
-    <li><strike>MuJoCo</strike><sup><a href="">[1]</a></sup>
+    <li><strike>MuJoCo</strike><sup><a href="#[3]">[3]</a></sup>
         <strike><ul>
             <li>PGS</li>
             <li>CG</li>
@@ -84,7 +84,17 @@ layout: default
 
 <ul>
     <li id="[1]">
-        [1] MuJoCo cannot simulate elastic collision. Furthermore, it is not possible to set specific restitutional coefficient in MuJoCo. The only way to make bouncy contact is adjusting solref parameter (damping parameter), however there is no one-to-one correspondence between solref and restitutional coefficient.
+        [1] Bullet has problem in simulation of elastic/inelastic collision when the time-step is small which is seemed to be a software bug as the following video:
+
+        <p>
+            <img src="bouncing-bullet-dt=0.0001.gif">
+        </p>
+    </li>
+    <li id="[2]">
+        [2] Bullet MLCP Lemke solver fails during the simulation.
+    </li>
+    <li id="[3]">
+        [3] MuJoCo cannot simulate elastic collision. Furthermore, it is not possible to set specific restitutional coefficient in MuJoCo. The only way to make bouncy contact is adjusting solref parameter (damping parameter), however there is no one-to-one correspondence between solref and restitutional coefficient.
 
         <p>
             <div class="row">
@@ -108,14 +118,12 @@ layout: default
     <img src="bouncing-error-speed-e=1.png">
 </p>
 
+<!--<p>-->
+    <!--The following figure is accuracy-speed plot of inelastic collision case.-->
+
+    <!--<img src="bouncing-error-speed-e=0.8.png">-->
+<!--</p>-->
+
 <p>
-    The following figure is accuracy-speed plot of inelastic collision case.
 
-    <img src="bouncing-error-speed-e=0.8.png">
-</p>
-
-<p>
-    In both case, Bullet has a problem in small time-step, which is seemed to be an software bug as the following video:
-
-    <img src="bouncing-bullet-dt=0.0001.gif">
 </p>
