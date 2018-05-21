@@ -32,6 +32,11 @@ layout: default
 
 <h2>Test scenario</h2>
 
+<ul>
+  <li>Perfectly inelastic collision (restitutional coefficient = 0)</li>
+  <li>Zero friction</li>
+  <li>6 x 6 x 6 spheres (10 kg)</li>
+</ul>
 
 <h2>Tested solver list</h2>
 
@@ -83,6 +88,10 @@ layout: default
 
 <h2>Results</h2>
 
-<img src="666-mujoco-dt=0.01.gif" alt="666-test-mujoco">
+<p>
+  MuJoCo cannot specify restitutional coefficient due to damping. There's uncontrollable bouncy behavior in collision as the following video.
+
+  <img src="666-mujoco-dt=0.01.gif" alt="666-test-mujoco">
+</p>
 
 <img src="666-error-speed.png" alt="666-error-speed">
