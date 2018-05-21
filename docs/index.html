@@ -24,13 +24,21 @@ layout: default
 <h2>Methodology</h2>
 
 <blockquote>
-<p>
-  We are focusing on velocity, position, energy and momentum drift of rigid body objects. Specifically, we investigates the accuracy of the contact solvers and integrators in the terms of position/velocity drift and momentum/energy conservation.
-</p>
-<p>
-  The numerical error of constraint solvers and integrators are rely on time-step and the number of iterations. For the iterative solvers, accuracy is typically improved as the number of the iteration is increased. A numerical integrator of order n has error proportional to h<sup>n</sup>.
-  Therefore we considered speed-accuracy trade-off. The better simulator is positioned in upper-right side on the accuracy-speed plot.
-</p>
+  <p>
+    In this benchamrk we measures the accuracy of the contact solvers and integrators in terms of realistic simulation.
+    Assuming there is no modeling error, it is plausible to compare the numerical solution of simulation with analytical solution when the analytical solution is applicable.
+  </p>
+
+  <p>
+    However, it may be chanllenging to find analytical solution of position or velocity for complex systems.
+    In these cases, we investigates if the numerical solution violates constraints or physics in quantitative manner.
+    One candidate is measuring penetration error which should be zero in hard-contacts or checking the system preserves total energy or linear momentum that is crucial to realistic and stable simulation.
+  </p>
+
+  <p>
+    In general, the numerical solution of physical quantity is rely on time-step and the number of iterations of iterative contact solvers.
+    Therefore we considered speed-accuracy trade-off. In the accuracy-speed plots, better curves locate upper-right side than others:
+  </p>
 </blockquote>
 
 More details of benchmark methodology is <a href="about/methodology.html">here</a>.
