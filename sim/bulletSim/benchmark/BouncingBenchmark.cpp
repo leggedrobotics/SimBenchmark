@@ -47,7 +47,7 @@ void setupWorld() {
   for(int i = 0; i < benchmark::bouncing::params.n; i++) {
     for(int j = 0; j < benchmark::bouncing::params.n; j++) {
       auto ball = sim->addSphere(benchmark::bouncing::params.R, benchmark::bouncing::params.m);
-      ball->setPosition(i * 2.0, j * 2.0, benchmark::bouncing::params.H);
+      ball->setPosition(i * 2.0 - 10, j * 2.0 - 10, benchmark::bouncing::params.H);
       ball->setFrictionCoefficient(benchmark::bouncing::params.mu_ball);
       ball->setRestitutionCoefficient(benchmark::bouncing::options.e);
 
@@ -68,7 +68,7 @@ void setupWorld() {
     sim->setLightPosition((float)benchmark::bouncing::params.lightPosition[0],
                           (float)benchmark::bouncing::params.lightPosition[1],
                           (float)benchmark::bouncing::params.lightPosition[2]);
-    sim->cameraFollowObject(checkerboard, {10, 0, 10});
+    sim->cameraFollowObject(checkerboard, {10, 0, 6});
   }
 }
 

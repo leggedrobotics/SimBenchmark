@@ -56,7 +56,7 @@ layout: default
             <li>NNCG</li>
             <li>MLCP Dantzig</li>
             <li>MLCP PGS</li>
-            <li><strike>MLCP Lemke</strike><sup><a href="#[2]">[2]</a></sup></li>
+            <li>MLCP Lemke<sup><a href="#[2]">[2]</a></sup></li>
         </ul>
     </li>
     <li>ODE
@@ -84,15 +84,21 @@ layout: default
 
 <ul>
     <li id="[1]">
-        [1] Bullet has problem in simulation of elastic/inelastic collision when the time-step is small which is seemed to be a software bug as the following video:
-
-        <p>
-            <img src="bouncing-bullet-dt=0.0001.gif">
-        </p>
+        [1] Bullet has problem in simulation of elastic/inelastic collision when the time-step is small which is seemed to be a software bug as the following video(left).
     </li>
     <li id="[2]">
-        [2] Bullet MLCP Lemke solver fails during the simulation.
+        [2] Bullet MLCP Lemke solver has huge error due to the late rebound (right).
     </li>
+    <p>
+    <div class="row">
+        <div class="column">
+            <img src="bouncing-bullet-dt=0.0001.gif" alt="bouncing-test-bullet-failure" style="width:100%">
+        </div>
+        <div class="column">
+            <img src="bouncing-bullet-lemke.gif" alt="bouncing-test-bullet-lemke-failure" style="width:100%">
+        </div>
+    </div>
+    </p>
     <li id="[3]">
         [3] MuJoCo cannot simulate elastic collision. Furthermore, it is not possible to set specific restitutional coefficient in MuJoCo. The only way to make bouncy contact is adjusting solref parameter (damping parameter), however there is no one-to-one correspondence between solref and restitutional coefficient.
 

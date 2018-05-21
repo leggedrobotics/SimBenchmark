@@ -140,10 +140,10 @@ writetable(T, 'bouncing-log.csv', 'Delimiter', ',', 'QuoteStrings', true)
 %% error plot
 % plot option
 erpNe1 = plotoption;
-erpNe1.BULLETMLCPLEMKEBULLET = false;
+% erpNe1.BULLETMLCPLEMKEBULLET = false;
 
 erpNe08 = plotoption;
-erpNe08.BULLETMLCPLEMKEBULLET = false;
+% erpNe08.BULLETMLCPLEMKEBULLET = false;
 
 erpYe1 = plotoption;
 erpYe08 = plotoption;
@@ -213,7 +213,7 @@ hold off
 title(['Energy Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
-legend('Location', 'southeast')
+legend('Location', 'northeast')
 saveas(h, strcat('bouncing-plots/bounce-error-dt', fileName, '.png'))
 saveas(h, strcat('bouncing-plots/bounce-error-dt', fileName, '.eps'), 'epsc')
 saveas(h, strcat('bouncing-plots/bounce-error-dt', fileName, '.fig'), 'fig')
