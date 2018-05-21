@@ -6,14 +6,14 @@ layout: default
 <h2>Tests and Metric</h2>
 
 <p>
-  In this benchamrk we measures the accuracy of the contact solvers and integrators in terms of realistic simulation.
+  In this benchmark we measures the accuracy of the contact solvers and integrators in terms of realistic simulation.
   Assuming there is no modeling error, it is plausible to compare the numerical solution of simulation with analytical solution when the analytical solution is applicable.
   For an example, it is realatively easy to find an analytical solution of velocity and position of each object in <a href="../rolling/rolling.html">Rolling test</a> by solving simple dynamics equation.
   By doing this, we can investigate how the numerical solution of the simulator is close to dynamics model.
 </p>
 
 <p>
-  However, it may be chanllenging to find analytical solution of position or velocity for complex systems.
+  However, it may be challenging to find analytical solution of position or velocity for complex systems.
   In these cases, we investigates if the numerical solution violates constraints or physics in quantitative manner.
   One candidate is measuring penetration error which should be zero in hard-contacts or checking the system preserves total energy or linear momentum that is crucial to realistic and stable simulation.
 </p>
@@ -22,7 +22,6 @@ layout: default
   In general, the numerical solution of physical quantity is rely on time-step and the number of iterations of iterative contact solvers.
   As the time-step decreases, the accuracy is improved and the speed of simulation is declined and as the number of the iteration is increased for iterative solvers For the iterative solvers, accuracy is improved and the simulation becomes slower.
   Therefore we considered speed-accuracy trade-off as it is proposed in <a href="#[1]">[1]</a>. In the format below, the better curve locates upper-right side than others:
-
 </p>
 
 

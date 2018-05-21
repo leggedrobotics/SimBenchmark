@@ -120,7 +120,7 @@ for i = 1:length(testOptions)
                     res, ...
                     str2double(timestep), ...
                     meanerror, ...
-                    timer ...
+                    time ...
                     };
                 T = [T; data];
             end
@@ -140,7 +140,11 @@ writetable(T, 'bouncing-log.csv', 'Delimiter', ',', 'QuoteStrings', true)
 %% error plot
 % plot option
 erpNe1 = plotoption;
+erpNe1.BULLETMLCPLEMKEBULLET = false;
+
 erpNe08 = plotoption;
+erpNe08.BULLETMLCPLEMKEBULLET = false;
+
 erpYe1 = plotoption;
 erpYe08 = plotoption;
 
@@ -148,8 +152,8 @@ erpYe08 = plotoption;
 disp('plotting error vs timestep...')
 plot_error_speed(T, const, plotSpec, false, 1.0, '-noerp-e=1.0', '(No Erp / e = 1.0)', erpNe1);
 plot_error_speed(T, const, plotSpec, false, 0.8, '-noerp-e=0.8', '(No Erp / e = 0.8)', erpNe08);
-plot_error_speed(T, const, plotSpec, true, 1.0, '-erp-e=1.0', '(Erp / e = 1.0)', erpYe1);
-plot_error_speed(T, const, plotSpec, true, 0.8, '-erp-e=0.8', '(Erp / e = 0.8)', erpYe08);
+% plot_error_speed(T, const, plotSpec, true, 1.0, '-erp-e=1.0', '(Erp / e = 1.0)', erpYe1);
+% plot_error_speed(T, const, plotSpec, true, 0.8, '-erp-e=0.8', '(Erp / e = 0.8)', erpYe08);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -167,9 +171,9 @@ dataTable = dataTable(...
 % ball + box
 sims = unique(dataTable.SIM);
 
-h = figure('Name','error','Position', [0, 0, 800, 600]);
+h = figure('Name','error','Position', [0, 0, 600, 500]);
 hold on
-set(gca, 'YScale', 'log', 'XScale', 'log')
+set(gca, 'YScale', 'log', 'XScale', 'log',  'Ydir', 'reverse')
 for i = 1:length(sims)
     
     sim = sims(i);
@@ -206,13 +210,13 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title(['Velocity Error ', plotTitle])
-xlabel('timestep size')
-ylabel('squared error (log scale)')
-legend('Location', 'eastoutside')
-saveas(h, strcat('plots/bounce-error-dt', fileName, '.png'))
-saveas(h, strcat('plots/bounce-error-dt', fileName, '.eps'), 'epsc')
-saveas(h, strcat('plots/bounce-error-dt', fileName, '.fig'), 'fig')
+title(['Energy Error ', plotTitle])
+xlabel(sprintf('real time factor \n FAST →'))
+ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
+legend('Location', 'southeast')
+saveas(h, strcat('bouncing-plots/bounce-error-dt', fileName, '.png'))
+saveas(h, strcat('bouncing-plots/bounce-error-dt', fileName, '.eps'), 'epsc')
+saveas(h, strcat('bouncing-plots/bounce-error-dt', fileName, '.fig'), 'fig')
 
 end
 
@@ -250,7 +254,7 @@ while true
     h_array = [h_array, hi];
     t_array = [t_array, ti];
     t_accum = [t_accum, t_accum(end) + ti];
-    E_array = [E_array, m * g * hi];
+    E_array = [E_array, m * g * hi * n];
     
     if ti < t_tol || t_accum(end) > T
         break;

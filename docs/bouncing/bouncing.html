@@ -99,5 +99,23 @@ layout: default
     </li>
 </ul>
 
-
 <h2>Results</h2>
+
+<p>
+    The following figure is accuracy-speed plot of elastic collision case. The energy of the system preserves in Rai and ODE.
+    Rai shows the best result among the simulators.
+
+    <img src="bouncing-error-speed-e=1.png">
+</p>
+
+<p>
+    The following figure is accuracy-speed plot of inelastic collision case.
+
+    <img src="bouncing-error-speed-e=0.8.png">
+</p>
+
+<p>
+    In both case, Bullet has a problem in small time-step, which is seemed to be an software bug as the following video:
+
+    <img src="bouncing-bullet-dt=0.0001.gif">
+</p>

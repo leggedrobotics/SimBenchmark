@@ -7,6 +7,18 @@ layout: default
     SimBenchmark is a project for benchmark of rigid body simulators with contacts.
 </p>
 
+<h2>Motivation</h2>
+
+<!--<p>-->
+  <!--As robotic system becomes more and more complex, it is  -->
+  <!--A number of rigid body simulators has been introduced to robotics society.-->
+  <!--According to the <a href="https://arxiv.org/pdf/1402.7050.pdf">report</a>, the most important criteria for choosing a simulator in robotics society is simulation very close to reality.-->
+  <!--Also, robotics researchers responsed that the stability of simulation, speed, precision and accuracy are the most important features of robot simulator.-->
+  <!--Although there have been many benchmark reports,-->
+<!--</p>-->
+
+<h2>List of Simulators</h2>
+
 <p>
     The list of the simulators is as follows:
 <ul>
@@ -25,19 +37,20 @@ layout: default
 
 <blockquote>
   <p>
-    In this benchamrk we measures the accuracy of the contact solvers and integrators in terms of realistic simulation.
+    In this benchmark we measures the accuracy of the contact solvers and integrators in terms of realistic simulation.
     Assuming there is no modeling error, it is plausible to compare the numerical solution of simulation with analytical solution when the analytical solution is applicable.
   </p>
 
   <p>
-    However, it may be chanllenging to find analytical solution of position or velocity for complex systems.
+    However, it may be challenging to find analytical solution of position or velocity for complex systems.
     In these cases, we investigates if the numerical solution violates constraints or physics in quantitative manner.
     One candidate is measuring penetration error which should be zero in hard-contacts or checking the system preserves total energy or linear momentum that is crucial to realistic and stable simulation.
   </p>
 
   <p>
     In general, the numerical solution of physical quantity is rely on time-step and the number of iterations of iterative contact solvers.
-    Therefore we considered speed-accuracy trade-off. In the accuracy-speed plots, better curves locate upper-right side than others:
+    Therefore we considered speed-accuracy trade-off.
+    In summary, better curves locate upper-right side than others in the accuracy-speed plots.
   </p>
 </blockquote>
 
@@ -60,7 +73,7 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
    <tr>
      <td>RaiSim</td>
      <td><font color="green"><b>+++</b></font></td>
-     <td></td>
+     <td><font color="green"><b>+++</b></font></td>
      <td><font color="green"><b>++++</b></font></td>
      <td><font color="green"><b>++</b></font></td>
      <td><font color="green"><b>+++++</b></font></td>
@@ -80,7 +93,7 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
    <tr>
      <td>ODE</td>
      <td><font color="red">-</font></td>
-     <td></td>
+     <td>++</td>
      <td>++</td>
      <td>+</td>
      <td>+</td>
