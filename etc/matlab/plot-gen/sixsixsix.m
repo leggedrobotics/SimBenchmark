@@ -76,7 +76,8 @@ plot_error_speed(T, const, plotSpec, true, false, '-erp', '(ERP)', erpY);
 
 %% bar plot (for min dt)
 T2 = T(T.ERP == false & isnan(T.ENERGYERROR), :);
-dt = min(T2.TIMESTEP);
+% dt = min(T2.TIMESTEP);
+dt = 0.001;
 
 simTime = const.T;
 numIter = simTime / dt;
@@ -88,7 +89,7 @@ T2 = sortrows(T2, 10);
 speed = numIter ./ T2.TIME ./ 1000;
 
 disp('plotting bar graph')
-h = figure('Name', 'speed', 'Position', [0, 0, 800, 600])
+h = figure('Name', 'speed', 'Position', [0, 0, 600, 500])
 hold on
 for i = 1:size(T2, 1)
     data = T2(i, :);
@@ -109,10 +110,9 @@ text(1:length(speed), ...
     'horiz','center', ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-ylim([0, 16])
-saveas(h, strcat('plots/rollingbar.png'))
-saveas(h, strcat('plots/rollingbar.eps'), 'epsc')
-saveas(h, strcat('plots/rollingbar.fig'), 'fig')
+saveas(h, strcat('666-plots/speedbar.png'))
+saveas(h, strcat('666-plots/speedbar.eps'), 'epsc')
+saveas(h, strcat('666-plots/speedbar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
