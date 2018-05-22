@@ -20,9 +20,9 @@ layout: default
     }
 
     img {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
 </style>
 
@@ -33,9 +33,9 @@ layout: default
 <h2>Test scenario</h2>
 
 <ul>
-  <li>Perfectly inelastic collision (restitutional coefficient = 0)</li>
-  <li>Zero friction</li>
-  <li>6 x 6 x 6 spheres (10 kg)</li>
+    <li>Perfectly inelastic collision (restitutional coefficient = 0)</li>
+    <li>Zero friction</li>
+    <li>6 x 6 x 6 spheres (10 kg)</li>
 </ul>
 
 <h2>Tested solver list</h2>
@@ -89,9 +89,14 @@ layout: default
 <h2>Results</h2>
 
 <p>
-  MuJoCo cannot specify restitutional coefficient due to damping. There's uncontrollable bouncy behavior in collision as the following video.
+    The accuracy-speed plot and speed bar graph of 666 test are as follows:
 
-  <img src="666-mujoco-dt=0.01.gif" alt="666-test-mujoco">
+    <img src="666-error-speed.png" alt="666-error-speed-plot">
+    <img src="666-speed-bar.png" alt="666-speed-bar-graph">
 </p>
 
-<img src="666-error-speed.png" alt="666-error-speed">
+<p>
+    Note that MuJoCo cannot specify restitutional coefficient due to damping. There's uncontrollable bouncy behavior in collision as the following video.
+
+    <img src="666-mujoco-dt=0.01.gif" alt="666-test-mujoco">
+</p>

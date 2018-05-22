@@ -35,6 +35,7 @@ void setupWorld() {
                     benchmark::anymal::zerogravity::params.x0,
                     benchmark::anymal::zerogravity::params.H);
   ball->setVelocity(0, benchmark::anymal::zerogravity::params.v0, 0, 0, 0, 0);
+  ball->setFrictionCoefficient(0);
   balls.push_back(ball);
 
   // anymal

@@ -39,11 +39,6 @@ void setupWorld() {
                                     -0.03, -0.4, 0.8});
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
-  // color
-  for(int i = 0; i < anymal.visual().size(); i++) {
-    anymal.visual()[i]->setColor({0.5373, 0.6471, 0.3059});
-  }
-
   // gravity
   sim->setGravity({0, 0, benchmark::anymal::freedrop::params.g});
 
@@ -54,8 +49,14 @@ void setupWorld() {
   benchmark::anymal::freedrop::params.F =
       benchmark::anymal::freedrop::params.M * (-benchmark::anymal::freedrop::params.g) * 2;
 
-  if(benchmark::anymal::freedrop::options.gui)
+  if(benchmark::anymal::freedrop::options.gui) {
     sim->cameraFollowObject(checkerboard, {25.0, 0.0, 7.0});
+
+    // color
+    for(int i = 0; i < anymal.visual().size(); i++) {
+      anymal.visual()[i]->setColor({0.5373, 0.6471, 0.3059});
+    }
+  }
 }
 
 double computeEnergy() {

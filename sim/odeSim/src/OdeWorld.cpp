@@ -35,12 +35,11 @@ ode_sim::OdeWorld::OdeWorld(SolverOption solverOption) : solverOption_(solverOpt
 //  dWorldSetAutoDisableFlag(dynamicsWorld_, 1);
 
 ////  parameters
-//  dWorldSetCFM(dynamicsWorld_, 1e-5);
 //  dWorldSetLinearDamping(dynamicsWorld_, 0.00001);
-//  dWorldSetAngularDamping(world, 0.005);
-//  dWorldSetMaxAngularSpeed(world, 200);
-//  dWorldSetContactMaxCorrectingVel(world,0.1);
-//  dWorldSetContactSurfaceLayer(world,0.001);
+//  dWorldSetAngularDamping(dynamicsWorld_, 0.005);
+//  dWorldSetMaxAngularSpeed(dynamicsWorld_, 200);
+//  dWorldSetContactMaxCorrectingVel(dynamicsWorld_,0.1);
+//  dWorldSetContactSurfaceLayer(dynamicsWorld_,0.001);
   dWorldSetERP(dynamicsWorld_, 0);
   dWorldSetCFM(dynamicsWorld_, 0);
 

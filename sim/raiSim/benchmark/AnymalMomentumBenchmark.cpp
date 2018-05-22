@@ -56,8 +56,20 @@ void setupWorld() {
   benchmark::anymal::zerogravity::params.M =
       std::accumulate( anymal->getMass().begin(), anymal->getMass().end(), 0.0);
 
-  if(benchmark::anymal::zerogravity::options.gui)
-    sim->cameraFollowObject(checkerboard, {10.0, 0.0, 1.0});
+  if(benchmark::anymal::zerogravity::options.gui) {
+    sim->cameraFollowObject(checkerboard, {10.0, 10.0, 1.0});
+
+    // light
+    sim->setLightPosition((float)benchmark::anymal::zerogravity::params.lightPosition[0],
+                          (float)benchmark::anymal::zerogravity::params.lightPosition[1],
+                          (float)benchmark::anymal::zerogravity::params.lightPosition[2]);
+
+    // color
+    ball.visual()[0]->setColor({0.5373, 0.6471, 0.3059});
+    for(int i = 0; i < anymal.visual().size(); i++) {
+      anymal.visual()[i]->setColor({0.5373, 0.6471, 0.3059});
+    }
+  }
 }
 
 double computeLinearMomentumError() {
@@ -87,6 +99,8 @@ double simulationLoop() {
   watch.start();
   if(benchmark::anymal::zerogravity::options.gui) {
     // gui
+    if(benchmark::anymal::zerogravity::options.saveVideo)
+      sim->startRecordingVideo("/tmp", "rai-anymal-zerogravity");
 
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt, 1.0); t++) {
@@ -95,6 +109,9 @@ double simulationLoop() {
       benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
       sim->integrate2(benchmark::anymal::zerogravity::options.dt);
     }
+
+    if(benchmark::anymal::zerogravity::options.saveVideo)
+      sim->stopRecordingVideo();
   } else {
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); t++) {
       sim->integrate1(benchmark::anymal::zerogravity::options.dt);
