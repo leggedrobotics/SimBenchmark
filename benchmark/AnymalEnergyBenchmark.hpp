@@ -69,7 +69,7 @@ std::string getURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/ANYmal-nomesh/";
+  urdfPath += "../res/ANYmal-energy/";
 
   return urdfPath;
 }
@@ -84,7 +84,7 @@ std::string getMujocoURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/mujoco/ANYmal/robot1.urdf";
+  urdfPath += "../res/mujoco/ANYmal/robot-energy.urdf";
 
   return urdfPath;
 }

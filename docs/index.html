@@ -37,14 +37,14 @@ layout: default
 
 <blockquote>
   <p>
-    In this benchmark we measures the accuracy of the contact solvers and integrators in terms of realistic simulation.
-    Assuming there is no modeling error, it is plausible to compare the numerical solution of simulation with analytical solution when the analytical solution is applicable.
+    In this benchmark we measure the accuracy of the contact solvers and integrators in terms of realistic simulation.
+    Assuming no modeling error, it is reasonable to compare the numerical solution of simulation with analytical solution when the analytical solution is applicable.
   </p>
 
   <p>
-    However, it may be challenging to find analytical solution of position or velocity for complex systems.
+    However, it is challenging to find analytical solution of position or velocity for complex systems.
     In these cases, we investigates if the numerical solution violates constraints or physics in quantitative manner.
-    One candidate is measuring penetration error which should be zero in hard-contacts or checking the system preserves total energy or linear momentum that is crucial to realistic and stable simulation.
+    One candidate is measuring penetration error which should be zero in hard-contacts or checking the system preserves total energy or linear momentum that is crucial to stable simulation.
   </p>
 
   <p>
@@ -78,7 +78,7 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
      <td><font color="green"><b>++</b></font></td>
      <td><font color="green"><b>+++++</b></font></td>
      <td></td>
-     <td><font color="green"><b>+++++</b></font></td>
+     <td>+++</td>
    </tr>
    <tr>
      <td>Bullet</td>
@@ -98,7 +98,7 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
      <td>+</td>
      <td>+</td>
      <td></td>
-     <td>++</td>
+     <td>+</td>
    </tr>
    <tr>
      <td>MuJoCo</td>
@@ -108,8 +108,8 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
      <td><font color="red">-</font></td>
      <td>++++</td>
      <td></td>
-     <td>++++ (RK4)<br>
-         +++ (Euler)
+     <td><font color="green"><b>++++</b></font> (RK4)<br>
+         ++ (Euler)
      </td>
    </tr>
    <tr>

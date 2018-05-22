@@ -64,6 +64,7 @@ void BtArticulatedSystem::init() {
 
   for (int i = 0; i < multiBody_->getNumLinks(); i++) {
     switch(multiBody_->getLink(i).m_jointType) {
+      
       case btMultibodyLink::eRevolute: {
         // 1 DOF
         movableLinkIdx_.push_back(i);

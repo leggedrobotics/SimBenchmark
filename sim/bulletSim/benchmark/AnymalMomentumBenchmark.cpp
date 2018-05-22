@@ -90,7 +90,7 @@ double simulationLoop() {
   if(benchmark::anymal::zerogravity::options.gui) {
     // gui
     if(benchmark::anymal::zerogravity::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "ode-rolling");
+      sim->startRecordingVideo("/tmp", "bullet-zero-gravity");
 
     for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt) &&
         sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt, 1.0); t++) {
@@ -134,6 +134,9 @@ int main(int argc, const char* argv[]) {
 
   benchmark::anymal::zerogravity::getOptionsFromArg(argc, argv, desc);
   benchmark::bullet::getOptionsFromArg(argc, argv, desc);
+
+  benchmark::anymal::zerogravity::getParamsFromYAML(benchmark::anymal::zerogravity::getYamlpath().c_str(),
+                                                    benchmark::BULLET);
 
   RAIINFO(
       std::endl << "=======================" << std::endl

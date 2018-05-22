@@ -111,6 +111,21 @@ std::string getCSVpath() {
 }
 
 /**
+ * get YAML file path for parameter
+ *
+ * @return yaml path in string
+ */
+std::string getYamlpath() {
+
+  std::string yamlPath(__FILE__);
+  while (yamlPath.back() != '/')
+    yamlPath.erase(yamlPath.size() - 1, 1);
+  yamlPath += "./yaml/anymal-zerogravity.yaml";
+
+  return yamlPath;
+}
+
+/**
  * add options to desc
  *
  * @param desc
