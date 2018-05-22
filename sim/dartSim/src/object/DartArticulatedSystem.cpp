@@ -429,10 +429,12 @@ void DartArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
 }
 
 void DartArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
-  RAIINFO("not implemented yet")
+  genco = getGeneralizedCoordinate();
+  genvel = getGeneralizedVelocity();
 }
 void DartArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
-  RAIINFO("not implemented yet")
+  setGeneralizedCoordinate(genco);
+  setGeneralizedVelocity(genvel);
 }
 int DartArticulatedSystem::getDOF() {
   return dof_;

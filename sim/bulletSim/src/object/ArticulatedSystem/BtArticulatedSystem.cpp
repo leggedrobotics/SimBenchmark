@@ -535,11 +535,13 @@ void BtArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
 }
 
 void BtArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
-  RAIINFO("not implemented yet")
+  genco = getGeneralizedCoordinate();
+  genvel = getGeneralizedVelocity();
 }
 
 void BtArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
-  RAIINFO("not implemented yet")
+  setGeneralizedCoordinate(genco);
+  setGeneralizedVelocity(genvel);
 }
 
 int BtArticulatedSystem::getDOF() {
