@@ -23,7 +23,7 @@ fprintf('\t%s\n', data_dir)
 disp('===================================================================')
 
 %% constants and variables
-% const 
+% const
 yaml_data = yaml.ReadYaml(yaml_path);
 const = yaml_data.constant;
 const.T = 15;       % TODO should be get from somewhere
@@ -81,8 +81,9 @@ plot_error_speed(T, const, plotSpec, false, '-noerp', '(No ERP)', erpN)
 plot_error_speed(T, const, plotSpec, true, '-erp', '(ERP)', erpY)
 
 %% bar plot (for min dt)
-T2 = T(T.ERP == false & isnan(T.ENERGYERROR), :);
-dt = min(T2.TIMESTEP);
+T2 = T(T.ERP == false & ~isnan(T.ENERGYERROR), :);
+% dt = min(T2.TIMESTEP);
+dt = 0.0004;
 
 simTime = const.T;
 numIter = simTime / dt;
@@ -93,20 +94,30 @@ T2 = sortrows(T2, 10);
 
 speed = numIter ./ T2.TIME ./ 1000;
 
+barOption = plotoption;
+barOption.DARTDANTZIGDART = false;
+barOption.DARTPGSDART = false;
+
 disp('plotting bar graph')
-h = figure('Name', 'speed', 'Position', [0, 0, 800, 600])
+h = figure('Name', 'speed', 'Position', [0, 0, 600, 500])
 hold on
 for i = 1:size(T2, 1)
     data = T2(i, :);
     
-    spec = getfield(plotSpec, strcat(char(data.SIM), char(data.SOLVER), char(data.INTEGRATOR)));
+    name = strcat(char(data.SIM), char(data.SOLVER), char(data.INTEGRATOR));
+    
+    if ~getfield(barOption, name)
+        continue;
+    end
+    
+    spec = getfield(plotSpec, name);
     
     bar(categorical(cellstr(spec{2})), ...
         speed(i), ...
         'FaceColor', spec{3})
 end
 hold off
-title(sprintf('Rolling test speed (timestep = %f)', dt))
+title(sprintf('Elastic 666 test speed (timestep = %f)', dt))
 % numbers on bars
 text(1:length(speed), ...
     speed, ...
@@ -115,10 +126,10 @@ text(1:length(speed), ...
     'horiz','center', ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-ylim([0, 16])
-saveas(h, strcat('666-plots/rollingbar.png'))
-saveas(h, strcat('666-plots/rollingbar.eps'), 'epsc')
-saveas(h, strcat('666-plots/rollingbar.fig'), 'fig')
+ylim([0, 6])
+saveas(h, strcat('666-plots/elastic-speed-bar.png'))
+saveas(h, strcat('666-plots/elastic-speed-bar.eps'), 'epsc')
+saveas(h, strcat('666-plots/elastic-speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
