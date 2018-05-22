@@ -11,7 +11,7 @@ file_name = '2018-05-21-23:58:18.csv';
 % plot_path = strcat(data_dir, 'plots/');
 
 % yaml path
-% yaml_path = '../../../benchmark/yaml/rolling.yaml';
+yaml_path = '../../../benchmark/yaml/anymal-freedrop.yaml';
 
 % plot path
 % mkdir(plot_path);
@@ -26,8 +26,9 @@ disp('===================================================================')
 
 %% constants and variables
 % constant
-% yaml_data = yaml.ReadYaml(yaml_path);
-% const = yaml_data.constant;
+yaml_data = yaml.ReadYaml(yaml_path);
+const = yaml_data.constant;
+const.T = const.T1 + const.T2;
 % const.mu1 = const.raiSim.mu_ground * const.raiSim.mu_box;
 % const.mu2 = const.raiSim.mu_box * const.raiSim.mu_ball;
 
@@ -43,8 +44,6 @@ T = readtable(...
     );
 
 plotSpec = plotspec;
-const = struct(...
-    'T', 10);
 
 entry = {...
     'SIM', ...
@@ -67,44 +66,44 @@ disp('plotting error vs real-time-factor...')
 plot_error_speed(T, const, plotSpec, '-noerp', '(No Erp)', plotOption);
 
 %% bar plot (for min dt)
-% T2 = T(T.ERP == false & T.DIRECTION == true, :);
-% dt = min(T2.TIMESTEP);
-%
-% simTime = const.T;
-% numIter = simTime / dt;
-%
-% % filtering
-% T2 = T2(T2.TIMESTEP == dt, :);
-% T2 = sortrows(T2, 12);
-%
-% speed = numIter ./ T2.TIME ./ 1000;
-%
-% disp('plotting bar graph')
-% h = figure('Name', 'speed', 'Position', [0, 0, 800, 600])
-% hold on
-% for i = 1:size(T2, 1)
-%     data = T2(i, :);
-%
-%     spec = getfield(plotSpec, char(strcat(data.SIM, data.SOLVER)));
-%
-%     bar(categorical(cellstr(spec{2})), ...
-%         speed(i), ...
-%         'FaceColor', spec{3})
-% end
-% hold off
-% title(sprintf('Rolling test speed'))
-% % numbers on bars
-% text(1:length(speed), ...
-%     speed, ...
-%     num2str(speed, '%0.2f'),...
-%     'vert', 'bottom', ...
-%     'horiz','center', ...
-%     'FontWeight','bold');
-% ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-% ylim([0, 25])
-% saveas(h, strcat('plots/rollingbar.png'))
-% saveas(h, strcat('plots/rollingbar.eps'), 'epsc')
-% saveas(h, strcat('plots/rollingbar.fig'), 'fig')
+T2 = T;
+dt = min(T2.TIMESTEP);
+
+simTime = const.T;
+numIter = simTime / dt;
+
+% filtering
+T2 = T2(T2.TIMESTEP == dt, :);
+T2 = sortrows(T2, 7);
+
+speed = numIter ./ T2.TIME ./ 1000;
+
+disp('plotting bar graph')
+h = figure('Name', 'speed', 'Position', [0, 0, 720, 600]);
+hold on
+for i = 1:size(T2, 1)
+    data = T2(i, :);
+
+    spec = getfield(plotSpec, strcat(char(data.SIM), char(data.SOLVER), char(data.INTEGRATOR)));
+
+    bar(categorical(cellstr(spec{2})), ...
+        speed(i), ...
+        'FaceColor', spec{3})
+end
+hold off
+title(sprintf('ANYmal free drop test speed'))
+% numbers on bars
+text(1:length(speed), ...
+    speed, ...
+    num2str(speed, '%0.2f'),...
+    'vert', 'bottom', ...
+    'horiz','center', ...
+    'FontWeight','bold');
+ylabel(sprintf('timestep per second (kHz) \n FAST →'))
+ylim([0, 260])
+saveas(h, strcat('freedrop-plots/speed-bar.png'))
+saveas(h, strcat('freedrop-plots/speed-bar.eps'), 'epsc')
+saveas(h, strcat('freedrop-plots/speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
