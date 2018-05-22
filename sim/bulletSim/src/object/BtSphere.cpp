@@ -23,4 +23,5 @@ bullet_sim::object::BtSphere::BtSphere(double radius, double mass) : BtSingleBod
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState_, collisionShape_, localInertia);
   rigidBody_ = new btRigidBody(rbInfo);
   rigidBody_->setFlags(BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY);
+  rigidBody_->setSleepingThresholds(0, 0);
 }

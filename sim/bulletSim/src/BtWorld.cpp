@@ -63,7 +63,7 @@ BtWorld::BtWorld(SolverOption solverOption) : solverOption_(solverOption) {
 
   dynamicsWorld_->setGravity(gravity_);
 
-  // solver properties
+  // solver parameters
 //  dynamicsWorld_->getSolverInfo().m_tau = btScalar(0.6);
 //  dynamicsWorld_->getSolverInfo().m_damping = btScalar(1.0);
 //  dynamicsWorld_->getSolverInfo().m_friction = btScalar(0.8);

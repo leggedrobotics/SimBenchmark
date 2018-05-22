@@ -31,6 +31,7 @@ BtArticulatedSystem::BtArticulatedSystem(std::string urdfFile, btMultiBodyDynami
   // no damping (default)
   multiBody_->setAngularDamping(0);
   multiBody_->setLinearDamping(0);
+  multiBody_->setCanSleep(false);
 
   delete importer_;
 }
