@@ -70,44 +70,44 @@ disp('plotting error vs real-time-factor...')
 plot_error_speed(T, const, plotSpec, '-noerp-y', '(No Erp / Y force)', plotOption);
 
 %% bar plot (for min dt)
-% T2 = T(T.ERP == false & T.DIRECTION == true, :);
-% dt = min(T2.TIMESTEP);
-%
-% simTime = const.T;
-% numIter = simTime / dt;
-%
-% % filtering
-% T2 = T2(T2.TIMESTEP == dt, :);
-% T2 = sortrows(T2, 12);
-%
-% speed = numIter ./ T2.TIME ./ 1000;
-%
-% disp('plotting bar graph')
-% h = figure('Name', 'speed', 'Position', [0, 0, 800, 600])
-% hold on
-% for i = 1:size(T2, 1)
-%     data = T2(i, :);
-%
-%     spec = getfield(plotSpec, char(strcat(data.SIM, data.SOLVER)));
-%
-%     bar(categorical(cellstr(spec{2})), ...
-%         speed(i), ...
-%         'FaceColor', spec{3})
-% end
-% hold off
-% title(sprintf('Rolling test speed'))
-% % numbers on bars
-% text(1:length(speed), ...
-%     speed, ...
-%     num2str(speed, '%0.2f'),...
-%     'vert', 'bottom', ...
-%     'horiz','center', ...
-%     'FontWeight','bold');
-% ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-% ylim([0, 25])
-% saveas(h, strcat('plots/rollingbar.png'))
-% saveas(h, strcat('plots/rollingbar.eps'), 'epsc')
-% saveas(h, strcat('plots/rollingbar.fig'), 'fig')
+T2 = T;
+dt = min(T2.TIMESTEP);
+
+simTime = const.T;
+numIter = simTime / dt;
+
+% filtering
+T2 = T2(T2.TIMESTEP == dt, :);
+T2 = sortrows(T2, 7);
+
+speed = numIter ./ T2.TIME ./ 1000;
+
+disp('plotting bar graph')
+h = figure('Name', 'speed', 'Position', [0, 0, 800, 600])
+hold on
+for i = 1:size(T2, 1)
+    data = T2(i, :);
+
+    spec = getfield(plotSpec, strcat(char(data.SIM), char(data.SOLVER), char(data.INTEGRATOR)));
+
+    bar(categorical(cellstr(spec{2})), ...
+        speed(i), ...
+        'FaceColor', spec{3})
+end
+hold off
+title(sprintf('Zero gravity test speed'))
+% numbers on bars
+text(1:length(speed), ...
+    speed, ...
+    num2str(speed, '%0.2f'),...
+    'vert', 'bottom', ...
+    'horiz','center', ...
+    'FontWeight','bold');
+ylabel(sprintf('timestep per second (kHz) \n FAST →'))
+ylim([0, 160])
+saveas(h, strcat('zerog-plots/rollingbar.png'))
+saveas(h, strcat('zerog-plots/rollingbar.eps'), 'epsc')
+saveas(h, strcat('zerog-plots/rollingbar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -167,7 +167,7 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title(['Velocity Error ', plotTitle])
+title(['Momentum error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
 ylim([1e-11, 1e2])
