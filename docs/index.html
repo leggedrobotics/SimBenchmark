@@ -7,15 +7,22 @@ layout: default
     SimBenchmark is a project for benchmark of rigid body simulators with contacts.
 </p>
 
-<!--<h2>Motivation</h2>-->
-<!---->
-<!--<p>-->
-  <!--As robotic system becomes more and more complex, it is  -->
-  <!--A number of rigid body simulators has been introduced to robotics society.-->
-  <!--According to the <a href="https://arxiv.org/pdf/1402.7050.pdf">report</a>, the most important criteria for choosing a simulator in robotics society is simulation very close to reality.-->
-  <!--Also, robotics researchers responsed that the stability of simulation, speed, precision and accuracy are the most important features of robot simulator.-->
-  <!--Although there have been many benchmark reports,-->
-<!--</p>-->
+<h2>Motivation and Approach</h2>
+
+<p>
+  Solving contact dynamics is crucial for control and planning of legged robots since legged robots are driven by the feet-terrain interaction.
+  A number of rigid body simulators with contact solver has been introduced to the society and several survey or benchmark was reported to help researcher to select best one for their research.
+  According to <a href="https://arxiv.org/pdf/1402.7050.pdf">a survey report</a>, the most important criteria for choosing a simulator for legged robot research is simulation close to reality and speed of the software.
+</p>
+<p>
+  However due to its intractability of solving contact dynamics, rigid body simulators inevitably undergo the trade-off between efficiency and realistic solution.
+  Furthermore several state-of-the-art simulators sacrifices reality of the simulation by relaxation of contact dynacmics constraints in order to make the simulation efficient.
+  One common approach is relaxing Coulomb's friction cone constraint or Signorini condition.
+</p>
+<p>
+  In this benchmark test, we consider this trade-off between accuracy and speed to provide more reliable result. Also, we provide comparison between numerical solution by simulation and analytical solution by solving dynamics when it is applicable.
+  Although our lack of knowledge on real physics, as Newton dynamics and Coulomb's friction model are the most well-established model, it is reasonable approach for benchmark.
+</p>
 
 <h2>List of Simulators</h2>
 
@@ -57,6 +64,18 @@ layout: default
 More details of benchmark methodology is <a href="about/methodology.html">here</a>.
 
 <h2>Test results</h2>
+
+<p>
+<ul>
+    <li><a href="rolling/rolling.html">Rolling test</a>: friction model test</li>
+    <li><a href="bouncing/bouncing.html">Bouncing test</a>: single-body elastic/inelastic collision test</li>
+    <li><a href="666/666.html">666 balls test</a>: single-body hard contact test</li>
+    <li><a href="666/666-elastic.html">Elastic 666 balls test</a>: single-body energy test</li>
+    <li><a href="anymal/anymal.html">ANYmal PD control test</a>: articulated-robot-system speed test</li>
+    <li><a href="anymal-momentum/anymal-momentum.html">ANYmal zero gravity test</a>: articulated-robot-system momentum test</li>
+    <li><a href="anymal-energy/anymal-energy.html">ANYmal free drop test</a>: articulated-robot-system energy test</li>
+</ul>
+</p>
 
 <p>
   <table style="width:100%">
@@ -133,17 +152,6 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
 </ul>
 
 <hr>
-<p>
-  <ul>
-      <li><a href="rolling/rolling.html">Rolling test</a>: friction model test</li>
-      <li><a href="bouncing/bouncing.html">Bouncing test</a>: single-body elastic/inelastic collision test</li>
-      <li><a href="666/666.html">666 balls test</a>: single-body hard contact test</li>
-      <li><a href="666/666-elastic.html">Elastic 666 balls test</a>: single-body energy test</li>
-      <li><a href="anymal/anymal.html">ANYmal PD control test</a>: articulated-robot-system speed test</li>
-      <li><a href="anymal-momentum/anymal-momentum.html">ANYmal zero gravity test</a>: articulated-robot-system momentum test</li>
-      <li><a href="anymal-energy/anymal-energy.html">ANYmal free drop test</a>: articulated-robot-system energy test</li>
-  </ul>
-</p>
 
 <!--<h2>Conclusion</h2>-->
 
