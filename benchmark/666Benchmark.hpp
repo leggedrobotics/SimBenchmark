@@ -104,7 +104,11 @@ std::string getYamlpath() {
   std::string yamlPath(__FILE__);
   while (yamlPath.back() != '/')
     yamlPath.erase(yamlPath.size() - 1, 1);
-  yamlPath += "./yaml/666.yaml";
+
+  if(options.elasticCollision)
+    yamlPath += "./yaml/666-elastic.yaml";
+  else
+    yamlPath += "./yaml/666.yaml";
 
   return yamlPath;
 }

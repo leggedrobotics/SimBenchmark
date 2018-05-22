@@ -20,7 +20,7 @@ constant:
   ballM: 10
   gap: 0.21
   perturbation: 0.001
-  H: 0.101
+  H: 1.101
   n: 6
   g: -9.81
 
