@@ -94,6 +94,7 @@ void MjcSingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
   extforce[1] = torque[1];
   extforce[2] = torque[2];
 }
+
 mjtNum *MjcSingleBodyObject::getGeomPosition() {
   int geomIndex = worldModel_->body_geomadr[bodyID_] + geomID_;
   return worldData_->geom_xpos + 3 * geomIndex;
@@ -109,11 +110,15 @@ mjtNum *MjcSingleBodyObject::getBodyComPosition() {
 }
 
 mjtNum *MjcSingleBodyObject::getBodyLinearVelocity() {
-  return worldData_->cvel + 6 * bodyID_ + 3;
+  mj_objectVelocity(worldModel_, worldData_, mjOBJ_BODY, bodyID_, temp6D_, 0);
+  return temp6D_ + 3;
+//  return worldData_->cvel + 6 * bodyID_ + 3;
 }
 
 mjtNum *MjcSingleBodyObject::getBodyAngularVelocity() {
-  return worldData_->cvel + 6 * bodyID_;
+  mj_objectVelocity(worldModel_, worldData_, mjOBJ_BODY, bodyID_, temp6D_, 0);
+  return temp6D_;
+//  return worldData_->cvel + 6 * bodyID_;
 }
 
 /// friction for (slide, spin, roll)

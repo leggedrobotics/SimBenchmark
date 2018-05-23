@@ -95,6 +95,10 @@ class MjcSingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
 
   benchmark::Vec<3> linearMomentum_ = {0, 0, 0};
 
+  mjtNum temp6D_[6] = {0, 0, 0, 0, 0, 0};
+  mjtNum temp3D_[3] = {0, 0, 0};
+  mjtNum *tempPtr;
+
   bool isMovable_ = true;
 
 };
