@@ -6,7 +6,7 @@ addpath(genpath('../lib/yamlmatlab'))
 
 % data path
 data_dir = '../../../data/666/';
-file_name = 'sample.csv';
+file_name = '2018-05-23-00:21:08.csv';
 
 % yaml path
 yaml_path = '../../../benchmark/yaml/666.yaml';
@@ -101,7 +101,7 @@ for i = 1:size(T2, 1)
         'FaceColor', spec{3})
 end
 hold off
-title(sprintf('Rolling test speed (timestep = %f)', dt))
+title(sprintf('666 test speed (timestep = %f)', dt))
 % numbers on bars
 text(1:length(speed), ...
     speed, ...

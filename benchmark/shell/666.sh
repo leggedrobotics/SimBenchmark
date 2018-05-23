@@ -46,7 +46,7 @@ do
     # bullet sim
     if [ "$test_bt" == 'ON' ]; then
         if [ "$BTSIM_ON" == "ON" ]; then
-            for solver in seqimp nncg pgs dantzig #lemke
+            for solver in seqimp nncg pgs #dantzig lemke
             do
                 for erpon in true false
                 do

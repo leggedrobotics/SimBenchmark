@@ -63,18 +63,26 @@ BtWorld::BtWorld(SolverOption solverOption) : solverOption_(solverOption) {
 
   dynamicsWorld_->setGravity(gravity_);
 
-  // solver parameters
+  /// settings
+  /// no speculative contact
+  dynamicsWorld_->setApplySpeculativeContactRestitution(false);
+
+  /// solver parameters
 //  dynamicsWorld_->getSolverInfo().m_tau = btScalar(0.6);
 //  dynamicsWorld_->getSolverInfo().m_damping = btScalar(1.0);
 //  dynamicsWorld_->getSolverInfo().m_friction = btScalar(0.8);
 //  dynamicsWorld_->getSolverInfo().m_restitution = 0.0;
 //  dynamicsWorld_->getSolverInfo().m_maxErrorReduction = btScalar(20.);
 //  dynamicsWorld_->getSolverInfo().m_numIterations = 1000;                     // TODO
+  /// no erp
   dynamicsWorld_->getSolverInfo().m_erp = 0;
   dynamicsWorld_->getSolverInfo().m_erp2 = 0;
   dynamicsWorld_->getSolverInfo().m_frictionERP = 0;
-//  dynamicsWorld_->getSolverInfo().m_globalCfm = btScalar(0.0);
-//  dynamicsWorld_->getSolverInfo().m_frictionCFM = 0;
+
+  /// no cfm
+  dynamicsWorld_->getSolverInfo().m_globalCfm = btScalar(0.0);
+  dynamicsWorld_->getSolverInfo().m_frictionCFM = 0;
+
 //  dynamicsWorld_->getSolverInfo().m_sor = btScalar(1.);
 //  dynamicsWorld_->getSolverInfo().m_splitImpulse = false;
 //  dynamicsWorld_->getSolverInfo().m_splitImpulsePenetrationThreshold = 0;
@@ -85,8 +93,8 @@ BtWorld::BtWorld(SolverOption solverOption) : solverOption_(solverOption) {
 //  dynamicsWorld_->getSolverInfo().m_restingContactRestitutionThreshold = 2;//unused as of 2.81
 //  dynamicsWorld_->getSolverInfo().m_minimumSolverBatchSize = 128; //try to combine islands until the amount of constraints reaches this limit
 //  dynamicsWorld_->getSolverInfo().m_singleAxisRollingFrictionThreshold = 1e30f;///if the velocity is above this threshold, it will use a single constraint row (axis), otherwise 3 rows.
-//  dynamicsWorld_->getSolverInfo().m_leastSquaresResidualThreshold = 0.f;
-  dynamicsWorld_->getSolverInfo().m_restitutionVelocityThreshold = 0.0f;//if the relative velocity is below this threshold, there is zero restitution
+  dynamicsWorld_->getSolverInfo().m_leastSquaresResidualThreshold = 1e-2;
+  dynamicsWorld_->getSolverInfo().m_restitutionVelocityThreshold = 0.0f; //if the relative velocity is below this threshold, there is zero restitution
 
 }
 

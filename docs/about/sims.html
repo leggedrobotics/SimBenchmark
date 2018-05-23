@@ -44,12 +44,29 @@ layout: default
 Bullet Physics(Bullet) is physics engine developed by Erwin Coumans. It is one of the most commonly used simulator in computer games, computer graphics and robotics.
 Bullet is open-source subject to the terms of the zlib license. In the benchmark, we used version 2.87 of Bullet Physics that is the most recent stable version.
 
-<h3>Sequence Impulse solver</h3>
-<h3>NNCG solver</h3>
-<h3>MLCP Dantzig solver</h3>
-<h3>MLCP Projected Gauss Seidel solver</h3>
-<h3>MLCP Lemke solver</h3>
-<h3>Multibody solver</h3>
+<h3>Solvers</h3>
+
+<h4>Sequence Impulse</h4>
+<h4>NNCG</h4>
+<h4>MLCP Projected Gauss Seidel solver</h4>
+<h4>Multibody solver</h4>
+
+<h4>Others</h4>
+
+These solvers are obsolete or experimental that is not used:
+<ul>
+    <li>MLCP Dantzig solver</li>
+    <li>MLCP Lemke solver</li>
+</ul>
+
+<h3>Test setup</h3>
+<ul>
+    <li>ERP = 0</li>
+    <li>CFM = 0</li>
+    <li>Implicit body gyroscopic force</li>
+    <li>SleepingThreshold  = 0</li>
+    <!--<li>No <a href="https://wildbunny.co.uk/blog/2011/03/25/speculative-contacts-an-continuous-collision-engine-approach-part-1/">speculative contacts</a></li>-->
+</ul>
 
 <hr>
 <h2>ODE</h2>
