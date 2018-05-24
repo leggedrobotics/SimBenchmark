@@ -7,13 +7,13 @@
 
 #include <raiGraphics/RAI_graphics.hpp>
 
-#include "common/World_RG.hpp"
+#include "common/WorldRG.hpp"
 #include "MjcWorld.hpp"
 #include "UserHandle.hpp"
 
 namespace mujoco_sim {
 
-class MjcWorld_RG: public benchmark::World_RG {
+class MjcWorld_RG: public benchmark::WorldRG {
 
  public:
 
@@ -33,6 +33,11 @@ class MjcWorld_RG: public benchmark::World_RG {
               SolverOption solver = SOLVER_PGS,
               IntegratorOption integrator = INTEGRATOR_EULER);
   virtual ~MjcWorld_RG();
+
+  /////////////////////////////////////
+  /// Visualization related methods ///
+  /////////////////////////////////////
+  virtual void updateFrame() override ;
 
   //////////////////////////
   /// simulation methods ///

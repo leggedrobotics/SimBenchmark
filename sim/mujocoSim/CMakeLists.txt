@@ -54,13 +54,13 @@ set(MjcSimSrc
 # library
 add_library(MjcSimLib ${MjcSimSrc})
 target_link_libraries(MjcSimLib
-#        ${glew}
-#        ${glfw}
-        ${mujoco150}
-#        ${mujoco150nogl}
-#        GL
-#        GLU
-#        glut)
+        ${mujoco150nogl}
+        #        ${glew}
+        #        ${glfw}
+        #        ${mujoco150}
+        #        GL
+        #        GLU
+        #        glut
         )
 
 set(MjcSimLink
@@ -76,5 +76,9 @@ if(BUILD_DEMO)
 endif(BUILD_DEMO)
 
 if(BUILD_TEST)
+    add_subdirectory(test)
+endif(BUILD_TEST)
+
+if(BUILD_UTIL)
     add_subdirectory(test)
 endif(BUILD_TEST)

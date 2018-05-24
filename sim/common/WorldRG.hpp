@@ -21,19 +21,19 @@ enum VisualizerOption {
   DISABLE_INTERACTION = 1<<(2)
 };
 
-class World_RG {
+class WorldRG {
 
  public:
 
   /* constructor for visualization */
-  World_RG(int windowWidth,
+  WorldRG(int windowWidth,
            int windowHeight,
            float cms,
            int flags = 0);
 
   /* constructor for no visualization */
-  World_RG() = default;
-  virtual ~World_RG();
+  WorldRG() = default;
+  virtual ~WorldRG();
 
   /// Visualization related methods
   virtual void loop(double dt, double realTimeFactor = 1.0);
@@ -43,7 +43,6 @@ class World_RG {
   virtual void cameraFollowObject(rai_graphics::object::SingleBodyObject *followingObject, Eigen::Vector3d relativePosition);
   virtual void setLightPosition(float x, float y, float z);
   virtual bool visualizerLoop(double dt, double realTimeFactor = 1.0);
-  virtual void updateFrame();
   virtual void startRecordingVideo(std::string dir, std::string fileName);
   virtual void stopRecordingVideo();
 
@@ -86,6 +85,8 @@ class World_RG {
   virtual int getWorldNumContacts() = 0;
 
   /// pure virtual simulation methods
+  virtual void updateFrame() = 0;
+
   virtual void integrate(double dt) = 0;
   virtual void integrate1(double dt) = 0; // velocity updates
   virtual void integrate2(double dt) = 0; // position updates

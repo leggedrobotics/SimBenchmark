@@ -9,3 +9,6 @@ target_link_libraries(MjcAtlasDemo ${MjcSimLink})
 
 add_executable(MjcBuildingDemo BuildingDemo.cpp)
 target_link_libraries(MjcBuildingDemo ${MjcSimLink})
+
+add_executable(MjcHumanoidDemo HumanoidDemo.cpp)
+target_link_libraries(MjcHumanoidDemo ${MjcSimLink})

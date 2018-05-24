@@ -9,12 +9,12 @@ namespace bullet_sim {
 BtWorld_RG::BtWorld_RG(int windowWidth, int windowHeight, float cms, int flags, SolverOption solverOption) :
     solverOption_(solverOption),
     world_(solverOption),
-    benchmark::World_RG(windowWidth, windowHeight, cms, flags) {}
+    benchmark::WorldRG(windowWidth, windowHeight, cms, flags) {}
 
 BtWorld_RG::BtWorld_RG(SolverOption solverOption) :
     solverOption_(solverOption),
     world_(solverOption),
-    benchmark::World_RG() {}
+    benchmark::WorldRG() {}
 
 BtWorld_RG::~BtWorld_RG() {
   if(!isEnded_ && isReady_)
@@ -171,6 +171,7 @@ void BtWorld_RG::setGravity(Eigen::Vector3d gravity) {
 void BtWorld_RG::setERP(double erp, double erp2, double frictionErp) {
   world_.setERP(erp, erp2, frictionErp);
 }
+
 void BtWorld_RG::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);

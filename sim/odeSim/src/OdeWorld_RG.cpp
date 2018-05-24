@@ -8,11 +8,11 @@ namespace ode_sim {
 
 OdeWorld_RG::OdeWorld_RG(int windowWidth, int windowHeight, float cms, int flags, SolverOption solverOption) :
     world_(solverOption),
-    benchmark::World_RG(windowWidth, windowHeight, cms, flags) {}
+    benchmark::WorldRG(windowWidth, windowHeight, cms, flags) {}
 
 OdeWorld_RG::OdeWorld_RG(SolverOption solverOption) :
     world_(solverOption),
-    benchmark::World_RG() {}
+    benchmark::WorldRG() {}
 
 OdeWorld_RG::~OdeWorld_RG() {
   if(!isEnded_ && isReady_)

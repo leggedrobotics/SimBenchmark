@@ -36,7 +36,7 @@ class UserHandle {
 
 template<typename S>
 class UserObjectHandle : public UserHandle<S> {
-  friend class World_RG;
+  friend class WorldRG;
 
   std::vector<rai_graphics::object::SingleBodyObject*> g_, ag_;
 
@@ -54,7 +54,7 @@ class UserObjectHandle : public UserHandle<S> {
 
 template<typename S>
 class UserWireHandle : public UserHandle<S> {
-  friend class World_RG;
+  friend class WorldRG;
 
   std::vector<rai_graphics::object::Lines*> g_;
 

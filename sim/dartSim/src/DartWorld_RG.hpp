@@ -5,13 +5,13 @@
 #ifndef DARTSIM_WORLD_RG_HPP
 #define DARTSIM_WORLD_RG_HPP
 
-#include "common/World_RG.hpp"
+#include "common/WorldRG.hpp"
 #include "UserHandle.hpp"
 #include "DartWorld.hpp"
 
 namespace dart_sim {
 
-class DartWorld_RG: public benchmark::World_RG {
+class DartWorld_RG: public benchmark::WorldRG {
 
  public:
   /* constructor for visualization */
@@ -34,7 +34,7 @@ class DartWorld_RG: public benchmark::World_RG {
 
   //////////////////////////////////
   /// adding or removing objects ///
-  //////////World////////////////////////
+  //////////////////////////////////
   benchmark::SingleBodyHandle addSphere(double radius,
                                         double mass,
                                         benchmark::CollisionGroupType collisionGroup = 1,
