@@ -23,7 +23,8 @@ option(BENCHMARK_ODE "benchmark ODE" ON)
 option(BENCHMARK_MUJOCO "benchmark MUJOCO" ON)
 option(BENCHMARK_DART "benchmark DART" ON)
 option(BUILD_DEMO "build demos" ON)
-option(BUILD_TEST "build test" ON)
+option(BUILD_TEST "build tests" ON)
+#option(BUILD_UTIL "build utils" ON)
 
 ## =========================== LINK DIRECTORIES ===========================
 link_directories(/usr/local/lib)
