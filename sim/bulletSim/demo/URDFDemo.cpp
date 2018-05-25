@@ -2,7 +2,7 @@
 // Created by kangd on 16.05.18.
 //
 
-#include <BtWorld_RG.hpp>
+#include <BtSim.hpp>
 
 int main() {
 
@@ -11,7 +11,7 @@ int main() {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/Singlebody/";
 
-  bullet_sim::BtWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
+  bullet_sim::BtSim sim(800, 600, 0.5, bullet_sim::SOLVER_MULTI_BODY, benchmark::NO_BACKGROUND);
 
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   auto robot = sim.addArticulatedSystem(urdfPath);

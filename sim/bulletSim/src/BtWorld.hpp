@@ -51,6 +51,7 @@ class BtWorld: public benchmark::WorldInterface {
   explicit BtWorld(SolverOption solverOption = SOLVER_SEQUENTIAL_IMPULSE);
   virtual ~BtWorld();
 
+  /// AddObject
   object::BtCheckerBoard *addCheckerboard(double gridSize,
                                         double xLength,
                                         double yLength,
@@ -93,7 +94,15 @@ class BtWorld: public benchmark::WorldInterface {
   int getNumObject() override ;
 
   void setGravity(const benchmark::Vec<3> &gravity) override ;
-  void setERP(double erp, double erp2, double frictionErp);
+
+  /**
+   * Set ERP for error correcting algorithm (0 ~ 1).
+   * Default value is 0.
+   * @param nonContactErp   ERP for non-contact
+   * @param contactErp      ERP for contact
+   * @param frictionErp     ERP for friction
+   */
+  void setERP(double nonContacterp, double contactErp, double frictionErp);
 
   /**
    * The parameters for the number of iteration during detecting collision btw convex-convex and convex-plane
@@ -104,7 +113,15 @@ class BtWorld: public benchmark::WorldInterface {
   void setMultipointIteration(int convexconvex, int convexplane);
 
  private:
+
+  /**
+  * integrate1 is not supported for BtWorld
+  */
   void integrate1(double dt) override;
+
+  /**
+  * integrate2 is not supported for BtWorld
+  */
   void integrate2(double dt) override;
 
   // dynamics world

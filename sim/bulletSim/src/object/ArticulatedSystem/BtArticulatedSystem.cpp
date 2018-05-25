@@ -551,14 +551,7 @@ int BtArticulatedSystem::getDOF() {
 int BtArticulatedSystem::getStateDimension() {
   return stateDimension_;
 }
-void BtArticulatedSystem::setColor(Eigen::Vector4d color) {
-  color_ = {
-      color[0], color[1], color[2], color[3]};
 
-  for(int i = 0; i < visObj.size(); i++) {
-    std::get<4>(visObj[i]) = color_;
-  }
-}
 void BtArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orientation, benchmark::Vec<3> &position) {
 
   if(bodyId == 0) {

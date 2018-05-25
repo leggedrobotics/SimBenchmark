@@ -17,17 +17,17 @@
 #include "SharedMemoryPublic.h"
 #include "Bullet3Common/b3Logging.h"
 
-static void scalarToDouble3(b3Scalar a[3], double b[3]) 
+static void scalarToDouble3(b3Scalar a[3], double b[3])
 {
-	for (int i = 0; i < 3; i++) 
+	for (int i = 0; i < 3; i++)
 	{
 		b[i] = a[i];
 	}
 }
 
-static void scalarToDouble4(b3Scalar a[4], double b[4]) 
+static void scalarToDouble4(b3Scalar a[4], double b[4])
 {
-	for (int i = 0; i < 4; i++) 
+	for (int i = 0; i < 4; i++)
 	{
 		b[i] = a[i];
 	}
@@ -61,7 +61,7 @@ bool b3RobotSimulatorClientAPI_NoGUI::connect(int mode, const std::string& hostN
 
 	switch (mode)
 	{
-	
+
 	case eCONNECT_DIRECT:
 		{
 			sm = b3ConnectPhysicsDirect();
@@ -1054,7 +1054,7 @@ void b3RobotSimulatorClientAPI_NoGUI::resetDebugVisualizerCamera(double cameraDi
 		{
 			b3Vector3FloatData camTargetPos;
 			targetPos.serializeFloat(camTargetPos);
-			b3ConfigureOpenGLVisualizerSetViewMatrix(commandHandle, cameraDistance, cameraPitch, cameraYaw, camTargetPos.m_floats);			
+			b3ConfigureOpenGLVisualizerSetViewMatrix(commandHandle, cameraDistance, cameraPitch, cameraYaw, camTargetPos.m_floats);
 		}
 		b3SubmitClientCommandAndWaitStatus(m_data->m_physicsClientHandle, commandHandle);
 	}
@@ -1173,7 +1173,7 @@ bool b3RobotSimulatorClientAPI_NoGUI::getCameraImage(int width, int height, stru
 }
 
 bool b3RobotSimulatorClientAPI_NoGUI::calculateInverseDynamics(int bodyUniqueId, double *jointPositions, double *jointVelocities,
-	double *jointAccelerations, double *jointForcesOutput) 
+	double *jointAccelerations, double *jointForcesOutput)
 {
 	if (!isConnected()) {
 		b3Warning("Not connected");
@@ -1222,7 +1222,7 @@ int b3RobotSimulatorClientAPI_NoGUI::getBodyUniqueId(int bodyId) const
 	return b3GetBodyUniqueId(m_data->m_physicsClientHandle, bodyId);
 }
 
-bool b3RobotSimulatorClientAPI_NoGUI::removeBody(int bodyUniqueId) 
+bool b3RobotSimulatorClientAPI_NoGUI::removeBody(int bodyUniqueId)
 {
 	if (!isConnected()) {
 		b3Warning("Not connected");
@@ -1275,7 +1275,7 @@ bool b3RobotSimulatorClientAPI_NoGUI::getDynamicsInfo(int bodyUniqueId, int link
 			b3Warning("getDynamicsInfo did not complete");
 			return false;
 		}
-	} 
+	}
 	b3Warning("getDynamicsInfo could not submit command");
 	return false;
 }
@@ -1372,7 +1372,7 @@ double b3RobotSimulatorClientAPI_NoGUI::readUserDebugParameter(int itemUniqueId)
 		int ok = b3GetStatusDebugParameterValue(statusHandle, &paramValue);
 		if (ok) {
 			return paramValue;
-		} 
+		}
 	}
 	b3Warning("readUserDebugParameter failed.");
 	return 0;
@@ -1631,7 +1631,7 @@ bool b3RobotSimulatorClientAPI_NoGUI::setPhysicsEngineParameter(struct b3RobotSi
 }
 
 
-bool b3RobotSimulatorClientAPI_NoGUI::applyExternalForce(int objectUniqueId, int linkIndex, double *force, double *position, int flags) 
+bool b3RobotSimulatorClientAPI_NoGUI::applyExternalForce(int objectUniqueId, int linkIndex, double *force, double *position, int flags)
 {
 	b3PhysicsClientHandle sm = m_data->m_physicsClientHandle;
 	if (sm == 0) {
@@ -1664,7 +1664,7 @@ bool b3RobotSimulatorClientAPI_NoGUI::applyExternalForce(int objectUniqueId, int
 }
 
 
-bool b3RobotSimulatorClientAPI_NoGUI::applyExternalTorque(int objectUniqueId, int linkIndex, double *torque, int flags) 
+bool b3RobotSimulatorClientAPI_NoGUI::applyExternalTorque(int objectUniqueId, int linkIndex, double *torque, int flags)
 {
 	b3PhysicsClientHandle sm = m_data->m_physicsClientHandle;
 	if (sm == 0) {
@@ -1871,7 +1871,7 @@ bool b3RobotSimulatorClientAPI_NoGUI::getAABB(int bodyUniqueId, int linkIndex, d
 	if (aabbMin == NULL || aabbMax == NULL) {
 		b3Warning("Output AABB matrix is NULL");
 		return false;
-	}    
+	}
 
 	command = b3RequestCollisionInfoCommandInit(sm, bodyUniqueId);
 	statusHandle = b3SubmitClientCommandAndWaitStatus(sm, command);
@@ -2007,18 +2007,18 @@ int b3RobotSimulatorClientAPI_NoGUI::createMultiBody(struct b3RobotSimulatorCrea
 		scalarToDouble4(linkOrientation.m_floats, doubleLinkOrientation);
 		scalarToDouble4(linkInertialFrameOrientation.m_floats, doubleLinkInertialFrameOrientation);
 
-		b3CreateMultiBodyLink(command, 
-			linkMass, 
-			linkCollisionShapeIndex, 
-			linkVisualShapeIndex, 
-			doubleLinkPosition, 
+		b3CreateMultiBodyLink(command,
+			linkMass,
+			linkCollisionShapeIndex,
+			linkVisualShapeIndex,
+			doubleLinkPosition,
 			doubleLinkOrientation,
 			doubleLinkInertialFramePosition,
 			doubleLinkInertialFrameOrientation,
 			linkParentIndex,
 			linkJointType,
 			doubleLinkJointAxis
-			);    
+			);
 	}
 
 	statusHandle = b3SubmitClientCommandAndWaitStatus(sm, command);
@@ -2060,4 +2060,53 @@ void b3RobotSimulatorClientAPI_NoGUI::setGuiHelper(struct GUIHelperInterface* gu
 struct GUIHelperInterface* b3RobotSimulatorClientAPI_NoGUI::getGuiHelper()
 {
 	return m_data->m_guiHelper;
+}
+
+bool b3RobotSimulatorClientAPI_NoGUI::getCollisionShapeData(int bodyUniqueId,
+                                                            int linkIndex,
+                                                            b3CollisionShapeInformation &collisionShapeInfo) {
+    b3PhysicsClientHandle sm = m_data->m_physicsClientHandle;
+    if (sm == 0) {
+        b3Warning("Not connected");
+        return false;
+    }
+    b3SharedMemoryCommandHandle command;
+    b3SharedMemoryStatusHandle statusHandle;
+    int statusType;
+
+    {
+        command = b3InitRequestCollisionShapeInformation(sm, bodyUniqueId, linkIndex);
+        statusHandle = b3SubmitClientCommandAndWaitStatus(sm, command);
+        statusType = b3GetStatusType(statusHandle);
+    }
+
+    b3Assert(statusType == CMD_COLLISION_SHAPE_INFO_COMPLETED);
+    if (statusType == CMD_COLLISION_SHAPE_INFO_COMPLETED)
+    {
+        b3GetCollisionShapeInformation(sm, &collisionShapeInfo);
+    }
+    return true;
+}
+
+bool b3RobotSimulatorClientAPI_NoGUI::getVisualShapeData(int bodyUniqueId, b3VisualShapeInformation &visualShapeInfo) {
+  b3PhysicsClientHandle sm = m_data->m_physicsClientHandle;
+  if (sm == 0) {
+    b3Warning("Not connected");
+    return false;
+  }
+  b3SharedMemoryCommandHandle commandHandle;
+  b3SharedMemoryStatusHandle statusHandle;
+  int statusType;
+
+  {
+    commandHandle = b3InitRequestVisualShapeInformation(sm, bodyUniqueId);
+    statusHandle = b3SubmitClientCommandAndWaitStatus(sm, commandHandle);
+    statusType = b3GetStatusType(statusHandle);
+
+    b3Assert(statusType == CMD_VISUAL_SHAPE_INFO_COMPLETED);
+    if (statusType == CMD_VISUAL_SHAPE_INFO_COMPLETED) {
+      b3GetVisualShapeInformation(sm, &visualShapeInfo);
+    }
+    return true;
+  }
 }

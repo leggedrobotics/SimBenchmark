@@ -2,20 +2,20 @@
 // Created by kangd on 26.04.18.
 //
 
-#include <BtWorld_RG.hpp>
+#include <BtSim.hpp>
 
 #include "AnymalBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
-bullet_sim::BtWorld_RG *sim;
+bullet_sim::BtSim *sim;
 std::vector<bullet_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::options.gui)
-    sim = new bullet_sim::BtWorld_RG(800, 600, 0.5, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
+    sim = new bullet_sim::BtSim(800, 600, 0.5, bullet_sim::SOLVER_MULTI_BODY, benchmark::NO_BACKGROUND);
   else
-    sim = new bullet_sim::BtWorld_RG(bullet_sim::SOLVER_MULTI_BODY);
+    sim = new bullet_sim::BtSim(bullet_sim::SOLVER_MULTI_BODY);
 
   /// NOTE: collision detection parameters to maintain 4 contact points
   sim->setMultipointIteration(0, 0);

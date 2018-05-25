@@ -49,16 +49,31 @@ class WorldInterface {
                                                          CollisionGroupType collisionMask=-1) = 0;
 
 
+  /**
+   * Set gravitational acceleration
+   * @param gravity 3D vector of gravitational acceleration
+   */
   virtual void setGravity(const benchmark::Vec<3> &gravity) = 0;
 
   virtual int getNumObject() = 0;
 
+  /**
+   * One simulation step with dt.
+   * @param dt  timestep size in sec
+   */
   virtual void integrate(double dt) = 0;
 
+  /**
+   * Update kinematics with dt. Call this function before applying control input.
+   * @param dt  timestep size in sec
+   */
   virtual void integrate1(double dt) = 0;
 
+  /**
+   * One simulation step after control input.
+   * @param dt  timestep size in sec
+   */
   virtual void integrate2(double dt) = 0;
-
 };
 
 }

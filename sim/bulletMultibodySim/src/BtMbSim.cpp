@@ -1,107 +1,49 @@
 //
-// Created by kangd on 10.02.18.
+// Created by kangd on 24.05.18.
 //
 
-#include "BtWorld_RG.hpp"
+#include "BtMbSim.hpp"
 
-namespace bullet_sim {
+namespace bullet_multibody_sim {
 
-BtWorld_RG::BtWorld_RG(int windowWidth, int windowHeight, float cms, int flags, SolverOption solverOption) :
-    solverOption_(solverOption),
-    world_(solverOption),
-    benchmark::WorldRG(windowWidth, windowHeight, cms, flags) {}
+BtMbSim::BtMbSim(int windowWidth, int windowHeight, float cms, int flags)
+    : WorldRG(windowWidth, windowHeight, cms, flags), world_() {}
 
-BtWorld_RG::BtWorld_RG(SolverOption solverOption) :
-    solverOption_(solverOption),
-    world_(solverOption),
-    benchmark::WorldRG() {}
+BtMbSim::BtMbSim() : world_() {}
 
-BtWorld_RG::~BtWorld_RG() {
+BtMbSim::~BtMbSim() {
   if(!isEnded_ && isReady_)
     visEnd();
 }
 
-benchmark::SingleBodyHandle BtWorld_RG::addBox(double xLength,
-                                             double yLength,
-                                             double zLength,
-                                             double mass,
-                                             benchmark::CollisionGroupType collisionGroup,
-                                             benchmark::CollisionGroupType collisionMask) {
-
-  benchmark::SingleBodyHandle handle(
-      world_.addBox(xLength, yLength, zLength, mass, collisionGroup, collisionMask), {}, {});
-  if(gui_) handle.visual().push_back(new rai_graphics::object::Box(xLength, yLength, zLength, true));
-  processSingleBody(handle);
-  return handle;
+int BtMbSim::getNumObject() {
+  return world_.getNumObject();
 }
 
-benchmark::SingleBodyHandle BtWorld_RG::addSphere(double radius,
-                                                double mass,
-                                                benchmark::CollisionGroupType collisionGroup,
-                                                benchmark::CollisionGroupType collisionMask) {
-  benchmark::SingleBodyHandle handle(
-      world_.addSphere(radius, mass, collisionGroup, collisionMask), {}, {});
-  if(gui_) handle.visual().push_back(new rai_graphics::object::Sphere(radius, true));
-  processSingleBody(handle);
-  return handle;
+void BtMbSim::setGravity(Eigen::Vector3d gravity) {
+  world_.api_->setGravity({float(gravity.x()),
+                           float(gravity.y()),
+                           float(gravity.z())});
 }
 
-benchmark::SingleBodyHandle BtWorld_RG::addCheckerboard(double gridSize,
-                                                      double xLength,
-                                                      double yLength,
-                                                      double reflectanceI,
-                                                      bo::CheckerboardShape shape,
-                                                      benchmark::CollisionGroupType collisionGroup,
-                                                      benchmark::CollisionGroupType collisionMask,
-                                                      int flags) {
-  benchmark::SingleBodyHandle handle(
-      world_.addCheckerboard(gridSize, xLength, yLength, reflectanceI, shape, collisionGroup, collisionMask), {}, {});
-  handle.hidable = false;
-  if(gui_) {
-    handle.visual().push_back(new rai_graphics::object::CheckerBoard(gridSize, xLength, yLength, reflectanceI));
-    static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0])->gridMode = flags & bo::GRID;
-    gui_->addCheckerBoard(static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0]));
-  }
-  sbHandles_.push_back(handle);
-  return handle;
+void BtMbSim::setTimeStep(double dt) {
+  world_.api_->setTimeStep(dt);
 }
 
-benchmark::SingleBodyHandle BtWorld_RG::addCapsule(double radius,
-                                                 double height,
-                                                 double mass,
-                                                 benchmark::CollisionGroupType collisionGroup,
-                                                 benchmark::CollisionGroupType collisionMask) {
-  benchmark::SingleBodyHandle handle(
-      world_.addCapsule(radius, height, mass, collisionGroup, collisionMask), {}, {});
-  if(gui_) handle.visual().push_back(new rai_graphics::object::Capsule(radius, height, true));
-  processSingleBody(handle);
-  return handle;
+void BtMbSim::integrate() {
+  world_.api_->stepSimulation();
 }
 
-benchmark::SingleBodyHandle BtWorld_RG::addCylinder(double radius,
-                                                  double height,
-                                                  double mass,
-                                                  benchmark::CollisionGroupType collisionGroup,
-                                                  benchmark::CollisionGroupType collisionMask) {
-  benchmark::SingleBodyHandle handle(
-      world_.addCylinder(radius, height, mass, collisionGroup, collisionMask), {}, {});
-  if(gui_) handle.visual().push_back(new rai_graphics::object::Cylinder(radius, height, true));
-  processSingleBody(handle);
-  return handle;
-
-}
-
-ArticulatedSystemHandle BtWorld_RG::addArticulatedSystem(std::string nm,
-                                                       benchmark::CollisionGroupType collisionGroup,
-                                                       benchmark::CollisionGroupType collisionMask) {
-  if(solverOption_ != bullet_sim::SOLVER_MULTI_BODY)
-    RAIFATAL("cannot simulate articulated system on non-multibody world")
+void BtMbSim::addArticulatedSystem(std::string nm,
+                                   object::ObjectFileType fileType,
+                                   benchmark::CollisionGroupType collisionGroup,
+                                   benchmark::CollisionGroupType collisionMask) {
 
   ArticulatedSystemHandle handle(
-      world_.addArticulatedSystem(nm, collisionGroup, collisionMask), {}, {});
+      world_.addArticulatedSystem(nm, fileType, collisionGroup, collisionMask), {}, {});
   if(!gui_) {
     asHandles_.push_back(handle);
-    return handle;
+    return;
   }
 
   for (int i = 0; i < handle->visObj.size(); i++) {
@@ -155,24 +97,18 @@ ArticulatedSystemHandle BtWorld_RG::addArticulatedSystem(std::string nm,
     }
     processGraphicalObject(handle.alternateVisual().back(), std::get<2>(handle->visColObj[i]));
   }
-
-  asHandles_.push_back(handle);
-  return handle;
 }
 
-void BtWorld_RG::integrate(double dt) {
-  world_.integrate(dt);
+void BtMbSim::setERP(double nonContactErp, double contactErp, double frictionErp) {
+  b3RobotSimulatorSetPhysicsEngineParameters parameters;
+  parameters.m_erp = nonContactErp;
+  parameters.m_contactERP = contactErp;
+  parameters.m_frictionERP = frictionErp;
+
+  world_.api_->setPhysicsEngineParameter(parameters);
 }
 
-void BtWorld_RG::setGravity(Eigen::Vector3d gravity) {
-  world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
-}
-
-void BtWorld_RG::setERP(double erp, double erp2, double frictionErp) {
-  world_.setERP(erp, erp2, frictionErp);
-}
-
-void BtWorld_RG::updateFrame() {
+void BtMbSim::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
 
@@ -271,16 +207,16 @@ void BtWorld_RG::updateFrame() {
 //  }
 
   /// contact points
-  if (gui_->getCustomToggleState(1)) {
-    contactPointMarker_->mutexLock();
-    contactPointMarker_->clearGhost();
-    for (auto &pro: *world_.getCollisionProblem()) {
-      Eigen::Vector3d pos = pro.point_;
-      contactPointMarker_->addGhost(pos);
-    }
-    contactPointMarker_->mutexUnLock();
-  } else
-    contactPointMarker_->clearGhost();
+//  if (gui_->getCustomToggleState(1)) {
+//    contactPointMarker_->mutexLock();
+//    contactPointMarker_->clearGhost();
+//    for (auto &pro: *world_.getCollisionProblem()) {
+//      Eigen::Vector3d pos = pro.point_;
+//      contactPointMarker_->addGhost(pos);
+//    }
+//    contactPointMarker_->mutexUnLock();
+//  } else
+//    contactPointMarker_->clearGhost();
 
   /// contact forces
 //  if (gui_->getCustomToggleState(2)) {
@@ -388,41 +324,5 @@ void BtWorld_RG::updateFrame() {
 //    }
 //  }
 }
-void BtWorld_RG::visEnd() {
-  gui_->end();
-  for (auto& obj: asHandles_) {
-    for (auto go: obj.visual())
-      delete go;
-    for (auto go: obj.alternateVisual())
-      delete go;
-  }
 
-  for (auto& obj: sbHandles_) {
-    for (auto go: obj.visual())
-      delete go;
-    for (auto go: obj.alternateVisual())
-      delete go;
-  }
-
-  isEnded_ = true;
-}
-
-int BtWorld_RG::getNumObject() {
-  return world_.getNumObject();
-}
-
-int BtWorld_RG::getWorldNumContacts() {
-  return (int)world_.getCollisionProblem()->size();
-}
-
-void BtWorld_RG::setMultipointIteration(int convexconvex, int convexplane) {
-  world_.setMultipointIteration(convexconvex, convexplane);
-}
-void BtWorld_RG::integrate1(double dt) {
-  RAIFATAL("not supported for bullet")
-}
-void BtWorld_RG::integrate2(double dt) {
-  RAIFATAL("not supported for bullet")
-}
-
-} // bullet_sim
+} // bullet_multibody_sim

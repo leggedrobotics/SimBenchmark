@@ -2,23 +2,21 @@
 // Created by kangd on 14.05.18.
 //
 
-#include <BtWorld_RG.hpp>
+#include <BtSim.hpp>
 
 #include "AnymalMomentumBenchmark.hpp"
 #include "BtBenchmark.hpp"
 
-bullet_sim::BtWorld_RG *sim;
+bullet_sim::BtSim *sim;
 std::vector<benchmark::SingleBodyHandle> balls;
 std::vector<bullet_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::zerogravity::options.gui)
-    sim = new bullet_sim::BtWorld_RG(800, 600, 0.5,
-                                     benchmark::NO_BACKGROUND,
-                                     bullet_sim::SOLVER_MULTI_BODY);
+    sim = new bullet_sim::BtSim(800, 600, 0.5, bullet_sim::SOLVER_MULTI_BODY, benchmark::NO_BACKGROUND);
   else
-    sim = new bullet_sim::BtWorld_RG(bullet_sim::SOLVER_MULTI_BODY);
+    sim = new bullet_sim::BtSim(bullet_sim::SOLVER_MULTI_BODY);
 
   // set erp 0
   sim->setERP(0, 0, 0);

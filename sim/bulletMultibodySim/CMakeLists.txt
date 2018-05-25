@@ -23,8 +23,12 @@ set(BtMbSimSrc
         src/api/b3RobotSimulatorClientAPI_NoGUI.cpp
         src/api/b3RobotSimulatorClientAPI.h
         src/api/b3RobotSimulatorClientAPI.cpp
-        src/BtMbWorldRG.cpp
-        src/BtMbWorldRG.hpp)
+        src/BtMbSim.cpp
+        src/BtMbSim.hpp
+        src/object/BtMbArticulatedSystem.cpp
+        src/object/BtMbArticulatedSystem.hpp
+        src/BtMbUserHandle.hpp
+        )
 
 # library
 add_library(BtMbSimLib ${BtMbSimSrc})

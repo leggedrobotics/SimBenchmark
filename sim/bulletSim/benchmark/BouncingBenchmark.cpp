@@ -2,22 +2,20 @@
 // Created by kangd on 15.02.18.
 //
 
-#include <BtWorld_RG.hpp>
+#include <BtSim.hpp>
 
 #include "BouncingBenchmark.hpp"
 #include "BtBenchmark.hpp"
 
-bullet_sim::BtWorld_RG *sim;
+bullet_sim::BtSim *sim;
 std::vector<benchmark::SingleBodyHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
   if (benchmark::bouncing::options.gui)
-    sim = new bullet_sim::BtWorld_RG(800, 600, 0.5,
-                                     benchmark::NO_BACKGROUND,
-                                     benchmark::bullet::options.solverOption);
+    sim = new bullet_sim::BtSim(800, 600, 0.5, benchmark::bullet::options.solverOption, benchmark::NO_BACKGROUND);
   else
-    sim = new bullet_sim::BtWorld_RG(benchmark::bullet::options.solverOption);
+    sim = new bullet_sim::BtSim(benchmark::bullet::options.solverOption);
 
 
   // erp

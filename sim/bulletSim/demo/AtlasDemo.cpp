@@ -1,7 +1,7 @@
 //
 // Created by jhwangbo on 04/12/17.
 //
-#include <BtWorld_RG.hpp>
+#include <BtSim.hpp>
 #include <string>
 #include "raiCommon/utils/StopWatch.hpp"
 
@@ -12,7 +12,7 @@ int main() {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/Atlas/";
 
-  bullet_sim::BtWorld_RG sim(800, 600, 0.2, benchmark::NO_BACKGROUND, bullet_sim::SOLVER_MULTI_BODY);
+  bullet_sim::BtSim sim(800, 600, 0.2, bullet_sim::SOLVER_MULTI_BODY, benchmark::NO_BACKGROUND);
   sim.setLightPosition(0, -10, 10);
 
   auto atlas = sim.addArticulatedSystem(urdfPath);

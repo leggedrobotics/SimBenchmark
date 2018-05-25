@@ -16,22 +16,30 @@ namespace bo = benchmark::object;
 
 namespace benchmark {
 
+/**
+ * Options for GUI
+ */
 enum VisualizerOption {
   NO_BACKGROUND = 1<<(1),
   DISABLE_INTERACTION = 1<<(2)
 };
 
+/**
+ * WorldRG class is GUI wrapper of dynamics world.
+ * Each Sim (BtSim, MjcSim ...) inherit WorldRG
+ */
 class WorldRG {
 
  public:
 
-  /* constructor for visualization */
+  /// constructor and destructors
+  // constructor for visualization
   WorldRG(int windowWidth,
-           int windowHeight,
-           float cms,
-           int flags = 0);
+          int windowHeight,
+          float cms,
+          int flags = 0);
 
-  /* constructor for no visualization */
+  // constructor for no visualization
   WorldRG() = default;
   virtual ~WorldRG();
 
@@ -46,7 +54,7 @@ class WorldRG {
   virtual void startRecordingVideo(std::string dir, std::string fileName);
   virtual void stopRecordingVideo();
 
-  /// pure virtual adding or removing objects
+  /// add objects (pure virtuals)
   virtual SingleBodyHandle addCheckerboard(double gridSize,
                                            double xLength,
                                            double yLength,
@@ -86,24 +94,24 @@ class WorldRG {
 
   /// pure virtual simulation methods
   virtual void updateFrame() = 0;
-
   virtual void integrate(double dt) = 0;
-  virtual void integrate1(double dt) = 0; // velocity updates
-  virtual void integrate2(double dt) = 0; // position updates
+  virtual void integrate1(double dt) = 0;
+  virtual void integrate2(double dt) = 0;
   virtual void setGravity(Eigen::Vector3d gravity) = 0;
   virtual void setERP(double erp, double erp2, double frictionErp) = 0;
 
  protected:
+  /// sub methods
   virtual void checkFileExistance(std::string nm);
   virtual void processSingleBody(SingleBodyHandle handle);
   virtual void processGraphicalObject(rai_graphics::object::SingleBodyObject* go, int li);
   virtual void adjustTransparency(rai_graphics::object::SingleBodyObject* ob, bool hidable);
 
-  // object list
+  /// object list
   std::vector<SingleBodyHandle> sbHandles_;
   std::vector<object::SingleBodyObjectInterface *> framesAndCOMobj_;
 
-  // gui objects
+  /// gui objects
   std::unique_ptr<rai_graphics::RAI_graphics> gui_;
   std::unique_ptr<rai_graphics::object::Arrow> contactNormalArrow_;
   std::unique_ptr<rai_graphics::object::Sphere> contactPointMarker_;
@@ -111,20 +119,19 @@ class WorldRG {
   std::unique_ptr<rai_graphics::object::Sphere> graphicalComMarker_;
   std::unique_ptr<rai_graphics::object::Arrow> frameX_, frameY_, frameZ_;
 
-  // gui properties
+  /// gui properties
   rai_graphics::CameraProp cameraProperty_;
   rai_graphics::LightProp lightProperty_;
 
-  // gui watch timer
+  /// gui watch timer
   StopWatch watch_, visualizerWatch_;
 
-  // gui window size
+  /// gui window size
   const int windowWidth_ = 800;
   const int windowHeight_ = 600;
 
-  // gui option
+  /// gui option and flags
   int visualizerFlags_ = 0;
-
   bool isReady_=false;
   bool isEnded_=false;
 

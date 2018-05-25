@@ -18,8 +18,8 @@ include_directories(src)
 set(BtSimSrc
         src/BtWorld.hpp
         src/BtWorld.cpp
-        src/BtWorld_RG.hpp
-        src/BtWorld_RG.cpp
+        src/BtSim.hpp
+        src/BtSim.cpp
         src/UserHandle.hpp
         src/object/BtObject.hpp
         src/object/BtObject.cpp

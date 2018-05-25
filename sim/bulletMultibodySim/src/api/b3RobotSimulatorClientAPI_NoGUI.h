@@ -395,7 +395,6 @@ struct b3RobotSimulatorCreateMultiBodyArgs
 };
 
 
-
 ///The b3RobotSimulatorClientAPI is pretty much the C++ version of pybullet
 ///as documented in the pybullet Quickstart Guide
 ///https://docs.google.com/document/d/10sXEhzFRSnvFcl3XxNGhnD4N2SedqwdAvK3dsihxVUA
@@ -566,7 +565,10 @@ public:
 	
 	virtual void setGuiHelper(struct GUIHelperInterface* guiHelper);
 	virtual struct GUIHelperInterface* getGuiHelper();
-	
+
+    bool getCollisionShapeData(int bodyUniqueId, int linkIndex, b3CollisionShapeInformation &collisionShapeInfo);
+
+    bool getVisualShapeData(int bodyUniqueId, b3VisualShapeInformation &visualShapeInfo);
 };
 
 #endif  //B3_ROBOT_SIMULATOR_CLIENT_API_H

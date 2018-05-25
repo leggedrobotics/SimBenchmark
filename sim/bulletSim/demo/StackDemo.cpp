@@ -2,7 +2,7 @@
 // Created by kangd on 11.02.18.
 //
 
-#include "BtWorld_RG.hpp"
+#include "BtSim.hpp"
 
 enum Object {
   BOX,
@@ -12,9 +12,7 @@ enum Object {
 
 int main() {
 
-  bullet_sim::BtWorld_RG sim(800, 600, 0.5,
-                           benchmark::NO_BACKGROUND,
-                           bullet_sim::SOLVER_SEQUENTIAL_IMPULSE);
+  bullet_sim::BtSim sim(800, 600, 0.5, bullet_sim::SOLVER_SEQUENTIAL_IMPULSE, benchmark::NO_BACKGROUND);
   sim.setGravity({0, 0, -9.8});
   sim.setLightPosition(30, 0, 10);
 

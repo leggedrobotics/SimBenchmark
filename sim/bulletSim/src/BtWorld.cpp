@@ -225,9 +225,9 @@ void bullet_sim::BtWorld::setGravity(const benchmark::Vec<3> &gravity) {
   dynamicsWorld_->setGravity(gravity_);
 }
 
-void BtWorld::setERP(double erp, double erp2, double frictionErp) {
-  dynamicsWorld_->getSolverInfo().m_erp = erp;
-  dynamicsWorld_->getSolverInfo().m_erp2 = erp2;
+void BtWorld::setERP(double nonContacterp, double contactErp, double frictionErp) {
+  dynamicsWorld_->getSolverInfo().m_erp = nonContacterp;
+  dynamicsWorld_->getSolverInfo().m_erp2 = contactErp;
   dynamicsWorld_->getSolverInfo().m_frictionERP = frictionErp;
 }
 

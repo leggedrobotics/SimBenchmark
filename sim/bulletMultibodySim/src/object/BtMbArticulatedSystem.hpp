@@ -1,36 +1,33 @@
 //
-// Created by kangd on 25.03.18.
+// Created by kangd on 25.05.18.
 //
 
-#ifndef BULLETSIM_ARTICULATEDSYSTEM_HPP
-#define BULLETSIM_ARTICULATEDSYSTEM_HPP
+#ifndef BENCHMARK_BTMBARTICULATEDSYSTEM_HPP
+#define BENCHMARK_BTMBARTICULATEDSYSTEM_HPP
 
-#include <string>
-#include <btBulletCollisionCommon.h>
-#include <BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
-#include <BulletDynamics/Featherstone/btMultiBody.h>
-#include <BulletDynamics/Featherstone/btMultiBodyLink.h>
-#include <BulletDynamics/Featherstone/btMultiBodyLinkCollider.h>
-
+#include "api/b3RobotSimulatorClientAPI_NoGUI.h"
 #include "common/interface/ArticulatedSystemInterface.hpp"
 
-#include "URDF/BulletUrdfImporter.h"
-#include "URDF/MyMultiBodyCreator.h"
-#include "URDF/URDFToBullet.h"
-#include "URDF/UrdfParser.h"
-
-#include "object/ArticulatedSystem/URDF/URDFToBullet.h"
-#include "object/BtObject.hpp"
-
-namespace bullet_sim {
+namespace bullet_multibody_sim {
 namespace object {
 
-class BtArticulatedSystem: public bullet_sim::object::BtObject,
-                         public benchmark::object::ArticulatedSystemInterface {
+/**
+ * Articulated system script file type
+ */
+enum ObjectFileType {
+  URDF,
+  MJCF,
+  SDF
+};
+
+class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterface {
 
  public:
-  BtArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world);
-  virtual ~BtArticulatedSystem();
+
+  BtMbArticulatedSystem(std::string filePath,
+                        ObjectFileType fileType,
+                        b3RobotSimulatorClientAPI_NoGUI *api);
+  virtual ~BtMbArticulatedSystem();
 
   /**
    * Get degree of the freedom of the robot:
@@ -39,7 +36,7 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
    *
    * @return  Degree of freedom of the robot
    */
-  virtual int getDOF() override ;
+  int getDOF() override;
 
   /**
    * Get dimension of the generalized coordinate of the robot:
@@ -48,13 +45,15 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
    *
    * @return    State dimension of the robot
    */
-  virtual int getStateDimension() override ;
+  int getStateDimension() override;
 
   /**
    * Get generalized coordinate of robot
+   * The dimension of output vector is stateDimension:
    * If the robot is floating based then (base position ; base quaternion ; joint position)
-   * If the robot is fixed base then (joint position)
-   * @return Eigenvec of generalized coordinate (vector dimension = stateDimension)
+   * If the robot is fixed based then (joint position)
+   *
+   * @return Eigenvec of generalized coordinate
    */
   const EigenVec getGeneralizedCoordinate() override;
 
@@ -76,7 +75,7 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
    *
    * @return Eigenvec of generalized force
    */
-  virtual const EigenVec getGeneralizedForce() override;
+  const EigenVec getGeneralizedForce() override;
 
   /**
    * Get generalized coordinate and velocity
@@ -84,7 +83,7 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
    * @param genco   VectorXd of generalized coordinate (output)
    * @param genvel  VectorXd of generalized velocity (output)
    */
-  virtual void getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) override;
+  void getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) override;
 
   /**
    * Set generalized coordinate of robot
@@ -94,17 +93,7 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
    *
    * @param jointState  VectorXd of generalized coordinate
    */
-  virtual void setGeneralizedCoordinate(const Eigen::VectorXd &jointState) override;
-
-  /**
-   * Set generalized coordinate of robot
-   * The dimension of input vector is stateDimension:
-   * If the robot is floating based then (base position ; base quaternion ; joint position)
-   * If the robot is fixed based then (joint position)
-   *
-   * @param jointState  Array of generalized coordinate
-   */
-  virtual void setGeneralizedCoordinate(std::initializer_list<double> jointState) override;
+  void setGeneralizedCoordinate(const Eigen::VectorXd &jointState) override;
 
   /**
    * Set generalized velocity of robot
@@ -114,7 +103,17 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
    *
    * @param jointVel    VectorXd of generalized velocity
    */
-  virtual void setGeneralizedVelocity(const Eigen::VectorXd &jointVel) override;
+  void setGeneralizedVelocity(const Eigen::VectorXd &jointVel) override;
+
+  /**
+   * Set generalized coordinate of robot
+   * The dimension of input vector is stateDimension:
+   * If the robot is floating based then (base position ; base quaternion ; joint position)
+   * If the robot is fixed based then (joint position)
+   *
+   * @param jointState  Array of generalized coordinate
+   */
+  void setGeneralizedCoordinate(std::initializer_list<double> jointState) override;
 
   /**
    * Set generalized velocity of robot
@@ -124,7 +123,7 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
    *
    * @param jointVel    Array of generalized velocity
    */
-  virtual void setGeneralizedVelocity(std::initializer_list<double> jointVel) override;
+  void setGeneralizedVelocity(std::initializer_list<double> jointVel) override;
 
   /**
    * Set generalized force of robot
@@ -134,7 +133,7 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
    *
    * @return VectorXd of generalized force
    */
-  virtual void setGeneralizedForce(const Eigen::VectorXd &tau) override;
+  void setGeneralizedForce(const Eigen::VectorXd &tau) override;
 
   /**
    * Set generalized force of robot
@@ -144,7 +143,7 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
    *
    * @return Array of generalized force
    */
-  virtual void setGeneralizedForce(std::initializer_list<double> tau) override;
+  void setGeneralizedForce(std::initializer_list<double> tau) override;
 
   /**
    * Set generalized coordinate and velocity
@@ -152,23 +151,12 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
    * @param genco   VectorXd of generalized coordinate (input)
    * @param genvel  VectorXd of generalized velocity (input)
    */
-  virtual void setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) override;
+  void setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) override;
 
   /**
    * deprecated
    */
-  virtual void setColor(Eigen::Vector4d color) override { RAIFATAL("setColor is deprecated function") };
-
-  /**
-   * Set internal collision
-   *
-   * @param Yn  true for internal collision
-   */
-  void setInternalCollision(bool Yn);
-
-  void getBodyPose(int bodyId,
-                   benchmark::Mat<3, 3> &orientation,
-                   benchmark::Vec<3> &position);
+  void setColor(Eigen::Vector4d color) override {RAIFATAL("setColor is deprecated function")};
 
   /**
    * Get total mass of the robot
@@ -192,29 +180,10 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
   const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace() override;
 
  private:
-  void init();
-  void initVisuals();
-  void initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
-  void initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                         int id,
-                                         int numChild);
-  void initVisualFromCollisionShape(btCollisionShape *collisionShape,
-                                    btTransform transform,
-                                    int id);
-  void initVisualFromVisualShape(int id);
-
-  btMultiBodyDynamicsWorld *dynamicsWorld_;
-  btMultiBody *multiBody_;
-  BulletURDFImporter *importer_;
-
-  std::vector<int> movableLinkIdx_;
-
-  benchmark::Vec<3> linearMomentum_;
-
-  double maxJointTorque_ = 1000.0;
+  b3RobotSimulatorClientAPI_NoGUI *api_;
 };
 
 } // object
-} // rai_sim
+} // bullet_multibody_sim
 
-#endif //BULLETSIM_ARTICULATEDSYSTEM_HPP
+#endif //BENCHMARK_BTMBARTICULATEDSYSTEM_HPP

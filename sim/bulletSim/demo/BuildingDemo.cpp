@@ -2,12 +2,12 @@
 // Created by kangd on 09.05.18.
 //
 
-#include <BtWorld_RG.hpp>
+#include <BtSim.hpp>
 
 int main() {
 
   // sim
-  bullet_sim::BtWorld_RG sim(1280, 720, 0.1, benchmark::NO_BACKGROUND);
+  bullet_sim::BtSim sim(1280, 720, 0.1, bullet_sim::SOLVER_SEQUENTIAL_IMPULSE, benchmark::NO_BACKGROUND);
   sim.setERP(0.2, 0.1, 0.01);
 
   // object

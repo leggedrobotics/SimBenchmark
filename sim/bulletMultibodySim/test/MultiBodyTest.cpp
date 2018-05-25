@@ -34,15 +34,18 @@ int main(int argc, char* argv[])
   int planeUid = sim->loadURDF(groundpath);
   printf("planeUid = %d\n", planeUid);
 
-  int anymalid = sim->loadURDF(robotpath);
-  printf("r2d2 #joints = %d\n", sim->getNumJoints(anymalid));
+  int robot = sim->loadURDF(robotpath);
+  printf("robot #joints = %d\n", sim->getNumJoints(robot));
   printf("num body = %d\n", sim->getNumBodies());
 
   b3Vector3 basePosition = b3MakeVector3(0,0,1);
   b3Quaternion baseOrientation = b3Quaternion(0,0,0,1);
 
-  sim->resetBasePositionAndOrientation(anymalid, basePosition, baseOrientation);
-  sim->setGravity(b3MakeVector3(0,0,-9.8));
+  sim->resetBasePositionAndOrientation(robot, basePosition, baseOrientation);
+  sim->setGravity(b3MakeVector3(0,0,-9.81));
+
+  b3VisualShapeInformation info;
+  sim->getVisualShapeData(robot, info);
 
   while (sim->isConnected())
   {
@@ -50,7 +53,7 @@ int main(int argc, char* argv[])
 
     b3Vector3 pos;
     b3Quaternion quat;
-    sim->getBasePositionAndOrientation(anymalid, pos, quat);
+    sim->getBasePositionAndOrientation(robot, pos, quat);
 
   }
   delete sim;
