@@ -21,18 +21,18 @@ int main(int argc, char* argv[])
   //remove all existing objects (if any)
   sim->resetSimulation();
 
-//  std::string groundpath(__FILE__);
-//  while (groundpath.back() != '/')
-//    groundpath.erase(groundpath.size() - 1, 1);
-//  groundpath += "../../../res/ANYmal/robot.urdf";
+  std::string groundpath(__FILE__);
+  while (groundpath.back() != '/')
+    groundpath.erase(groundpath.size() - 1, 1);
+  groundpath += "../../../res/bullet/plane.urdf";
 
   std::string robotpath(__FILE__);
   while (robotpath.back() != '/')
     robotpath.erase(robotpath.size() - 1, 1);
-  robotpath += "../../../res/ANYmal/robot.urdf";
+  robotpath += "../../../res/bullet/R2D2/r2d2.urdf";
 
-//  int planeUid = sim->loadURDF(groundpath);
-//  printf("planeUid = %d\n", planeUid);
+  int planeUid = sim->loadURDF(groundpath);
+  printf("planeUid = %d\n", planeUid);
 
   int anymalid = sim->loadURDF(robotpath);
   printf("r2d2 #joints = %d\n", sim->getNumJoints(anymalid));
