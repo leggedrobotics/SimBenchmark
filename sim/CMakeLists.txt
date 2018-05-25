@@ -1,7 +1,7 @@
 set(Benchmark_SRCS
         common/UserHandle.hpp
-        common/World_RG.hpp
-        common/World_RG.cpp
+        common/WorldRG.hpp
+        common/WorldRG.cpp
         common/math.hpp
 #        common/interface/ArticulatedSystemInterface.hpp
 #        common/interface/WorldInterface.hpp
@@ -21,6 +21,11 @@ if(BENCHMARK_BULLET)
     message(STATUS "Benchmark Bullet")
     add_subdirectory(bulletSim)
 endif(BENCHMARK_BULLET)
+
+#if(BENCHMARK_BULLET_MULTIBODY)
+#    message(STATUS "Benchmark Bullet Multibody")
+#    add_subdirectory(bulletMultibodySim)
+#endif(BENCHMARK_BULLET_MULTIBODY)
 
 if(BENCHMARK_ODE)
     message(STATUS "Benchmark ODE")

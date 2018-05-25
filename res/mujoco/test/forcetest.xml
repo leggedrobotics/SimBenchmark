@@ -1,0 +1,12 @@
+<mujoco>
+    <option cone="elliptic"/>
+
+    <worldbody>
+        <geom type="plane" size="10 10 1" rgba=".9 0 0 1"/>
+        <body pos="0 0 10" quat="0.654066 0.209426 -0.636794 -0.350473">
+            <inertial pos="0 0 0" mass="10.000000" diaginertia="1.000000 1.000000 1.000000"/>
+            <freejoint/>
+            <geom type="sphere" size="0.5" rgba="0 .9 0 1" friction="0.4 0 0"/>
+        </body>
+    </worldbody>
+</mujoco>

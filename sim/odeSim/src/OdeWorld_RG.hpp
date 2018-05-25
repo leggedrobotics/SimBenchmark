@@ -10,7 +10,7 @@
 #include <raiGraphics/RAI_graphics.hpp>
 
 #include "common/math.hpp"
-#include "common/World_RG.hpp"
+#include "common/WorldRG.hpp"
 #include "common/Configure.hpp"
 
 #include "UserHandle.hpp"
@@ -18,7 +18,7 @@
 
 namespace ode_sim {
 
-class OdeWorld_RG: public benchmark::World_RG {
+class OdeWorld_RG: public benchmark::WorldRG {
 
  public:
 

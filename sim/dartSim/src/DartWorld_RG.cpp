@@ -13,11 +13,11 @@ DartWorld_RG::DartWorld_RG(int windowWidth,
                            SolverOption solverOption,
                            CollisionDetectorOption detectorOption) :
     world_(solverOption, detectorOption),
-    benchmark::World_RG(windowWidth, windowHeight, cms, flags) {}
+    benchmark::WorldRG(windowWidth, windowHeight, cms, flags) {}
 
 DartWorld_RG::DartWorld_RG(SolverOption solverOption, CollisionDetectorOption detectorOption) :
     world_(solverOption, detectorOption),
-    benchmark::World_RG() {}
+    benchmark::WorldRG() {}
 
 benchmark::SingleBodyHandle DartWorld_RG::addSphere(double radius,
                                                 double mass,

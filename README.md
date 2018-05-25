@@ -13,10 +13,11 @@ You can see the details and the result in [webpage](https://leggedrobotics.githu
 
 ## Overview
 
-- The project is consist of common part(interface) and libraries which corresponds each simulation engine.
+The project is consist of common part(interface) and libraries which corresponds each simulation engine.
 
 ## Installation
 
+- Ubuntu 16.04 LTS only.
 - Matlab R2018a is required for plotting
 - MuJoCo is proprietary. You need a license for testing MuJoCo.
 - RaiSim is proprietary, and currently unreleased.

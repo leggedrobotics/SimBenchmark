@@ -18,11 +18,13 @@ endif()
 # options
 option(BENCHMARK_RAISIM "benchmark raiSim" ON)
 option(BENCHMARK_BULLET "benchmark Bullet" ON)
+option(BENCHMARK_BULLET_MULTIBODY "benchmark Bullet Multibody" ON)
 option(BENCHMARK_ODE "benchmark ODE" ON)
 option(BENCHMARK_MUJOCO "benchmark MUJOCO" ON)
 option(BENCHMARK_DART "benchmark DART" ON)
 option(BUILD_DEMO "build demos" ON)
-option(BUILD_TEST "build test" ON)
+option(BUILD_TEST "build tests" ON)
+#option(BUILD_UTIL "build utils" ON)
 
 ## =========================== LINK DIRECTORIES ===========================
 link_directories(/usr/local/lib)

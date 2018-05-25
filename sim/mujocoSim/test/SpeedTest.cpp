@@ -156,7 +156,7 @@ int main(int argc, const char** argv)
         return finish("Could not allocate mjData", m);
 
     // time step
-    m->opt.timestep = 0.005;
+    m->opt.timestep = 0.03;
     m->opt.gravity[0] = 0;
     m->opt.gravity[1] = 0;
     m->opt.gravity[2] = -9.8;

@@ -11,14 +11,14 @@
 #include <bullet/btBulletCollisionCommon.h>
 
 #include "common/math.hpp"
-#include "common/World_RG.hpp"
+#include "common/WorldRG.hpp"
 #include "common/Configure.hpp"
 #include "UserHandle.hpp"
 #include "BtWorld.hpp"
 
 namespace bullet_sim {
 
-class BtWorld_RG: public benchmark::World_RG {
+class BtWorld_RG: public benchmark::WorldRG {
 
  public:
 
