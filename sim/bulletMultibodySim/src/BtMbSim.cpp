@@ -34,16 +34,16 @@ void BtMbSim::integrate() {
   world_.api_->stepSimulation();
 }
 
-void BtMbSim::addArticulatedSystem(std::string nm,
-                                   object::ObjectFileType fileType,
-                                   benchmark::CollisionGroupType collisionGroup,
-                                   benchmark::CollisionGroupType collisionMask) {
+ArticulatedSystemHandle BtMbSim::addArticulatedSystem(std::string nm,
+                                                      object::ObjectFileType fileType,
+                                                      benchmark::CollisionGroupType collisionGroup,
+                                                      benchmark::CollisionGroupType collisionMask) {
 
   ArticulatedSystemHandle handle(
       world_.addArticulatedSystem(nm, fileType, collisionGroup, collisionMask), {}, {});
   if(!gui_) {
     asHandles_.push_back(handle);
-    return;
+    return handle;
   }
 
   for (int i = 0; i < handle->visObj.size(); i++) {

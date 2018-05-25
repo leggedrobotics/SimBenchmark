@@ -63,10 +63,10 @@ class BtMbSim: public benchmark::WorldRG {
    * @param collisionGroup
    * @param collisionMask
    */
-  void addArticulatedSystem(std::string nm,
-                            ObjectFileType fileType,
-                            benchmark::CollisionGroupType collisionGroup = 1,
-                            benchmark::CollisionGroupType collisionMask = -1);
+  ArticulatedSystemHandle addArticulatedSystem(std::string nm,
+                                               object::ObjectFileType fileType,
+                                               benchmark::CollisionGroupType collisionGroup = 1,
+                                               benchmark::CollisionGroupType collisionMask = -1);
 
   /// pure virtual getter, setter
   /**
