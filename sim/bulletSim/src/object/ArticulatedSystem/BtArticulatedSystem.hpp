@@ -166,6 +166,13 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
    */
   void setInternalCollision(bool Yn);
 
+  /**
+   * Get pose of link w.r.t. world frame
+   *
+   * @param bodyId          linkId
+   * @param orientation     orientation of link (output)
+   * @param position        position of link (output)
+   */
   void getBodyPose(int bodyId,
                    benchmark::Mat<3, 3> &orientation,
                    benchmark::Vec<3> &position);

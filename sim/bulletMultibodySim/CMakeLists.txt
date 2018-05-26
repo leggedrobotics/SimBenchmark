@@ -6,6 +6,7 @@ set(CMAKE_CXX_FLAGS_RELEASE
 
 # bullet double precision
 add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
+#add_definitions(-DB3_USE_DOUBLE_PRECISION=1) TODO
 
 # bullet package
 find_package(Bullet CONFIG REQUIRED)

@@ -20,7 +20,7 @@ int main(int argc, const char* argv[]) {
 
   bullet_multibody_sim::BtMbSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 
-//  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
+//  auto checkerboard = sim.addArticulatedSystem(urdfPath, bullet_multibody_sim::object::URDF);
 //  checkerboard->setFrictionCoefficient(0.8);
 
   auto anymal = sim.addArticulatedSystem(urdfPath, bullet_multibody_sim::object::URDF);
@@ -34,7 +34,7 @@ int main(int argc, const char* argv[]) {
 //  anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
 //  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
-  sim.setGravity({0, 0, -9.8});
+  sim.setGravity({0, 0, 0});
   sim.setERP(0.05, 0.01, 0.0);
   sim.setTimeStep(0.005);
 
@@ -58,8 +58,8 @@ int main(int argc, const char* argv[]) {
 //    jointVel = anymal->getGeneralizedVelocity();
 //    jointForce = anymal->getGeneralizedForce();
 
-    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-    jointForce.head(6).setZero();
+//    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
+//    jointForce.head(6).setZero();
 //    anymal->setGeneralizedForce(jointForce);
     sim.integrate();
   }

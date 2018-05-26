@@ -21,9 +21,9 @@ int BtMbSim::getNumObject() {
 }
 
 void BtMbSim::setGravity(Eigen::Vector3d gravity) {
-  world_.api_->setGravity({float(gravity.x()),
-                           float(gravity.y()),
-                           float(gravity.z())});
+  world_.api_->setGravity({gravity.x(),
+                           gravity.y(),
+                           gravity.z()});
 }
 
 void BtMbSim::setTimeStep(double dt) {
@@ -97,6 +97,9 @@ ArticulatedSystemHandle BtMbSim::addArticulatedSystem(std::string nm,
     }
     processGraphicalObject(handle.alternateVisual().back(), std::get<2>(handle->visColObj[i]));
   }
+
+  asHandles_.push_back(handle);
+  return handle;
 }
 
 void BtMbSim::setERP(double nonContactErp, double contactErp, double frictionErp) {

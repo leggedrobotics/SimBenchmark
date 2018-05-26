@@ -5,6 +5,9 @@
 #ifndef BENCHMARK_BTMBARTICULATEDSYSTEM_HPP
 #define BENCHMARK_BTMBARTICULATEDSYSTEM_HPP
 
+#include <string>
+#include <bullet/SharedMemoryPublic.h>
+
 #include "api/b3RobotSimulatorClientAPI_NoGUI.h"
 #include "common/interface/ArticulatedSystemInterface.hpp"
 
@@ -84,6 +87,17 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
    * @param genvel  VectorXd of generalized velocity (output)
    */
   void getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) override;
+
+  /**
+  * Get pose of link w.r.t. world frame
+  *
+  * @param linkId          linkId
+  * @param orientation     orientation of link (output)
+  * @param position        position of link (output)
+  */
+  void getBodyPose(int linkId,
+                   benchmark::Mat<3, 3> &orientation,
+                   benchmark::Vec<3> &position);
 
   /**
    * Set generalized coordinate of robot
@@ -180,7 +194,35 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
   const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace() override;
 
  private:
+  /**
+   * Initialize links's visual object from visual shape data.
+   * One link has one visual object.
+   *
+   * @param objectId    Id of object (in Bullet API)
+   * @param data        VisualShapeData of link (output)
+   */
+  void initVisuals(int objectId, b3VisualShapeData &data);
+
+  /**
+   * Initialize link's collision visual object from collision shape info.
+   * Note that one link can have multiple collision objects.
+   *
+   * @param objectId    Id of object (in Bullet API)
+   * @param linkId      Id of link
+   * @param info        CollisionShapeInformation of link (output)
+   */
+  void initCollisions(int objectId, int linkId, b3CollisionShapeInformation &info);
+
+  /// Attiributes
+  // linear momentum
+  benchmark::Vec<3> linearMomentum_;
+
+  // api
   b3RobotSimulatorClientAPI_NoGUI *api_;
+
+  // object id (in bullet api)
+  int objectId_;
+
 };
 
 } // object
