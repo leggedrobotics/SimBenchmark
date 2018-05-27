@@ -295,32 +295,32 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
     // joints
     for(int i = 0; i < numJoints_; i++) {
       b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed")
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed");
       genCoordinate_[i] = state.m_jointPosition;
     }
   } // end of fixed base
   else {
-    b3Vector3 bPosition;
-    b3Quaternion bQuaternion;
+    btVector3 bPosition;
+    btQuaternion bQuaternion;
     RAIFATAL_IF(!api_->getBasePositionAndOrientation(objectId_, bPosition, bQuaternion),
-                "getBasePositionAndOrientation failed")
+                "getBasePositionAndOrientation failed");
 
     {
       // base
-      genCoordinate_[0] = bPosition.x;
-      genCoordinate_[1] = bPosition.y;
-      genCoordinate_[2] = bPosition.z;
+      genCoordinate_[0] = bPosition.x();
+      genCoordinate_[1] = bPosition.y();
+      genCoordinate_[2] = bPosition.z();
 
-      genCoordinate_[3] = bQuaternion.w;
-      genCoordinate_[4] = bQuaternion.x;
-      genCoordinate_[5] = bQuaternion.y;
-      genCoordinate_[6] = bQuaternion.z;
+      genCoordinate_[3] = bQuaternion.w();
+      genCoordinate_[4] = bQuaternion.x();
+      genCoordinate_[5] = bQuaternion.y();
+      genCoordinate_[6] = bQuaternion.z();
     }
 
     // joints
     for(int i = 0; i < numJoints_; i++) {
       b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed")
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed");
       genCoordinate_[i+7] = state.m_jointPosition;
     }
   } // end of floating base
@@ -334,31 +334,31 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
     // joints
     for(int i = 0; i < numJoints_; i++) {
       b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed")
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed");
       genVelocity_[i] = state.m_jointVelocity;
     }
   } // end of fixed base
   else {
-    b3Vector3 bLinVel;
-    b3Vector3 bAngVel;
+    btVector3 bLinVel;
+    btVector3 bAngVel;
     RAIFATAL_IF(!api_->getBaseVelocity(objectId_, bLinVel, bAngVel),
                 "getBaseVelocity failed")
 
     {
       // base
-      genVelocity_[0] = bLinVel.x;
-      genVelocity_[1] = bLinVel.y;
-      genVelocity_[2] = bLinVel.z;
+      genVelocity_[0] = bLinVel.x();
+      genVelocity_[1] = bLinVel.y();
+      genVelocity_[2] = bLinVel.z();
 
-      genVelocity_[3] = bAngVel.x;
-      genVelocity_[4] = bAngVel.y;
-      genVelocity_[5] = bAngVel.z;
+      genVelocity_[3] = bAngVel.x();
+      genVelocity_[4] = bAngVel.y();
+      genVelocity_[5] = bAngVel.z();
     }
 
     // joints
     for(int i = 0; i < numJoints_; i++) {
       b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed")
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed");
       genVelocity_[i+6] = state.m_jointVelocity;
     }
   } // end of floating base
@@ -375,7 +375,7 @@ void object::BtMbArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::Vect
 }
 
 void object::BtMbArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
-  RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
+  RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input");
 
   if(isFixed_) {
     for(int i = 0; i < numJoints_; i++) {
@@ -388,27 +388,27 @@ void object::BtMbArticulatedSystem::setGeneralizedCoordinate(const Eigen::Vector
     // floating base
     {
       // base
-      b3Vector3 basePosition = {
+      btVector3 basePosition = {
           jointState[0],
           jointState[1],
           jointState[2]
       };
 
-      genCoordinate_[0] = basePosition.x;
-      genCoordinate_[1] = basePosition.y;
-      genCoordinate_[2] = basePosition.z;
+      genCoordinate_[0] = basePosition.x();
+      genCoordinate_[1] = basePosition.y();
+      genCoordinate_[2] = basePosition.z();
 
-      b3Quaternion baseQuaternion = {
+      btQuaternion baseQuaternion = {
           jointState[4], // x
           jointState[5], // y
           jointState[6], // z
           jointState[3], // w
       };
 
-      genCoordinate_[3] = baseQuaternion.w;
-      genCoordinate_[4] = baseQuaternion.x;
-      genCoordinate_[5] = baseQuaternion.y;
-      genCoordinate_[6] = baseQuaternion.z;
+      genCoordinate_[3] = baseQuaternion.w();
+      genCoordinate_[4] = baseQuaternion.x();
+      genCoordinate_[5] = baseQuaternion.y();
+      genCoordinate_[6] = baseQuaternion.z();
 
       api_->resetBasePositionAndOrientation(objectId_, basePosition, baseQuaternion);
     }
@@ -423,7 +423,7 @@ void object::BtMbArticulatedSystem::setGeneralizedCoordinate(const Eigen::Vector
 }
 
 void object::BtMbArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
-  RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
+  RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input");
 
   if(isFixed_) {
     // fixed base
@@ -437,27 +437,27 @@ void object::BtMbArticulatedSystem::setGeneralizedCoordinate(std::initializer_li
     // floating base
     {
       // base
-      b3Vector3 basePosition = {
+      btVector3 basePosition = {
           jointState.begin()[0],
           jointState.begin()[1],
           jointState.begin()[2]
       };
 
-      genCoordinate_[0] = basePosition.x;
-      genCoordinate_[1] = basePosition.y;
-      genCoordinate_[2] = basePosition.z;
+      genCoordinate_[0] = basePosition.x();
+      genCoordinate_[1] = basePosition.y();
+      genCoordinate_[2] = basePosition.z();
 
-      b3Quaternion baseQuaternion = {
+      btQuaternion baseQuaternion = {
           jointState.begin()[4], // x
           jointState.begin()[5], // y
           jointState.begin()[6], // z
           jointState.begin()[3], // w
       };
 
-      genCoordinate_[3] = baseQuaternion.w;
-      genCoordinate_[4] = baseQuaternion.x;
-      genCoordinate_[5] = baseQuaternion.y;
-      genCoordinate_[6] = baseQuaternion.z;
+      genCoordinate_[3] = baseQuaternion.w();
+      genCoordinate_[4] = baseQuaternion.x();
+      genCoordinate_[5] = baseQuaternion.y();
+      genCoordinate_[6] = baseQuaternion.z();
 
       api_->resetBasePositionAndOrientation(objectId_, basePosition, baseQuaternion);
     }
@@ -477,12 +477,12 @@ void object::BtMbArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd
 
   }
   else {
-    b3Vector3 bLinVel = {
+    btVector3 bLinVel = {
         jointVel[0],
         jointVel[1],
         jointVel[2]
     };
-    b3Vector3 bAngVel = {
+    btVector3 bAngVel = {
         jointVel[3],
         jointVel[4],
         jointVel[5]
@@ -499,12 +499,12 @@ void object::BtMbArticulatedSystem::setGeneralizedVelocity(std::initializer_list
 
   }
   else {
-    b3Vector3 bLinVel = {
+    btVector3 bLinVel = {
         jointVel.begin()[0],
         jointVel.begin()[1],
         jointVel.begin()[2]
     };
-    b3Vector3 bAngVel = {
+    btVector3 bAngVel = {
         jointVel.begin()[3],
         jointVel.begin()[4],
         jointVel.begin()[5]
@@ -539,7 +539,7 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &t
     // floating base
     {
       // base
-      b3Vector3 bForce = {
+      btVector3 bForce = {
           tau[0],
           tau[1],
           tau[2]
@@ -549,7 +549,7 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &t
       genForce_[1] = tau[1];
       genForce_[2] = tau[2];
 
-      b3Vector3 bTorque = {
+      btVector3 bTorque = {
           tau[3], // x
           tau[4], // y
           tau[5], // z
@@ -559,7 +559,7 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &t
       genForce_[4] = tau[4];
       genForce_[5] = tau[5];
 
-      b3Vector3 bPosition = {0, 0, 0};
+      btVector3 bPosition = {0, 0, 0};
       api_->applyExternalForce(objectId_, -1, bForce, bPosition, EF_WORLD_FRAME);
       api_->applyExternalTorque(objectId_, -1, bForce, EF_WORLD_FRAME);
     }
@@ -607,7 +607,7 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(std::initializer_list<do
     // floating base
     {
       // base
-      b3Vector3 bForce = {
+      btVector3 bForce = {
           tau.begin()[0],
           tau.begin()[1],
           tau.begin()[2]
@@ -617,7 +617,7 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(std::initializer_list<do
       genForce_[1] = tau.begin()[1];
       genForce_[2] = tau.begin()[2];
 
-      b3Vector3 bTorque = {
+      btVector3 bTorque = {
           tau.begin()[3], // x
           tau.begin()[4], // y
           tau.begin()[5], // z
@@ -627,7 +627,7 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(std::initializer_list<do
       genForce_[4] = tau.begin()[4];
       genForce_[5] = tau.begin()[5];
 
-      b3Vector3 bPosition = {0, 0, 0};
+      btVector3 bPosition = {0, 0, 0};
       api_->applyExternalForce(objectId_, -1, bForce, bPosition, EF_WORLD_FRAME);
       api_->applyExternalTorque(objectId_, -1, bForce, EF_WORLD_FRAME);
     }
@@ -671,20 +671,20 @@ void object::BtMbArticulatedSystem::getBodyPose(int linkId,
 
   if(linkId == -1) {
     // base
-    b3Vector3 bPosition;
-    b3Quaternion bQuat;
+    btVector3 bPosition;
+    btQuaternion bQuat;
     RAIFATAL_IF(!api_->getBasePositionAndOrientation(objectId_, bPosition, bQuat), "getBasePositionAndOrientation failed");
     position = {
-        bPosition.x,
-        bPosition.y,
-        bPosition.z
+        bPosition.x(),
+        bPosition.y(),
+        bPosition.z()
     };
 
     benchmark::Vec<4> quat = {
-        bQuat.w,
-        bQuat.x,
-        bQuat.y,
-        bQuat.z,
+        bQuat.w(),
+        bQuat.x(),
+        bQuat.y(),
+        bQuat.z(),
     };
     benchmark::quatToRotMat(quat, orientation);
   }
@@ -693,7 +693,7 @@ void object::BtMbArticulatedSystem::getBodyPose(int linkId,
     b3LinkState linkState;
     RAIFATAL_IF(!api_->getLinkState(objectId_, linkId, &linkState), "getBasePositionAndOrientation failed");
 
-    b3Transform comTf_W;
+    btTransform comTf_W;
     comTf_W.setOrigin(
         {linkState.m_worldPosition[0],
          linkState.m_worldPosition[1],
@@ -704,7 +704,7 @@ void object::BtMbArticulatedSystem::getBodyPose(int linkId,
          linkState.m_worldOrientation[2],
          linkState.m_worldOrientation[3]});
 
-    b3Transform comTf_B;
+    btTransform comTf_B;
     comTf_B.setOrigin(
         {linkState.m_localInertialPosition[0],
          linkState.m_localInertialPosition[1],
@@ -715,19 +715,19 @@ void object::BtMbArticulatedSystem::getBodyPose(int linkId,
          linkState.m_localInertialOrientation[2],
          linkState.m_localInertialOrientation[3]});
 
-    b3Transform bTf = comTf_W * comTf_B.inverse();
+    btTransform bTf = comTf_W * comTf_B.inverse();
 
     benchmark::Vec<4> quat = {
-        bTf.getRotation().w,
-        bTf.getRotation().x,
-        bTf.getRotation().y,
-        bTf.getRotation().z};
+        bTf.getRotation().w(),
+        bTf.getRotation().x(),
+        bTf.getRotation().y(),
+        bTf.getRotation().z()};
     benchmark::quatToRotMat(quat, orientation);
 
     position = {
-        bTf.getOrigin().x,
-        bTf.getOrigin().y,
-        bTf.getOrigin().z};
+        bTf.getOrigin().x(),
+        bTf.getOrigin().y(),
+        bTf.getOrigin().z()};
   }
 }
 

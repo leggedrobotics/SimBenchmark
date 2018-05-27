@@ -136,47 +136,47 @@ bool BtMbSingleBodyObject::isVisualizeFramesAndCom() const {
 }
 
 void BtMbSingleBodyObject::getBulletQuaternion() {
-  b3Vector3 bPos;
-  b3Quaternion bQuat;
+  btVector3 bPos;
+  btQuaternion bQuat;
   api_->getBasePositionAndOrientation(objectId_, bPos, bQuat);
   quatTemp_ = {
-      bQuat.w,   // w
-      bQuat.x,   // x
-      bQuat.y,   // y
-      bQuat.z,   // z
+      bQuat.w(),   // w
+      bQuat.x(),   // x
+      bQuat.y(),   // y
+      bQuat.z(),   // z
   };
 }
 
 void BtMbSingleBodyObject::getBulletPosition() {
-  b3Vector3 bPos;
-  b3Quaternion bQuat;
+  btVector3 bPos;
+  btQuaternion bQuat;
   api_->getBasePositionAndOrientation(objectId_, bPos, bQuat);
   posTemp_ = {
-      bPos.x,   // x
-      bPos.y,   // y
-      bPos.z,   // z
+      bPos.x(),   // x
+      bPos.y(),   // y
+      bPos.z(),   // z
   };
 }
 
 void BtMbSingleBodyObject::getBulletLinearVelocity() {
-  b3Vector3 bLinVel;
-  b3Vector3 bAngVel;
+  btVector3 bLinVel;
+  btVector3 bAngVel;
   api_->getBaseVelocity(objectId_, bLinVel, bAngVel);
   posTemp_ = {
-      bLinVel.x,   // x
-      bLinVel.y,   // y
-      bLinVel.z,   // z
+      bLinVel.x(),   // x
+      bLinVel.y(),   // y
+      bLinVel.z(),   // z
   };
 }
 
 void BtMbSingleBodyObject::getBulletAngularVelocity() {
-  b3Vector3 bLinVel;
-  b3Vector3 bAngVel;
+  btVector3 bLinVel;
+  btVector3 bAngVel;
   api_->getBaseVelocity(objectId_, bLinVel, bAngVel);
   posTemp_ = {
-      bAngVel.x,   // x
-      bAngVel.y,   // y
-      bAngVel.z,   // z
+      bAngVel.x(),   // x
+      bAngVel.y(),   // y
+      bAngVel.z(),   // z
   };
 }
 

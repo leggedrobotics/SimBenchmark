@@ -54,7 +54,7 @@ void setupWorld() {
            benchmark::anymal::params.jointPos[11]
           });
 //      anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
-      anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
+//      anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
       anymals.push_back(anymal);
     }
   }
