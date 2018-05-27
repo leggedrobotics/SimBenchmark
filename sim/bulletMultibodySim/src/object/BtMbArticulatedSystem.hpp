@@ -11,7 +11,9 @@
 #include "api/b3RobotSimulatorClientAPI_NoGUI.h"
 #include "common/interface/ArticulatedSystemInterface.hpp"
 
-namespace bullet_multibody_sim {
+#include "BtMbObject.hpp"
+
+namespace bullet_mb_sim {
 namespace object {
 
 /**
@@ -23,7 +25,9 @@ enum ObjectFileType {
   SDF
 };
 
-class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterface {
+class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterface,
+                              public BtMbObject
+{
 
  public:
 
@@ -217,15 +221,21 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
   // linear momentum
   benchmark::Vec<3> linearMomentum_;
 
+  // joint idx (controllable joints)
+  std::vector<int> ctrbJoints_;
+
   // api
   b3RobotSimulatorClientAPI_NoGUI *api_;
 
   // object id (in bullet api)
   int objectId_;
 
+  // num of joints
+  int numJoints_;
+
 };
 
 } // object
-} // bullet_multibody_sim
+} // bullet_mb_sim
 
 #endif //BENCHMARK_BTMBARTICULATEDSYSTEM_HPP

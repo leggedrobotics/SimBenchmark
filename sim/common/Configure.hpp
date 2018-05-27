@@ -10,6 +10,7 @@ namespace benchmark {
 typedef int CollisionGroupType;
 
 enum ObjectType { SPHERE, BOX, CYLINDER, CONE, CAPSULE, CONVEXMESH, HALFSPACE, COMPOUND, HEIGHTMAP, ARTICULATED_SYSTEM };
+
 }
 
 #endif //BENCHMARK_CONFIGURE_HPP

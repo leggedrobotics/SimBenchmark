@@ -1,15 +1,4 @@
-set(Benchmark_SRCS
-        common/UserHandle.hpp
-        common/WorldRG.hpp
-        common/WorldRG.cpp
-        common/math.hpp
-#        common/interface/ArticulatedSystemInterface.hpp
-#        common/interface/WorldInterface.hpp
-#        common/interface/SingleBodyObjectInterface.hpp
-        )
-
-add_library(BenchmarkLib ${Benchmark_SRCS})
-
+add_subdirectory(common)
 message(STATUS "Simulation Engines:")
 
 if(BENCHMARK_RAISIM)

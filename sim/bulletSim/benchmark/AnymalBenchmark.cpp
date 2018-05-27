@@ -31,7 +31,6 @@ void setupWorld() {
       auto anymal = sim->addArticulatedSystem(
           benchmark::anymal::getURDFpath()
       );
-      anymal->setColor({1, 0, 0, 1});
       anymal->setGeneralizedCoordinate(
           {i * 2,
            j * 2,

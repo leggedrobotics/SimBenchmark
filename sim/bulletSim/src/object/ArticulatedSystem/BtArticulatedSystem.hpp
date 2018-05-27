@@ -26,7 +26,7 @@ namespace bullet_sim {
 namespace object {
 
 class BtArticulatedSystem: public bullet_sim::object::BtObject,
-                         public benchmark::object::ArticulatedSystemInterface {
+                           public benchmark::object::ArticulatedSystemInterface {
 
  public:
   BtArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world);
@@ -203,8 +203,8 @@ class BtArticulatedSystem: public bullet_sim::object::BtObject,
   void initVisuals();
   void initVisualFromLinkCollider(btMultiBodyLinkCollider *linkCollider, int colliderId);
   void initVisualFromCompoundChildList(btCompoundShapeChild *compoundShapeChild,
-                                         int id,
-                                         int numChild);
+                                       int id,
+                                       int numChild);
   void initVisualFromCollisionShape(btCollisionShape *collisionShape,
                                     btTransform transform,
                                     int id);

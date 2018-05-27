@@ -23,21 +23,22 @@ class MjcSingleBodyObject: public benchmark::object::SingleBodyObjectInterface {
                      int bodyId,
                      int geomId);
 
-  const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion() override ;
+  /// see base class for details
+  const benchmark::eQuaternion getQuaternion() override ;
   void getQuaternion(benchmark::Vec<4>& quat) override ;
-  const Eigen::Map<Eigen::Matrix<double, 3, 3> > getRotationMatrix() override ;
+  const benchmark::eRotationMat getRotationMatrix() override ;
   void getRotationMatrix(benchmark::Mat<3,3>& rotation) override ;
-  const Eigen::Map<Eigen::Matrix<double, 3, 1> > getPosition() override ;
-  const Eigen::Map<Eigen::Matrix<double, 3, 1> > getComPosition() override ;
-  const Eigen::Map<Eigen::Matrix<double, 3, 1> > getLinearVelocity() override ;
-  const Eigen::Map<Eigen::Matrix<double, 3, 1> > getAngularVelocity() override ;
+  const benchmark::eVector3 getPosition() override ;
+  const benchmark::eVector3 getComPosition() override ;
+  const benchmark::eVector3 getLinearVelocity() override ;
+  const benchmark::eVector3 getAngularVelocity() override ;
   void getPosition_W(benchmark::Vec<3>& pos_w) override ;
 
   double getKineticEnergy() override ;
   double getPotentialEnergy(const benchmark::Vec<3> &gravity) override ;
   double getEnergy(const benchmark::Vec<3> &gravity) override ;
 
-  const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentum() override;
+  const benchmark::eVector3 getLinearMomentum() override;
 
   void setExternalForce(Eigen::Vector3d force) override ;
   void setExternalTorque(Eigen::Vector3d torque) override ;

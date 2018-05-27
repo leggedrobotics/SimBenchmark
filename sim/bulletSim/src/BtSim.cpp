@@ -351,20 +351,20 @@ void BtSim::updateFrame() {
     return;
 
   /// interaction
-  if (gui_->isInteracting()) {
-    auto indices = interactionIdx_.find(gui_->getInteractingObjectID());
-    interactionForce_ = gui_->getInteractionMagnitude();
-    interactionForce_ *= interactionForce_.norm() * 20.0 * world_.getObjList()[indices->second.first]->getMass(indices->second.second);
-    objToInteract_ = world_.getObjList()[indices->second.first];
-    objToInteractLocalIdx_ = indices->second.second;
-    std::stringstream inStr;
-    inStr << std::setprecision(3) << interactionForce_.norm() << "N";
-    gui_->changeMenuText(1, false, inStr.str());
-    gui_->setMenuPositionNextToCursor(1);
-  } else {
-    gui_->changeMenuText(1, false, "");
-    objToInteract_ = nullptr;
-  }
+//  if (gui_->isInteracting()) {
+//    auto indices = interactionIdx_.find(gui_->getInteractingObjectID());
+//    interactionForce_ = gui_->getInteractionMagnitude();
+//    interactionForce_ *= interactionForce_.norm() * 20.0 * world_.getObjList()[indices->second.first]->getMass(indices->second.second);
+//    objToInteract_ = world_.getObjList()[indices->second.first];
+//    objToInteractLocalIdx_ = indices->second.second;
+//    std::stringstream inStr;
+//    inStr << std::setprecision(3) << interactionForce_.norm() << "N";
+//    gui_->changeMenuText(1, false, inStr.str());
+//    gui_->setMenuPositionNextToCursor(1);
+//  } else {
+//    gui_->changeMenuText(1, false, "");
+//    objToInteract_ = nullptr;
+//  }
 
   /// deletion
 //  if (gui_->getKeyboardEvent(rai_graphics::KeyboardEvent::DEL)) {

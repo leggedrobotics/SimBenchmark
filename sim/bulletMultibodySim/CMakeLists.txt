@@ -28,8 +28,12 @@ set(BtMbSimSrc
         src/BtMbSim.hpp
         src/object/BtMbArticulatedSystem.cpp
         src/object/BtMbArticulatedSystem.hpp
+        src/object/BtMbSingleBodyObject.cpp
+        src/object/BtMbSingleBodyObject.hpp
+        src/object/BtMbCheckerBoard.cpp
+        src/object/BtMbCheckerBoard.hpp
         src/BtMbUserHandle.hpp
-        )
+        src/object/BtMbObject.cpp src/object/BtMbObject.hpp)
 
 # library
 add_library(BtMbSimLib ${BtMbSimSrc})

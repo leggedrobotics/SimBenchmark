@@ -16,7 +16,7 @@ object::OdeSingleBodyObject::~OdeSingleBodyObject() {
     dGeomDestroy(geometry_);
 }
 
-const Eigen::Map<Eigen::Matrix<double, 4, 1>> ode_sim::object::OdeSingleBodyObject::getQuaternion() {
+const eQuaternion ode_sim::object::OdeSingleBodyObject::getQuaternion() {
   dQuaternion dquaternion;
   dGeomGetQuaternion(geometry_, dquaternion);
   quatTemp_ = {dquaternion[0], dquaternion[1], dquaternion[2], dquaternion[3]};

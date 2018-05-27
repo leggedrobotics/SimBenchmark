@@ -18,7 +18,7 @@ bool bullet_sim::object::BtSingleBodyObject::isVisualizeFramesAndCom() const {
   return visualizeFramesAndCom_;
 }
 
-const Eigen::Map<Eigen::Matrix<double, 4, 1>> bullet_sim::object::BtSingleBodyObject::getQuaternion() {
+const benchmark::eQuaternion bullet_sim::object::BtSingleBodyObject::getQuaternion() {
   const btQuaternion &quaternion = rigidBody_->getWorldTransform().getRotation();
   quatTemp_ = {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
   return quatTemp_.e();
@@ -36,7 +36,7 @@ void bullet_sim::object::BtSingleBodyObject::getRotationMatrix(benchmark::Mat<3,
       rotMat.getRow(2).x(), rotMat.getRow(2).y(), rotMat.getRow(2).z();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 3> > bullet_sim::object::BtSingleBodyObject::getRotationMatrix() {
+const benchmark::eRotationMat bullet_sim::object::BtSingleBodyObject::getRotationMatrix() {
   const btMatrix3x3 &rotMat = rigidBody_->getWorldTransform().getBasis();
   rotMatTemp_.e() << rotMat.getRow(0).x(), rotMat.getRow(0).y(), rotMat.getRow(0).z(),
       rotMat.getRow(1).x(), rotMat.getRow(1).y(), rotMat.getRow(1).z(),
@@ -44,26 +44,26 @@ const Eigen::Map<Eigen::Matrix<double, 3, 3> > bullet_sim::object::BtSingleBodyO
   return rotMatTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::BtSingleBodyObject::getPosition() {
+const benchmark::eVector3 bullet_sim::object::BtSingleBodyObject::getPosition() {
   const btVector3 &position = rigidBody_->getWorldTransform().getOrigin();
   posTemp_ = {position.x(), position.y(), position.z()};
   return posTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::BtSingleBodyObject::getComPosition() {
+const benchmark::eVector3 bullet_sim::object::BtSingleBodyObject::getComPosition() {
   const btVector3 &position = rigidBody_->getWorldTransform().getOrigin();
   posTemp_ = {position.x(), position.y(), position.z()};
   RAIWARN("check if COM = body origin!");
   return posTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::BtSingleBodyObject::getLinearVelocity() {
+const benchmark::eVector3 bullet_sim::object::BtSingleBodyObject::getLinearVelocity() {
   const btVector3 &linearVelocity = rigidBody_->getLinearVelocity();
   linVelTemp_ = {linearVelocity.x(), linearVelocity.y(), linearVelocity.z()};
   return linVelTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > bullet_sim::object::BtSingleBodyObject::getAngularVelocity() {
+const benchmark::eVector3 bullet_sim::object::BtSingleBodyObject::getAngularVelocity() {
   const btVector3 &angularVelocity = rigidBody_->getAngularVelocity();
   angVelTemp_ = {angularVelocity.x(), angularVelocity.y(), angularVelocity.z()};
   return angVelTemp_.e();
@@ -180,7 +180,7 @@ double bullet_sim::object::BtSingleBodyObject::getEnergy(const benchmark::Vec<3>
   return getKineticEnergy() + getPotentialEnergy(gravity);
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1>> bullet_sim::object::BtSingleBodyObject::getLinearMomentum() {
+const benchmark::eVector3 bullet_sim::object::BtSingleBodyObject::getLinearMomentum() {
   getLinearVelocity();
   benchmark::vecScalarMul(mass_, linVelTemp_, linearMomentum_);
   return linearMomentum_.e();

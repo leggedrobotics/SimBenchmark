@@ -55,7 +55,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 
 ## =========================== LINK ===========================
 set(BENCHMARK_LINK
-        BenchmarkLib
+        CommonLib
         ${Boost_LIBRARIES}
         ${YAML_CPP_LIBRARIES}
         ${RAI_COMMON_LINK}

@@ -18,23 +18,23 @@ int main(int argc, const char* argv[]) {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/ANYmal/";
 
-  bullet_multibody_sim::BtMbSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
+  bullet_mb_sim::BtMbSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 
-//  auto checkerboard = sim.addArticulatedSystem(urdfPath, bullet_multibody_sim::object::URDF);
-//  checkerboard->setFrictionCoefficient(0.8);
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
+  checkerboard->setFrictionCoefficient(0.8);
 
-  auto anymal = sim.addArticulatedSystem(urdfPath, bullet_multibody_sim::object::URDF);
-//  anymal->setGeneralizedCoordinate(
-//      {0, 0, 0.54,
-//       1.0, 0.0, 0.0, 0.0,
-//       0.03, 0.4, -0.8,
-//       -0.03, 0.4, -0.8,
-//       0.03, -0.4, 0.8,
-//       -0.03, -0.4, 0.8});
+  auto anymal = sim.addArticulatedSystem(urdfPath, bullet_mb_sim::object::URDF);
+  anymal->setGeneralizedCoordinate(
+      {0, 0, 0.54,
+       1.0, 0.0, 0.0, 0.0,
+       0.03, 0.4, -0.8,
+       -0.03, 0.4, -0.8,
+       0.03, -0.4, 0.8,
+       -0.03, -0.4, 0.8});
 //  anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
 //  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
-  sim.setGravity({0, 0, 0});
+  sim.setGravity({0, 0, -9.81});
   sim.setERP(0.05, 0.01, 0.0);
   sim.setTimeStep(0.005);
 
@@ -46,7 +46,7 @@ int main(int argc, const char* argv[]) {
       1.0, 0, 0, 0,
       0.03, 0.4, -0.8, -0.03, 0.4, -0.8, 0.03, -0.4, 0.8, -0.03, -0.4, 0.8;
 
-//  sim.cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
+  sim.cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
 
 #if defined(VIDEO_SAVE_MODE)
   sim.startRecordingVideo("/tmp", "btAnymal");

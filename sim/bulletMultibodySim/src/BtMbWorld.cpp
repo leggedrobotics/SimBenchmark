@@ -4,7 +4,7 @@
 
 #include "BtMbWorld.hpp"
 
-namespace bullet_multibody_sim {
+namespace bullet_mb_sim {
 
 BtMbWorld::BtMbWorld() {
   api_ = new b3RobotSimulatorClientAPI_NoGUI();
@@ -26,6 +26,9 @@ BtMbWorld::BtMbWorld() {
 
 BtMbWorld::~BtMbWorld() {
   delete api_;
+
+  for(auto *ob: objectList_)
+    delete ob;
 }
 
 void BtMbWorld::setGravity(const benchmark::Vec<3> &gravity) {
@@ -42,11 +45,22 @@ object::BtMbArticulatedSystem* BtMbWorld::addArticulatedSystem(std::string nm,
                                                                 object::ObjectFileType fileType,
                                                                 benchmark::CollisionGroupType collisionGroup,
                                                                 benchmark::CollisionGroupType collisionMask) {
-
-  object::BtMbArticulatedSystem *articulatedSystem =
+  auto *articulatedSystem =
       new object::BtMbArticulatedSystem(nm, fileType, api_);
   objectList_.push_back(articulatedSystem);
   return articulatedSystem;
 }
 
-} // bullet_multibody_sim
+benchmark::object::SingleBodyObjectInterface *BtMbWorld::addCheckerboard(double gridSize,
+                                                                         double xLength,
+                                                                         double yLength,
+                                                                         double reflectanceI,
+                                                                         bo::CheckerboardShape shape,
+                                                                         benchmark::CollisionGroupType collisionGroup,
+                                                                         benchmark::CollisionGroupType collisionMask) {
+  auto *checkerBoard = new bullet_mb_sim::object::BtMbCheckerBoard(xLength, yLength, api_, shape);
+  objectList_.push_back(checkerBoard);
+  return checkerBoard;
+}
+
+} // bullet_mb_sim

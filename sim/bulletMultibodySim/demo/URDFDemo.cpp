@@ -11,9 +11,9 @@ int main(int argc, const char* argv[]) {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/Singlebody/";
 
-  bullet_multibody_sim::BtMbSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
+  bullet_mb_sim::BtMbSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 
-  auto anymal = sim.addArticulatedSystem(urdfPath, bullet_multibody_sim::object::URDF);
+  auto anymal = sim.addArticulatedSystem(urdfPath, bullet_mb_sim::object::URDF);
   sim.setGravity({0, 0, -9.8});
   sim.setTimeStep(0.005);
 

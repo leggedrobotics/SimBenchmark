@@ -29,21 +29,22 @@ class OdeSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   OdeSingleBodyObject(const dWorldID worldID, const dSpaceID spaceID);
   virtual ~OdeSingleBodyObject();
 
-  virtual const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion();
+  /// see base class for details
+  virtual const benchmark::eQuaternion getQuaternion();
   virtual void getQuaternion(benchmark::Vec<4>& quat);
-  virtual const Eigen::Map<Eigen::Matrix<double, 3, 3> > getRotationMatrix();
+  virtual const benchmark::eRotationMat getRotationMatrix();
   virtual void getRotationMatrix(benchmark::Mat<3,3>& rotation);
-  virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getPosition();
-  virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getComPosition();
-  virtual  const Eigen::Map<Eigen::Matrix<double, 3, 1> > getLinearVelocity();
-  virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getAngularVelocity();
+  virtual const benchmark::eVector3 getPosition();
+  virtual const benchmark::eVector3 getComPosition();
+  virtual const benchmark::eVector3 getLinearVelocity();
+  virtual const benchmark::eVector3 getAngularVelocity();
   virtual void getPosition_W(benchmark::Vec<3>& pos_w);
 
   double getKineticEnergy() override ;
   double getPotentialEnergy(const benchmark::Vec<3> &gravity) override ;
   double getEnergy(const benchmark::Vec<3> &gravity) override ;
 
-  const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentum() override;
+  const benchmark::eVector3 getLinearMomentum() override;
 
   virtual void setPosition(Eigen::Vector3d originPosition);
   virtual void setPosition(double x, double y, double z);

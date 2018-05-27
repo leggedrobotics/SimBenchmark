@@ -16,11 +16,10 @@ int main() {
 
   bullet_sim::BtSim sim(800, 600, 0.5, bullet_sim::SOLVER_MULTI_BODY, benchmark::NO_BACKGROUND);
 
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(0.8);
 
   auto anymal = sim.addArticulatedSystem(urdfPath);
-  anymal->setColor({1, 0, 0, 1});
   anymal->setGeneralizedCoordinate(
       {0, 0, 0.54,
        1.0, 0.0, 0.0, 0.0,

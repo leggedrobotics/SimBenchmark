@@ -4,7 +4,7 @@
 
 #include "BtMbArticulatedSystem.hpp"
 
-namespace bullet_multibody_sim {
+namespace bullet_mb_sim {
 
 object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
                                                      ObjectFileType fileType,
@@ -57,6 +57,53 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     b3CollisionShapeInformation collisionShapeInfo;
     api_->getCollisionShapeData(objectId, i, collisionShapeInfo);
     initCollisions(objectId, i, collisionShapeInfo);
+  }
+
+  // is fixed
+  {
+    isFixed_ = false;
+  }
+
+  // dof and state dim
+  {
+    int numJoint = api_->getNumJoints(objectId);
+    if (isFixed_) {
+      dof_ = 0;
+      stateDimension_ = 0;
+    } else {
+      dof_ = 6;
+      stateDimension_ = 7;
+    }
+
+    for (int i = 0; i < numJoint; i++) {
+      b3JointInfo info;
+      api_->getJointInfo(objectId, i, &info);
+
+      switch(info.m_jointType) {
+        case eFixedType:break;
+        case eRevoluteType:
+        case ePrismaticType: {
+          ctrbJoints_.push_back(i);
+          dof_++;
+          stateDimension_++;
+          numJoints_++;
+          break;
+        }
+        case eSphericalType:
+        case ePlanarType:
+        case ePoint2PointType:
+        case eGearType:
+        default:
+        RAIFATAL("not supported joint type")
+      }
+    }
+
+    genCoordinate_.resize(stateDimension_);
+    genCoordinate_.setZero();
+    genVelocity_.resize(dof_);
+    genVelocity_.setZero();
+    genForce_.resize(dof_);
+    genForce_.setZero();
   }
 }
 
@@ -146,7 +193,7 @@ void object::BtMbArticulatedSystem::initVisuals(int objectId, b3VisualShapeData 
     case GEOM_PLANE:
     case GEOM_UNKNOWN:
     default:
-      RAIFATAL("invalid visual shape")
+    RAIFATAL("invalid visual shape")
   }
 }
 
@@ -253,9 +300,100 @@ void object::BtMbArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::Vect
 }
 
 void object::BtMbArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
+  RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
+
+  if(isFixed_) {
+    for(int i = 0; i < numJoints_; i++) {
+      genCoordinate_[i] = jointState[i];
+      api_->resetJointState(objectId_, ctrbJoints_[i], jointState[i]);
+    }
+  } // end of fixed base
+  else {
+
+    // floating base
+    {
+      // base
+      b3Vector3 basePosition = {
+          jointState[0],
+          jointState[1],
+          jointState[2]
+      };
+
+      genCoordinate_[0] = basePosition.x;
+      genCoordinate_[1] = basePosition.y;
+      genCoordinate_[2] = basePosition.z;
+
+      b3Quaternion baseQuaternion = {
+          jointState[4], // x
+          jointState[5], // y
+          jointState[6], // z
+          jointState[3], // w
+      };
+
+      genCoordinate_[3] = baseQuaternion.w;
+      genCoordinate_[4] = baseQuaternion.x;
+      genCoordinate_[5] = baseQuaternion.y;
+      genCoordinate_[6] = baseQuaternion.z;
+
+      api_->resetBasePositionAndOrientation(objectId_, basePosition, baseQuaternion);
+    }
+
+    // joint
+    for(int i = 0; i < numJoints_; i++) {
+      genCoordinate_[i+7] = jointState[i+7];
+      api_->resetJointState(objectId_, ctrbJoints_[i], jointState[i+7]);
+    }
+
+  } // end of floating base
 }
 
 void object::BtMbArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double> jointState) {
+  RAIFATAL_IF(jointState.size() != stateDimension_, "invalid generalized coordinate input")
+
+  if(isFixed_) {
+    // fixed base
+    for(int i = 0; i < numJoints_; i++) {
+      genCoordinate_[i] = jointState.begin()[i];
+      api_->resetJointState(objectId_, ctrbJoints_[i], jointState.begin()[i]);
+    }
+  } // end of fixed base
+  else {
+
+    // floating base
+    {
+      // base
+      b3Vector3 basePosition = {
+          jointState.begin()[0],
+          jointState.begin()[1],
+          jointState.begin()[2]
+      };
+
+      genCoordinate_[0] = basePosition.x;
+      genCoordinate_[1] = basePosition.y;
+      genCoordinate_[2] = basePosition.z;
+
+      b3Quaternion baseQuaternion = {
+          jointState.begin()[4], // x
+          jointState.begin()[5], // y
+          jointState.begin()[6], // z
+          jointState.begin()[3], // w
+      };
+
+      genCoordinate_[3] = baseQuaternion.w;
+      genCoordinate_[4] = baseQuaternion.x;
+      genCoordinate_[5] = baseQuaternion.y;
+      genCoordinate_[6] = baseQuaternion.z;
+
+      api_->resetBasePositionAndOrientation(objectId_, basePosition, baseQuaternion);
+    }
+
+    // joint
+    for(int i = 0; i < numJoints_; i++) {
+      genCoordinate_[i+7] = jointState.begin()[i+7];
+      api_->resetJointState(objectId_, ctrbJoints_[i], jointState.begin()[i+7]);
+    }
+
+  } // floating base
 }
 
 void object::BtMbArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
@@ -352,4 +490,4 @@ void object::BtMbArticulatedSystem::getBodyPose(int linkId,
   }
 }
 
-} // bullet_multibody_sim
+} // bullet_mb_sim

@@ -4,7 +4,7 @@
 
 #include "BtMbSim.hpp"
 
-namespace bullet_multibody_sim {
+namespace bullet_mb_sim {
 
 BtMbSim::BtMbSim(int windowWidth, int windowHeight, float cms, int flags)
     : WorldRG(windowWidth, windowHeight, cms, flags), world_() {}
@@ -102,6 +102,26 @@ ArticulatedSystemHandle BtMbSim::addArticulatedSystem(std::string nm,
   return handle;
 }
 
+benchmark::SingleBodyHandle BtMbSim::addCheckerboard(double gridSize,
+                                                     double xLength,
+                                                     double yLength,
+                                                     double reflectanceI,
+                                                     bo::CheckerboardShape shape,
+                                                     benchmark::CollisionGroupType collisionGroup,
+                                                     benchmark::CollisionGroupType collisionMask,
+                                                     int flags) {
+  benchmark::SingleBodyHandle handle(
+      world_.addCheckerboard(gridSize, xLength, yLength, reflectanceI, shape, collisionGroup, collisionMask), {}, {});
+  handle.hidable = false;
+  if(gui_) {
+    handle.visual().push_back(new rai_graphics::object::CheckerBoard(gridSize, xLength, yLength, reflectanceI));
+    static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0])->gridMode = flags & bo::GRID;
+    gui_->addCheckerBoard(static_cast<rai_graphics::object::CheckerBoard *>(handle.visual()[0]));
+  }
+  sbHandles_.push_back(handle);
+  return handle;
+}
+
 void BtMbSim::setERP(double nonContactErp, double contactErp, double frictionErp) {
   b3RobotSimulatorSetPhysicsEngineParameters parameters;
   parameters.m_erp = nonContactErp;
@@ -110,7 +130,6 @@ void BtMbSim::setERP(double nonContactErp, double contactErp, double frictionErp
 
   world_.api_->setPhysicsEngineParameter(parameters);
 }
-
 void BtMbSim::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
@@ -328,4 +347,4 @@ void BtMbSim::updateFrame() {
 //  }
 }
 
-} // bullet_multibody_sim
+} // bullet_mb_sim

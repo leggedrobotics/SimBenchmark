@@ -22,21 +22,22 @@ class DartSingleBodyObject: public benchmark::object::SingleBodyObjectInterface,
   explicit DartSingleBodyObject(double mass, int id);
   virtual ~DartSingleBodyObject();
 
-  virtual const Eigen::Map<Eigen::Matrix<double, 4, 1>> getQuaternion() override ;
+  /// see base class for details
+  virtual const benchmark::eQuaternion getQuaternion() override ;
   virtual void getQuaternion(benchmark::Vec<4>& quat) override ;
-  virtual const Eigen::Map<Eigen::Matrix<double, 3, 3> > getRotationMatrix() override ;
+  virtual const benchmark::eRotationMat getRotationMatrix() override ;
   virtual void getRotationMatrix(benchmark::Mat<3,3>& rotation) override ;
-  virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getPosition() override ;
-  virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getComPosition() override ;
-  virtual  const Eigen::Map<Eigen::Matrix<double, 3, 1> > getLinearVelocity() override ;
-  virtual const Eigen::Map<Eigen::Matrix<double, 3, 1> > getAngularVelocity() override ;
+  virtual const benchmark::eVector3 getPosition() override ;
+  virtual const benchmark::eVector3 getComPosition() override ;
+  virtual const benchmark::eVector3 getLinearVelocity() override ;
+  virtual const benchmark::eVector3 getAngularVelocity() override ;
   virtual void getPosition_W(benchmark::Vec<3>& pos_w) override ;
 
   double getKineticEnergy() override ;
   double getPotentialEnergy(const benchmark::Vec<3> &gravity) override ;
   double getEnergy(const benchmark::Vec<3> &gravity) override ;
 
-  virtual const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentum() override ;
+  virtual const benchmark::eVector3 getLinearMomentum() override ;
 
   virtual void setPosition(Eigen::Vector3d originPosition) override ;
   virtual void setPosition(double x, double y, double z) override ;

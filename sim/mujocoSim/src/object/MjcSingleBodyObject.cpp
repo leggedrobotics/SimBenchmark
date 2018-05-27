@@ -17,7 +17,7 @@ MjcSingleBodyObject::MjcSingleBodyObject(mjData *data,
   setGeomFriction({0.8, 0, 0});
 }
 
-const Eigen::Map<Eigen::Matrix<double, 4, 1>> MjcSingleBodyObject::getQuaternion() {
+const eQuaternion MjcSingleBodyObject::getQuaternion() {
   mjtNum *rotMat = getGeomRotMat();
   rotMatTemp_.e() << rotMat[0], rotMat[1], rotMat[2],
       rotMat[3], rotMat[4], rotMat[5],

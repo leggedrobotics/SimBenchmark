@@ -7,9 +7,12 @@
 
 #include "api/b3RobotSimulatorClientAPI_NoGUI.h"
 #include "common/interface/WorldInterface.hpp"
-#include "object/BtMbArticulatedSystem.hpp"
 
-namespace bullet_multibody_sim {
+#include "object/BtMbArticulatedSystem.hpp"
+#include "object/BtMbCheckerBoard.hpp"
+
+
+namespace bullet_mb_sim {
 
 class BtMbWorld: public benchmark::WorldInterface  {
   friend class BtMbSim;
@@ -42,18 +45,15 @@ class BtMbWorld: public benchmark::WorldInterface  {
                                                        benchmark::CollisionGroupType collisionGroup = 1,
                                                        benchmark::CollisionGroupType collisionMask = -1);
 
- private:
-  /// deprecated functions
-  /**
-   * not supported for BtMbWorld
-   */
   benchmark::object::SingleBodyObjectInterface *addCheckerboard(double gridSize,
                                                                 double xLength,
                                                                 double yLength,
                                                                 double reflectanceI,
                                                                 bo::CheckerboardShape shape,
                                                                 benchmark::CollisionGroupType collisionGroup,
-                                                                benchmark::CollisionGroupType collisionMask) override {};
+                                                                benchmark::CollisionGroupType collisionMask) override;
+ private:
+  /// deprecated functions
   /**
    * not supported for BtMbWorld
    */
@@ -110,7 +110,7 @@ class BtMbWorld: public benchmark::WorldInterface  {
   b3RobotSimulatorClientAPI_NoGUI* api_;
 
   // object list
-  std::vector<object::BtMbArticulatedSystem*> objectList_;
+  std::vector<object::BtMbObject*> objectList_;
 
 };
 

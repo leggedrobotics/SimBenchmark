@@ -14,7 +14,7 @@ dart_sim::object::DartSingleBodyObject::DartSingleBodyObject(double mass, int id
 DartSingleBodyObject::~DartSingleBodyObject() {
 }
 
-const Eigen::Map<Eigen::Matrix<double, 4, 1>> dart_sim::object::DartSingleBodyObject::getQuaternion() {
+const eQuaternion dart_sim::object::DartSingleBodyObject::getQuaternion() {
   updateBodyQuaternion();
   return quat_.e();
 }
