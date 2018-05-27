@@ -64,7 +64,7 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     isFixed_ = false;
   }
 
-  // dof and state dim
+  // dof, state dim, and motor set
   {
     int numJoint = api_->getNumJoints(objectId);
     if (isFixed_) {
@@ -78,6 +78,13 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     for (int i = 0; i < numJoint; i++) {
       b3JointInfo info;
       api_->getJointInfo(objectId, i, &info);
+
+      {
+        // disable motor of each joints
+        b3RobotSimulatorJointMotorArgs arg(CONTROL_MODE_POSITION_VELOCITY_PD);
+        arg.m_maxTorqueValue = 0;
+        api_->setJointMotorControl(objectId, i, arg);
+      }
 
       switch(info.m_jointType) {
         case eFixedType:
@@ -284,10 +291,77 @@ int object::BtMbArticulatedSystem::getStateDimension() {
 }
 
 const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticulatedSystem::getGeneralizedCoordinate() {
+  if(isFixed_) {
+    // joints
+    for(int i = 0; i < numJoints_; i++) {
+      b3JointSensorState state;
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "get joint state error from API")
+      genCoordinate_[i] = state.m_jointPosition;
+    }
+  } // end of fixed base
+  else {
+    b3Vector3 bPosition;
+    b3Quaternion bQuaternion;
+    RAIFATAL_IF(!api_->getBasePositionAndOrientation(objectId_, bPosition, bQuaternion),
+                "get base position and orientation error from API")
+
+    {
+      // base
+      genCoordinate_[0] = bPosition.x;
+      genCoordinate_[1] = bPosition.y;
+      genCoordinate_[2] = bPosition.z;
+
+      genCoordinate_[3] = bQuaternion.w;
+      genCoordinate_[4] = bQuaternion.x;
+      genCoordinate_[5] = bQuaternion.y;
+      genCoordinate_[6] = bQuaternion.z;
+    }
+
+    // joints
+    for(int i = 0; i < numJoints_; i++) {
+      b3JointSensorState state;
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "get joint state error from API")
+      genCoordinate_[i+7] = state.m_jointPosition;
+    }
+  } // end of floating base
+
   return genCoordinate_.e();
 }
 
 const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticulatedSystem::getGeneralizedVelocity() {
+
+  if(isFixed_) {
+    // joints
+    for(int i = 0; i < numJoints_; i++) {
+      b3JointSensorState state;
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "get joint state error from API")
+      genVelocity_[i] = state.m_jointVelocity;
+    }
+  } // end of fixed base
+  else {
+    b3Vector3 bLinVel;
+    b3Vector3 bAngVel;
+    RAIFATAL_IF(!api_->getBaseVelocity(objectId_, bLinVel, bAngVel),
+                "get base position and orientation error from API")
+
+    {
+      // base
+      genVelocity_[0] = bLinVel.x;
+      genVelocity_[1] = bLinVel.y;
+      genVelocity_[2] = bLinVel.z;
+
+      genVelocity_[3] = bAngVel.x;
+      genVelocity_[4] = bAngVel.y;
+      genVelocity_[5] = bAngVel.z;
+    }
+
+    // joints
+    for(int i = 0; i < numJoints_; i++) {
+      b3JointSensorState state;
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "get joint state error from API")
+      genVelocity_[i+6] = state.m_jointVelocity;
+    }
+  } // end of floating base
   return genVelocity_.e();
 }
 
@@ -393,7 +467,6 @@ void object::BtMbArticulatedSystem::setGeneralizedCoordinate(std::initializer_li
       genCoordinate_[i+7] = jointState.begin()[i+7];
       api_->resetJointState(objectId_, ctrbJoints_[i], jointState.begin()[i+7]);
     }
-
   } // floating base
 }
 
@@ -404,10 +477,140 @@ void object::BtMbArticulatedSystem::setGeneralizedVelocity(std::initializer_list
 
 }
 
-void object::BtMbArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
+void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized coordinate input")
+
+  if(isFixed_) {
+    // fixed base
+    // joint
+    {
+      b3RobotSimulatorJointMotorArrayArgs arg(CONTROL_MODE_TORQUE, numJoints_);
+
+      double jointForces[numJoints_];
+      for(int i = 0; i < numJoints_; i++) {
+        jointForces[i] = tau[i];
+        genForce_[i] = tau[i];
+      }
+      arg.m_forces = jointForces;
+      arg.m_jointIndices = &ctrbJoints_[0]; // vector -> array conversion
+
+      RAIFATAL_IF(!api_->setJointMotorControlArray(objectId_, arg), "setJointMotorControlArray failed")
+    }
+  } // end of fixed base
+  else {
+
+    // floating base
+    {
+      // base
+      b3Vector3 bForce = {
+          tau[0],
+          tau[1],
+          tau[2]
+      };
+
+      genForce_[0] = tau[0];
+      genForce_[1] = tau[1];
+      genForce_[2] = tau[2];
+
+      b3Vector3 bTorque = {
+          tau[3], // x
+          tau[4], // y
+          tau[5], // z
+      };
+
+      genForce_[3] = tau[3];
+      genForce_[4] = tau[4];
+      genForce_[5] = tau[5];
+
+      b3Vector3 bPosition = {0, 0, 0};
+      api_->applyExternalForce(objectId_, -1, bForce, bPosition, EF_WORLD_FRAME);
+      api_->applyExternalTorque(objectId_, -1, bForce, EF_WORLD_FRAME);
+    }
+
+    // joint
+    {
+      b3RobotSimulatorJointMotorArrayArgs arg(CONTROL_MODE_TORQUE, numJoints_);
+
+      double jointForces[numJoints_];
+      for(int i = 0; i < numJoints_; i++) {
+        jointForces[i] = tau[i+6];
+        genForce_[i+6] = tau[i+6];
+      }
+      arg.m_forces = jointForces;
+      arg.m_jointIndices = &ctrbJoints_[0]; // vector -> array conversion
+
+      RAIFATAL_IF(!api_->setJointMotorControlArray(objectId_, arg), "setJointMotorControlArray failed")
+    }
+
+  } // floating base
 }
 
-void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
+void object::BtMbArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized coordinate input")
+
+  if(isFixed_) {
+    // fixed base
+    // joint
+    {
+      b3RobotSimulatorJointMotorArrayArgs arg(CONTROL_MODE_TORQUE, numJoints_);
+
+      double jointForces[numJoints_];
+      for(int i = 0; i < numJoints_; i++) {
+        jointForces[i] = tau.begin()[i];
+        genForce_[i] = tau.begin()[i];
+      }
+      arg.m_forces = jointForces;
+      arg.m_jointIndices = &ctrbJoints_[0]; // vector -> array conversion
+
+      RAIFATAL_IF(!api_->setJointMotorControlArray(objectId_, arg), "setJointMotorControlArray failed")
+    }
+  } // end of fixed base
+  else {
+
+    // floating base
+    {
+      // base
+      b3Vector3 bForce = {
+          tau.begin()[0],
+          tau.begin()[1],
+          tau.begin()[2]
+      };
+
+      genForce_[0] = tau.begin()[0];
+      genForce_[1] = tau.begin()[1];
+      genForce_[2] = tau.begin()[2];
+
+      b3Vector3 bTorque = {
+          tau.begin()[3], // x
+          tau.begin()[4], // y
+          tau.begin()[5], // z
+      };
+
+      genForce_[3] = tau.begin()[3];
+      genForce_[4] = tau.begin()[4];
+      genForce_[5] = tau.begin()[5];
+
+      b3Vector3 bPosition = {0, 0, 0};
+      api_->applyExternalForce(objectId_, -1, bForce, bPosition, EF_WORLD_FRAME);
+      api_->applyExternalTorque(objectId_, -1, bForce, EF_WORLD_FRAME);
+    }
+
+    // joint
+    {
+      b3RobotSimulatorJointMotorArrayArgs arg(CONTROL_MODE_TORQUE, numJoints_);
+
+      double jointForces[numJoints_];
+      for(int i = 0; i < numJoints_; i++) {
+        jointForces[i] = tau.begin()[i+6];
+        genForce_[i+6] = tau.begin()[i+6];
+      }
+      arg.m_forces = jointForces;
+      arg.m_jointIndices = &ctrbJoints_[0]; // vector -> array conversion
+
+      RAIFATAL_IF(!api_->setJointMotorControlArray(objectId_, arg), "setJointMotorControlArray failed")
+    }
+
+  } // floating base
 }
 
 void object::BtMbArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
