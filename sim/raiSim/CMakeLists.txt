@@ -6,9 +6,14 @@ add_definitions(-DCOLLISION_BACKEND_ODE)        # ODE
 find_package(raiSim CONFIG REQUIRED)
 include_directories(${RAI_SIM_INCLUDE_DIR})
 
+if(BUILD_TEST)
 add_subdirectory(test)
-add_subdirectory(benchmark)
+endif(BUILD_TEST)
 
 if(BUILD_DEMO)
     add_subdirectory(demo)
 endif(BUILD_DEMO)
+
+if(BUILD_BENCHMARK)
+    add_subdirectory(benchmark)
+endif(BUILD_BENCHMARK)

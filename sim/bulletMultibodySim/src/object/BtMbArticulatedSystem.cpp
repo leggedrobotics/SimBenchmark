@@ -80,7 +80,8 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
       api_->getJointInfo(objectId, i, &info);
 
       switch(info.m_jointType) {
-        case eFixedType:break;
+        case eFixedType:
+          break;
         case eRevoluteType:
         case ePrismaticType: {
           ctrbJoints_.push_back(i);

@@ -62,7 +62,9 @@ set(BtSimLink
         )
 
 # sub-directories
-add_subdirectory(benchmark)
+if(BUILD_BENCHMARK)
+    add_subdirectory(benchmark)
+endif(BUILD_BENCHMARK)
 
 if(BUILD_DEMO)
     add_subdirectory(demo)

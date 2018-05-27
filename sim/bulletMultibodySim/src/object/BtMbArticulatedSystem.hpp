@@ -231,7 +231,7 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
   int objectId_;
 
   // num of joints
-  int numJoints_;
+  int numJoints_ = 0;
 
 };
 

@@ -63,3 +63,7 @@ endif(BUILD_TEST)
 if(BUILD_DEMO)
     add_subdirectory(demo)
 endif(BUILD_DEMO)
+
+if(BUILD_BENCHMARK)
+    add_subdirectory(benchmark)
+endif(BUILD_BENCHMARK)
