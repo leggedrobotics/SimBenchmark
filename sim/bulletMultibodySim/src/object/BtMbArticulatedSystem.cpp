@@ -295,7 +295,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
     // joints
     for(int i = 0; i < numJoints_; i++) {
       b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "get joint state error from API")
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed")
       genCoordinate_[i] = state.m_jointPosition;
     }
   } // end of fixed base
@@ -303,7 +303,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
     b3Vector3 bPosition;
     b3Quaternion bQuaternion;
     RAIFATAL_IF(!api_->getBasePositionAndOrientation(objectId_, bPosition, bQuaternion),
-                "get base position and orientation error from API")
+                "getBasePositionAndOrientation failed")
 
     {
       // base
@@ -320,7 +320,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
     // joints
     for(int i = 0; i < numJoints_; i++) {
       b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "get joint state error from API")
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed")
       genCoordinate_[i+7] = state.m_jointPosition;
     }
   } // end of floating base
@@ -334,7 +334,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
     // joints
     for(int i = 0; i < numJoints_; i++) {
       b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "get joint state error from API")
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed")
       genVelocity_[i] = state.m_jointVelocity;
     }
   } // end of fixed base
@@ -342,7 +342,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
     b3Vector3 bLinVel;
     b3Vector3 bAngVel;
     RAIFATAL_IF(!api_->getBaseVelocity(objectId_, bLinVel, bAngVel),
-                "get base position and orientation error from API")
+                "getBaseVelocity failed")
 
     {
       // base
@@ -358,7 +358,7 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
     // joints
     for(int i = 0; i < numJoints_; i++) {
       b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "get joint state error from API")
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed")
       genVelocity_[i+6] = state.m_jointVelocity;
     }
   } // end of floating base
@@ -471,14 +471,51 @@ void object::BtMbArticulatedSystem::setGeneralizedCoordinate(std::initializer_li
 }
 
 void object::BtMbArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
+  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
+  RAIWARN("direct assigning joint velocity is not available. set only base velocity")
+  if(isFixed_){
+
+  }
+  else {
+    b3Vector3 bLinVel = {
+        jointVel[0],
+        jointVel[1],
+        jointVel[2]
+    };
+    b3Vector3 bAngVel = {
+        jointVel[3],
+        jointVel[4],
+        jointVel[5]
+    };
+
+    RAIFATAL_IF(!api_->resetBaseVelocity(objectId_, bLinVel, bAngVel), "resetBaseVelocity failed");
+  }
 }
 
 void object::BtMbArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
+  RAIWARN("direct assigning joint velocity is not available. set only base velocity")
+  if(isFixed_){
 
+  }
+  else {
+    b3Vector3 bLinVel = {
+        jointVel.begin()[0],
+        jointVel.begin()[1],
+        jointVel.begin()[2]
+    };
+    b3Vector3 bAngVel = {
+        jointVel.begin()[3],
+        jointVel.begin()[4],
+        jointVel.begin()[5]
+    };
+
+    RAIFATAL_IF(!api_->resetBaseVelocity(objectId_, bLinVel, bAngVel), "resetBaseVelocity failed");
+  }
 }
 
 void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &tau) {
-  RAIFATAL_IF(tau.size() != dof_, "invalid generalized coordinate input")
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
 
   if(isFixed_) {
     // fixed base
@@ -546,7 +583,7 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &t
 }
 
 void object::BtMbArticulatedSystem::setGeneralizedForce(std::initializer_list<double> tau) {
-  RAIFATAL_IF(tau.size() != dof_, "invalid generalized coordinate input")
+  RAIFATAL_IF(tau.size() != dof_, "invalid generalized force input")
 
   if(isFixed_) {
     // fixed base
@@ -636,7 +673,7 @@ void object::BtMbArticulatedSystem::getBodyPose(int linkId,
     // base
     b3Vector3 bPosition;
     b3Quaternion bQuat;
-    RAIFATAL_IF(!api_->getBasePositionAndOrientation(objectId_, bPosition, bQuat), "failed to get link state");
+    RAIFATAL_IF(!api_->getBasePositionAndOrientation(objectId_, bPosition, bQuat), "getBasePositionAndOrientation failed");
     position = {
         bPosition.x,
         bPosition.y,
@@ -654,7 +691,7 @@ void object::BtMbArticulatedSystem::getBodyPose(int linkId,
   else {
     // link
     b3LinkState linkState;
-    RAIFATAL_IF(!api_->getLinkState(objectId_, linkId, &linkState), "failed to get link state");
+    RAIFATAL_IF(!api_->getLinkState(objectId_, linkId, &linkState), "getBasePositionAndOrientation failed");
 
     b3Transform comTf_W;
     comTf_W.setOrigin(
