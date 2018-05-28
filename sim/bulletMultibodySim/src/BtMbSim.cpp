@@ -31,13 +31,7 @@ void BtMbSim::setTimeStep(double dt) {
 }
 
 void BtMbSim::integrate() {
-  // collision detection
-  b3RobotSimulatorGetContactPointsArgs arg;
-  b3ContactInformation info;
-  world_.api_->getContactPoints(arg, &info);
-
-  // step simulation
-  world_.api_->stepSimulation();
+  world_.integrate();
 }
 
 ArticulatedSystemHandle BtMbSim::addArticulatedSystem(std::string nm,
@@ -138,7 +132,7 @@ void BtMbSim::setERP(double nonContactErp, double contactErp, double frictionErp
 }
 
 int BtMbSim::getWorldNumContacts() {
-  return 0;
+  return int(world_.contactProblemList_.size());
 }
 
 void BtMbSim::updateFrame() {

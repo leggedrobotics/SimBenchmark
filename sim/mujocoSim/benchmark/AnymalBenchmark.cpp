@@ -186,15 +186,14 @@ void simulationLoop() {
              << (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt)
              << " steps "<< time <<"s \n";
 
-    if(benchmark::anymal::options.log)
-      benchmark::anymal::printCSV(
-          benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
-          "MUJOCO",
-          benchmark::mujoco::options.solverName,
-          "",
-          benchmark::anymal::options.numRow,
-          time
-      );
+    if(benchmark::anymal::options.csv)
+      benchmark::anymal::printCSV(benchmark::anymal::getCSVpath(benchmark::anymal::options.feedback),
+                                  benchmark::mujoco::options.simName,
+                                  benchmark::mujoco::options.solverName,
+                                  benchmark::mujoco::options.detectorName,
+                                  benchmark::mujoco::options.integratorName,
+                                  benchmark::anymal::options.numRow,
+                                  time);
   }
 }
 

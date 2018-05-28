@@ -130,15 +130,14 @@ void simulationLoop() {
              << (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt)
              << " steps "<< time <<"s \n";
 
-    if(benchmark::anymal::options.log)
-      benchmark::anymal::printCSV(
-          benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
-          "ODE",
-          benchmark::ode::options.solverName,
-          "",
-          benchmark::anymal::options.numRow,
-          time
-      );
+    if(benchmark::anymal::options.csv)
+      benchmark::anymal::printCSV(benchmark::anymal::getCSVpath(benchmark::anymal::options.feedback),
+                                  benchmark::ode::options.simName,
+                                  benchmark::ode::options.solverName,
+                                  benchmark::ode::options.detectorName,
+                                  benchmark::ode::options.integratorName,
+                                  benchmark::anymal::options.numRow,
+                                  time);
   }
 }
 

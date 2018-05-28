@@ -131,14 +131,13 @@ void simulationLoop() {
              << " steps "<< time <<"s \n";
 
     if(benchmark::anymal::options.log)
-      benchmark::anymal::printCSV(
-          benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
-          "BULLET",
-          "MULTIBODY",
-          "",
-          benchmark::anymal::options.numRow,
-          time
-      );
+      benchmark::anymal::printCSV(benchmark::anymal::getCSVpath(benchmark::anymal::options.feedback),
+                                  "BULLET",
+                                  "MULTIBODY",
+                                  "",
+                                  std::__cxx11::string(),
+                                  benchmark::anymal::options.numRow,
+                                  time);
   }
 }
 

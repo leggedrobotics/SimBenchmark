@@ -126,15 +126,14 @@ void simulationLoop() {
              << (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt)
              << " steps "<< time <<"s \n";
 
-    if(benchmark::anymal::options.log)
-      benchmark::anymal::printCSV(
-          benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
-          "RAI",
-          "RAI",
-          "",
-          benchmark::anymal::options.numRow,
-          time
-      );
+    if(benchmark::anymal::options.csv)
+      benchmark::anymal::printCSV(benchmark::anymal::getCSVpath(benchmark::anymal::options.feedback),
+                                  "RAI",
+                                  "RAI",
+                                  "RAI",
+                                  "RAI",
+                                  benchmark::anymal::options.numRow,
+                                  time);
   }
 }
 

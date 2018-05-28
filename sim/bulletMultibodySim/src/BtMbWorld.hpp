@@ -14,6 +14,15 @@
 
 namespace bullet_mb_sim {
 
+struct Single3DContactProblem {
+  Single3DContactProblem(const btVector3 &point, const btVector3 &normal) {
+    point_ = {point.x(), point.y(), point.z()};
+    normal_ = {normal.x(), normal.y(), normal.z()};
+  };
+  Eigen::Vector3d point_;
+  Eigen::Vector3d normal_;
+};
+
 class BtMbWorld: public benchmark::WorldInterface  {
   friend class BtMbSim;
  public:
@@ -52,6 +61,12 @@ class BtMbWorld: public benchmark::WorldInterface  {
                                                                 bo::CheckerboardShape shape,
                                                                 benchmark::CollisionGroupType collisionGroup,
                                                                 benchmark::CollisionGroupType collisionMask) override;
+
+  /**
+  * One simulation step
+  */
+  void integrate();
+
  private:
   /// deprecated functions
   /**
@@ -111,6 +126,9 @@ class BtMbWorld: public benchmark::WorldInterface  {
 
   // object list
   std::vector<object::BtMbObject*> objectList_;
+
+  // contact list
+  std::vector<Single3DContactProblem> contactProblemList_;
 
 };
 

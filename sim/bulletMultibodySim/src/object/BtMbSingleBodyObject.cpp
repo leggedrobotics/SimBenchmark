@@ -110,7 +110,9 @@ void BtMbSingleBodyObject::setRestitutionCoefficient(double restitution) {
 }
 
 void BtMbSingleBodyObject::setFrictionCoefficient(double friction) {
-
+  b3RobotSimulatorChangeDynamicsArgs arg;
+  arg.m_lateralFriction = friction;
+  api_->changeDynamics(objectId_, -1, arg);
 }
 
 double BtMbSingleBodyObject::getKineticEnergy() {

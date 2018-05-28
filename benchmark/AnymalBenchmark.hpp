@@ -127,16 +127,16 @@ std::string getMujocoURDFpath(int rowNum) {
  * @param feedback
  * @return log file path in string
  */
-std::string getLogFilepath(bool feedback) {
+std::string getCSVpath(bool feedback) {
 
   std::string logPath(__FILE__);
   while (logPath.back() != '/')
     logPath.erase(logPath.size() - 1, 1);
 
   if(feedback)
-    logPath += "../data/anymal-stand/log.csv";
+    logPath += "../data/anymal-stand/" + options.csvName;
   else
-    logPath += "../data/anymal-grounded/log.csv";
+    logPath += "../data/anymal-grounded/" + options.csvName;
 
   return logPath;
 }
@@ -174,8 +174,9 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
   }
 
   // log option
-  if(vm.count("log")) {
-    options.log = true;
+  if(vm.count("csv")) {
+    options.csv = true;
+    options.csvName = vm["csv"].as<std::string>();
   }
 
   // nogui option
@@ -257,11 +258,17 @@ void printCSV(std::string filePath,
               std::string sim,
               std::string solver,
               std::string detector,
+              std::string integrator,
               int rownum,
               double time) {
   std::ofstream myfile;
   myfile.open (filePath, std::ios_base::app);
-  myfile << sim << "," << solver << "," << detector << "," << rownum << "," << time << std::endl;
+  myfile << sim << ","
+         << solver << ","
+         << detector << ","
+         << integrator << ","
+         << rownum << ","
+         << time << std::endl;
   myfile.close();
 }
 

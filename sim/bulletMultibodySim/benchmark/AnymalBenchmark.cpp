@@ -25,7 +25,7 @@ void setupSimulation() {
 }
 
 void setupWorld() {
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
+  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(0.8);
 
   for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
@@ -132,15 +132,14 @@ void simulationLoop() {
              << (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt)
              << " steps "<< time <<"s \n";
 
-    if(benchmark::anymal::options.log)
-      benchmark::anymal::printCSV(
-          benchmark::anymal::getLogFilepath(benchmark::anymal::options.feedback),
-          "BULLET",
-          "MULTIBODY",
-          "",
-          benchmark::anymal::options.numRow,
-          time
-      );
+    if(benchmark::anymal::options.csv)
+      benchmark::anymal::printCSV(benchmark::anymal::getCSVpath(benchmark::anymal::options.feedback),
+                                  benchmark::bulletmultibody::options.simName,
+                                  benchmark::bulletmultibody::options.solverName,
+                                  benchmark::bulletmultibody::options.detectorName,
+                                  benchmark::bulletmultibody::options.integratorName,
+                                  benchmark::anymal::options.numRow,
+                                  time);
   }
 }
 
@@ -149,27 +148,30 @@ int main(int argc, const char* argv[]) {
   benchmark::anymal::addDescToOption(desc);
   benchmark::anymal::getOptionsFromArg(argc, argv, desc);
 
+  benchmark::bulletmultibody::addDescToOption(desc);
+  benchmark::bulletmultibody::getOptionsFromArg(argc, argv, desc);
+
   benchmark::anymal::getParamsFromYAML(benchmark::anymal::getYamlpath().c_str(),
                                        benchmark::BULLET);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: BULLET MULTIBODY" << std::endl
+                << "Simulator: " << benchmark::bulletmultibody::options.simName << std::endl
                 << "GUI      : " << benchmark::anymal::options.gui << std::endl
                 << "Row      : " << benchmark::anymal::options.numRow << std::endl
                 << "Feedback : " << benchmark::anymal::options.feedback << std::endl
-                << "Solver   : " << "multibody" << std::endl
+                << "Solver   : " << benchmark::bulletmultibody::options.solverName << std::endl
                 << "-----------------------"
   )
   setupSimulation();
   setupWorld();
   simulationLoop();
 
-//  RAIINFO(
-//      std::endl << "-----------------------" << std::endl
-//                << "Contacts : " << sim->getWorldNumContacts() << std::endl
-//                << "======================="
-//  )
+  RAIINFO(
+      std::endl << "-----------------------" << std::endl
+                << "Contacts : " << sim->getWorldNumContacts() << std::endl
+                << "======================="
+  )
 
   delete sim;
   return 0;

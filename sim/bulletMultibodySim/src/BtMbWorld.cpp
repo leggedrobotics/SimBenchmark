@@ -63,4 +63,31 @@ benchmark::object::SingleBodyObjectInterface *BtMbWorld::addCheckerboard(double 
   return checkerBoard;
 }
 
+void BtMbWorld::integrate() {
+  // collision detection
+  contactProblemList_.clear();
+  b3RobotSimulatorGetContactPointsArgs arg;
+  b3ContactInformation info;
+  api_->getContactPoints(arg, &info);
+  contactProblemList_.reserve(info.m_numContactPoints);
+  
+  for (int i = 0; i < info.m_numContactPoints; ++i) {
+    btVector3 position(
+        info.m_contactPointData[i].m_positionOnAInWS[0],
+        info.m_contactPointData[i].m_positionOnAInWS[1],
+        info.m_contactPointData[i].m_positionOnAInWS[2]
+    );
+
+    btVector3 normal(
+        info.m_contactPointData[i].m_positionOnBInWS[0],
+        info.m_contactPointData[i].m_positionOnBInWS[1],
+        info.m_contactPointData[i].m_positionOnBInWS[2]
+    );
+    contactProblemList_.emplace_back(position, normal);
+  }
+
+  // step simulation
+  api_->stepSimulation();
+}
+
 } // bullet_mb_sim
