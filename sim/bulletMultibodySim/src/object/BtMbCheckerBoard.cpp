@@ -13,7 +13,7 @@ BtMbCheckerBoard::BtMbCheckerBoard(double xLength,
                                    double yLength,
                                    b3RobotSimulatorClientAPI_NoGUI *api,
                                    bo::CheckerboardShape shape)
-    : BtMbSingleBodyObject(api) {
+    : BtMbSingleBodyObject(0, api) {
 
   // create collision shape
   int shapeId = -1;
@@ -50,7 +50,6 @@ BtMbCheckerBoard::BtMbCheckerBoard(double xLength,
   }
 
   RAIFATAL_IF(objectId_ ==  -1, "Checkerboard body creation error")
-  mass_ = 0;
 }
 
 } // object

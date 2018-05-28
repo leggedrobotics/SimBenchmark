@@ -73,6 +73,26 @@ benchmark::object::SingleBodyObjectInterface *BtMbWorld::addCheckerboard(double 
   return checkerBoard;
 }
 
+benchmark::object::SingleBodyObjectInterface *BtMbWorld::addSphere(double radius,
+                                                                   double mass,
+                                                                   benchmark::CollisionGroupType collisionGroup,
+                                                                   benchmark::CollisionGroupType collisionMask) {
+  auto *sphere = new bullet_mb_sim::object::BtMbSphere(radius, mass, api_);
+  objectList_.push_back(sphere);
+  return sphere;
+}
+
+benchmark::object::SingleBodyObjectInterface *BtMbWorld::addBox(double xLength,
+                                                                double yLength,
+                                                                double zLength,
+                                                                double mass,
+                                                                benchmark::CollisionGroupType collisionGroup,
+                                                                benchmark::CollisionGroupType collisionMask) {
+  auto *box = new bullet_mb_sim::object::BtMbBox(xLength, yLength, zLength, mass, api_);
+  objectList_.push_back(box);
+  return box;
+}
+
 void BtMbWorld::integrate() {
   // collision detection
   contactProblemList_.clear();

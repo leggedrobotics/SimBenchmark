@@ -23,7 +23,7 @@ class BtMbSingleBodyObject: public bo::SingleBodyObjectInterface,
 {
 
  public:
-  BtMbSingleBodyObject(b3RobotSimulatorClientAPI_NoGUI *api);
+  BtMbSingleBodyObject(double mass, b3RobotSimulatorClientAPI_NoGUI *api);
 
   /// see base class for details
   const benchmark::eQuaternion getQuaternion() override;
@@ -82,6 +82,17 @@ class BtMbSingleBodyObject: public bo::SingleBodyObjectInterface,
    * This function updates angVelTemp_.
    */
   void getBulletAngularVelocity();
+
+  /**
+   * Set body frame origin w.r.t. world frame with posTemp_
+   * and body rotation quaternion w.r.t. world frame with quatTemp_;
+   */
+  void setBulletPositionAndQuaternion();
+
+  /**
+   * Set body linear and angular velocity w.r.t. world frame with linVelTemp_ and angVelTemp_;
+   */
+  void setBulletLinearAndAngularVelocity();
 
   /// Attiributes
   // pose and velocity

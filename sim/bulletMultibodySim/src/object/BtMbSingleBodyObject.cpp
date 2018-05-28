@@ -7,8 +7,8 @@
 namespace bullet_mb_sim {
 namespace object {
 
-BtMbSingleBodyObject::BtMbSingleBodyObject(b3RobotSimulatorClientAPI_NoGUI *api) : api_(api) {
-}
+BtMbSingleBodyObject::BtMbSingleBodyObject(double mass, b3RobotSimulatorClientAPI_NoGUI *api)
+    : api_(api), mass_(mass) {}
 
 const benchmark::eQuaternion BtMbSingleBodyObject::getQuaternion() {
   getBulletQuaternion();
@@ -58,43 +58,73 @@ void BtMbSingleBodyObject::getPosition_W(benchmark::Vec<3> &pos_w) {
 }
 
 void BtMbSingleBodyObject::setPosition(Eigen::Vector3d originPosition) {
-
+  posTemp_.e() = originPosition;
+  getBulletQuaternion();
+  setBulletPositionAndQuaternion();
 }
 
 void BtMbSingleBodyObject::setPosition(double x, double y, double z) {
-
+  posTemp_ = {x, y, z};
+  getBulletQuaternion();
+  setBulletPositionAndQuaternion();
 }
 
 void BtMbSingleBodyObject::setOrientation(Eigen::Quaterniond quaternion) {
-
+  quatTemp_ = {
+      quaternion.w(),
+      quaternion.x(),
+      quaternion.y(),
+      quaternion.z()
+  };
+  getBulletPosition();
+  setBulletPositionAndQuaternion();
 }
 
 void BtMbSingleBodyObject::setOrientation(double w, double x, double y, double z) {
-
+  quatTemp_ = {w, x, y, z};
+  getBulletPosition();
+  setBulletPositionAndQuaternion();
 }
 
 void BtMbSingleBodyObject::setOrientation(Eigen::Matrix3d rotationMatrix) {
-
+  rotMatTemp_.e() = rotationMatrix;
+  benchmark::rotMatToQuat(rotMatTemp_, quatTemp_);
+  getBulletPosition();
+  setBulletPositionAndQuaternion();
 }
 
 void BtMbSingleBodyObject::setOrientationRandom() {
-
+  RAIFATAL("setOrientationRandom not implemented yet")
 }
 
 void BtMbSingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Quaterniond quaternion) {
-
+  posTemp_.e() = originPosition;
+  quatTemp_ = {
+      quaternion.w(),
+      quaternion.x(),
+      quaternion.y(),
+      quaternion.z()
+  };
+  setBulletPositionAndQuaternion();
 }
 
 void BtMbSingleBodyObject::setPose(Eigen::Vector3d originPosition, Eigen::Matrix3d rotationMatrix) {
-
+  posTemp_.e() = originPosition;
+  rotMatTemp_.e() = rotationMatrix;
+  benchmark::rotMatToQuat(rotMatTemp_, quatTemp_);
+  setBulletPositionAndQuaternion();
 }
 
 void BtMbSingleBodyObject::setVelocity(Eigen::Vector3d linearVelocity, Eigen::Vector3d angularVelocity) {
-
+  linVelTemp_.e() = linearVelocity;
+  angVelTemp_.e() = angularVelocity;
+  setBulletLinearAndAngularVelocity();
 }
 
 void BtMbSingleBodyObject::setVelocity(double dx, double dy, double dz, double wx, double wy, double wz) {
-
+  linVelTemp_ = {dx, dy, dz};
+  angVelTemp_ = {wx, wy, wz};
+  setBulletLinearAndAngularVelocity();
 }
 
 void BtMbSingleBodyObject::setExternalForce(Eigen::Vector3d force) {
@@ -116,15 +146,37 @@ void BtMbSingleBodyObject::setFrictionCoefficient(double friction) {
 }
 
 double BtMbSingleBodyObject::getKineticEnergy() {
-  return 0;
+  getBulletLinearVelocity();
+  getBulletAngularVelocity();
+  const btVector3 &localInertia = rigidBody_->getLocalInertia();
+  benchmark::Mat<3,3> I;
+  I.e() << localInertia.x(), 0, 0,
+      0, localInertia.y(), 0,
+      0, 0, localInertia.z();
+
+  // ang
+  double angEnergy = 0;
+  benchmark::Mat<3,3> I_w;
+  getRotationMatrix();
+  benchmark::similarityTransform(rotMatTemp_, I, I_w);
+  benchmark::vecTransposeMatVecMul(angVelTemp_, I_w, angEnergy);
+
+  // lin
+  double linEnergy = 0;
+  benchmark::vecDot(linVelTemp_, linVelTemp_, linEnergy);
+
+  return 0.5 * angEnergy + 0.5 * mass_ * linEnergy;
 }
 
 double BtMbSingleBodyObject::getPotentialEnergy(const benchmark::Vec<3> &gravity) {
-  return 0;
+  double potential = 0;
+  getBulletPosition();
+  benchmark::vecDot(posTemp_, gravity, potential);
+  return -potential * mass_;
 }
 
 double BtMbSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {
-  return 0;
+  return getKineticEnergy() + getPotentialEnergy(gravity);
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1>> BtMbSingleBodyObject::getLinearMomentum() {
@@ -180,6 +232,37 @@ void BtMbSingleBodyObject::getBulletAngularVelocity() {
       bAngVel.y(),   // y
       bAngVel.z(),   // z
   };
+}
+
+void BtMbSingleBodyObject::setBulletPositionAndQuaternion() {
+  btVector3 bPosition(
+      posTemp_[0],
+      posTemp_[1],
+      posTemp_[2]
+  );
+  btQuaternion bQuaternion(
+      quatTemp_[1],   // x
+      quatTemp_[2],   // y
+      quatTemp_[3],   // z
+      quatTemp_[0]    // w
+  );
+
+  api_->resetBasePositionAndOrientation(objectId_, bPosition, bQuaternion);
+}
+
+void BtMbSingleBodyObject::setBulletLinearAndAngularVelocity() {
+  btVector3 bLinVel(
+      linVelTemp_[0],
+      linVelTemp_[1],
+      linVelTemp_[2]
+  );
+  btVector3 bAngVel(
+      angVelTemp_[0],  // x
+      angVelTemp_[1],  // y
+      angVelTemp_[2]   // z
+  );
+
+  api_->resetBaseVelocity(objectId_, bLinVel, bAngVel);
 }
 
 } // object

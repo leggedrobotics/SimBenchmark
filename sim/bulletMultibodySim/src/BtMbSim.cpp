@@ -122,6 +122,32 @@ benchmark::SingleBodyHandle BtMbSim::addCheckerboard(double gridSize,
   return handle;
 }
 
+benchmark::SingleBodyHandle BtMbSim::addSphere(double radius,
+                                               double mass,
+                                               benchmark::CollisionGroupType collisionGroup,
+                                               benchmark::CollisionGroupType collisionMask) {
+  benchmark::SingleBodyHandle handle(
+      world_.addSphere(radius, mass, collisionGroup, collisionMask), {}, {});
+  handle.hidable = false;
+  if(gui_) handle.visual().push_back(new rai_graphics::object::Sphere(radius, true));
+  processSingleBody(handle);
+  return handle;
+}
+
+benchmark::SingleBodyHandle BtMbSim::addBox(double xLength,
+                                            double yLength,
+                                            double zLength,
+                                            double mass,
+                                            benchmark::CollisionGroupType collisionGroup,
+                                            benchmark::CollisionGroupType collisionMask) {
+  benchmark::SingleBodyHandle handle(
+      world_.addBox(xLength, yLength, zLength, mass, collisionGroup, collisionMask), {}, {});
+  handle.hidable = false;
+  if(gui_) handle.visual().push_back(new rai_graphics::object::Box(xLength, yLength, zLength, true));
+  processSingleBody(handle);
+  return handle;
+}
+
 void BtMbSim::setERP(double nonContactErp, double contactErp, double frictionErp) {
   b3RobotSimulatorSetPhysicsEngineParameters parameters;
   parameters.m_erp = nonContactErp;
@@ -134,7 +160,6 @@ void BtMbSim::setERP(double nonContactErp, double contactErp, double frictionErp
 int BtMbSim::getWorldNumContacts() {
   return int(world_.contactProblemList_.size());
 }
-
 void BtMbSim::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);

@@ -26,14 +26,18 @@ set(BtMbSimSrc
         src/api/b3RobotSimulatorClientAPI.cpp
         src/BtMbSim.cpp
         src/BtMbSim.hpp
+        src/BtMbUserHandle.hpp
         src/object/BtMbArticulatedSystem.cpp
         src/object/BtMbArticulatedSystem.hpp
         src/object/BtMbSingleBodyObject.cpp
         src/object/BtMbSingleBodyObject.hpp
         src/object/BtMbCheckerBoard.cpp
         src/object/BtMbCheckerBoard.hpp
-        src/BtMbUserHandle.hpp
-        src/object/BtMbObject.cpp src/object/BtMbObject.hpp)
+        src/object/BtMbObject.cpp
+        src/object/BtMbObject.hpp
+        src/object/BtMbSphere.cpp
+        src/object/BtMbSphere.hpp
+        src/object/BtMbBox.cpp src/object/BtMbBox.hpp)
 
 # library
 add_library(BtMbSimLib ${BtMbSimSrc})

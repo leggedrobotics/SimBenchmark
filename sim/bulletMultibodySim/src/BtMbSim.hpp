@@ -84,9 +84,38 @@ class BtMbSim: public benchmark::WorldRG {
    */
   benchmark::SingleBodyHandle addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
                                               bo::CheckerboardShape shape,
-                                              benchmark::CollisionGroupType collisionGroup,
-                                              benchmark::CollisionGroupType collisionMask,
-                                              int flags) override;
+                                              benchmark::CollisionGroupType collisionGroup = 1,
+                                              benchmark::CollisionGroupType collisionMask = -1,
+                                              int flags = 0) override;
+
+  /**
+   * Add sphere to simulation
+   *
+   * @param radius
+   * @param mass
+   * @param collisionGroup
+   * @param collisionMask
+   * @return
+   */
+  benchmark::SingleBodyHandle addSphere(double radius, double mass,
+                                        benchmark::CollisionGroupType collisionGroup = 1,
+                                        benchmark::CollisionGroupType collisionMask = -1) override;
+
+  /**
+   * Add box to simulation
+   *
+   * @param xLength
+   * @param yLength
+   * @param zLength
+   * @param mass
+   * @param collisionGroup
+   * @param collisionMask
+   * @return
+   */
+  benchmark::SingleBodyHandle addBox(double xLength, double yLength, double zLength, double mass,
+                                     benchmark::CollisionGroupType collisionGroup = 1,
+                                     benchmark::CollisionGroupType collisionMask = -1) override;
+
 
   /// pure virtual getter, setter
   /**
@@ -133,20 +162,6 @@ class BtMbSim: public benchmark::WorldRG {
 
  private:
   /// deprecated pure virtual function
-  /**
-   * not supported
-   */
-  benchmark::SingleBodyHandle addSphere(double radius, double mass,
-                                        benchmark::CollisionGroupType collisionGroup,
-                                        benchmark::CollisionGroupType collisionMask) override {};
-
-  /**
-   * not supported
-   */
-  benchmark::SingleBodyHandle addBox(double xLength, double yLength, double zLength, double mass,
-                                     benchmark::CollisionGroupType collisionGroup,
-                                     benchmark::CollisionGroupType collisionMask) override {};
-
   /**
    * not supported
    */

@@ -10,7 +10,8 @@
 
 #include "object/BtMbArticulatedSystem.hpp"
 #include "object/BtMbCheckerBoard.hpp"
-
+#include "object/BtMbBox.hpp"
+#include "object/BtMbSphere.hpp"
 
 namespace bullet_mb_sim {
 
@@ -62,6 +63,18 @@ class BtMbWorld: public benchmark::WorldInterface  {
                                                                 benchmark::CollisionGroupType collisionGroup,
                                                                 benchmark::CollisionGroupType collisionMask) override;
 
+  benchmark::object::SingleBodyObjectInterface *addSphere(double radius,
+                                                          double mass,
+                                                          benchmark::CollisionGroupType collisionGroup,
+                                                          benchmark::CollisionGroupType collisionMask) override;
+
+  benchmark::object::SingleBodyObjectInterface *addBox(double xLength,
+                                                       double yLength,
+                                                       double zLength,
+                                                       double mass,
+                                                       benchmark::CollisionGroupType collisionGroup,
+                                                       benchmark::CollisionGroupType collisionMask) override;
+
   /**
   * One simulation step
   */
@@ -69,22 +82,6 @@ class BtMbWorld: public benchmark::WorldInterface  {
 
  private:
   /// deprecated functions
-  /**
-   * not supported for BtMbWorld
-   */
-  benchmark::object::SingleBodyObjectInterface *addSphere(double radius,
-                                                          double mass,
-                                                          benchmark::CollisionGroupType collisionGroup,
-                                                          benchmark::CollisionGroupType collisionMask) override {};
-  /**
-   * not supported for BtMbWorld
-   */
-  benchmark::object::SingleBodyObjectInterface *addBox(double xLength,
-                                                       double yLength,
-                                                       double zLength,
-                                                       double mass,
-                                                       benchmark::CollisionGroupType collisionGroup,
-                                                       benchmark::CollisionGroupType collisionMask) override {};
   /**
    * not supported for BtMbWorld
    */
