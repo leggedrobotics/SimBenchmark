@@ -31,6 +31,12 @@ void BtMbSim::setTimeStep(double dt) {
 }
 
 void BtMbSim::integrate() {
+  // collision detection
+  b3RobotSimulatorGetContactPointsArgs arg;
+  b3ContactInformation info;
+  world_.api_->getContactPoints(arg, &info);
+
+  // step simulation
   world_.api_->stepSimulation();
 }
 
@@ -130,6 +136,11 @@ void BtMbSim::setERP(double nonContactErp, double contactErp, double frictionErp
 
   world_.api_->setPhysicsEngineParameter(parameters);
 }
+
+int BtMbSim::getWorldNumContacts() {
+  return 0;
+}
+
 void BtMbSim::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);

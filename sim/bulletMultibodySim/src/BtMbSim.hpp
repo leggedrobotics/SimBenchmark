@@ -96,6 +96,12 @@ class BtMbSim: public benchmark::WorldRG {
    */
   int getNumObject() override;
 
+  /**
+   * Get number of all contacts existing in a simulation world
+   * @return    Number of contacts
+   */
+  int getWorldNumContacts() override;
+
   /// pure virtual simulation methods
   /**
    * Set gravitational acceleration
@@ -154,11 +160,6 @@ class BtMbSim: public benchmark::WorldRG {
   benchmark::SingleBodyHandle addCapsule(double radius, double height, double mass,
                                          benchmark::CollisionGroupType collisionGroup,
                                          benchmark::CollisionGroupType collisionMask) override {};
-
-  /**
-  * not supported for btMbSim
-  */
-  int getWorldNumContacts() override {};
 
   /**
    * integrate1 is not supported for BtMbSim

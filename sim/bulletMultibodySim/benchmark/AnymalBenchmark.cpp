@@ -5,6 +5,7 @@
 #include <BtMbSim.hpp>
 
 #include "AnymalBenchmark.hpp"
+#include "BtMbBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
 bullet_mb_sim::BtMbSim *sim;

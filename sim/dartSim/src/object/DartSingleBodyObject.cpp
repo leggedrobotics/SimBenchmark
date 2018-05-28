@@ -14,7 +14,7 @@ dart_sim::object::DartSingleBodyObject::DartSingleBodyObject(double mass, int id
 DartSingleBodyObject::~DartSingleBodyObject() {
 }
 
-const eQuaternion dart_sim::object::DartSingleBodyObject::getQuaternion() {
+const benchmark::eQuaternion dart_sim::object::DartSingleBodyObject::getQuaternion() {
   updateBodyQuaternion();
   return quat_.e();
 }
@@ -24,7 +24,7 @@ void dart_sim::object::DartSingleBodyObject::getQuaternion(benchmark::Vec<4> &qu
   quat = quat_;
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 3> > dart_sim::object::DartSingleBodyObject::getRotationMatrix() {
+const benchmark::eRotationMat dart_sim::object::DartSingleBodyObject::getRotationMatrix() {
   updateBodyRotationMatrix();
   return rotMat_.e();
 }
@@ -33,7 +33,7 @@ void dart_sim::object::DartSingleBodyObject::getRotationMatrix(benchmark::Mat<3,
   updateBodyRotationMatrix();
   rotation = rotMat_;
 }
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::DartSingleBodyObject::getPosition() {
+const benchmark::eVector3 dart_sim::object::DartSingleBodyObject::getPosition() {
   updateBodyPosition();
   return pos_.e();
 }
@@ -41,18 +41,18 @@ void dart_sim::object::DartSingleBodyObject::getPosition_W(benchmark::Vec<3> &po
   updateBodyPosition();
   pos_w = {pos_[0], pos_[1], pos_[2]};
 }
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::DartSingleBodyObject::getComPosition() {
+const benchmark::eVector3 dart_sim::object::DartSingleBodyObject::getComPosition() {
   updateBodyPosition();
   return pos_.e();
 }
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::DartSingleBodyObject::getLinearVelocity() {
+const benchmark::eVector3 dart_sim::object::DartSingleBodyObject::getLinearVelocity() {
   linVelTemp_[0] = bodyPtr_->getParentJoint()->getVelocity(3);
   linVelTemp_[1] = bodyPtr_->getParentJoint()->getVelocity(4);
   linVelTemp_[2] = bodyPtr_->getParentJoint()->getVelocity(5);
   return linVelTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > dart_sim::object::DartSingleBodyObject::getAngularVelocity() {
+const benchmark::eVector3 dart_sim::object::DartSingleBodyObject::getAngularVelocity() {
   angVelTemp_[0] = bodyPtr_->getParentJoint()->getVelocity(0);
   angVelTemp_[1] = bodyPtr_->getParentJoint()->getVelocity(1);
   angVelTemp_[2] = bodyPtr_->getParentJoint()->getVelocity(2);
@@ -188,7 +188,7 @@ double DartSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) {
   return getKineticEnergy() + getPotentialEnergy(gravity);
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1>> DartSingleBodyObject::getLinearMomentum() {
+const benchmark::eVector3 DartSingleBodyObject::getLinearMomentum() {
   getLinearVelocity();
   benchmark::vecScalarMul(mass_, linVelTemp_, linMomentum);
   return linMomentum.e();

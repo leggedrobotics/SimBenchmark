@@ -17,7 +17,7 @@ MjcSingleBodyObject::MjcSingleBodyObject(mjData *data,
   setGeomFriction({0.8, 0, 0});
 }
 
-const eQuaternion MjcSingleBodyObject::getQuaternion() {
+const benchmark::eQuaternion MjcSingleBodyObject::getQuaternion() {
   mjtNum *rotMat = getGeomRotMat();
   rotMatTemp_.e() << rotMat[0], rotMat[1], rotMat[2],
       rotMat[3], rotMat[4], rotMat[5],
@@ -34,7 +34,7 @@ void MjcSingleBodyObject::getQuaternion(benchmark::Vec<4> &quat) {
   benchmark::rotMatToQuat(rotMatTemp_, quat);
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 3> > MjcSingleBodyObject::getRotationMatrix() {
+const benchmark::eRotationMat MjcSingleBodyObject::getRotationMatrix() {
   mjtNum *rotMat = getGeomRotMat();
   rotMatTemp_.e() << rotMat[0], rotMat[1], rotMat[2],
       rotMat[3], rotMat[4], rotMat[5],
@@ -49,25 +49,25 @@ void MjcSingleBodyObject::getRotationMatrix(benchmark::Mat<3, 3> &rotation) {
       rotMat[6], rotMat[7], rotMat[8];
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > MjcSingleBodyObject::getPosition() {
+const benchmark::eVector3 MjcSingleBodyObject::getPosition() {
   mjtNum *pos = getGeomPosition();
   posTemp_ = {pos[0], pos[1], pos[2]};
   return posTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > MjcSingleBodyObject::getComPosition() {
+const benchmark::eVector3 MjcSingleBodyObject::getComPosition() {
   mjtNum *pos = getBodyComPosition();
   posTemp_ = {pos[0], pos[1], pos[2]};
   return posTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > MjcSingleBodyObject::getLinearVelocity() {
+const benchmark::eVector3 MjcSingleBodyObject::getLinearVelocity() {
   mjtNum *linVel = getBodyLinearVelocity();
   linVelTemp_ = {linVel[0], linVel[1], linVel[2]};
   return linVelTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > MjcSingleBodyObject::getAngularVelocity() {
+const benchmark::eVector3 MjcSingleBodyObject::getAngularVelocity() {
   mjtNum *angVel = getBodyAngularVelocity();
   angVelTemp_ = {angVel[0], angVel[1], angVel[2]};
   return angVelTemp_.e();

@@ -32,8 +32,8 @@ void setupWorld() {
       );
       anymal->setColor({1, 0, 0, 1});
       anymal->setGeneralizedCoordinate(
-          {i * 2,
-           j * 2,
+          {i * 2.0,
+           j * 2.0,
            benchmark::anymal::params.H,
            benchmark::anymal::params.baseQuat[0],
            benchmark::anymal::params.baseQuat[1],

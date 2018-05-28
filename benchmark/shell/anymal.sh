@@ -6,6 +6,23 @@
 ##                                                                                                                    ##
 ########################################################################################################################
 
+echo "    ___    _   ____  ____  ______    __       _______________________"
+echo "   /   |  / | / /\ \/ /  |/  /   |  / /      /_  __/ ____/ ___/_  __/"
+echo "  / /| | /  |/ /  \  / /|_/ / /| | / /        / / / __/  \__ \ / /   "
+echo " / ___ |/ /|  /   / / /  / / ___ |/ /___     / / / /___ ___/ // /    "
+echo "/_/  |_/_/ |_/   /_/_/  /_/_/  |_/_____/    /_/ /_____//____//_/     "
+
+
+########################################################################################################################
+# select sims
+########################################################################################################################
+source selectsim.sh
+
+
+########################################################################################################################
+# test
+########################################################################################################################
+
 # the number of test (for num_row <= 3)
 num_test=10
 
@@ -13,176 +30,176 @@ num_test=10
 num_row_rai=( 1 2 3 4 5 7 10 15 )
 num_row_mjc=( 1 2 3 4 5 7 10 15 )
 num_row_ode=( 1 2 3 4 5 7 10 15 )
-num_row_bt=( 1 2 3 4 )
+num_row_bt=( 1 2 3 4 5 7 10 15 )
 num_row_dart=( 1 2 3 4 5 7 10 15 )
 
 # feedback (PD control)
 feedback=true
 
-# logo (slant)
-echo "    ___    _   ____  ____  ______    __       _______________________"
-echo "   /   |  / | / /\ \/ /  |/  /   |  / /      /_  __/ ____/ ___/_  __/"
-echo "  / /| | /  |/ /  \  / /|_/ / /| | / /        / / / __/  \__ \ / /   "
-echo " / ___ |/ /|  /   / / /  / / ___ |/ /___     / / / /___ ___/ // /    "
-echo "/_/  |_/_/ |_/   /_/_/  /_/_/  |_/_____/    /_/ /_____//____//_/     "
-
-echo ""
-echo "====================================================================="
-echo "The log file is saved in data/anymal-XXX directory"
-
-source sim.sh
-
 # RAI
-echo "====================================================================="
-echo "RAI"
-for num_row in ${num_row_rai[@]}
-do
-    if [[ $num_row -le 3 ]]
-    then
-        for (( i=1; i <= $num_test; ++i ))
-        do
-            ../sim/raiSim/benchmark/RaiAnymalBenchmark --nogui --feedback=$feedback --row=$num_row
-        done
-    else
-        ../sim/raiSim/benchmark/RaiAnymalBenchmark --nogui --feedback=$feedback --row=$num_row
-    fi
-done
+if [ "$test_rai" == 'ON' ]; then
+	if [ "$RAISIM_ON" == "ON" ]; then
+
+		echo "====================================================================="
+		echo "RAI"
+
+		for num_row in ${num_row_rai[@]}
+		do
+			if [[ $num_row -le 3 ]]
+			then
+				for (( i=1; i <= $num_test; ++i ))
+				do
+					../sim/raiSim/benchmark/RaiAnymalBenchmark --nogui --feedback=$feedback --row=$num_row
+				done
+			else
+				../sim/raiSim/benchmark/RaiAnymalBenchmark --nogui --feedback=$feedback --row=$num_row
+			fi
+		done
+	else
+		echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
+	fi
+fi
 
 # BULLET
-echo "====================================================================="
-echo "BULLET (MULTIBODY SOLVER)"
-for num_row in ${num_row_bt[@]}
-do
-    if [[ $num_row -le 3 ]]
-    then
-        for (( i=1; i <= $num_test; ++i ))
-        do
-            ../sim/bulletSim/benchmark/BtAnymalBenchmark --nogui --feedback=$feedback --row=$num_row
-        done
-    else
-        ../sim/bulletSim/benchmark/BtAnymalBenchmark --nogui --feedback=$feedback --row=$num_row
-    fi
-done
+if [ "$test_bt" == 'ON' ]; then
+	if [ "$BTSIM_ON" == "ON" ]; then
+
+		echo "====================================================================="
+		echo "BULLET (MULTIBODY)"
+
+		for num_row in ${num_row_bt[@]}
+		do
+			if [[ $num_row -le 3 ]]
+			then
+				for (( i=1; i <= $num_test; ++i ))
+				do
+					../sim/bulletMultibodySim/benchmark/BtMbAnymalBenchmark --nogui --feedback=$feedback --row=$num_row
+				done
+			else
+				../sim/bulletMultibodySim/benchmark/BtMbAnymalBenchmark --nogui --feedback=$feedback --row=$num_row
+			fi
+		done
+	else
+		echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
+	fi
+fi
 
 # DART
-echo "====================================================================="
-echo "DART (DANTZIG - BULLET)"
-for num_row in ${num_row_dart[@]}
-do
-    if [[ $num_row -le 3 ]]
-    then
-        for (( i=1; i <= $num_test; ++i ))
-        do
-            ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=bullet
-        done
-    else
-        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=bullet
-    fi
-done
+if [ "$test_dart" == 'ON' ]; then
+	if [ "$DARTSIM_ON" == "ON" ] ; then
 
-echo "====================================================================="
-echo "DART (DANTZIG - ODE)"
-for num_row in ${num_row_dart[@]}
-do
-    if [[ $num_row -le 3 ]]
-    then
-        for (( i=1; i <= $num_test; ++i ))
-        do
-            ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=ode
-        done
-    else
-        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=ode
-    fi
-done
+		echo "====================================================================="
+		echo "DART (DANTZIG - BULLET)"
 
-echo "====================================================================="
-echo "DART (PGS - BULLET)"
-for num_row in ${num_row_dart[@]}
-do
-    if [[ $num_row -le 3 ]]
-    then
-        for (( i=1; i <= $num_test; ++i ))
-        do
-            ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=bullet
-        done
-    else
-        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=bullet
-    fi
-done
+		for num_row in ${num_row_dart[@]}
+		do
+			if [[ $num_row -le 3 ]]
+			then
+				for (( i=1; i <= $num_test; ++i ))
+				do
+					../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=bullet
+				done
+			else
+				../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=bullet
+			fi
+		done
 
-echo "====================================================================="
-echo "DART (PGS - ODE)"
-for num_row in ${num_row_dart[@]}
-do
-    if [[ $num_row -le 3 ]]
-    then
-        for (( i=1; i <= $num_test; ++i ))
-        do
-            ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=ode
-        done
-    else
-        ../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=ode
-    fi
-done
+
+		echo "====================================================================="
+		echo "DART (PGS - BULLET)"
+		for num_row in ${num_row_dart[@]}
+		do
+			if [[ $num_row -le 3 ]]
+			then
+				for (( i=1; i <= $num_test; ++i ))
+				do
+					../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=bullet
+				done
+			else
+				../sim/dartSim/benchmark/DartAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=bullet
+			fi
+		done
+
+	else
+		echo "dartsim is not built. turn on BENCHMARK_DARTSIM option in cmake"
+	fi
+fi
+
 
 # MUJOCO
-echo "====================================================================="
-echo "MUJOCO (PGS)"
-for num_row in ${num_row_mjc[@]}
-do
-    if [[ $num_row -le 3 ]]
-    then
-        for (( i=1; i <= $num_test; ++i ))
-        do
-            ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --noslip
-        done
-    else
-        ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --noslip
-    fi
-done
+if [ "$test_mjc" == 'ON' ]; then
+	if [ "$MJCSIM_ON" == "ON" ] ; then
 
-echo "====================================================================="
-echo "MUJOCO (CG)"
-for num_row in ${num_row_mjc[@]}
-do
-    if [[ $num_row -le 3 ]]
-    then
-        for (( i=1; i <= $num_test; ++i ))
-        do
-            ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=cg --noslip
-        done
-    else
-        ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=cg --noslip
-    fi
-done
+		echo "====================================================================="
+		echo "MUJOCO (PGS)"
+		for num_row in ${num_row_mjc[@]}
+		do
+			if [[ $num_row -le 3 ]]
+			then
+				for (( i=1; i <= $num_test; ++i ))
+				do
+					../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --noslip
+				done
+			else
+				../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=pgs --noslip
+			fi
+		done
 
-echo "====================================================================="
-echo "MUJOCO (NEWTON)"
-for num_row in ${num_row_mjc[@]}
-do
-    if [[ $num_row -le 3 ]]
-    then
-        for (( i=1; i <= $num_test; ++i ))
-        do
-            ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=newton --noslip
-        done
-    else
-        ../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=newton --noslip
-    fi
-done
+		echo "====================================================================="
+		echo "MUJOCO (CG)"
+		for num_row in ${num_row_mjc[@]}
+		do
+			if [[ $num_row -le 3 ]]
+			then
+				for (( i=1; i <= $num_test; ++i ))
+				do
+					../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=cg --noslip
+				done
+			else
+				../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=cg --noslip
+			fi
+		done
+
+		echo "====================================================================="
+		echo "MUJOCO (NEWTON)"
+		for num_row in ${num_row_mjc[@]}
+		do
+			if [[ $num_row -le 3 ]]
+			then
+				for (( i=1; i <= $num_test; ++i ))
+				do
+					../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=newton --noslip
+				done
+			else
+				../sim/mujocoSim/benchmark/MjcAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=newton --noslip
+			fi
+		done
+
+	else
+		echo "mujocosim is not built. turn on BENCHMARK_MUJOCOSIM option in cmake"
+	fi
+fi
 
 # ODE
-echo "====================================================================="
-echo "ODE (STANDARD SOLVER)"
-for num_row in ${num_row_ode[@]}
-do
-    if [[ $num_row -le 3 ]]
-    then
-        for (( i=1; i <= $num_test; ++i ))
-        do
-            ../sim/odeSim/benchmark/OdeAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=std
-        done
-    else
-        ../sim/odeSim/benchmark/OdeAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=std
-    fi
-done
+if [ "$test_ode" == 'ON' ]; then
+	if [ "$ODESIM_ON" == "ON" ] ; then
+
+		echo "====================================================================="
+		echo "ODE (STANDARD SOLVER)"
+
+		for num_row in ${num_row_ode[@]}
+		do
+			if [[ $num_row -le 3 ]]
+			then
+				for (( i=1; i <= $num_test; ++i ))
+				do
+					../sim/odeSim/benchmark/OdeAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=std
+				done
+			else
+				../sim/odeSim/benchmark/OdeAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --solver=std
+			fi
+		done
+	else
+		echo "odesim is not built. turn on BENCHMARK_ODESIM option in cmake"
+	fi
+fi

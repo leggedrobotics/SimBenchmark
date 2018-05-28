@@ -38,11 +38,11 @@ int main(int argc, char* argv[])
   printf("robot #joints = %d\n", sim->getNumJoints(robot));
   printf("num body = %d\n", sim->getNumBodies());
 
-  b3Vector3 basePosition = b3MakeVector3(0,0,1);
-  b3Quaternion baseOrientation = b3Quaternion(0,0,0,1);
+  btVector3 basePosition = btVector3(0,0,1);
+  btQuaternion baseOrientation = btQuaternion(0,0,0,1);
 
   sim->resetBasePositionAndOrientation(robot, basePosition, baseOrientation);
-  sim->setGravity(b3MakeVector3(0,0,-9.81));
+  sim->setGravity(btVector3(0,0,-9.81));
 
   b3VisualShapeInformation info;
   sim->getVisualShapeData(robot, info);
@@ -51,8 +51,8 @@ int main(int argc, char* argv[])
   {
     sim->stepSimulation();
 
-    b3Vector3 pos;
-    b3Quaternion quat;
+    btVector3 pos;
+    btQuaternion quat;
     sim->getBasePositionAndOrientation(robot, pos, quat);
 
   }

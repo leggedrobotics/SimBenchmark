@@ -16,7 +16,7 @@ object::OdeSingleBodyObject::~OdeSingleBodyObject() {
     dGeomDestroy(geometry_);
 }
 
-const eQuaternion ode_sim::object::OdeSingleBodyObject::getQuaternion() {
+const benchmark::eQuaternion ode_sim::object::OdeSingleBodyObject::getQuaternion() {
   dQuaternion dquaternion;
   dGeomGetQuaternion(geometry_, dquaternion);
   quatTemp_ = {dquaternion[0], dquaternion[1], dquaternion[2], dquaternion[3]};
@@ -29,7 +29,7 @@ void ode_sim::object::OdeSingleBodyObject::getQuaternion(benchmark::Vec<4> &quat
   quat = {dquaternion[0], dquaternion[1], dquaternion[2], dquaternion[3]};
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 3> > ode_sim::object::OdeSingleBodyObject::getRotationMatrix() {
+const benchmark::eRotationMat ode_sim::object::OdeSingleBodyObject::getRotationMatrix() {
   const dReal* rot = dGeomGetRotation(geometry_);
   rotMatTemp_.e() << rot[0], rot[1], rot[2],
       rot[4], rot[5], rot[6],
@@ -44,20 +44,20 @@ void ode_sim::object::OdeSingleBodyObject::getRotationMatrix(benchmark::Mat<3, 3
       rot[8], rot[9], rot[10];
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::OdeSingleBodyObject::getPosition() {
+const benchmark::eVector3 ode_sim::object::OdeSingleBodyObject::getPosition() {
   const dReal *position = dGeomGetPosition(geometry_);
   posTemp_ = {position[0], position[1], position[2]};
   return posTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::OdeSingleBodyObject::getComPosition() {
+const benchmark::eVector3 ode_sim::object::OdeSingleBodyObject::getComPosition() {
   const dReal *position = dGeomGetPosition(geometry_);
   posTemp_ = {position[0], position[1], position[2]};
   RAIWARN('check if COM = body origin!');
   return posTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::OdeSingleBodyObject::getLinearVelocity() {
+const benchmark::eVector3 ode_sim::object::OdeSingleBodyObject::getLinearVelocity() {
   const dReal *linearVelocity;
   if(body_) {
     linearVelocity = dBodyGetLinearVel(body_);
@@ -69,7 +69,7 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::OdeSingleBodyObj
   return linVelTemp_.e();
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1> > ode_sim::object::OdeSingleBodyObject::getAngularVelocity() {
+const benchmark::eVector3 ode_sim::object::OdeSingleBodyObject::getAngularVelocity() {
   const dReal *angularVelocity;
   if(body_) {
     angularVelocity = dBodyGetAngularVel(body_);
@@ -223,7 +223,7 @@ double object::OdeSingleBodyObject::getEnergy(const benchmark::Vec<3> &gravity) 
   return getKineticEnergy() + getPotentialEnergy(gravity);
 }
 
-const Eigen::Map<Eigen::Matrix<double, 3, 1>> object::OdeSingleBodyObject::getLinearMomentum() {
+const benchmark::eVector3 object::OdeSingleBodyObject::getLinearMomentum() {
   const dReal *linearVelocity;
   if(body_) {
     linearVelocity = dBodyGetLinearVel(body_);
