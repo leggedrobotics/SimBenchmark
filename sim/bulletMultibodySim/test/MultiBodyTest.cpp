@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
   std::string robotpath(__FILE__);
   while (robotpath.back() != '/')
     robotpath.erase(robotpath.size() - 1, 1);
-  robotpath += "../../../res/bullet/R2D2/r2d2.urdf";
+  robotpath += "../../../res/ANYmal/robot.urdf";
 
   int planeUid = sim->loadURDF(groundpath);
   printf("planeUid = %d\n", planeUid);

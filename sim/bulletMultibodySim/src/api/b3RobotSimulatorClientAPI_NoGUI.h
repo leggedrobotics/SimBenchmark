@@ -151,7 +151,8 @@ struct b3RobotSimulatorJointMotorArrayArgs
 	double *m_forces;
 
 	b3RobotSimulatorJointMotorArrayArgs(int controlMode, int numControlledDofs)
-		: m_controlMode(controlMode), m_numControlledDofs(numControlledDofs)
+		: m_controlMode(controlMode), m_numControlledDofs(numControlledDofs), m_jointIndices(0), m_kps(0), m_kds(0),
+          m_targetVelocities(0), m_targetPositions(0), m_forces(0)
 	{
 	}
 };
@@ -203,6 +204,7 @@ struct b3RobotSimulatorSetPhysicsEngineParameters
 	double m_erp;
 	double m_contactERP;
 	double m_frictionERP;
+	double m_solverResidualThreshold;
 
 	b3RobotSimulatorSetPhysicsEngineParameters()
 		: m_fixedTimeStep(-1),
@@ -217,7 +219,8 @@ struct b3RobotSimulatorSetPhysicsEngineParameters
 		  m_restitutionVelocityThreshold(-1),
 		  m_erp(-1),
 		  m_contactERP(-1),
-		  m_frictionERP(-1)
+		  m_frictionERP(-1),
+		  m_solverResidualThreshold(-1)
 	{
 	}
 };

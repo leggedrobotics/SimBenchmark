@@ -81,7 +81,7 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
 
       {
         // disable motor of each joints
-        b3RobotSimulatorJointMotorArgs arg(CONTROL_MODE_POSITION_VELOCITY_PD);
+        b3RobotSimulatorJointMotorArgs arg(CONTROL_MODE_VELOCITY);
         arg.m_maxTorqueValue = 0;
         api_->setJointMotorControl(objectId, i, arg);
       }
@@ -530,6 +530,8 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &t
       }
       arg.m_forces = jointForces;
       arg.m_jointIndices = &ctrbJoints_[0]; // vector -> array conversion
+      arg.m_targetPositions = 0;
+      arg.m_targetVelocities = 0;
 
       RAIFATAL_IF(!api_->setJointMotorControlArray(objectId_, arg), "setJointMotorControlArray failed")
     }
@@ -575,6 +577,8 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &t
       }
       arg.m_forces = jointForces;
       arg.m_jointIndices = &ctrbJoints_[0]; // vector -> array conversion
+      arg.m_targetPositions = 0;
+      arg.m_targetVelocities = 0;
 
       RAIFATAL_IF(!api_->setJointMotorControlArray(objectId_, arg), "setJointMotorControlArray failed")
     }

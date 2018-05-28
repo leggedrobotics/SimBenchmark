@@ -20,7 +20,7 @@ void setupSimulation() {
 
   /// NOTE: collision detection parameters to maintain 4 contact points
 //  sim->setMultipointIteration(0, 0);
-  sim->setERP(0.05, 0.01, 0.0);
+  sim->setERP(0.05, 0.01, 0.1);
   sim->setTimeStep(benchmark::anymal::params.dt);
 }
 
@@ -55,7 +55,7 @@ void setupWorld() {
            benchmark::anymal::params.jointPos[11]
           });
 //      anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
-//      anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
+      anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
       anymals.push_back(anymal);
     }
   }
@@ -69,7 +69,7 @@ void setupWorld() {
 void simulationLoop() {
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);
-  const double kp = benchmark::anymal::params.kp * 1.5; /// for bullet 2.78
+  const double kp = benchmark::anymal::params.kp;
   const double kd = benchmark::anymal::params.kd;
 
   jointNominalConfig

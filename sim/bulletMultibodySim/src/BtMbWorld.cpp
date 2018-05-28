@@ -22,6 +22,16 @@ BtMbWorld::BtMbWorld() {
 
   //remove all existing objects (if any)
   api_->resetSimulation();
+
+  {
+    // engine parameters
+    b3RobotSimulatorSetPhysicsEngineParameters arg;
+    arg.m_erp = 0;
+    arg.m_contactERP = 0;
+    arg.m_frictionERP = 0;
+    arg.m_solverResidualThreshold = 1e-2;
+    api_->setPhysicsEngineParameter(arg);
+  }
 }
 
 BtMbWorld::~BtMbWorld() {
@@ -32,9 +42,9 @@ BtMbWorld::~BtMbWorld() {
 }
 
 void BtMbWorld::setGravity(const benchmark::Vec<3> &gravity) {
-  api_->setGravity({float(gravity[0]),
-                    float(gravity[1]),
-                    float(gravity[2])});
+  api_->setGravity({gravity[0],
+                    gravity[1],
+                    gravity[2]});
 }
 
 int BtMbWorld::getNumObject() {
