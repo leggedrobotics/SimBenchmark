@@ -49,6 +49,9 @@ BtMbCheckerBoard::BtMbCheckerBoard(double xLength,
     RAIFATAL_IF(!api_->changeDynamics(objectId_, -1, dynarg), "changeDynamics failed")
   }
 
+  // inertia
+  localInertia_.setZero();
+
   RAIFATAL_IF(objectId_ ==  -1, "Checkerboard body creation error")
 }
 

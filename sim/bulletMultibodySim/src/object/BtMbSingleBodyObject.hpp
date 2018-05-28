@@ -108,6 +108,9 @@ class BtMbSingleBodyObject: public bo::SingleBodyObjectInterface,
   // api
   b3RobotSimulatorClientAPI_NoGUI *api_;
 
+  // inertia
+  benchmark::Mat<3,3> localInertia_;
+
   // mass
   double mass_ = 0;
 

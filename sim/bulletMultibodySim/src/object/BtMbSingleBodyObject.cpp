@@ -148,17 +148,12 @@ void BtMbSingleBodyObject::setFrictionCoefficient(double friction) {
 double BtMbSingleBodyObject::getKineticEnergy() {
   getBulletLinearVelocity();
   getBulletAngularVelocity();
-  const btVector3 &localInertia = rigidBody_->getLocalInertia();
-  benchmark::Mat<3,3> I;
-  I.e() << localInertia.x(), 0, 0,
-      0, localInertia.y(), 0,
-      0, 0, localInertia.z();
 
   // ang
   double angEnergy = 0;
   benchmark::Mat<3,3> I_w;
   getRotationMatrix();
-  benchmark::similarityTransform(rotMatTemp_, I, I_w);
+  benchmark::similarityTransform(rotMatTemp_, localInertia_, I_w);
   benchmark::vecTransposeMatVecMul(angVelTemp_, I_w, angEnergy);
 
   // lin

@@ -44,10 +44,16 @@ bullet_mb_sim::object::BtMbBox::BtMbBox(double xlength,
     RAIFATAL_IF(!api_->changeDynamics(objectId_, -1, dynarg), "changeDynamics failed")
   }
 
+  // inertia
+  {
+    b3DynamicsInfo info;
+    RAIFATAL_IF(!api_->getDynamicsInfo(objectId_, -1, &info), "getDynamicsInfo failed")
+    localInertia_[0] = info.m_localInertialDiagonal[0];
+    localInertia_[4] = info.m_localInertialDiagonal[1];
+    localInertia_[8] = info.m_localInertialDiagonal[2];
+  }
   RAIFATAL_IF(objectId_ ==  -1, "Checkerboard body creation error")
-
-
 }
 
-}
-}
+} // object
+} // bullet_multi_body
