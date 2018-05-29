@@ -18,15 +18,13 @@ void setupSimulation() {
   else
     sim = new bullet_mb_sim::BtMbSim();
 
-  /// NOTE: collision detection parameters to maintain 4 contact points
-//  sim->setMultipointIteration(0, 0);
   sim->setERP(0.05, 0.01, 0.1);
   sim->setTimeStep(benchmark::anymal::params.dt);
 }
 
 void setupWorld() {
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
-  checkerboard->setFrictionCoefficient(0.8);
+  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
+//  checkerboard->setFrictionCoefficient(0.8);
 
   for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
     for(int j = 0; j < benchmark::anymal::options.numRow; j++) {

@@ -128,15 +128,29 @@ void BtMbSingleBodyObject::setVelocity(double dx, double dy, double dz, double w
 }
 
 void BtMbSingleBodyObject::setExternalForce(Eigen::Vector3d force) {
-
+  btVector3 bForce(
+      force[0],
+      force[1],
+      force[2]
+  );
+  btVector3 bPosition(0, 0, 0);
+  api_->applyExternalForce(objectId_, -1, bForce, bPosition, EF_WORLD_FRAME);
 }
 
 void BtMbSingleBodyObject::setExternalTorque(Eigen::Vector3d torque) {
-
+  btVector3 bTorque(
+      torque[0],
+      torque[1],
+      torque[2]
+  );
+  btVector3 bPosition(0, 0, 0);
+  api_->applyExternalTorque(objectId_, -1, bTorque, EF_WORLD_FRAME);
 }
 
 void BtMbSingleBodyObject::setRestitutionCoefficient(double restitution) {
-
+  b3RobotSimulatorChangeDynamicsArgs arg;
+  arg.m_restitution = restitution;
+  api_->changeDynamics(objectId_, -1, arg);
 }
 
 void BtMbSingleBodyObject::setFrictionCoefficient(double friction) {

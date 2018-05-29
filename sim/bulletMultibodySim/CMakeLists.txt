@@ -37,7 +37,8 @@ set(BtMbSimSrc
         src/object/BtMbObject.hpp
         src/object/BtMbSphere.cpp
         src/object/BtMbSphere.hpp
-        src/object/BtMbBox.cpp src/object/BtMbBox.hpp)
+        src/object/BtMbBox.cpp
+        src/object/BtMbBox.hpp)
 
 # library
 add_library(BtMbSimLib ${BtMbSimSrc})
