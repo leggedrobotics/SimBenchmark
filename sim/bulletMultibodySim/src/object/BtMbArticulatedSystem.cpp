@@ -694,10 +694,8 @@ double object::BtMbArticulatedSystem::getTotalMass() {
   return mass;
 }
 
-double object::BtMbArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
+double object::BtMbArticulatedSystem::getKineticEnergy() {
   double kinetic = 0;
-  double potential = 0;
-  int numJoints = api_->getNumJoints(objectId_);
 
   {
     // base
@@ -722,9 +720,6 @@ double object::BtMbArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity
     double angular = 0;
     benchmark::vecTransposeMatVecMul(angVel, inertia_[0], angular);
     kinetic += angular;
-
-    // potential energy
-    potential -= mass_[0] * bPosition.dot({gravity[0], gravity[1], gravity[2]});
   }
 
   {
@@ -745,6 +740,31 @@ double object::BtMbArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity
         kinetic += angular;
       }
 
+    }
+  }
+
+  return 0.5 * kinetic;
+}
+
+double object::BtMbArticulatedSystem::getPotentialEnergy(const benchmark::Vec<3> &gravity) {
+  double potential = 0;
+
+  {
+    // base
+    btVector3 bPosition;
+    btQuaternion bQuaternion;
+    api_->getBasePositionAndOrientation(objectId_, bPosition, bQuaternion);
+
+    // potential energy
+    potential -= mass_[0] * bPosition.dot({gravity[0], gravity[1], gravity[2]});
+  }
+
+  {
+    // link
+    for (int i = 1; i < mass_.size(); i++) {
+      b3LinkState state;
+      api_->getLinkState(objectId_, i, &state);
+
       {
         btVector3 compos(
             state.m_worldPosition[0],
@@ -756,7 +776,11 @@ double object::BtMbArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity
     }
   }
 
-  return potential + 0.5 * kinetic;
+  return potential;
+}
+
+double object::BtMbArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
+  return getKineticEnergy() + getPotentialEnergy(gravity);
 }
 
 void object::BtMbArticulatedSystem::getBodyPose(int linkId,

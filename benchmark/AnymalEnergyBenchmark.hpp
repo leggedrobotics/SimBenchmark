@@ -30,6 +30,8 @@ namespace benchmark::anymal::freedrop {
 struct Data {
   std::vector<double> errorList;
   std::vector<double> EList;
+  std::vector<double> kEList;
+  std::vector<double> pEList;
 };
 Data data;
 
@@ -267,11 +269,17 @@ void showPlot() {
   Eigen::MatrixXd edata(n, 1);
   Eigen::MatrixXd tdata(n, 1);
   Eigen::MatrixXd Edata(n, 1);
+  Eigen::MatrixXd pEdata(n, 1);
+  Eigen::MatrixXd kEdata(n, 1);
 
   for(int i = 0; i < n; i++) {
     tdata(i, 0) = i;
     edata(i, 0) = data.errorList[i];
     Edata(i, 0) = data.EList[i];
+    if(data.kEList.size() != 0 && data.pEList.size() != 0) {
+      pEdata(i, 0) = data.pEList[i];
+      kEdata(i, 0) = data.kEList[i];
+    }
   }
 
   rai::Utils::Graph::FigProp2D figure1properties("step", "squared energy error", "energy error");
@@ -290,6 +298,16 @@ void showPlot() {
                                 Edata.data(),
                                 n,
                                 "energy");
+  rai::Utils::graph->appendData(2,
+                                tdata.data(),
+                                kEdata.data(),
+                                n,
+                                "kineticenergy");
+  rai::Utils::graph->appendData(2,
+                                tdata.data(),
+                                pEdata.data(),
+                                n,
+                                "potentialenergy");
   rai::Utils::graph->drawFigure(2);
   rai::Utils::graph->waitForEnter();
 }

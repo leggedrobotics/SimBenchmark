@@ -192,6 +192,21 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
   double getEnergy(const benchmark::Vec<3> &gravity) override;
 
   /**
+   * Get kinetic energy of the robot
+   *
+   * @return        Kinetic energy of the robot
+   */
+  double getKineticEnergy();
+
+  /**
+   * Get potential energy of the robot
+   *
+   * @param gravity Gravitational acceleration
+   * @return        Potential energy of the robot
+   */
+  double getPotentialEnergy(const benchmark::Vec<3> &gravity);
+
+  /**
    * Get linear momentum of the robot in Cartesian space
    *
    * @return    3D output vector of linear momentum
