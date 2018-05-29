@@ -1697,7 +1697,7 @@ bool b3RobotSimulatorClientAPI_NoGUI::setPhysicsEngineParameter(struct b3RobotSi
 		b3PhysicsParamSetDefaultFrictionERP(command, args.m_frictionERP);
 	}
 
-	if (args.m_restitutionVelocityThreshold >= 0)
+	if (args.m_solverResidualThreshold >= 0)
 	{
 		b3PhysicsParamSetSolverResidualThreshold(command, args.m_solverResidualThreshold);
 	}
