@@ -694,9 +694,32 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(std::initializer_list<do
 }
 
 void object::BtMbArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) {
+  setGeneralizedCoordinate(genco);
+  setGeneralizedVelocity(genvel);
 }
 
 const Eigen::Map<Eigen::Matrix<double, 3, 1>> object::BtMbArticulatedSystem::getLinearMomentumInCartesianSpace() {
+
+  {
+    // base
+    b3LinkState state;
+    api_->getLinkState(objectId_, -1, &state);
+
+    linearMomentum_[0] = state.m_worldLinearVelocity[0] * mass_[0];
+    linearMomentum_[1] = state.m_worldLinearVelocity[1] * mass_[0];
+    linearMomentum_[2] = state.m_worldLinearVelocity[2] * mass_[0];
+  }
+
+  // link
+  for (int i = 1; i < mass_.size(); i++) {
+    b3LinkState state;
+    api_->getLinkState(objectId_, i, &state);
+
+    linearMomentum_[0] += state.m_worldLinearVelocity[0] * mass_[i];
+    linearMomentum_[1] += state.m_worldLinearVelocity[1] * mass_[i];
+    linearMomentum_[2] += state.m_worldLinearVelocity[2] * mass_[i];
+  }
+
   return linearMomentum_.e();
 }
 
