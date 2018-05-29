@@ -30,18 +30,20 @@ ode_sim::OdeWorld::OdeWorld(SolverOption solverOption) : solverOption_(solverOpt
 
   dWorldSetGravity(dynamicsWorld_, gravity_[0], gravity_[1], gravity_[2]);
 
-////  auto disable
+  ///  auto disable
+  dWorldSetAutoDisableLinearThreshold(dynamicsWorld_, 0);
+  dWorldSetAutoDisableAngularThreshold(dynamicsWorld_, 0);
 //  dWorldSetAutoDisableAverageSamplesCount(dynamicsWorld_, 10);
 //  dWorldSetAutoDisableFlag(dynamicsWorld_, 1);
 
-////  parameters
-//  dWorldSetLinearDamping(dynamicsWorld_, 0.00001);
-//  dWorldSetAngularDamping(dynamicsWorld_, 0.005);
+  ///  parameters
+  dWorldSetLinearDamping(dynamicsWorld_, 0);
+  dWorldSetAngularDamping(dynamicsWorld_, 0);
+  dWorldSetCFM(dynamicsWorld_, 0);
+  dWorldSetERP(dynamicsWorld_, 0);
 //  dWorldSetMaxAngularSpeed(dynamicsWorld_, 200);
 //  dWorldSetContactMaxCorrectingVel(dynamicsWorld_,0.1);
 //  dWorldSetContactSurfaceLayer(dynamicsWorld_,0.001);
-  dWorldSetERP(dynamicsWorld_, 0);
-  dWorldSetCFM(dynamicsWorld_, 0);
 
   // num iteration of quick solver. (default value is 20.)
 //  dWorldSetQuickStepNumIterations(dynamicsWorld_, 50);

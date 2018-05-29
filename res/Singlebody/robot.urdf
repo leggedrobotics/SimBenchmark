@@ -25,20 +25,20 @@
     <!-- Base link -->
     <link name="base">
         <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="0 0 0" xyz="0.5 0.5 0.5"/>
             <geometry>
-                <box size="0.5 0.5 0.5"/>
+                <box size="1 1 1"/>
             </geometry>
         </visual>
         <collision>
             <!-- Main Body -->
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="0 0 0" xyz="0.5 0.5 0.5"/>
             <geometry>
-                <box size="0.5 0.5 0.5"/>
+                <box size="1 1 1"/>
             </geometry>
         </collision>
         <inertial>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <origin rpy="0 0 0" xyz="0.5 0.5 0.5"/>
             <mass value="10"/>
             <inertia ixx="0.4167" ixy="0" ixz="0" iyy="0.4167" iyz="0" izz="0.4167"/>
         </inertial>

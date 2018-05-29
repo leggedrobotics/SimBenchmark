@@ -377,14 +377,12 @@ void OdeArticulatedSystem::initCollisions(Link &link,
     switch (link.collision_.colShape_[i]) {
       case bo::Shape::Cylinder: {
         link.collision_.odeGeometries_.push_back(dCreateCylinder(spaceID_, size[0], size[1]));
-        dGeomSetBody(link.collision_.odeGeometries_.back(), link.odeBody_);
         dGeomSetCategoryBits(link.collision_.odeGeometries_.back(), collisionGroup_);
         dGeomSetCollideBits(link.collision_.odeGeometries_.back(), collisionMask_);
         break;
       }
       case bo::Shape::Sphere: {
-        link.collision_.odeGeometries_.push_back(dCreateSphere(spaceID_, size[0]));
-        dGeomSetBody(link.collision_.odeGeometries_.back(), link.odeBody_);
+        link.collision_.odeGeometries_.push_back(dCreateSphere(spaceID_, size[q0]));
         dGeomSetCategoryBits(link.collision_.odeGeometries_.back(), collisionGroup_);
         dGeomSetCollideBits(link.collision_.odeGeometries_.back(), collisionMask_);
         break;
@@ -970,15 +968,6 @@ int OdeArticulatedSystem::getStateDimension() {
   return stateDimension_;
 }
 
-void OdeArticulatedSystem::setColor(Eigen::Vector4d color) {
-  color_ = {
-      color[0], color[1], color[2], color[3]};
-
-  for(int i = 0; i < visObj.size(); i++) {
-    std::get<4>(visObj[i]) = color_;
-  }
-}
-
 const std::vector<Joint *> &OdeArticulatedSystem::getJoints() const {
   return joints_;
 }
@@ -1053,6 +1042,10 @@ void OdeArticulatedSystem::getComPos_W(int bodyId, benchmark::Vec<3> &comPos) {
 }
 
 double OdeArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
+  return getKineticEnergy() + getPotentialEnergy(gravity);
+}
+
+double OdeArticulatedSystem::getKineticEnergy() {
   double kinetic = 0;
   for(int i = 0; i < links_.size(); i++) {
     benchmark::Vec<3> comvel;
@@ -1066,6 +1059,10 @@ double OdeArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
     kinetic += angular;
   }
 
+  return 0.5 * kinetic;
+}
+
+double OdeArticulatedSystem::getPotentialEnergy(const benchmark::Vec<3> &gravity) {
   double potential = 0;
   for(int i = 0; i < links_.size(); i++) {
     double linkPotential = 0;
@@ -1075,8 +1072,9 @@ double OdeArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
     potential -= linkPotential * links_[i]->inertial_.mass_;
   }
 
-  return potential + 0.5 * kinetic;
+  return potential;
 }
+
 void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
   RAIFATAL("not implemented yet")
 //  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
@@ -1146,6 +1144,7 @@ void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVe
 //    }
 //  }
 }
+
 void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
   RAIFATAL("not implemented yet")
 //  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")

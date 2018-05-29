@@ -30,37 +30,177 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
                        const dSpaceID spaceID,
                        benchmark::CollisionGroupType collisionGroup,
                        benchmark::CollisionGroupType collisionMask);
+
   virtual ~OdeArticulatedSystem();
 
-  const EigenVec getGeneralizedCoordinate() override;
-  const EigenVec getGeneralizedVelocity() override;
-  const EigenVec getGeneralizedForce() override;
-  void getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) override;
-
+  /**
+ * Get degree of the freedom of the robot:
+ * If the robot is floating based then (6 + the number of joints.)
+ * If the robot is fixed based then (the number of joints)
+ *
+ * @return  Degree of freedom of the robot
+ */
   int getDOF() override;
+
+  /**
+ * Get dimension of the generalized coordinate of the robot:
+ * If the robot is floating based then (7 + the number of joints.)
+ * If the robot is fixed based then (the number of joints)
+ *
+ * @return    State dimension of the robot
+ */
   int getStateDimension() override;
 
+  /**
+ * Get generalized coordinate of robot
+ * The dimension of output vector is stateDimension:
+ * If the robot is floating based then (base position ; base quaternion ; joint position)
+ * If the robot is fixed based then (joint position)
+ *
+ * @return Eigenvec of generalized coordinate
+ */
+  const EigenVec getGeneralizedCoordinate() override;
+
+  /**
+   * Get generalized velocity of robot
+   * The dimension of output vector is degree of freedom:
+   * If the robot is floating based then (base linear velocity ; base angular velocity ; joint velocities)
+   * If the robot is fixed based then (joint velocities)
+   *
+   * @return Eigenvec of generalized velocity
+   */
+  const EigenVec getGeneralizedVelocity() override;
+
+  /**
+ * Get generalized force of robot
+ * The dimension of output vector is degree of freedom:
+ * If the robot is floating based then (base force ; base torque ; joint torque(or force))
+ * If the robot is fixed based then (joint torque(or force))
+ *
+ * @return Eigenvec of generalized force
+ */
+  const EigenVec getGeneralizedForce() override;
+
+  /**
+ * Get generalized coordinate and velocity
+ *
+ * @param genco   VectorXd of generalized coordinate (output)
+ * @param genvel  VectorXd of generalized velocity (output)
+ */
+  void getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) override;
+
+  /**
+ * Set generalized coordinate of robot
+ * The dimension of input vector is stateDimension:
+ * If the robot is floating based then (base position ; base quaternion ; joint position)
+ * If the robot is fixed based then (joint position)
+ *
+ * @param jointState  VectorXd of generalized coordinate
+ */
   void setGeneralizedCoordinate(const Eigen::VectorXd &jointState) override;
 
- private:
-  /// these functions are not implemented yet
-  void setGeneralizedVelocity(const Eigen::VectorXd &jointVel) override;
-  void setGeneralizedVelocity(std::initializer_list<double> jointVel) override;
-  //////////////////////////////////////////
-
- public:
+  /**
+ * Set generalized coordinate of robot
+ * The dimension of input vector is stateDimension:
+ * If the robot is floating based then (base position ; base quaternion ; joint position)
+ * If the robot is fixed based then (joint position)
+ *
+ * @param jointState  Array of generalized coordinate
+ */
   void setGeneralizedCoordinate(std::initializer_list<double> jointState) override;
-  void setGeneralizedForce(std::initializer_list<double> tau) override;
-  void setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) override;
+
+  /**
+ * Set generalized force of robot
+ * The dimension of input vector is degree of freedom:
+ * If the robot is floating based then (base force ; base torque ; joint torque(or force))
+ * If the robot is fixed based then (joint torque(or force))
+ *
+ * @return VectorXd of generalized force
+ */
   void setGeneralizedForce(const Eigen::VectorXd &tau) override;
-  void setColor(Eigen::Vector4d color) override;
 
-  const std::vector<Joint *> &getJoints() const;
-  const std::vector<Link *> &getLinks() const;
+  /**
+ * Set generalized force of robot
+ * The dimension of input vector is degree of freedom:
+ * If the robot is floating based then (base force ; base torque ; joint torque(or force))
+ * If the robot is fixed based then (joint torque(or force))
+ *
+ * @return Array of generalized force
+ */
+  void setGeneralizedForce(std::initializer_list<double> tau) override;
 
+  /**
+ * Set generalized coordinate and velocity
+ *
+ * @param genco   VectorXd of generalized coordinate (input)
+ * @param genvel  VectorXd of generalized velocity (input)
+ */
+  void setState(const Eigen::VectorXd &genco, const Eigen::VectorXd &genvel) override;
+
+  /**
+ * deprecated
+ */
+  void setColor(Eigen::Vector4d color) override {RAIFATAL("setColor is deprecated function")};
+
+  /**
+* Get pose of link w.r.t. world frame
+*
+* @param linkId          linkId
+* @param orientation     orientation of link (output)
+* @param position        position of link (output)
+*/
   void getBodyPose(int bodyId,
                    benchmark::Mat<3, 3> &orientation,
                    benchmark::Vec<3> &position);
+
+/**
+   * Get list of joint related data (all joint)
+   * @return    Vector of Joint data
+   */
+  const std::vector<Joint *> &getJoints() const;
+
+  /**
+   * Get list of link related data (all link)
+   * @return    Vector of link data
+   */
+  const std::vector<Link *> &getLinks() const;
+
+  /**
+   * Get total mass of the robot
+   * @return    total mass of the robot in kg
+   */
+  double getTotalMass() override;
+
+  /**
+ * Get linear momentum of the robot in Cartesian space
+ *
+ * @return    3D output vector of linear momentum
+ */
+  const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace() override;
+
+  /**
+  * Get total energy of the robot = kinetic E + potential E
+  *
+  * @param gravity Gravitational acceleration
+  * @return        Total energy of the robot
+  */
+  double getEnergy(const benchmark::Vec<3> &gravity) override;
+
+  /**
+   * Get kinetic energy of the robot
+   *
+   * @return        Kinetic energy of the robot
+   */
+  double getKineticEnergy();
+
+  /**
+   * Get potential energy of the robot
+   *
+   * @param gravity Gravitational acceleration
+   * @return        Potential energy of the robot
+   */
+  double getPotentialEnergy(const benchmark::Vec<3> &gravity);
+
 
   void getComVelocity_W(int bodyId,
                         benchmark::Vec<3> &velocity);
@@ -71,9 +211,17 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   void getComPos_W(int bodyId,
                    benchmark::Vec<3> &comPos);
 
-  const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace() override;
-  double getTotalMass() override;
-  double getEnergy(const benchmark::Vec<3> &gravity) override;
+ private:
+  /// these functions are not implemented yet
+  /**
+   * not completed
+   */
+  void setGeneralizedVelocity(const Eigen::VectorXd &jointVel) override;
+
+  /**
+   * not completed
+   */
+  void setGeneralizedVelocity(std::initializer_list<double> jointVel) override;
 
  private:
   void init();
@@ -158,14 +306,14 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
 
   benchmark::Vec<3> linearMomentum_;
 
+  benchmark::CollisionGroupType collisionGroup_;
+  benchmark::CollisionGroupType collisionMask_;
+
   Link rootLink_;
   Joint rootJoint_;
 
   dWorldID worldID_ = 0;
   dSpaceID spaceID_ = 0;
-
-  benchmark::CollisionGroupType collisionGroup_;
-  benchmark::CollisionGroupType collisionMask_;
 
 };
 
