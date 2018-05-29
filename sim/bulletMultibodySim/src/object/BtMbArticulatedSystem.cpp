@@ -8,6 +8,7 @@ namespace bullet_mb_sim {
 
 object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
                                                      ObjectFileType fileType,
+                                                     bool internalCollision,
                                                      b3RobotSimulatorClientAPI_NoGUI *api) : api_(api) {
 
   int objectId = -1;
@@ -17,7 +18,10 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     case URDF: {
       b3RobotSimulatorLoadUrdfFileArgs args;
       args.m_flags =
-          URDF_USE_INERTIA_FROM_FILE | URDF_USE_SELF_COLLISION | URDF_USE_IMPLICIT_CYLINDER | MJCF_COLORS_FROM_FILE;
+          URDF_USE_INERTIA_FROM_FILE | URDF_USE_IMPLICIT_CYLINDER | MJCF_COLORS_FROM_FILE;
+
+      if(internalCollision)
+        args.m_flags |= URDF_USE_SELF_COLLISION;
 
       objectId = api->loadURDF(filePath + "/robot.urdf", args);
       break;
@@ -44,12 +48,23 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     }
   }
 
-  // initialize collision data
+  // initialize collision data and mass
   // base (link id = -1)
   {
     b3CollisionShapeInformation collisionShapeInfo;
     api_->getCollisionShapeData(objectId, -1, collisionShapeInfo);
     initCollisions(objectId, -1, collisionShapeInfo);
+
+    b3DynamicsInfo info;
+    api_->getDynamicsInfo(objectId, -1, &info);
+    mass_.push_back(info.m_mass);
+
+    benchmark::Mat<3,3> inertia;
+    inertia.setZero();
+    inertia[0] = info.m_localInertialDiagonal[0];
+    inertia[4] = info.m_localInertialDiagonal[1];
+    inertia[8] = info.m_localInertialDiagonal[2];
+    inertia_.push_back(inertia);
   }
 
   // links
@@ -57,6 +72,17 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     b3CollisionShapeInformation collisionShapeInfo;
     api_->getCollisionShapeData(objectId, i, collisionShapeInfo);
     initCollisions(objectId, i, collisionShapeInfo);
+
+    b3DynamicsInfo info;
+    api_->getDynamicsInfo(objectId, i, &info);
+    mass_.push_back(info.m_mass);
+
+    benchmark::Mat<3,3> inertia;
+    inertia.setZero();
+    inertia[0] = info.m_localInertialDiagonal[0];
+    inertia[4] = info.m_localInertialDiagonal[1];
+    inertia[8] = info.m_localInertialDiagonal[2];
+    inertia_.push_back(inertia);
   }
 
   // is fixed
@@ -563,7 +589,7 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &t
 
       btVector3 bPosition = {0, 0, 0};
       api_->applyExternalForce(objectId_, -1, bForce, bPosition, EF_WORLD_FRAME);
-      api_->applyExternalTorque(objectId_, -1, bForce, EF_WORLD_FRAME);
+      api_->applyExternalTorque(objectId_, -1, bTorque, EF_WORLD_FRAME);
     }
 
     // joint
@@ -633,7 +659,7 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(std::initializer_list<do
 
       btVector3 bPosition = {0, 0, 0};
       api_->applyExternalForce(objectId_, -1, bForce, bPosition, EF_WORLD_FRAME);
-      api_->applyExternalTorque(objectId_, -1, bForce, EF_WORLD_FRAME);
+      api_->applyExternalTorque(objectId_, -1, bTorque, EF_WORLD_FRAME);
     }
 
     // joint
@@ -662,11 +688,75 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1>> object::BtMbArticulatedSystem::get
 }
 
 double object::BtMbArticulatedSystem::getTotalMass() {
-  return 0;
+  double mass = 0;
+  for(double linkmass : mass_)
+    mass += linkmass;
+  return mass;
 }
 
 double object::BtMbArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
-  return 0;
+  double kinetic = 0;
+  double potential = 0;
+  int numJoints = api_->getNumJoints(objectId_);
+
+  {
+    // base
+    // kinetic energy (x 0.5 at the last)
+    btVector3 bLinVel;
+    btVector3 bAngvel;
+    api_->getBaseVelocity(objectId_, bLinVel, bAngvel);
+
+    btVector3 bPosition;
+    btQuaternion bQuaternion;
+    api_->getBasePositionAndOrientation(objectId_, bPosition, bQuaternion);
+
+    kinetic += mass_[0] * bLinVel.dot(bLinVel);
+
+    bAngvel = btMatrix3x3(bQuaternion) * bAngvel;   // get local angvel
+    benchmark::Vec<3> angVel = {
+        bAngvel.x(),
+        bAngvel.y(),
+        bAngvel.z()
+    };
+
+    double angular = 0;
+    benchmark::vecTransposeMatVecMul(angVel, inertia_[0], angular);
+    kinetic += angular;
+
+    // potential energy
+    potential -= mass_[0] * bPosition.dot({gravity[0], gravity[1], gravity[2]});
+  }
+
+  {
+    // link
+    for (int i = 1; i < mass_.size(); i++) {
+      b3LinkState state;
+      api_->getLinkState(objectId_, i, &state);
+      {
+        kinetic += mass_[i] * (
+            pow(state.m_worldLinearVelocity[0], 2)
+                + pow(state.m_worldLinearVelocity[1], 2)
+                + pow(state.m_worldLinearVelocity[2], 2)
+        );
+
+        double angular;
+        benchmark::Vec<3> angVel;
+        benchmark::vecTransposeMatVecMul(angVel, inertia_[i], angular);
+        kinetic += angular;
+      }
+
+      {
+        btVector3 compos(
+            state.m_worldPosition[0],
+            state.m_worldPosition[1],
+            state.m_worldPosition[2]
+        );
+        potential -= mass_[i] * compos.dot({gravity[0], gravity[1], gravity[2]});
+      }
+    }
+  }
+
+  return potential + 0.5 * kinetic;
 }
 
 void object::BtMbArticulatedSystem::getBodyPose(int linkId,

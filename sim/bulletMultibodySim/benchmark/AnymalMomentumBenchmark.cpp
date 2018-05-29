@@ -37,9 +37,8 @@ void setupWorld() {
   balls.push_back(ball);
 
   // anymal
-  auto anymal = sim->addArticulatedSystem(
-      benchmark::anymal::zerogravity::getURDFpath(), bullet_mb_sim::object::URDF
-  );
+  auto anymal =
+      sim->addArticulatedSystem(benchmark::anymal::zerogravity::getURDFpath(), bullet_mb_sim::object::URDF);
   anymal->setGeneralizedCoordinate({0,
                                     0,
                                     benchmark::anymal::zerogravity::params.H,

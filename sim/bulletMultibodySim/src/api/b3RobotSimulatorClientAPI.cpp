@@ -1,6 +1,6 @@
 #include "b3RobotSimulatorClientAPI.h"
 
-#include "../SharedMemory/PhysicsClientC_API.h"
+#include "PhysicsClientC_API.h"
 #include "b3RobotSimulatorClientAPI_InternalData.h"
 #ifdef BT_ENABLE_ENET
 #include "../SharedMemory/PhysicsClientUDP_C_API.h"

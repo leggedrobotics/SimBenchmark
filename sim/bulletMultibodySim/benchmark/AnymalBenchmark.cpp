@@ -28,9 +28,8 @@ void setupWorld() {
 
   for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
     for(int j = 0; j < benchmark::anymal::options.numRow; j++) {
-      auto anymal = sim->addArticulatedSystem(
-          benchmark::anymal::getURDFpath(), bullet_mb_sim::object::URDF
-      );
+      auto anymal =
+          sim->addArticulatedSystem(benchmark::anymal::getURDFpath(), bullet_mb_sim::object::URDF);
       anymal->setGeneralizedCoordinate(
           {i * 2.0,
            j * 2.0,

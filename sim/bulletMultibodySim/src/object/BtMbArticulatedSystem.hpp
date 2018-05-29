@@ -32,8 +32,9 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
  public:
 
   BtMbArticulatedSystem(std::string filePath,
-                        ObjectFileType fileType,
-                        b3RobotSimulatorClientAPI_NoGUI *api);
+                          ObjectFileType fileType,
+                          bool internalCollision,
+                          b3RobotSimulatorClientAPI_NoGUI *api);
   virtual ~BtMbArticulatedSystem();
 
   /**
@@ -223,6 +224,10 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
 
   // joint idx (controllable joints)
   std::vector<int> ctrbJoints_;
+
+  // link mass
+  std::vector<double> mass_;
+  std::vector<benchmark::Mat<3,3>> inertia_;    // local inertia (w.r.t com)
 
   // api
   b3RobotSimulatorClientAPI_NoGUI *api_;

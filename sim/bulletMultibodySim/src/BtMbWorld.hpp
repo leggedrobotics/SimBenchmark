@@ -50,10 +50,11 @@ class BtMbWorld: public benchmark::WorldInterface  {
    * @param collisionGroup
    * @param collisionMask
    */
-  object::BtMbArticulatedSystem * addArticulatedSystem(std::string nm,
-                                                       object::ObjectFileType fileType,
-                                                       benchmark::CollisionGroupType collisionGroup = 1,
-                                                       benchmark::CollisionGroupType collisionMask = -1);
+  object::BtMbArticulatedSystem *addArticulatedSystem(std::string nm,
+                                                      object::ObjectFileType fileType,
+                                                      bool internalCollision,
+                                                      benchmark::CollisionGroupType collisionGroup,
+                                                      benchmark::CollisionGroupType collisionMask);
 
   benchmark::object::SingleBodyObjectInterface *addCheckerboard(double gridSize,
                                                                 double xLength,

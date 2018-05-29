@@ -36,11 +36,12 @@ void BtMbSim::integrate() {
 
 ArticulatedSystemHandle BtMbSim::addArticulatedSystem(std::string nm,
                                                       object::ObjectFileType fileType,
+                                                      bool internalCollision,
                                                       benchmark::CollisionGroupType collisionGroup,
                                                       benchmark::CollisionGroupType collisionMask) {
 
   ArticulatedSystemHandle handle(
-      world_.addArticulatedSystem(nm, fileType, collisionGroup, collisionMask), {}, {});
+      world_.addArticulatedSystem(nm, fileType, internalCollision, collisionGroup, collisionMask), {}, {});
   if(!gui_) {
     asHandles_.push_back(handle);
     return handle;

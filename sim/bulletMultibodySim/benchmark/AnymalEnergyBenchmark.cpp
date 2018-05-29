@@ -27,10 +27,9 @@ void setupWorld() {
   // add objects
   auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
 
-  // anymal
-  auto anymal = sim->addArticulatedSystem(
-      benchmark::anymal::freedrop::getURDFpath(), bullet_mb_sim::object::URDF
-  );
+  // anymal (no internal collision)
+  auto anymal =
+      sim->addArticulatedSystem(benchmark::anymal::freedrop::getURDFpath(), bullet_mb_sim::object::URDF, false);
   anymal->setGeneralizedCoordinate({0,
                                     0,
                                     benchmark::anymal::freedrop::params.H,
@@ -40,7 +39,6 @@ void setupWorld() {
                                     0.03, -0.4, 0.8,
                                     -0.03, -0.4, 0.8});
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
-  anymal->setInternalCollision(false);
   anymals.push_back(anymal);
 
   // gravity
@@ -78,6 +76,15 @@ double simulationLoop() {
 
   StopWatch watch;
   watch.start();
+
+//  anymals[0]->setGeneralizedCoordinate({
+//                                           0, 0, 10,
+//                                           1, 0, 0, 0,
+//                                           0, 0, 0,
+//                                           0, 0, 0,
+//                                           0, 0, 0,
+//                                           0, 0, 0
+//                                       });
   if(benchmark::anymal::freedrop::options.gui) {
     // gui
     // step1: applying force

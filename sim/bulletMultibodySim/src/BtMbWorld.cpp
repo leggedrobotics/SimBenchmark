@@ -51,12 +51,13 @@ int BtMbWorld::getNumObject() {
   return api_->getNumBodies();
 }
 
-object::BtMbArticulatedSystem* BtMbWorld::addArticulatedSystem(std::string nm,
+object::BtMbArticulatedSystem * BtMbWorld::addArticulatedSystem(std::string nm,
                                                                 object::ObjectFileType fileType,
+                                                                bool internalCollision,
                                                                 benchmark::CollisionGroupType collisionGroup,
                                                                 benchmark::CollisionGroupType collisionMask) {
   auto *articulatedSystem =
-      new object::BtMbArticulatedSystem(nm, fileType, api_);
+      new object::BtMbArticulatedSystem(nm, fileType, internalCollision, api_);
   objectList_.push_back(articulatedSystem);
   return articulatedSystem;
 }
