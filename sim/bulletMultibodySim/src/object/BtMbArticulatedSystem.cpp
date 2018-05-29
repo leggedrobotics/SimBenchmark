@@ -48,7 +48,7 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     }
   }
 
-  // initialize collision data and mass
+  // initialize collision data & mass & physical props
   // base (link id = -1)
   {
     b3CollisionShapeInformation collisionShapeInfo;
@@ -65,6 +65,13 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     inertia[4] = info.m_localInertialDiagonal[1];
     inertia[8] = info.m_localInertialDiagonal[2];
     inertia_.push_back(inertia);
+
+    b3RobotSimulatorChangeDynamicsArgs arg;
+    arg.m_lateralFriction = 0.8;
+    arg.m_linearDamping = 0;
+    arg.m_angularDamping = 0;
+    arg.m_restitution = 0;
+    api_->changeDynamics(objectId, -1, arg);
   }
 
   // links
@@ -83,6 +90,12 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     inertia[4] = info.m_localInertialDiagonal[1];
     inertia[8] = info.m_localInertialDiagonal[2];
     inertia_.push_back(inertia);
+
+    b3RobotSimulatorChangeDynamicsArgs arg;
+    arg.m_lateralFriction = 0.8;
+    arg.m_linearDamping = 0;
+    arg.m_angularDamping = 0;
+    api_->changeDynamics(objectId, i, arg);
   }
 
   // is fixed
