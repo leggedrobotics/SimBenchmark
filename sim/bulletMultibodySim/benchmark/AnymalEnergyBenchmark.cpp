@@ -29,7 +29,7 @@ void setupWorld() {
 
   // anymal (no internal collision)
   auto anymal =
-      sim->addArticulatedSystem(benchmark::anymal::freedrop::getURDFpath(), bullet_mb_sim::object::URDF, false);
+      sim->addArticulatedSystem(benchmark::anymal::freedrop::getBulletURDFpath(), bullet_mb_sim::object::URDF, false);
   anymal->setGeneralizedCoordinate({0,
                                     0,
                                     benchmark::anymal::freedrop::params.H,
@@ -131,8 +131,8 @@ double simulationLoop() {
                                        0, 0, 0});
       benchmark::anymal::freedrop::data.errorList.push_back(computeEnergyError(E0));
       benchmark::anymal::freedrop::data.EList.push_back(computeEnergy());
-//      benchmark::anymal::freedrop::data.kEList.push_back(computeKineticEnergy());
-//      benchmark::anymal::freedrop::data.pEList.push_back(computePotentialEnergy());
+      benchmark::anymal::freedrop::data.kEList.push_back(computeKineticEnergy());
+      benchmark::anymal::freedrop::data.pEList.push_back(computePotentialEnergy());
       sim->integrate();
     }
   } else {
@@ -162,8 +162,8 @@ double simulationLoop() {
                                        0, 0, 0});
       benchmark::anymal::freedrop::data.errorList.push_back(computeEnergyError(E0));
       benchmark::anymal::freedrop::data.EList.push_back(computeEnergy());
-//      benchmark::anymal::freedrop::data.kEList.push_back(computeKineticEnergy());
-//      benchmark::anymal::freedrop::data.pEList.push_back(computePotentialEnergy());
+      benchmark::anymal::freedrop::data.kEList.push_back(computeKineticEnergy());
+      benchmark::anymal::freedrop::data.pEList.push_back(computePotentialEnergy());
       sim->integrate();
     }
   }

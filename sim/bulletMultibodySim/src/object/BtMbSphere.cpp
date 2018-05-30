@@ -33,6 +33,8 @@ bullet_mb_sim::object::BtMbSphere::BtMbSphere(double radius, double mass, b3Robo
     dynarg.m_restitution = 0;
     dynarg.m_rollingFriction = 0;
     dynarg.m_spinningFriction = 0;
+    dynarg.m_linearDamping = 0;
+    dynarg.m_angularDamping = 0;
     RAIFATAL_IF(!api_->changeDynamics(objectId_, -1, dynarg), "changeDynamics failed")
   }
 
@@ -40,6 +42,7 @@ bullet_mb_sim::object::BtMbSphere::BtMbSphere(double radius, double mass, b3Robo
   {
     b3DynamicsInfo info;
     RAIFATAL_IF(!api_->getDynamicsInfo(objectId_, -1, &info), "getDynamicsInfo failed")
+    localInertia_.setZero();
     localInertia_[0] = info.m_localInertialDiagonal[0];
     localInertia_[4] = info.m_localInertialDiagonal[1];
     localInertia_[8] = info.m_localInertialDiagonal[2];

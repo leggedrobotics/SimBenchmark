@@ -702,22 +702,23 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1>> object::BtMbArticulatedSystem::get
 
   {
     // base
-    b3LinkState state;
-    api_->getLinkState(objectId_, -1, &state);
+    btVector3 bLinVel;
+    btVector3 bAngvel;
+    api_->getBaseVelocity(objectId_, bLinVel, bAngvel);
 
-    linearMomentum_[0] = state.m_worldLinearVelocity[0] * mass_[0];
-    linearMomentum_[1] = state.m_worldLinearVelocity[1] * mass_[0];
-    linearMomentum_[2] = state.m_worldLinearVelocity[2] * mass_[0];
+    linearMomentum_[0] = bLinVel.x() * mass_[0];
+    linearMomentum_[1] = bLinVel.y() * mass_[0];
+    linearMomentum_[2] = bLinVel.z() * mass_[0];
   }
 
   // link
   for (int i = 1; i < mass_.size(); i++) {
-    b3LinkState state;
-    api_->getLinkState(objectId_, i, &state);
+    benchmark::Vec<3> comVel;
+    getComVelocity_W(i-1, comVel);
 
-    linearMomentum_[0] += state.m_worldLinearVelocity[0] * mass_[i];
-    linearMomentum_[1] += state.m_worldLinearVelocity[1] * mass_[i];
-    linearMomentum_[2] += state.m_worldLinearVelocity[2] * mass_[i];
+    linearMomentum_[0] += comVel[0] * mass_[i];
+    linearMomentum_[1] += comVel[1] * mass_[i];
+    linearMomentum_[2] += comVel[2] * mass_[i];
   }
 
   return linearMomentum_.e();
@@ -744,17 +745,27 @@ double object::BtMbArticulatedSystem::getKineticEnergy() {
     btQuaternion bQuaternion;
     api_->getBasePositionAndOrientation(objectId_, bPosition, bQuaternion);
 
+    // linear
     kinetic += mass_[0] * bLinVel.dot(bLinVel);
 
-    bAngvel = btMatrix3x3(bQuaternion) * bAngvel;   // get local angvel
+    benchmark::Vec<4> quaternion = {
+        bQuaternion.w(),   // w
+        bQuaternion.x(),   // x
+        bQuaternion.y(),   // y
+        bQuaternion.z()    // z
+    };
+    benchmark::Mat<3,3> rotmat;
+    benchmark::Mat<3,3> I_w;
+    benchmark::quatToRotMat(quaternion, rotmat);
+    benchmark::similarityTransform(rotmat, inertia_[0], I_w);
+
+    double angular;
     benchmark::Vec<3> angVel = {
         bAngvel.x(),
         bAngvel.y(),
         bAngvel.z()
     };
-
-    double angular = 0;
-    benchmark::vecTransposeMatVecMul(angVel, inertia_[0], angular);
+    benchmark::vecTransposeMatVecMul(angVel, I_w, angular);
     kinetic += angular;
   }
 
@@ -762,21 +773,38 @@ double object::BtMbArticulatedSystem::getKineticEnergy() {
     // link
     for (int i = 1; i < mass_.size(); i++) {
       b3LinkState state;
-      api_->getLinkState(objectId_, i, &state);
+      api_->getLinkState(objectId_, i-1, &state);
       {
+        // from com velocity
         kinetic += mass_[i] * (
             pow(state.m_worldLinearVelocity[0], 2)
                 + pow(state.m_worldLinearVelocity[1], 2)
                 + pow(state.m_worldLinearVelocity[2], 2)
         );
 
+        benchmark::Vec<4> quaternion = {
+            state.m_worldOrientation[3],   // w
+            state.m_worldOrientation[0],   // x
+            state.m_worldOrientation[1],   // y
+            state.m_worldOrientation[2]    // z
+        };
+        benchmark::Mat<3,3> rotmat;
+        benchmark::Mat<3,3> I_w;
+        benchmark::quatToRotMat(quaternion, rotmat);
+        benchmark::similarityTransform(rotmat, inertia_[i], I_w);
+
         double angular;
-        benchmark::Vec<3> angVel;
-        benchmark::vecTransposeMatVecMul(angVel, inertia_[i], angular);
+        benchmark::Vec<3> angVel = {
+            state.m_worldAngularVelocity[0],
+            state.m_worldAngularVelocity[1],
+            state.m_worldAngularVelocity[2]
+        };
+        benchmark::vecTransposeMatVecMul(angVel, I_w, angular);
         kinetic += angular;
       }
 
     }
+
   }
 
   return 0.5 * kinetic;
@@ -799,7 +827,7 @@ double object::BtMbArticulatedSystem::getPotentialEnergy(const benchmark::Vec<3>
     // link
     for (int i = 1; i < mass_.size(); i++) {
       b3LinkState state;
-      api_->getLinkState(objectId_, i, &state);
+      api_->getLinkState(objectId_, i-1, &state);
 
       {
         btVector3 compos(
@@ -883,6 +911,18 @@ void object::BtMbArticulatedSystem::getBodyPose(int linkId,
         bTf.getOrigin().y(),
         bTf.getOrigin().z()};
   }
+}
+
+void object::BtMbArticulatedSystem::getComVelocity_W(int linkId, benchmark::Vec<3> &velocity) {
+
+  b3LinkState state;
+  api_->getLinkState(objectId_, linkId, &state);
+
+  velocity = {
+      state.m_worldLinearVelocity[0],
+      state.m_worldLinearVelocity[1],
+      state.m_worldLinearVelocity[2]
+  };
 }
 
 } // bullet_mb_sim

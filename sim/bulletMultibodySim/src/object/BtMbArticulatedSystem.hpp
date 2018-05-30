@@ -233,6 +233,13 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
    */
   void initCollisions(int objectId, int linkId, b3CollisionShapeInformation &info);
 
+  /**
+   * Get COM velocity of link
+   * @param linkId
+   * @param velocity
+   */
+  void getComVelocity_W(int linkId, benchmark::Vec<3> &velocity);
+
   /// Attiributes
   // linear momentum
   benchmark::Vec<3> linearMomentum_;

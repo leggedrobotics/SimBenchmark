@@ -9,7 +9,7 @@ int main(int argc, const char* argv[]) {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/Singlebody/";
+  urdfPath += "../../../res/Multibody/";
 
   bullet_mb_sim::BtMbSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
   sim.setGravity({0, 0, -9.81});
@@ -19,11 +19,24 @@ int main(int argc, const char* argv[]) {
   sim.cameraFollowObject(checkerboard, {5, 0, 5});
 
   auto robot = sim.addArticulatedSystem(urdfPath, bullet_mb_sim::object::URDF);
-  robot->setGeneralizedCoordinate({0, 2, 4,
-                                   1, 0, 0, 0});
+  robot->setGeneralizedCoordinate({0, 0, 0.51,
+                                   1, 0, 0, 0,
+                                   0});
 
+  int cnt = 0;
   while(sim.visualizerLoop(0.005, 1.0)) {
     sim.integrate();
+    if(cnt++ < 4000) {
+      robot->setGeneralizedForce({0, 0, 0,
+                                  0, 0, 0,
+                                  0.1});
+    } else {
+      break;
+    }
   }
+
+  RAIINFO(std::endl << "genvel = " << std::endl << robot->getGeneralizedVelocity());
+  RAIINFO(std::endl << "momentum = " << std::endl << robot->getLinearMomentumInCartesianSpace());
+  RAIINFO(std::endl << "energy = " << std::endl << robot->getEnergy({0, 0, -9.81}));
   return 0;
 }
