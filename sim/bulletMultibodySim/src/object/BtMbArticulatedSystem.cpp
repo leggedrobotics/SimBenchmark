@@ -763,7 +763,7 @@ double object::BtMbArticulatedSystem::getKineticEnergy() {
     // link
     for (int i = 1; i < mass_.size(); i++) {
       b3LinkState state;
-      api_->getLinkState(objectId_, i, &state);
+      api_->getLinkState(objectId_, i-1, &state);
       {
         // from com velocity
         kinetic += mass_[i] * (
@@ -801,7 +801,7 @@ double object::BtMbArticulatedSystem::getPotentialEnergy(const benchmark::Vec<3>
     // link
     for (int i = 1; i < mass_.size(); i++) {
       b3LinkState state;
-      api_->getLinkState(objectId_, i, &state);
+      api_->getLinkState(objectId_, i-1, &state);
 
       {
         btVector3 compos(
