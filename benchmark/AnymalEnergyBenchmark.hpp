@@ -77,6 +77,21 @@ std::string getURDFpath() {
 }
 
 /**
+ * get URDF file path of ANYmal for Bullet
+ *
+ * @return urdfPath in string
+ */
+std::string getBulletURDFpath() {
+
+  std::string urdfPath(__FILE__);
+  while (urdfPath.back() != '/')
+    urdfPath.erase(urdfPath.size() - 1, 1);
+  urdfPath += "../res/bullet/ANYmal-energy/";
+
+  return urdfPath;
+}
+
+/**
  * get URDF file path of ANYmal for Mujoco
  *
  * @return urdfPath in string
