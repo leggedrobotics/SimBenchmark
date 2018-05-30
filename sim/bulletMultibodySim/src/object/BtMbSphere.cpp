@@ -42,6 +42,7 @@ bullet_mb_sim::object::BtMbSphere::BtMbSphere(double radius, double mass, b3Robo
   {
     b3DynamicsInfo info;
     RAIFATAL_IF(!api_->getDynamicsInfo(objectId_, -1, &info), "getDynamicsInfo failed")
+    localInertia_.setZero();
     localInertia_[0] = info.m_localInertialDiagonal[0];
     localInertia_[4] = info.m_localInertialDiagonal[1];
     localInertia_[8] = info.m_localInertialDiagonal[2];

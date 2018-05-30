@@ -10,7 +10,7 @@
 //#define VIDEO_SAVE_MODE
 
 namespace po = boost::program_options;
-std::vector<Eigen::Vector3d> momentum;
+std::vector<Eigen::Vector3d> kenergy;
 
 void showplot();
 
@@ -34,7 +34,7 @@ int main(int argc, const char* argv[]) {
   for(int i = 0; i < 1000 && sim.visualizerLoop(0.005, 1.0); i++) {
     sim.integrate();
     Eigen::Vector3d mo = ball1->getLinearMomentum() + ball2->getLinearMomentum();
-    momentum.push_back(mo);
+    kenergy.push_back(mo);
   }
 
   showplot();
@@ -43,14 +43,14 @@ int main(int argc, const char* argv[]) {
 
 void showplot() {
 
-  int n = momentum.size();
+  int n = kenergy.size();
   Eigen::MatrixXd tdata(n, 1);
   Eigen::MatrixXd xdata(n, 1);
   Eigen::MatrixXd ydata(n, 1);
   Eigen::MatrixXd zdata(n, 1);
 
   for(int i = 0; i < n; i++) {
-    Eigen::Vector3d data = momentum[i];
+    Eigen::Vector3d data = kenergy[i];
     tdata(i, 0) = i;
     xdata(i, 0) = data.x();
     ydata(i, 0) = data.y();
