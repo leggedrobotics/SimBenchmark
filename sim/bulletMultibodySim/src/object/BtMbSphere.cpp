@@ -33,6 +33,8 @@ bullet_mb_sim::object::BtMbSphere::BtMbSphere(double radius, double mass, b3Robo
     dynarg.m_restitution = 0;
     dynarg.m_rollingFriction = 0;
     dynarg.m_spinningFriction = 0;
+    dynarg.m_linearDamping = 0;
+    dynarg.m_angularDamping = 0;
     RAIFATAL_IF(!api_->changeDynamics(objectId_, -1, dynarg), "changeDynamics failed")
   }
 
