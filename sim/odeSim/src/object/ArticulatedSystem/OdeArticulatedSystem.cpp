@@ -396,11 +396,6 @@ void OdeArticulatedSystem::initLink(Link &link,
     dBodySetPosition(link.odeBody_, parentPos_w[0], parentPos_w[1], parentPos_w[2]);
     dBodySetRotation(link.odeBody_, bodyR);
     dBodySetGyroscopicMode(link.odeBody_, true);
-
-//    // material properties
-//    raiLink.matrialProps_.emplace_back();
-//    dGeomSetData(raiLink.odeGeometries_.back(),
-//                 raiLink.matrialProps_.back());
   }
 
   /// inertial
@@ -434,18 +429,23 @@ void OdeArticulatedSystem::initLink(Link &link,
           inertia[0], inertia[4], inertia[8], inertia[1], inertia[2], inertia[7]
       );
 
-      benchmark::Vec<3> temp = parentPos_w;
-      benchmark::matvecmulThenAdd(parentRot_w, link.inertial_.pos_, temp);
+      // origin
+      benchmark::Vec<3> inertialOrigin_w = parentPos_w;
+      benchmark::matvecmulThenAdd(parentRot_w, link.inertial_.pos_, inertialOrigin_w);
+
+      // orientation
+      benchmark::Mat<3,3> inertialOrientation_w;
+      benchmark::matmul(parentRot_w, link.inertial_.rotmat_, inertialOrientation_w);
 
       dMatrix3 drotation;
       for(int i = 0; i < 3; i++) {
         for(int j = 0; j < 3; j++) {
-          drotation[4*i + j] = parentRot_w[i+3*j];
+          drotation[4*i + j] = inertialOrientation_w[i+3*j];
         }
         drotation[4*i + 3] = 0;
       }
       dMassRotate(&link.inertial_.odeMass_, drotation);
-      dMassTranslate(&link.inertial_.odeMass_, temp[0], temp[1], temp[2]);
+      dMassTranslate(&link.inertial_.odeMass_, inertialOrigin_w[0], inertialOrigin_w[1], inertialOrigin_w[2]);
       dBodySetMass(link.odeBody_, &link.inertial_.odeMass_);
     }
   } // end of inertial
