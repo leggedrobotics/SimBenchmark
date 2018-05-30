@@ -15,6 +15,9 @@ int main(int argc, const char* argv[]) {
   sim.setGravity({0, 0, -9.81});
   sim.setERP(0.2, 0.2, 0.2);
 
+  double dt = 0.005;
+  sim.setTimeStep(dt);
+
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   sim.cameraFollowObject(checkerboard, {5, 0, 5});
 
@@ -24,7 +27,7 @@ int main(int argc, const char* argv[]) {
                                    0});
 
   int cnt = 0;
-  while(sim.visualizerLoop(0.005, 1.0)) {
+  while(sim.visualizerLoop(dt, 1.0)) {
     sim.integrate();
     if(cnt++ < 4000) {
       robot->setGeneralizedForce({0, 0, 0,
