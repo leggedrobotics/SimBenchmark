@@ -225,7 +225,7 @@ void BtMbSingleBodyObject::getBulletLinearVelocity() {
   btVector3 bLinVel;
   btVector3 bAngVel;
   api_->getBaseVelocity(objectId_, bLinVel, bAngVel);
-  posTemp_ = {
+  linVelTemp_ = {
       bLinVel.x(),   // x
       bLinVel.y(),   // y
       bLinVel.z(),   // z
@@ -236,7 +236,7 @@ void BtMbSingleBodyObject::getBulletAngularVelocity() {
   btVector3 bLinVel;
   btVector3 bAngVel;
   api_->getBaseVelocity(objectId_, bLinVel, bAngVel);
-  posTemp_ = {
+  angVelTemp_ = {
       bAngVel.x(),   // x
       bAngVel.y(),   // y
       bAngVel.z(),   // z
