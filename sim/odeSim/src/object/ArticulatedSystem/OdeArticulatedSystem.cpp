@@ -425,18 +425,26 @@ void OdeArticulatedSystem::initLink(Link &link,
     else {
       // non zero mass link
       benchmark::Mat<3,3> inertia = link.inertial_.inertia_;
-      benchmark::similarityTransform(link.inertial_.rotmat_, link.inertial_.inertia_, inertia);
+//      benchmark::similarityTransform(link.inertial_.rotmat_, link.inertial_.inertia_, inertia);
 
       dMassSetParameters(
           &link.inertial_.odeMass_,
           link.inertial_.mass_,
-          0, 0, 0,
-//          link.inertial_.pos_[0], link.inertial_.pos_[1], link.inertial_.pos_[2],
+          link.inertial_.pos_[0], link.inertial_.pos_[1], link.inertial_.pos_[2],
           inertia[0], inertia[4], inertia[8], inertia[1], inertia[2], inertia[7]
       );
 
       benchmark::Vec<3> temp = parentPos_w;
       benchmark::matvecmulThenAdd(parentRot_w, link.inertial_.pos_, temp);
+
+      dMatrix3 drotation;
+      for(int i = 0; i < 3; i++) {
+        for(int j = 0; j < 3; j++) {
+          drotation[4*i + j] = parentRot_w[i+3*j];
+        }
+        drotation[4*i + 3] = 0;
+      }
+      dMassRotate(&link.inertial_.odeMass_, drotation);
       dMassTranslate(&link.inertial_.odeMass_, temp[0], temp[1], temp[2]);
       dBodySetMass(link.odeBody_, &link.inertial_.odeMass_);
     }
@@ -488,6 +496,11 @@ void OdeArticulatedSystem::initLink(Link &link,
                              link.collision_.colObjOrigin_[i][1],
                              link.collision_.colObjOrigin_[i][2]);
       dGeomSetOffsetRotation(link.collision_.odeGeometries_.back(), geomR);
+
+      // set geometry properties
+      link.collision_.matrialProps_.emplace_back();
+      dGeomSetData(link.collision_.odeGeometries_.back(),
+                   &link.collision_.matrialProps_.back());
 
       // set alternative visualization object
       collisioncollect.emplace_back();

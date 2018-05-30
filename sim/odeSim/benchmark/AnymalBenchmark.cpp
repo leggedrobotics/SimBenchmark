@@ -94,14 +94,16 @@ void simulationLoop() {
   if(benchmark::anymal::options.gui) {
     // gui
     while(sim->visualizerLoop(benchmark::anymal::params.dt, 1.0)) {
-      for(int i = 0; i < anymals.size(); i++) {
-        jointState = anymals[i]->getGeneralizedCoordinate();
-        jointVel = anymals[i]->getGeneralizedVelocity();
+      if(benchmark::anymal::options.feedback) {
+        for(int i = 0; i < anymals.size(); i++) {
+          jointState = anymals[i]->getGeneralizedCoordinate();
+          jointVel = anymals[i]->getGeneralizedVelocity();
 //        jointForce = anymals[i]->getGeneralizedForce();
 
-        jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-        jointForce.head(6).setZero();
-        anymals[i]->setGeneralizedForce(jointForce);
+          jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
+          jointForce.head(6).setZero();
+          anymals[i]->setGeneralizedForce(jointForce);
+        }
       }
       sim->integrate(benchmark::anymal::params.dt);
     }
@@ -110,14 +112,16 @@ void simulationLoop() {
     StopWatch watch;
     watch.start();
     for(int t = 0; t < (int)(benchmark::anymal::params.T / benchmark::anymal::params.dt); t++) {
-      for(int i = 0; i < anymals.size(); i++) {
-        jointState = anymals[i]->getGeneralizedCoordinate();
-        jointVel = anymals[i]->getGeneralizedVelocity();
+      if(benchmark::anymal::options.feedback) {
+        for(int i = 0; i < anymals.size(); i++) {
+          jointState = anymals[i]->getGeneralizedCoordinate();
+          jointVel = anymals[i]->getGeneralizedVelocity();
 //        jointForce = anymals[i]->getGeneralizedForce();
 
-        jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-        jointForce.head(6).setZero();
-        anymals[i]->setGeneralizedForce(jointForce);
+          jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
+          jointForce.head(6).setZero();
+          anymals[i]->setGeneralizedForce(jointForce);
+        }
       }
       sim->integrate(benchmark::anymal::params.dt);
     }

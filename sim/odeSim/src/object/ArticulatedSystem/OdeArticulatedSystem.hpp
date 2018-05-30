@@ -13,6 +13,7 @@
 #include "common/interface/ArticulatedSystemInterface.hpp"
 #include "common/Configure.hpp"
 
+#include "object/OdeSingleBodyObject.hpp"
 #include "object/OdeObject.hpp"
 #include "OdeLinkJoint.hpp"
 

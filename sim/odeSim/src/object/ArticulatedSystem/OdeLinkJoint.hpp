@@ -115,6 +115,8 @@ struct LinkCollision {
   std::vector<benchmark::Vec<4>> colShapeParam_;
   std::vector<benchmark::Vec<3>> colObjOrigin_;     // w.r.t joint
   std::vector<benchmark::Mat<3, 3>> colObjRotMat_;  // w.r.t joint
+
+  std::vector<MetrialProp> matrialProps_;
   std::vector<dGeomID> odeGeometries_;
 };
 
@@ -144,11 +146,6 @@ struct Link {
   int parentIdx_;
 
   dBodyID odeBody_ = 0;
-
-  /// collision ode
-//  std::vector<MetrialProp *> matrialProps_;
-//  void initCollisions(std::vector<AlternativeVisualObjectData> &collect,
-//                      std::vector<VisualObjectProperty> &props);
 
   int numberOfBodiesFromHere() {
     int nbody = 1;
