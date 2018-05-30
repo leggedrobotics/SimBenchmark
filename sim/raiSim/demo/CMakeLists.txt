@@ -19,8 +19,5 @@ target_link_libraries(RaiBuildingDemo ${RAI_SIM_LINK})
 add_executable(RaiElasticCollisionDemo ElasticCollisionDemo.cpp)
 target_link_libraries(RaiElasticCollisionDemo ${RAI_SIM_LINK})
 
-add_executable(collisionAnymalRaiSim collisionAnymalRaiSim.cpp)
-target_link_libraries(collisionAnymalRaiSim ${RAI_SIM_LINK})
-
-add_executable(freeDropAnymalRaiSim freeDropAnymalRaiSim.cpp)
-target_link_libraries(freeDropAnymalRaiSim ${RAI_SIM_LINK})
+add_executable(RaiURDFDemo URDFDemo.cpp)
+target_link_libraries(RaiURDFDemo ${RAI_SIM_LINK})

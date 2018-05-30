@@ -227,41 +227,30 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   void init();
 
   /**
-   * initialize body index, parent index and make link vector (links_)
+   * Initialize body index, parent index and make link vector (links_)
    *
    * @param link
    */
   void initIdx(Link &link);
 
   /**
-   * initialize visual objects (position, orientation, shape, size, color)
-   * collect, props are output of function
-   * @param link
-   * @param parentRot_w
-   * @param parentPos_w
-   * @param collect
-   * @param props
-   */
-  void initVisuals(Link &link,
-                   std::vector<VisualObjectData> &collect,
-                   std::vector<VisualObjectProperty> &props);
-
-  /**
-   * initialize ODE collision objects
+   * Initialize link (ODE geometry, body, inertia and visual objects)
    *
-   * @param link
-   * @param parentRot_w
-   * @param parentPos_w
-   * @param collect
-   * @param props
+   * @param link                Link class object
+   * @param parentRot_w         Link reference frame (joint rorational matrix w.r.t. world)
+   * @param parentPos_w         Link reference frame (joint position w.r.t. world)
+   * @param visualcollect       (output)
+   * @param visualprops         (output)
+   * @param collisioncollect    (output)
+   * @param collisionprops      (output)
    */
-  void initCollisions(Link &link,
-                      benchmark::Mat<3, 3> &parentRot_w,
-                      benchmark::Vec<3> &parentPos_w,
-                      std::vector<AlternativeVisualObjectData> &collect,
-                      std::vector<VisualObjectProperty> &props);
-
-  void initInertials(Link &link);
+  void initLink(Link &link,
+                benchmark::Mat<3, 3> &parentRot_w,
+                benchmark::Vec<3> &parentPos_w,
+                std::vector<VisualObjectData> &visualcollect,
+                std::vector<VisualObjectProperty> &visualprops,
+                std::vector<AlternativeVisualObjectData> &collisioncollect,
+                std::vector<VisualObjectProperty> &collisionprops);
 
   /**
    * initialize children joint of link includeing ODE joint objects
