@@ -19,47 +19,7 @@
 <!--You should have received a copy of the Lesser GNU General Public License -->
 <!--along with this program. If not, see <http://www.gnu.org/licenses/>.     -->
 <!-- This file contains the description of the ANYmal Beth robot. -->
-<robot name="anymal" xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <material name="black">
-        <color rgba="0.0 0.0 0.0 1.0"/>
-    </material>
-    <material name="blue">
-        <color rgba="0.0 0.0 0.8 1.0"/>
-    </material>
-    <material name="green">
-        <color rgba="0.0 0.8 0.0 1.0"/>
-    </material>
-    <material name="grey">
-        <color rgba="0.2 0.2 0.2 1.0"/>
-    </material>
-    <material name="light_grey">
-        <color rgba="0.4 0.4 0.4 1.0"/>
-    </material>
-    <material name="orange">
-        <color rgba="1.0 0.423529411765 0.0392156862745 1.0"/>
-    </material>
-    <material name="brown">
-        <color rgba="0.870588235294 0.811764705882 0.764705882353 1.0"/>
-    </material>
-    <material name="red">
-        <color rgba="0.8 0.0 0.0 1.0"/>
-    </material>
-    <material name="white">
-        <color rgba="1.0 1.0 1.0 1.0"/>
-    </material>
-    <gazebo>
-        <plugin filename="libanymal_gazebo.so" name="gazebo_ros_control">
-            <robotNamespace>anymal</robotNamespace>
-            <!-- Currently unused -->
-            <robotDescription>quadruped_description</robotDescription>
-            <robotBaseLink>base</robotBaseLink>
-            <statePublisherRate>400.0</statePublisherRate>
-        </plugin>
-    </gazebo>
-    <!-- Material for the visual primitives -->
-    <material name="anymal_material">
-        <color rgba="0 0 0 0"/>
-    </material>
+<robot name="singlebody" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <!-- Xacro:Properties -->
     <!-- [m] -->
     <!-- Base link -->
@@ -67,146 +27,48 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="anymal_base_2.dae" scale="0.001 0.001     0.001"/>
+                <box size="1 1 1"/>
             </geometry>
-            <material name="anymal_material"/>
         </visual>
         <collision>
             <!-- Main Body -->
-            <origin rpy="0 0 0" xyz="0 0 0.08"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <box size="0.531 0.232 0.26"/>
+                <box size="1 1 1"/>
             </geometry>
         </collision>
         <inertial>
-            <origin rpy="0 0 0" xyz="0.022 -0.01 0.01"/>
-            <mass value="21.39"/>
-            <inertia ixx="0.268388530624" ixy="0.000775392455422" ixz="-0.0151848534451" iyy="0.884235660795" iyz="-0.000989297489507" izz="0.829158678306"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="10"/>
+            <inertia ixx="0.4167" ixy="0" ixz="0" iyy="0.4167" iyz="0" izz="0.4167"/>
         </inertial>
     </link>
-    <!-- Xacro:Properties -->
-    <!-- [m] -->
-    <!-- [Nm] -->
-    <link name="LF_HIP">
-        <visual>
-            <origin rpy="3.14159265359 1.5707963268 3.14159265359" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="anymal_hip.dae" scale="0.001 0.001     0.001"/>
-            </geometry>
-        </visual>
-        <collision>
-            <origin rpy="1.57079632679 0 0" xyz="0.0585 0.0315 0.0"/>
-            <geometry>
-                <cylinder length="0.08" radius="0.04"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin rpy="0 0 0" xyz="0.0542 -0.0136 0.0"/>
-            <mass value="1.1064"/>
-            <inertia ixx="0.00123301508523" ixy="-6.4285329973e-05" ixz="6.9990104e-08" iyy="0.000993231183395" iyz="2.327401345e-06" izz="0.00142160349098"/>
-        </inertial>
-    </link>
-    <!-- Hip joint -->
-    <joint name="LF_HAA" type="revolute">
+	<joint name="revolute" type="revolute">
         <parent link="base"/>
-        <child link="LF_HIP"/>
-        <origin xyz="0.2629 0.115 0.0"/>
-        <axis xyz="1 0 0"/>
+        <child link="bar"/>
+        <origin xyz="0.0 0.0 0.7"/>
+        <axis xyz="0 0 1"/>
         <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
-    <link name="LF_THIGH">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="anymal_thigh.dae" scale="0.001 0.001     0.001"/>
-            </geometry>
-        </visual>
-        <!--collision>
-            <origin rpy="0.145 0 0" xyz="0 0.02 -0.1"/>
-            <geometry>
-                <cylinder length="0.2" radius="0.01"/>
-            </geometry>
-        </collision-->
-        <collision>
-            <origin rpy="1.57079632679 0 0" xyz="0.0 0.07 -0.25"/>
-            <geometry>
-                <cylinder length="0.08" radius="0.04"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin rpy="0 0 0" xyz="0.0008 0.0545 -0.1975"/>
-            <mass value="1.51"/>
-            <inertia ixx="0.0147571628275" ixy="-1.7996507882e-05" ixz="0.000205877679383" iyy="0.0144188925719" iyz="-0.00181291342366" izz="0.00178449075964"/>
-        </inertial>
-    </link>
-    <!-- Thigh joint -->
-    <joint name="LF_HFE" type="revolute">
-        <parent link="LF_HIP"/>
-        <child link="LF_THIGH"/>
-        <origin xyz="0.0585                    0.0315                    0.0"/>
-        <axis xyz="0 1 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
-        <dynamics damping="0.0" friction="0.0"/>
-    </joint>
-    <link name="LF_SHANK">
-        <visual>
-            <origin rpy="0 0 0.0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="anymal_shank_2_LF.dae" scale="0.001 0.001     0.001"/>
-            </geometry>
-        </visual>
-        <!--collision>
-            <origin rpy="0 -0.9 -0.2" xyz="0.04 -0.02 -0.04"/>
-            <geometry>
-                <cylinder length="0.13" radius="0.015"/>
-            </geometry>
-        </collision-->
-        <collision>
-            <origin rpy="-0.0 0.34 0" xyz="0.06 -0.03 -0.18"/>
-            <geometry>
-                <cylinder length="0.19" radius="0.015"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin rpy="0 0 0" xyz="0.016355414056 -0.00562219106 -0.064350437219"/>
-            <mass value="0.318"/>
-            <inertia ixx="0.0037693717909" ixy="-7.7334500762e-05" ixz="-0.000152069372983" iyy="0.00400446467635" iyz="-0.0003218356083" izz="0.000418471691904"/>
-        </inertial>
-    </link>
-    <!-- Shank joint -->
-    <joint name="LF_KFE" type="revolute">
-        <parent link="LF_THIGH"/>
-        <child link="LF_SHANK"/>
-        <origin xyz="0.0 0.111 -0.25"/>
-        <axis xyz="0 1 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
-        <dynamics damping="0.0" friction="0.0"/>
-    </joint>
-    <!-- Foot mount link -->
-    <link name="LF_FOOT_MOUNT">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="anymal_optoforce.dae" scale="0.001 0.001     0.001"/>
-            </geometry>
-        </visual>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.0 0.0 0"/>
-            <geometry>
-                <sphere radius="0.03"/>
-            </geometry>
-        </collision>
-        <inertial>
-            <origin rpy="0 0 0" xyz="-5.552058e-06 7.1133124e-05 -0.021388647779"/>
-            <mass value="0.1922685"/>
-            <inertia ixx="8.3086410294e-05" ixy="4.16901601e-07" ixz="3.99054799e-07" iyy="8.2860209667e-05" iyz="-3.45712252e-07" izz="8.1948124086e-05"/>
-        </inertial>
-    </link>
-    <!-- Foot mount joint / ankle -->
-    <joint name="LF_ANKLE_JOINT" type="fixed">
-        <parent link="LF_SHANK"/>
-        <child link="LF_FOOT_MOUNT"/>
-        <origin rpy="0.323 0.549 0" xyz="0.0 -0.016 -0.31"/>
-    </joint>
+    <link name="bar">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<box size="1 0.2 0.2"/>
+			</geometry>
+		</visual>
+		<collision>
+			<!-- Main Body -->
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<box size="1 0.2 0.2"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<mass value="10"/>
+			<inertia ixx="0.4167" ixy="0" ixz="0" iyy="0.4167" iyz="0" izz="0.4167"/>
+		</inertial>
+	</link>
 </robot>

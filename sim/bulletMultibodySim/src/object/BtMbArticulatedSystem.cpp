@@ -702,22 +702,23 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1>> object::BtMbArticulatedSystem::get
 
   {
     // base
-    b3LinkState state;
-    api_->getLinkState(objectId_, -1, &state);
+    btVector3 bLinVel;
+    btVector3 bAngvel;
+    api_->getBaseVelocity(objectId_, bLinVel, bAngvel);
 
-    linearMomentum_[0] = state.m_worldLinearVelocity[0] * mass_[0];
-    linearMomentum_[1] = state.m_worldLinearVelocity[1] * mass_[0];
-    linearMomentum_[2] = state.m_worldLinearVelocity[2] * mass_[0];
+    linearMomentum_[0] = bLinVel.x() * mass_[0];
+    linearMomentum_[1] = bLinVel.y() * mass_[0];
+    linearMomentum_[2] = bLinVel.z() * mass_[0];
   }
 
   // link
   for (int i = 1; i < mass_.size(); i++) {
-    b3LinkState state;
-    api_->getLinkState(objectId_, i, &state);
+    benchmark::Vec<3> comVel;
+    getComVelocity_W(i-1, comVel);
 
-    linearMomentum_[0] += state.m_worldLinearVelocity[0] * mass_[i];
-    linearMomentum_[1] += state.m_worldLinearVelocity[1] * mass_[i];
-    linearMomentum_[2] += state.m_worldLinearVelocity[2] * mass_[i];
+    linearMomentum_[0] += comVel[0] * mass_[i];
+    linearMomentum_[1] += comVel[1] * mass_[i];
+    linearMomentum_[2] += comVel[2] * mass_[i];
   }
 
   return linearMomentum_.e();
@@ -764,6 +765,7 @@ double object::BtMbArticulatedSystem::getKineticEnergy() {
       b3LinkState state;
       api_->getLinkState(objectId_, i, &state);
       {
+        // from com velocity
         kinetic += mass_[i] * (
             pow(state.m_worldLinearVelocity[0], 2)
                 + pow(state.m_worldLinearVelocity[1], 2)
@@ -883,6 +885,18 @@ void object::BtMbArticulatedSystem::getBodyPose(int linkId,
         bTf.getOrigin().y(),
         bTf.getOrigin().z()};
   }
+}
+
+void object::BtMbArticulatedSystem::getComVelocity_W(int linkId, benchmark::Vec<3> &velocity) {
+
+  b3LinkState state;
+  api_->getLinkState(objectId_, linkId, &state);
+
+  velocity = {
+      state.m_worldLinearVelocity[0],
+      state.m_worldLinearVelocity[1],
+      state.m_worldLinearVelocity[2]
+  };
 }
 
 } // bullet_mb_sim
