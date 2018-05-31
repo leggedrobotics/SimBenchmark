@@ -383,23 +383,50 @@ void OdeArticulatedSystem::initLink(Link &link,
                                     std::vector<AlternativeVisualObjectData> &collisioncollect,
                                     std::vector<VisualObjectProperty> &collisionprops) {
 
+  /*
+   * NOTE
+   * parentRot_w = joint orientation
+   * parentPos_W = joint position
+   */
+
   /// body
   {
-    // set body position
-    dMatrix3 bodyR;
-    for(int row = 0; row < 3; row++) {
-      for(int col = 0; col < 3; col++) {
-        bodyR[4*row + col] = parentRot_w[row + col*3];
+
+    /*
+     * body frame origin = COM (inertial frame)
+     * body frame orientation = inertial frame orientation
+     */
+
+    // origin
+    benchmark::Vec<3> bodyOrigin_w = parentPos_w;
+    benchmark::matvecmulThenAdd(parentRot_w, link.inertial_.pos_, bodyOrigin_w);
+
+    // orientation
+    benchmark::Mat<3,3> bodyOrientation_w;
+    benchmark::matmul(parentRot_w, link.inertial_.rotmat_, bodyOrientation_w);
+    dMatrix3 drotation;
+    for(int i = 0; i < 3; i++) {
+      for(int j = 0; j < 3; j++) {
+        drotation[4*i + j] = bodyOrientation_w[i+3*j];
       }
-      bodyR[4*row + 3] = 0;
+      drotation[4*i + 3] = 0;
     }
-    dBodySetPosition(link.odeBody_, parentPos_w[0], parentPos_w[1], parentPos_w[2]);
-    dBodySetRotation(link.odeBody_, bodyR);
+    dBodySetPosition(link.odeBody_, bodyOrigin_w[0], bodyOrigin_w[1], bodyOrigin_w[2]);
+    dBodySetRotation(link.odeBody_, drotation);
     dBodySetGyroscopicMode(link.odeBody_, true);
   }
 
   /// inertial
   {
+    /*
+     * inertial frame origin = COM (inertial frame)
+     * inertial frame orientation = inertial frame orientation
+     */
+
+    // origin and orientation
+    benchmark::Vec<3> inertialOrigin_w;
+    benchmark::Mat<3,3> inertialOrientation_w;
+
     if(link.inertial_.mass_ == 0) {
       // zero mass link
       if(link.bodyIdx_ == 0 && isFixed_) {
@@ -420,23 +447,20 @@ void OdeArticulatedSystem::initLink(Link &link,
     else {
       // non zero mass link
       benchmark::Mat<3,3> inertia = link.inertial_.inertia_;
-//      benchmark::similarityTransform(link.inertial_.rotmat_, link.inertial_.inertia_, inertia);
 
       dMassSetParameters(
           &link.inertial_.odeMass_,
           link.inertial_.mass_,
-          link.inertial_.pos_[0], link.inertial_.pos_[1], link.inertial_.pos_[2],
+          0, 0, 0,
           inertia[0], inertia[4], inertia[8], inertia[1], inertia[2], inertia[7]
       );
 
       // origin
-      benchmark::Vec<3> inertialOrigin_w = parentPos_w;
+      inertialOrigin_w = parentPos_w;
       benchmark::matvecmulThenAdd(parentRot_w, link.inertial_.pos_, inertialOrigin_w);
 
       // orientation
-      benchmark::Mat<3,3> inertialOrientation_w;
       benchmark::matmul(parentRot_w, link.inertial_.rotmat_, inertialOrientation_w);
-
       dMatrix3 drotation;
       for(int i = 0; i < 3; i++) {
         for(int j = 0; j < 3; j++) {
@@ -445,7 +469,10 @@ void OdeArticulatedSystem::initLink(Link &link,
         drotation[4*i + 3] = 0;
       }
       dMassRotate(&link.inertial_.odeMass_, drotation);
-      dMassTranslate(&link.inertial_.odeMass_, inertialOrigin_w[0], inertialOrigin_w[1], inertialOrigin_w[2]);
+      dMassTranslate(&link.inertial_.odeMass_,
+                     inertialOrigin_w[0],
+                     inertialOrigin_w[1],
+                     inertialOrigin_w[2]);
       dBodySetMass(link.odeBody_, &link.inertial_.odeMass_);
     }
   } // end of inertial
@@ -454,8 +481,16 @@ void OdeArticulatedSystem::initLink(Link &link,
   {
     // collision objects
     for(int i = 0; i < link.collision_.colShape_.size(); i++) {
-      benchmark::Vec<4> size = link.collision_.colShapeParam_[i];
 
+      /*
+       * collision frame origin
+       * collision frame orientation
+       */
+
+      benchmark::Vec<3> collisionOrigin_w;
+      benchmark::Mat<3,3> collisionOrientation_w;
+
+      benchmark::Vec<4> size = link.collision_.colShapeParam_[i];
       switch (link.collision_.colShape_[i]) {
         case bo::Shape::Cylinder: {
           link.collision_.odeGeometries_.push_back(dCreateCylinder(spaceID_, size[0], size[1]));
@@ -481,26 +516,34 @@ void OdeArticulatedSystem::initLink(Link &link,
         }
       }
 
-      // set each geometry position
-      dMatrix3 geomR;
-      for(int row = 0; row < 3; row++) {
-        for(int col = 0; col < 3; col++) {
-          geomR[4*row + col] = link.collision_.colObjRotMat_[i][row+col*3];
-        }
-        geomR[4*row + 3] = 0;
-      }
-
-      dGeomSetBody(link.collision_.odeGeometries_.back(), link.odeBody_);
-      dGeomSetOffsetPosition(link.collision_.odeGeometries_.back(),
-                             link.collision_.colObjOrigin_[i][0],
-                             link.collision_.colObjOrigin_[i][1],
-                             link.collision_.colObjOrigin_[i][2]);
-      dGeomSetOffsetRotation(link.collision_.odeGeometries_.back(), geomR);
-
       // set geometry properties
       link.collision_.matrialProps_.emplace_back();
       dGeomSetData(link.collision_.odeGeometries_.back(),
                    &link.collision_.matrialProps_.back());
+
+      // origin
+      collisionOrigin_w = parentPos_w;
+      benchmark::matvecmulThenAdd(parentRot_w, link.collision_.colObjOrigin_[i], collisionOrigin_w);
+
+      // orientation
+      benchmark::matmul(parentRot_w, link.collision_.colObjRotMat_[i], collisionOrientation_w);
+
+      // set each geometry position
+      dMatrix3 geomR;
+      for(int row = 0; row < 3; row++) {
+        for(int col = 0; col < 3; col++) {
+          geomR[4*row + col] = collisionOrientation_w[row+col*3];
+        }
+        geomR[4*row + 3] = 0;
+      }
+
+      // set geom orientation and position
+      dGeomSetBody(link.collision_.odeGeometries_.back(), link.odeBody_);
+      dGeomSetOffsetWorldPosition(link.collision_.odeGeometries_.back(),
+                                  collisionOrigin_w[0],
+                                  collisionOrigin_w[1],
+                                  collisionOrigin_w[2]);
+      dGeomSetOffsetWorldRotation(link.collision_.odeGeometries_.back(), geomR);
 
       // set alternative visualization object
       collisioncollect.emplace_back();
@@ -531,11 +574,10 @@ void OdeArticulatedSystem::initLink(Link &link,
   /// children
   for (auto &ch: link.childrenLinks_) {
     benchmark::Mat<3,3> rot_w;
-    benchmark::Vec<3> pos_w;
+    benchmark::Vec<3> pos_w = parentPos_w;
 
     benchmark::matmul(parentRot_w, ch.parentJoint_.rotmat_, rot_w);
-    benchmark::matvecmul(parentRot_w, ch.parentJoint_.pos_, pos_w);
-    benchmark::vecadd(parentPos_w, pos_w);
+    benchmark::matvecmulThenAdd(parentRot_w, ch.parentJoint_.pos_, pos_w);
 
     initLink(ch, rot_w, pos_w, visualcollect, visualprops, collisioncollect, collisionprops);
   }
@@ -564,18 +606,29 @@ void OdeArticulatedSystem::updateJointPos(Link &link,
                                           benchmark::Mat<3, 3> &parentRot_w,
                                           benchmark::Vec<3> &parentPos_w) {
 
-  // set ode body pos and rotation
-  dMatrix3 bodyR;
-  for(int row = 0; row < 3; row++) {
-    for(int col = 0; col < 3; col++) {
-      bodyR[4*row + col] = parentRot_w[row + col*3];
-    }
-    bodyR[4*row + 3] = 0;
-  }
+  {
+    /*
+     * body frame origin = COM (inertial frame)
+     * body frame orientation = inertial frame orientation
+     */
 
-  // update base body position and rotation
-  dBodySetPosition(link.odeBody_, parentPos_w[0], parentPos_w[1], parentPos_w[2]);
-  dBodySetRotation(link.odeBody_, bodyR);
+    // origin
+    benchmark::Vec<3> bodyOrigin_w = parentPos_w;
+    benchmark::matvecmulThenAdd(parentRot_w, link.inertial_.pos_, bodyOrigin_w);
+
+    // orientation
+    benchmark::Mat<3, 3> bodyOrientation_w;
+    benchmark::matmul(parentRot_w, link.inertial_.rotmat_, bodyOrientation_w);
+    dMatrix3 drotation;
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        drotation[4 * i + j] = bodyOrientation_w[i + 3 * j];
+      }
+      drotation[4 * i + 3] = 0;
+    }
+    dBodySetPosition(link.odeBody_, bodyOrigin_w[0], bodyOrigin_w[1], bodyOrigin_w[2]);
+    dBodySetRotation(link.odeBody_, drotation);
+  }
 
   // children
   for(int i = 0; i < link.childrenLinks_.size(); i++) {
@@ -974,13 +1027,24 @@ const std::vector<Link *> &OdeArticulatedSystem::getLinks() const {
 void OdeArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orientation, benchmark::Vec<3> &position) {
   Link *link = links_[bodyId];
 
+  // com position w.r.t. world
   const dReal *pos = dBodyGetPosition(link->odeBody_);
   position = {pos[0], pos[1], pos[2]};
 
+  // body rotation w.r.t. world
   const dReal* rot = dBodyGetRotation(link->odeBody_);
-  orientation.e() << rot[0], rot[1], rot[2],
+  benchmark::Mat<3,3> tempMat;
+  tempMat.e() << rot[0], rot[1], rot[2],
       rot[4], rot[5], rot[6],
       rot[8], rot[9], rot[10];
+
+  // body position (joint position)
+  benchmark::Vec<3> tempVec;
+  benchmark::matvecmul(tempMat, link->inertial_.pos_, tempVec);
+  benchmark::vecsub(tempVec, position);
+
+  // body orientation (joint orientation)
+  benchmark::transposed2MatMul(tempMat, link->inertial_.rotmat_, orientation);
 }
 
 void OdeArticulatedSystem::getComVelocity_W(int bodyId, benchmark::Vec<3> &velocity) {
@@ -1033,7 +1097,7 @@ void OdeArticulatedSystem::getComPos_W(int bodyId, benchmark::Vec<3> &comPos) {
   getBodyPose(bodyId, bodyOrientation, bodyPos);
 
   comPos = bodyPos;
-  benchmark::matvecmulThenAdd(bodyOrientation, links_[bodyId]->inertial_.pos_, comPos);
+//  benchmark::matvecmulThenAdd(bodyOrientation, links_[bodyId]->inertial_.pos_, comPos);
 }
 
 double OdeArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
