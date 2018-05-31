@@ -15,6 +15,12 @@ DartCapsule::DartCapsule(double radius, double height, double mass, int id) : Da
 
   dart::dynamics::FreeJoint::Properties jointProp;
   jointProp.mName = std::to_string(id) + "_joint";
+  jointProp.mDampingCoefficients[0] = 0;
+  jointProp.mDampingCoefficients[1] = 0;
+  jointProp.mDampingCoefficients[2] = 0;
+  jointProp.mDampingCoefficients[3] = 0;
+  jointProp.mDampingCoefficients[4] = 0;
+  jointProp.mDampingCoefficients[5] = 0;
 
   // body
   auto pair = skeletonPtr_->createJointAndBodyNodePair<dart::dynamics::FreeJoint>(
