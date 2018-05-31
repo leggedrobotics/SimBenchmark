@@ -1048,20 +1048,25 @@ void OdeArticulatedSystem::getBodyPose(int bodyId, benchmark::Mat<3, 3> &orienta
 }
 
 void OdeArticulatedSystem::getComVelocity_W(int bodyId, benchmark::Vec<3> &velocity) {
-  dReal comvel[3];
-  benchmark::Mat<3, 3> bodyOrientation;
-  benchmark::Vec<3> comPosition;
-  getBodyPose(bodyId, bodyOrientation, comPosition);
-
-  benchmark::matvecmulThenAdd(bodyOrientation, links_[bodyId]->inertial_.pos_, comPosition);
-  dBodyGetPointVel(links_[bodyId]->odeBody_,
-                   comPosition[0],
-                   comPosition[1],
-                   comPosition[2],
-                   comvel);
-
+  const dReal *comvel = dBodyGetLinearVel(links_[bodyId]->odeBody_);
   velocity = {comvel[0], comvel[1], comvel[2]};
 }
+
+void OdeArticulatedSystem::getBodyOmega_W(int bodyId, benchmark::Vec<3> &omega) {
+  const dReal *angvel = dBodyGetAngularVel(links_[bodyId]->odeBody_);
+  benchmark::Mat<3, 3> bodyOrientation;
+  benchmark::Vec<3> temp;
+  getBodyPose(bodyId, bodyOrientation, temp); // temp here is just for dummy
+
+  temp = {angvel[0], angvel[1], angvel[2]};
+  benchmark::matvecmul(bodyOrientation, temp, omega);
+}
+
+void OdeArticulatedSystem::getComPos_W(int bodyId, benchmark::Vec<3> &comPos) {
+  const dReal *compos = dBodyGetPosition(links_[bodyId]->odeBody_);
+  comPos = {compos[0], compos[1], compos[2]};
+}
+
 const Eigen::Map<Eigen::Matrix<double, 3, 1>> OdeArticulatedSystem::getLinearMomentumInCartesianSpace() {
   linearMomentum_.setZero();
   for(int i = 0; i < links_.size(); i++) {
@@ -1079,25 +1084,6 @@ double OdeArticulatedSystem::getTotalMass() {
     totalMass += links_[i]->inertial_.odeMass_.mass;
   }
   return totalMass;
-}
-
-void OdeArticulatedSystem::getBodyOmega_W(int bodyId, benchmark::Vec<3> &omega) {
-  const dReal *angvel = dBodyGetAngularVel(links_[bodyId]->odeBody_);
-  benchmark::Mat<3, 3> bodyOrientation;
-  benchmark::Vec<3> temp;
-  getBodyPose(bodyId, bodyOrientation, temp); // temp here is just for dummy
-
-  temp = {angvel[0], angvel[1], angvel[2]};
-  benchmark::matvecmul(bodyOrientation, temp, omega);
-}
-
-void OdeArticulatedSystem::getComPos_W(int bodyId, benchmark::Vec<3> &comPos) {
-  benchmark::Vec<3> bodyPos;
-  benchmark::Mat<3, 3> bodyOrientation;
-  getBodyPose(bodyId, bodyOrientation, bodyPos);
-
-  comPos = bodyPos;
-//  benchmark::matvecmulThenAdd(bodyOrientation, links_[bodyId]->inertial_.pos_, comPos);
 }
 
 double OdeArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
