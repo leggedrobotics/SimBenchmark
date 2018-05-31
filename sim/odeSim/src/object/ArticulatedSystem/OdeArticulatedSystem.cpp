@@ -469,10 +469,10 @@ void OdeArticulatedSystem::initLink(Link &link,
         drotation[4*i + 3] = 0;
       }
       dMassRotate(&link.inertial_.odeMass_, drotation);
-      dMassTranslate(&link.inertial_.odeMass_,
-                     inertialOrigin_w[0],
-                     inertialOrigin_w[1],
-                     inertialOrigin_w[2]);
+//      dMassTranslate(&link.inertial_.odeMass_,
+//                     inertialOrigin_w[0],
+//                     inertialOrigin_w[1],
+//                     inertialOrigin_w[2]);
       dBodySetMass(link.odeBody_, &link.inertial_.odeMass_);
     }
   } // end of inertial
@@ -600,6 +600,14 @@ OdeArticulatedSystem::~OdeArticulatedSystem() {
         dGeomDestroy(links_[i]->collision_.odeGeometries_[j]);
     }
   }
+}
+
+int OdeArticulatedSystem::getDOF() {
+  return dof_;
+}
+
+int OdeArticulatedSystem::getStateDimension() {
+  return stateDimension_;
 }
 
 void OdeArticulatedSystem::updateJointPos(Link &link,
@@ -1006,14 +1014,6 @@ void OdeArticulatedSystem::setState(const Eigen::VectorXd &genco, const Eigen::V
 const benchmark::object::ArticulatedSystemInterface::EigenVec OdeArticulatedSystem::getGeneralizedForce() {
   RAIFATAL("not implemented yet")
   return genForce_.e();
-}
-
-int OdeArticulatedSystem::getDOF() {
-  return dof_;
-}
-
-int OdeArticulatedSystem::getStateDimension() {
-  return stateDimension_;
 }
 
 const std::vector<Joint *> &OdeArticulatedSystem::getJoints() const {
