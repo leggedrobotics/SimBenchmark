@@ -113,7 +113,7 @@
         <child link="LF_HIP"/>
         <origin xyz="0.2629 0.115 0.0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -144,7 +144,7 @@
         <child link="LF_THIGH"/>
         <origin xyz="0.0585                    0.0315                    0.0"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -175,7 +175,7 @@
         <child link="LF_SHANK"/>
         <origin xyz="0.0 0.111 -0.25"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->
@@ -242,7 +242,7 @@
         <child link="RF_HIP"/>
         <origin xyz="0.2629 -0.115 0.0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -273,7 +273,7 @@
         <child link="RF_THIGH"/>
         <origin xyz="0.0585                    -0.0315                    0.0"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -304,7 +304,7 @@
         <child link="RF_SHANK"/>
         <origin xyz="0.0 -0.111 -0.25"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->
@@ -371,7 +371,7 @@
         <child link="LH_HIP"/>
         <origin xyz="-0.2629 0.115 0.0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -402,7 +402,7 @@
         <child link="LH_THIGH"/>
         <origin xyz="-0.0585                    0.0315                    0.0"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -433,7 +433,7 @@
         <child link="LH_SHANK"/>
         <origin xyz="-0.0 0.111 -0.25"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->
@@ -500,7 +500,7 @@
         <child link="RH_HIP"/>
         <origin xyz="-0.2629 -0.115 0.0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -531,7 +531,7 @@
         <child link="RH_THIGH"/>
         <origin xyz="-0.0585                    -0.0315                    0.0"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -562,7 +562,7 @@
         <child link="RH_SHANK"/>
         <origin xyz="-0.0 -0.111 -0.25"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" velocity="15"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->

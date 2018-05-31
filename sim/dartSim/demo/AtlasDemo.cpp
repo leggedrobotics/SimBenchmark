@@ -1,7 +1,7 @@
 //
 // Created by jhwangbo on 04/12/17.
 //
-#include <DartWorld_RG.hpp>
+#include <DartSim.hpp>
 #include <string>
 #include "raiCommon/utils/StopWatch.hpp"
 
@@ -12,7 +12,7 @@ int main() {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/Atlas/";
 
-  dart_sim::DartWorld_RG sim(800, 600, 0.2, benchmark::NO_BACKGROUND);
+  dart_sim::DartSim sim(800, 600, 0.2, benchmark::NO_BACKGROUND);
   sim.setLightPosition(0, -10, 10);
 
   auto atlas = sim.addArticulatedSystem(urdfPath);

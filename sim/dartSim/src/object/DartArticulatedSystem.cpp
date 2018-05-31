@@ -37,6 +37,12 @@ void DartArticulatedSystem::init() {
     stateDimension_ = dof_ + 1;
   }
 
+  // remove damping
+  for(int i = 0; i < skeletonPtr_->getNumJoints(); i++) {
+    for(int j = 0; j < skeletonPtr_->getJoint(i)->getNumDofs(); j++)
+      skeletonPtr_->getJoint(i)->setDampingCoefficient(j, 0);
+  }
+
   genCoordinate_.resize(stateDimension_);
   genCoordinate_.setZero();
   genVelocity_.resize(dof_);

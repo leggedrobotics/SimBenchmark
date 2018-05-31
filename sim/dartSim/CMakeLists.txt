@@ -19,8 +19,8 @@ include_directories(src)
 set(DartSim_SRCS
         src/DartWorld.cpp
         src/DartWorld.hpp
-        src/DartWorld_RG.cpp
-        src/DartWorld_RG.hpp
+        src/DartSim.cpp
+        src/DartSim.hpp
         src/UserHandle.hpp
         src/object/DartSingleBodyObject.cpp
         src/object/DartSingleBodyObject.hpp

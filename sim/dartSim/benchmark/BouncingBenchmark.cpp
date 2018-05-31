@@ -2,22 +2,22 @@
 // Created by kangd on 15.02.18.
 //
 
-#include <DartWorld_RG.hpp>
+#include <DartSim.hpp>
 
 #include "BouncingBenchmark.hpp"
 #include "DartBenchmark.hpp"
 
-dart_sim::DartWorld_RG *sim;
+dart_sim::DartSim *sim;
 std::vector<benchmark::SingleBodyHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
   if (benchmark::bouncing::options.gui)
-    sim = new dart_sim::DartWorld_RG(800, 600, 0.5,
+    sim = new dart_sim::DartSim(800, 600, 0.5,
                                      benchmark::NO_BACKGROUND,
                                      benchmark::dart::options.solverOption);
   else
-    sim = new dart_sim::DartWorld_RG(benchmark::dart::options.solverOption);
+    sim = new dart_sim::DartSim(benchmark::dart::options.solverOption);
 
   // timestep
   sim->setTimeStep(benchmark::bouncing::options.dt);

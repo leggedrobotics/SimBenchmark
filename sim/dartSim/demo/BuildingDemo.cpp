@@ -2,12 +2,12 @@
 // Created by kangd on 09.05.18.
 //
 
-#include <DartWorld_RG.hpp>
+#include <DartSim.hpp>
 
 int main() {
 
   // sim
-  dart_sim::DartWorld_RG sim(1280, 720, 0.1, benchmark::NO_BACKGROUND, dart_sim::SOLVER_LCP_PGS);
+  dart_sim::DartSim sim(1280, 720, 0.1, benchmark::NO_BACKGROUND, dart_sim::SOLVER_LCP_PGS);
   sim.setMaxContacts(5000);
 
   // object

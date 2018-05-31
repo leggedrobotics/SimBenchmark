@@ -4,6 +4,9 @@ target_link_libraries(DartZeroGravityDemo ${DartSimLink})
 add_executable(DartAnymalDemo AnymalDemo.cpp)
 target_link_libraries(DartAnymalDemo ${DartSimLink})
 
+add_executable(DartAnymalEnergyDemo AnymalEnergyDemo.cpp)
+target_link_libraries(DartAnymalEnergyDemo ${DartSimLink})
+
 add_executable(DartAtlasDemo AtlasDemo.cpp)
 target_link_libraries(DartAtlasDemo ${DartSimLink})
 

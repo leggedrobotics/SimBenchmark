@@ -2,7 +2,7 @@
 // Created by kangd on 04.04.18.
 //
 
-#include <DartWorld_RG.hpp>
+#include <DartSim.hpp>
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define VIDEO_SAVE_MODE
@@ -14,7 +14,7 @@ int main() {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/ANYmal/";
 
-  dart_sim::DartWorld_RG sim(800, 600, 0.5,
+  dart_sim::DartSim sim(800, 600, 0.5,
                              benchmark::NO_BACKGROUND,
                              dart_sim::SOLVER_LCP_DANTZIG,
                              dart_sim::COLLISION_DETECTOR_BULLET);

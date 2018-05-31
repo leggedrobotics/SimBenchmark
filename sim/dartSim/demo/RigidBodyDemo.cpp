@@ -2,11 +2,11 @@
 // Created by kangd on 05.04.18.
 //
 
-#include <DartWorld_RG.hpp>
+#include <DartSim.hpp>
 
 int main() {
 
-  dart_sim::DartWorld_RG sim(800, 600, 0.5, 0,
+  dart_sim::DartSim sim(800, 600, 0.5, 0,
                              dart_sim::SOLVER_LCP_PGS,
                              dart_sim::COLLISION_DETECTOR_BULLET);
 

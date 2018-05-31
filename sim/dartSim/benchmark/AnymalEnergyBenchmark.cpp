@@ -2,22 +2,22 @@
 // Created by kangd on 14.05.18.
 //
 
-#include <DartWorld_RG.hpp>
+#include <DartSim.hpp>
 
 #include "AnymalEnergyBenchmark.hpp"
 #include "DartBenchmark.hpp"
 
-dart_sim::DartWorld_RG *sim;
+dart_sim::DartSim *sim;
 std::vector<dart_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::freedrop::options.gui)
-    sim = new dart_sim::DartWorld_RG(800, 600, 0.5,
-                                     benchmark::NO_BACKGROUND,
-                                     benchmark::dart::options.solverOption);
+    sim = new dart_sim::DartSim(800, 600, 0.5,
+                                benchmark::NO_BACKGROUND,
+                                benchmark::dart::options.solverOption);
   else
-    sim = new dart_sim::DartWorld_RG(benchmark::dart::options.solverOption);
+    sim = new dart_sim::DartSim(benchmark::dart::options.solverOption);
 
   // set time step
   sim->setTimeStep(benchmark::anymal::freedrop::options.dt);

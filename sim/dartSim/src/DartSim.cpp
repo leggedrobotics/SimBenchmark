@@ -2,11 +2,11 @@
 // Created by kangd on 16.03.18.
 //
 
-#include "DartWorld_RG.hpp"
+#include "DartSim.hpp"
 
 namespace dart_sim {
 
-DartWorld_RG::DartWorld_RG(int windowWidth,
+DartSim::DartSim(int windowWidth,
                            int windowHeight,
                            float cms,
                            int flags,
@@ -15,11 +15,11 @@ DartWorld_RG::DartWorld_RG(int windowWidth,
     world_(solverOption, detectorOption),
     benchmark::WorldRG(windowWidth, windowHeight, cms, flags) {}
 
-DartWorld_RG::DartWorld_RG(SolverOption solverOption, CollisionDetectorOption detectorOption) :
+DartSim::DartSim(SolverOption solverOption, CollisionDetectorOption detectorOption) :
     world_(solverOption, detectorOption),
     benchmark::WorldRG() {}
 
-benchmark::SingleBodyHandle DartWorld_RG::addSphere(double radius,
+benchmark::SingleBodyHandle DartSim::addSphere(double radius,
                                                 double mass,
                                                 benchmark::CollisionGroupType collisionGroup,
                                                 benchmark::CollisionGroupType collisionMask) {
@@ -29,7 +29,7 @@ benchmark::SingleBodyHandle DartWorld_RG::addSphere(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle DartWorld_RG::addBox(double xLength,
+benchmark::SingleBodyHandle DartSim::addBox(double xLength,
                                              double yLength,
                                              double zLength,
                                              double mass,
@@ -41,12 +41,12 @@ benchmark::SingleBodyHandle DartWorld_RG::addBox(double xLength,
   return handle;
 }
 
-DartWorld_RG::~DartWorld_RG() {
+DartSim::~DartSim() {
   if(!isEnded_ && isReady_)
     visEnd();
 }
 
-benchmark::SingleBodyHandle DartWorld_RG::addCapsule(double radius,
+benchmark::SingleBodyHandle DartSim::addCapsule(double radius,
                                                  double height,
                                                  double mass,
                                                  benchmark::CollisionGroupType collisionGroup,
@@ -57,7 +57,7 @@ benchmark::SingleBodyHandle DartWorld_RG::addCapsule(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle DartWorld_RG::addCylinder(double radius,
+benchmark::SingleBodyHandle DartSim::addCylinder(double radius,
                                                   double height,
                                                   double mass,
                                                   benchmark::CollisionGroupType collisionGroup,
@@ -68,7 +68,7 @@ benchmark::SingleBodyHandle DartWorld_RG::addCylinder(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle DartWorld_RG::addCheckerboard(double gridSize,
+benchmark::SingleBodyHandle DartSim::addCheckerboard(double gridSize,
                                                       double xLength,
                                                       double yLength,
                                                       double reflectanceI,
@@ -87,7 +87,7 @@ benchmark::SingleBodyHandle DartWorld_RG::addCheckerboard(double gridSize,
   return handle;
 }
 
-ArticulatedSystemHandle DartWorld_RG::addArticulatedSystem(std::string nm,
+ArticulatedSystemHandle DartSim::addArticulatedSystem(std::string nm,
                                                        benchmark::CollisionGroupType collisionGroup,
                                                        benchmark::CollisionGroupType collisionMask) {
   ArticulatedSystemHandle handle(
@@ -153,41 +153,41 @@ ArticulatedSystemHandle DartWorld_RG::addArticulatedSystem(std::string nm,
   return handle;
 }
 
-void DartWorld_RG::setGravity(Eigen::Vector3d gravity) {
+void DartSim::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
 }
 
-void DartWorld_RG::setTimeStep(double timeStep) {
+void DartSim::setTimeStep(double timeStep) {
   timeStep_ = timeStep;
   world_.setTimeStep(timeStep);
 }
 
-void DartWorld_RG::integrate() {
+void DartSim::integrate() {
   world_.integrate();
 }
 
-void DartWorld_RG::loop(double realTimeFactor) {
+void DartSim::loop(double realTimeFactor) {
   while (visualizerLoop(timeStep_, realTimeFactor))
     integrate();
 }
 
-void DartWorld_RG::loop(double dt, double realTimeFactor) {
+void DartSim::loop(double dt, double realTimeFactor) {
   RAIFATAL("use setTimeStep(double dt) + loop(double realTimeFactor) instead")
 }
 
-void DartWorld_RG::integrate(double dt) {
+void DartSim::integrate(double dt) {
   RAIFATAL("use setTimeStep(double dt) + integrate() instead")
 }
 
-void DartWorld_RG::setERP(double erp, double erp2, double frictionErp) {
+void DartSim::setERP(double erp, double erp2, double frictionErp) {
 
 }
 
-int DartWorld_RG::getNumObject() {
+int DartSim::getNumObject() {
   return world_.getNumObject();
 }
 
-void DartWorld_RG::updateFrame() {
+void DartSim::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
 
@@ -410,18 +410,18 @@ void DartWorld_RG::updateFrame() {
 //    }
 //  }
 }
-void DartWorld_RG::setMaxContacts(int maxcontacts) {
+void DartSim::setMaxContacts(int maxcontacts) {
   world_.setMaxContacts(maxcontacts);
 }
-int DartWorld_RG::getWorldNumContacts() {
+int DartSim::getWorldNumContacts() {
   return (int) world_.getCollisionProblem().size();
 }
 
-void DartWorld_RG::integrate1(double dt) {
+void DartSim::integrate1(double dt) {
   RAIFATAL("not supported for dart")
 }
 
-void DartWorld_RG::integrate2(double dt) {
+void DartSim::integrate2(double dt) {
   RAIFATAL("not supported for dart")
 }
 

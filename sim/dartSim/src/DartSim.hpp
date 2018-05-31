@@ -11,21 +11,21 @@
 
 namespace dart_sim {
 
-class DartWorld_RG: public benchmark::WorldRG {
+class DartSim: public benchmark::WorldRG {
 
  public:
   /* constructor for visualization */
-  DartWorld_RG(int windowWidth,
-               int windowHeight,
-               float cms,
-               int flags,
-               SolverOption solverOption = SOLVER_LCP_DANTZIG,
-               CollisionDetectorOption detectorOption = COLLISION_DETECTOR_FCL);
+  DartSim(int windowWidth,
+          int windowHeight,
+          float cms,
+          int flags,
+          SolverOption solverOption = SOLVER_LCP_DANTZIG,
+          CollisionDetectorOption detectorOption = COLLISION_DETECTOR_BULLET);
 
   /* constructor for no visualization */
-  DartWorld_RG(SolverOption solverOption = SOLVER_LCP_DANTZIG,
-               CollisionDetectorOption detectorOption = COLLISION_DETECTOR_FCL);
-  virtual ~DartWorld_RG();
+  DartSim(SolverOption solverOption = SOLVER_LCP_DANTZIG,
+          CollisionDetectorOption detectorOption = COLLISION_DETECTOR_BULLET);
+  virtual ~DartSim();
 
   /////////////////////////////////////
   /// Visualization related methods ///
