@@ -2,12 +2,12 @@
 // Created by kangd on 09.05.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <OdeSim.hpp>
 
 int main() {
 
   // sim
-  ode_sim::OdeWorld_RG sim(1280, 720, 0.1, benchmark::NO_BACKGROUND, ode_sim::SOLVER_QUICK);
+  ode_sim::OdeSim sim(1280, 720, 0.1, benchmark::NO_BACKGROUND, ode_sim::SOLVER_QUICK);
   sim.setERP(0.2, 0, 0);
 
   // object

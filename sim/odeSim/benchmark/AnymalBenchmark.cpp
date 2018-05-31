@@ -2,23 +2,23 @@
 // Created by kangd on 26.04.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <OdeSim.hpp>
 
 #include "AnymalBenchmark.hpp"
 #include "OdeBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
-ode_sim::OdeWorld_RG *sim;
+ode_sim::OdeSim *sim;
 std::vector<ode_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::options.gui)
-    sim = new ode_sim::OdeWorld_RG(800, 600, 0.5,
+    sim = new ode_sim::OdeSim(800, 600, 0.5,
                                    benchmark::NO_BACKGROUND,
                                    benchmark::ode::options.solverOption);
   else
-    sim = new ode_sim::OdeWorld_RG(benchmark::ode::options.solverOption);
+    sim = new ode_sim::OdeSim(benchmark::ode::options.solverOption);
 }
 
 void setupWorld() {

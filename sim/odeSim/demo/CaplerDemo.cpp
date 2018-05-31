@@ -1,7 +1,7 @@
 //
 // Created by jhwangbo on 04/12/17.
 //
-#include <OdeWorld_RG.hpp>
+#include <OdeSim.hpp>
 
 int main() {
 
@@ -10,7 +10,7 @@ int main() {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/Capler/";
 
-  ode_sim::OdeWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
+  ode_sim::OdeSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
   sim.setLightPosition(0, -10, 10);
 
   auto checkerBoard = sim.addCheckerboard(1, 100, 100, 0.1,

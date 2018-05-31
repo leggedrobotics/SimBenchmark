@@ -2,22 +2,22 @@
 // Created by kangd on 15.02.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <OdeSim.hpp>
 
 #include "BouncingBenchmark.hpp"
 #include "OdeBenchmark.hpp"
 
-ode_sim::OdeWorld_RG *sim;
+ode_sim::OdeSim *sim;
 std::vector<benchmark::SingleBodyHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
   if (benchmark::bouncing::options.gui)
-    sim = new ode_sim::OdeWorld_RG(800, 600, 0.5,
+    sim = new ode_sim::OdeSim(800, 600, 0.5,
                                    benchmark::NO_BACKGROUND,
                                    benchmark::ode::options.solverOption);
   else
-    sim = new ode_sim::OdeWorld_RG(benchmark::ode::options.solverOption);
+    sim = new ode_sim::OdeSim(benchmark::ode::options.solverOption);
 
   // erp
   if(benchmark::bouncing::options.erpYN)

@@ -2,22 +2,22 @@
 // Created by kangd on 09.05.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <OdeSim.hpp>
 
 #include "BuildingBenchmark.hpp"
 #include "OdeBenchmark.hpp"
 
-ode_sim::OdeWorld_RG *sim;
+ode_sim::OdeSim *sim;
 std::vector<benchmark::SingleBodyHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
   if (benchmark::building::options.gui)
-    sim = new ode_sim::OdeWorld_RG(800, 600, 0.05,
+    sim = new ode_sim::OdeSim(800, 600, 0.05,
                                    benchmark::NO_BACKGROUND,
                                    benchmark::ode::options.solverOption);
   else
-    sim = new ode_sim::OdeWorld_RG(benchmark::ode::options.solverOption);
+    sim = new ode_sim::OdeSim(benchmark::ode::options.solverOption);
 
   // erp
   if(benchmark::building::options.erpYN)

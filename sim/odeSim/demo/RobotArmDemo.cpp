@@ -2,7 +2,7 @@
 // Created by kangd on 24.04.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <OdeSim.hpp>
 
 int main() {
 
@@ -16,7 +16,7 @@ int main() {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/2DRobotArm/";
 
-  ode_sim::OdeWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
+  ode_sim::OdeSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 
   auto arm = sim.addArticulatedSystem(urdfPath);
   auto checkerBoard = sim.addCheckerboard(1, 100, 100, 0.1,

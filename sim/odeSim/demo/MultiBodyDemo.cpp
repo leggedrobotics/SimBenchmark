@@ -2,7 +2,7 @@
 // Created by kangd on 23.04.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <OdeSim.hpp>
 
 int main() {
 
@@ -11,7 +11,7 @@ int main() {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/Multibody/";
 
-  ode_sim::OdeWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
+  ode_sim::OdeSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
   sim.setGravity({0, 0, 0});
 
   /// NOTE erp should be set to 0.2 for articulated system simulation on ODE

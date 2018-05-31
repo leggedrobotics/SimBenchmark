@@ -18,20 +18,20 @@
 
 namespace ode_sim {
 
-class OdeWorld_RG: public benchmark::WorldRG {
+class OdeSim: public benchmark::WorldRG {
 
  public:
 
   /* constructor for visualization */
-  OdeWorld_RG(int windowWidth,
-              int windowHeight,
-              float cms,
-              int flags = 0,
-              SolverOption solverOption = SOLVER_STANDARD);
+  OdeSim(int windowWidth,
+         int windowHeight,
+         float cms,
+         int flags = 0,
+         SolverOption solverOption = SOLVER_STANDARD);
 
   /* constructor for no visualization */
-  OdeWorld_RG(SolverOption solverOption = SOLVER_STANDARD);
-  virtual ~OdeWorld_RG();
+  OdeSim(SolverOption solverOption = SOLVER_STANDARD);
+  virtual ~OdeSim();
 
   /////////////////////////////////////
   /// Visualization related methods ///

@@ -2,7 +2,7 @@
 // Created by kangd on 15.04.18.
 //
 
-#include <OdeWorld_RG.hpp>
+#include <OdeSim.hpp>
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define VIDEO_SAVE_MODE
@@ -14,7 +14,7 @@ int main() {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/ANYmal/";
 
-  ode_sim::OdeWorld_RG sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
+  ode_sim::OdeSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(0.8);

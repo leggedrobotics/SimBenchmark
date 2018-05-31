@@ -19,8 +19,8 @@ include_directories(src)
 set(ODESim_SRCS
         src/OdeWorld.hpp
         src/OdeWorld.cpp
-        src/OdeWorld_RG.hpp
-        src/OdeWorld_RG.cpp
+        src/OdeSim.hpp
+        src/OdeSim.cpp
         src/UserHandle.hpp
         src/object/OdeSingleBodyObject.hpp
         src/object/OdeSingleBodyObject.cpp

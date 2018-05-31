@@ -2,24 +2,24 @@
 // Created by kangd on 10.02.18.
 //
 
-#include "OdeWorld_RG.hpp"
+#include "OdeSim.hpp"
 
 namespace ode_sim {
 
-OdeWorld_RG::OdeWorld_RG(int windowWidth, int windowHeight, float cms, int flags, SolverOption solverOption) :
+OdeSim::OdeSim(int windowWidth, int windowHeight, float cms, int flags, SolverOption solverOption) :
     world_(solverOption),
     benchmark::WorldRG(windowWidth, windowHeight, cms, flags) {}
 
-OdeWorld_RG::OdeWorld_RG(SolverOption solverOption) :
+OdeSim::OdeSim(SolverOption solverOption) :
     world_(solverOption),
     benchmark::WorldRG() {}
 
-OdeWorld_RG::~OdeWorld_RG() {
+OdeSim::~OdeSim() {
   if(!isEnded_ && isReady_)
     visEnd();
 }
 
-void OdeWorld_RG::updateFrame() {
+void OdeSim::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
 
@@ -260,7 +260,7 @@ void OdeWorld_RG::updateFrame() {
 //  }
 }
 
-benchmark::SingleBodyHandle OdeWorld_RG::addBox(double xLength,
+benchmark::SingleBodyHandle OdeSim::addBox(double xLength,
                                                 double yLength,
                                                 double zLength,
                                                 double mass,
@@ -273,7 +273,7 @@ benchmark::SingleBodyHandle OdeWorld_RG::addBox(double xLength,
   return handle;
 }
 
-benchmark::SingleBodyHandle OdeWorld_RG::addSphere(double radius,
+benchmark::SingleBodyHandle OdeSim::addSphere(double radius,
                                                    double mass,
                                                    benchmark::CollisionGroupType collisionGroup,
                                                    benchmark::CollisionGroupType collisionMask) {
@@ -283,7 +283,7 @@ benchmark::SingleBodyHandle OdeWorld_RG::addSphere(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle OdeWorld_RG::addCapsule(double radius,
+benchmark::SingleBodyHandle OdeSim::addCapsule(double radius,
                                                     double height,
                                                     double mass,
                                                     benchmark::CollisionGroupType collisionGroup,
@@ -294,7 +294,7 @@ benchmark::SingleBodyHandle OdeWorld_RG::addCapsule(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle OdeWorld_RG::addCylinder(double radius,
+benchmark::SingleBodyHandle OdeSim::addCylinder(double radius,
                                                      double height,
                                                      double mass,
                                                      benchmark::CollisionGroupType collisionGroup,
@@ -305,7 +305,7 @@ benchmark::SingleBodyHandle OdeWorld_RG::addCylinder(double radius,
   return handle;
 }
 
-benchmark::SingleBodyHandle OdeWorld_RG::addCheckerboard(double gridSize,
+benchmark::SingleBodyHandle OdeSim::addCheckerboard(double gridSize,
                                                          double xLength,
                                                          double yLength,
                                                          double reflectanceI,
@@ -330,7 +330,7 @@ benchmark::SingleBodyHandle OdeWorld_RG::addCheckerboard(double gridSize,
   return handle;
 }
 
-ArticulatedSystemHandle OdeWorld_RG::addArticulatedSystem(std::string nm,
+ArticulatedSystemHandle OdeSim::addArticulatedSystem(std::string nm,
                                                           benchmark::CollisionGroupType collisionGroup,
                                                           benchmark::CollisionGroupType collisionMask) {
   ArticulatedSystemHandle handle(
@@ -416,28 +416,28 @@ ArticulatedSystemHandle OdeWorld_RG::addArticulatedSystem(std::string nm,
   asHandles_.push_back(handle);
   return handle;
 }
-void OdeWorld_RG::integrate(double dt) {
+void OdeSim::integrate(double dt) {
   world_.integrate(dt);
 }
 
-void OdeWorld_RG::setGravity(Eigen::Vector3d gravity) {
+void OdeSim::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
 }
-void OdeWorld_RG::setERP(double erp, double erp2, double frictionErp) {
+void OdeSim::setERP(double erp, double erp2, double frictionErp) {
   world_.setERP(erp);
 }
 
-int OdeWorld_RG::getNumObject() {
+int OdeSim::getNumObject() {
   return world_.getNumObject();
 }
-int OdeWorld_RG::getWorldNumContacts() {
+int OdeSim::getWorldNumContacts() {
   return (int)world_.getCollisionProblem()->size();
 }
 
-void OdeWorld_RG::integrate1(double dt) {
+void OdeSim::integrate1(double dt) {
 RAIFATAL("not supported for ode")
 }
-void OdeWorld_RG::integrate2(double dt) {
+void OdeSim::integrate2(double dt) {
   RAIFATAL("not supported for ode")
 }
 
