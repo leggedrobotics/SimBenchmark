@@ -35,8 +35,8 @@ include_directories(src)
 set(MjcSimSrc
         src/MjcWorld.cpp
         src/MjcWorld.hpp
-        src/MjcWorld_RG.cpp
-        src/MjcWorld_RG.hpp
+        src/MjcSim.cpp
+        src/MjcSim.hpp
         src/UserHandle.hpp
         src/object/MjcSingleBodyObject.cpp
         src/object/MjcSingleBodyObject.hpp

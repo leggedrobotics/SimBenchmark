@@ -2,24 +2,24 @@
 // Created by kangd on 21.02.18.
 //
 
-#include <MjcWorld_RG.hpp>
+#include <MjcSim.hpp>
 
 #include "MjcBenchmark.hpp"
 #include "RollingBenchmark.hpp"
 
-mujoco_sim::MjcWorld_RG *sim;
+mujoco_sim::MjcSim *sim;
 po::options_description desc;
 
 void setupSimulation() {
   if (benchmark::rolling::options.gui)
-    sim = new mujoco_sim::MjcWorld_RG(800, 600, 0.5,
+    sim = new mujoco_sim::MjcSim(800, 600, 0.5,
                                       benchmark::rolling::getMujocoXMLpath().c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
                                       benchmark::NO_BACKGROUND,
                                       benchmark::mujoco::options.solverOption,
                                       benchmark::mujoco::options.integratorOption);
   else
-    sim = new mujoco_sim::MjcWorld_RG(benchmark::rolling::getMujocoXMLpath().c_str(),
+    sim = new mujoco_sim::MjcSim(benchmark::rolling::getMujocoXMLpath().c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
                                       benchmark::mujoco::options.solverOption,
                                       benchmark::mujoco::options.integratorOption);

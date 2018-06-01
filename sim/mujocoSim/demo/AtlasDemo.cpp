@@ -1,7 +1,7 @@
 //
 // Created by jhwangbo on 04/12/17.
 //
-#include <MjcWorld_RG.hpp>
+#include <MjcSim.hpp>
 #include <string>
 #include "raiCommon/utils/StopWatch.hpp"
 
@@ -17,7 +17,7 @@ int main() {
     keyPath.erase(keyPath.size() - 1, 1);
   keyPath += "../../../lib/mjpro150/mjkey.txt";
 
-  mujoco_sim::MjcWorld_RG sim(800, 600, 0.2,
+  mujoco_sim::MjcSim sim(800, 600, 0.2,
                               urdfPath.c_str(),
                               keyPath.c_str(),
                               benchmark::NO_BACKGROUND);

@@ -4,6 +4,9 @@ target_link_libraries(MjcSimDemo ${MjcSimLink})
 add_executable(MjcAnymalDemo AnymalDemo.cpp)
 target_link_libraries(MjcAnymalDemo ${MjcSimLink})
 
+add_executable(MjcAnymalEnergyDemo AnymalEnergyDemo.cpp)
+target_link_libraries(MjcAnymalEnergyDemo ${MjcSimLink})
+
 add_executable(MjcAtlasDemo AtlasDemo.cpp)
 target_link_libraries(MjcAtlasDemo ${MjcSimLink})
 

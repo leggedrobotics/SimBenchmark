@@ -4,7 +4,7 @@
 
 #include <boost/program_options.hpp>
 
-#include "MjcWorld_RG.hpp"
+#include "MjcSim.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define VIDEO_SAVE_MODE
@@ -24,7 +24,7 @@ int main(int argc, const char* argv[]) {
     keyPath.erase(keyPath.size() - 1, 1);
   keyPath += "../../../lib/mjpro150/mjkey.txt";
 
-  mujoco_sim::MjcWorld_RG
+  mujoco_sim::MjcSim
       sim(800, 600, 0.5, urdfPath.c_str(), keyPath.c_str(), benchmark::NO_BACKGROUND);
   sim.cameraFollowObject(sim.getSingleBodyHandle(sim.getNumObject()-1), {1.0, 1.0, 1.0});
 

@@ -32,8 +32,8 @@ int main(int argc, const char* argv[]) {
       {0, 0, 10,
        1.0, 0.0, 0.0, 0.0,
        0.03, 0.4, -0.8,
+       0.03, -0.4, +0.8,
        -0.03, 0.4, -0.8,
-       0.03, -0.4, 0.8,
        -0.03, -0.4, 0.8});
   anymal->setGeneralizedVelocity(
       {0, 0, 0,
@@ -43,7 +43,7 @@ int main(int argc, const char* argv[]) {
        0.0, 0.0, 0.0,
        0.0, 0.0, 0.0});
 
-  double g = -0;
+  double g = -0.0;
   double dt = 0.005;
   sim.setGravity({0, 0, g});
   sim.setTimeStep(dt);
@@ -56,6 +56,7 @@ int main(int argc, const char* argv[]) {
     kenergy.push_back(anymal->getEnergy({0, 0, g}));
   }
 
+  RAIINFO("initial E = " << E0)
   showplot(E0);
   return 0;
 }

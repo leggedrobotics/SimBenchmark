@@ -2,7 +2,7 @@
 // Created by kangd on 24.05.18.
 //
 
-#include "MjcWorld_RG.hpp"
+#include "MjcSim.hpp"
 
 int main(int argc, const char* argv[]) {
 
@@ -24,7 +24,7 @@ int main(int argc, const char* argv[]) {
   keyPath += "../../../lib/mjpro150/mjkey.txt";
 
   // load model from file and check for errors
-  mujoco_sim::MjcWorld_RG sim(800,
+  mujoco_sim::MjcSim sim(800,
                               600,
                               0.5,
                               xmlPath.c_str(),

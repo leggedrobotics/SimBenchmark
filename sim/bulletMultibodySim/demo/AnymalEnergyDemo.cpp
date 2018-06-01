@@ -55,6 +55,7 @@ int main(int argc, const char* argv[]) {
     kenergy.push_back(anymal->getEnergy({0, 0, g}));
   }
 
+  RAIINFO("initial E = " << E0)
   showplot(E0);
   return 0;
 }

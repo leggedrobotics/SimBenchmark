@@ -4,7 +4,7 @@
 
 #include <boost/program_options.hpp>
 
-#include "raiSim/World_RG.hpp"
+#include "MjcSim.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define VIDEO_SAVE_MODE
@@ -19,21 +19,34 @@ int main(int argc, const char* argv[]) {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/ANYmal-energy/robot.urdf";
+  urdfPath += "../../../res/mujoco/ANYmal/robot-energy.urdf";
 
-  rai_sim::World_RG sim(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+  std::string keyPath(__FILE__);
+  while (keyPath.back() != '/')
+    keyPath.erase(keyPath.size() - 1, 1);
+  keyPath += "../../../lib/mjpro150/mjkey.txt";
 
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
+  mujoco_sim::MjcSim
+      sim(800, 600, 0.5, urdfPath.c_str(), keyPath.c_str(), benchmark::NO_BACKGROUND);
+  sim.cameraFollowObject(sim.getSingleBodyHandle(sim.getNumObject()-1), {1.0, 1.0, 1.0});
 
-  auto anymal = sim.addArticulatedSystem(urdfPath, 1, 0);
-  anymal->setGeneralizedCoordinate(
+  /// no slip parameter should be set in order to make anymal stands
+  sim.setTimeStep(0.005);
+
+  // set color
+  for(int i = 0; i < sim.getNumObject()-1; i++) {
+    sim.getSingleBodyHandle(i).visual()[0]->setColor({0, 0, 1});
+  }
+
+  // initial general coordinate
+  sim.setGeneralizedCoordinate(
       {0, 0, 10,
        1.0, 0.0, 0.0, 0.0,
        0.03, 0.4, -0.8,
        -0.03, 0.4, -0.8,
        0.03, -0.4, 0.8,
        -0.03, -0.4, 0.8});
-  anymal->setGeneralizedVelocity(
+  sim.setGeneralizedVelocity(
       {0, 0, 0,
        0.2, 1.0, 0.5,
        0.0, 0.0, 0.0,
@@ -41,17 +54,24 @@ int main(int argc, const char* argv[]) {
        0.0, 0.0, 0.0,
        0.0, 0.0, 0.0});
 
+  for(int i = 0 ; i < sim.getNumObject(); i++) {
+    static_cast<mujoco_sim::object::MjcSingleBodyObject *>(sim.getSingleBodyHandle(i).s_)
+        ->setCollisionGroupAndMask(1, 0);
+  }
+
   double g = -0;
   double dt = 0.005;
   sim.setGravity({0, 0, g});
-  sim.cameraFollowObject(checkerboard, {15.0, 0.0, 15.0});
+  sim.setTimeStep(dt);
+
+  sim.cameraFollowObject(sim.getSingleBodyHandle(0), {2.0, 0.0, 0.5});
 
   double E0 = 0;
   for(int i = 0; i < int(5.0/dt) && sim.visualizerLoop(dt, 1.0); i++) {
-    sim.integrate1(dt);
-    if(i == 0) E0 = anymal->getEnergy({0, 0, g});
-    kenergy.push_back(anymal->getEnergy({0, 0, g}));
-    sim.integrate2(dt);
+    sim.integrate1();
+    if(i == 0) E0 = sim.getEnergy({0, 0, g});
+    kenergy.push_back(sim.getEnergy({0, 0, g}));
+    sim.integrate2();
   }
 
   RAIINFO("initial E = " << E0)

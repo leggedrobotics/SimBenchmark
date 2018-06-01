@@ -2,24 +2,24 @@
 // Created by kangd on 14.05.18.
 //
 
-#include <MjcWorld_RG.hpp>
+#include <MjcSim.hpp>
 
 #include "AnymalMomentumBenchmark.hpp"
 #include "MjcBenchmark.hpp"
 
-mujoco_sim::MjcWorld_RG *sim;
+mujoco_sim::MjcSim *sim;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::zerogravity::options.gui)
-    sim = new mujoco_sim::MjcWorld_RG(800, 600, 0.5,
+    sim = new mujoco_sim::MjcSim(800, 600, 0.5,
                                       benchmark::anymal::zerogravity::getMujocoURDFpath().c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
                                       benchmark::NO_BACKGROUND,
                                       benchmark::mujoco::options.solverOption,
                                       benchmark::mujoco::options.integratorOption);
   else
-    sim = new mujoco_sim::MjcWorld_RG(benchmark::anymal::zerogravity::getMujocoURDFpath().c_str(),
+    sim = new mujoco_sim::MjcSim(benchmark::anymal::zerogravity::getMujocoURDFpath().c_str(),
                                       benchmark::mujoco::getKeypath().c_str(),
                                       benchmark::mujoco::options.solverOption,
                                       benchmark::mujoco::options.integratorOption);

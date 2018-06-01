@@ -13,26 +13,26 @@
 
 namespace mujoco_sim {
 
-class MjcWorld_RG: public benchmark::WorldRG {
+class MjcSim: public benchmark::WorldRG {
 
  public:
 
   /* constructor for visualization */
-  MjcWorld_RG(int windowWidth,
-              int windowHeight,
-              float cms,
-              const char *modelPath,
-              const char *keyPath,
-              int flags,
-              SolverOption solver = SOLVER_PGS,
-              IntegratorOption integrator = INTEGRATOR_EULER);
+  MjcSim(int windowWidth,
+         int windowHeight,
+         float cms,
+         const char *modelPath,
+         const char *keyPath,
+         int flags,
+         SolverOption solver = SOLVER_PGS,
+         IntegratorOption integrator = INTEGRATOR_EULER);
 
   /* constructor for no visualization */
-  MjcWorld_RG(const char *modelPath,
-              const char *keyPath,
-              SolverOption solver = SOLVER_PGS,
-              IntegratorOption integrator = INTEGRATOR_EULER);
-  virtual ~MjcWorld_RG();
+  MjcSim(const char *modelPath,
+         const char *keyPath,
+         SolverOption solver = SOLVER_PGS,
+         IntegratorOption integrator = INTEGRATOR_EULER);
+  virtual ~MjcSim();
 
   /////////////////////////////////////
   /// Visualization related methods ///
@@ -121,8 +121,8 @@ class MjcWorld_RG: public benchmark::WorldRG {
                                      int geomId) override ;
 
   benchmark::SingleBodyHandle addCylinder(double radius,
-                                          double height, 
-                                          double mass, 
+                                          double height,
+                                          double mass,
                                           int bodyId,
                                           int geomId) override ;
 
