@@ -41,7 +41,7 @@ ArticulatedSystemHandle BtMbSim::addArticulatedSystem(std::string nm,
                                                       benchmark::CollisionGroupType collisionMask) {
 
   ArticulatedSystemHandle handle(
-      world_.addArticulatedSystem(nm, fileType, internalCollision, collisionGroup, collisionMask), {}, {});
+      world_.addArticulatedSystem(nm, fileType, internalCollision, false, collisionGroup, collisionMask), {}, {});
   if(!gui_) {
     asHandles_.push_back(handle);
     return handle;

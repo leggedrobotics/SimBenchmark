@@ -7,7 +7,7 @@ addpath(genpath('../lib/yamlmatlab'))
 
 % data path
 data_dir = '../../../data/anymal-freedrop/';
-file_name = '2018-05-21-23:58:18.csv';
+file_name = 'sample.csv';
 % plot_path = strcat(data_dir, 'plots/');
 
 % yaml path
@@ -63,7 +63,7 @@ plotOption = plotoption;
 
 % error plot vs dt
 disp('plotting error vs real-time-factor...')
-plot_error_speed(T, const, plotSpec, '-noerp', '(No Erp)', plotOption);
+plot_error_speed(T, const, plotSpec, '-energy', '(No Erp)', plotOption);
 
 %% bar plot (for min dt)
 T2 = T;
@@ -116,6 +116,8 @@ sims = unique(dataTable.SIM);
 
 h = figure('Name','error','Position', [0, 0, 600, 500]);
 hold on
+box on
+grid on
 set(gca, 'YScale', 'log', 'XScale', 'log', 'Ydir', 'reverse')
 for i = 1:length(sims)
     

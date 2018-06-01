@@ -34,6 +34,7 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
   BtMbArticulatedSystem(std::string filePath,
                           ObjectFileType fileType,
                           bool internalCollision,
+                          bool maximalCoordinate,
                           b3RobotSimulatorClientAPI_NoGUI *api);
   virtual ~BtMbArticulatedSystem();
 

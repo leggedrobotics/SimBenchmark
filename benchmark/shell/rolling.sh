@@ -48,14 +48,11 @@ do
         # bullet sim
         if [ "$test_bt" == 'ON' ]; then
             if [ "$BTSIM_ON" == "ON" ]; then
-                for solver in seqimp nncg pgs #dantzig lemke
-                do
-                    for erpon in true false
-                    do
-                        timeout 600 ../sim/bulletSim/benchmark/BtRollingBenchmark \
-                        --nogui --erp-on=$erpon --dt=$dt --solver=$solver --force=$forcedir --log --csv=$csv_file
-                    done
-                done
+				for erpon in true false
+				do
+					timeout 600 ../sim/bulletMultibodySim/benchmark/BtMbRollingBenchmark \
+					--nogui --erp-on=$erpon --dt=$dt --force=$forcedir --log --csv=$csv_file
+				done
             else
                 echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
             fi

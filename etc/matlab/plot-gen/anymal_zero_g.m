@@ -7,7 +7,7 @@ addpath(genpath('../lib/yamlmatlab'))
 
 % data path
 data_dir = '../../../data/anymal-zeroG/';
-file_name = '2018-05-22-02:42:55.csv';
+file_name = 'sample.csv';
 % plot_path = strcat(data_dir, 'plots/');
 
 % yaml path
@@ -57,6 +57,9 @@ entry = {...
     };
 T.Properties.VariableNames = entry;
 
+% zero to small value
+T.ERROR(T.ERROR == 0, :) = 1e-40;
+
 
 %% error plot
 % plot option
@@ -67,7 +70,7 @@ plotOption.MUJOCONEWTONRK4 = false;
 
 % error plot vs dt
 disp('plotting error vs real-time-factor...')
-plot_error_speed(T, const, plotSpec, '-noerp-y', '(No Erp / Y force)', plotOption);
+plot_error_speed(T, const, plotSpec, '-momentum', '(No Erp)', plotOption);
 
 %% bar plot (for min dt)
 T2 = T;
@@ -120,6 +123,7 @@ sims = unique(dataTable.SIM);
 
 h = figure('Name','error','Position', [0, 0, 600, 500]);
 hold on
+box on
 set(gca, 'YScale', 'log', 'XScale', 'log', 'Ydir', 'reverse')
 for i = 1:length(sims)
     
@@ -170,7 +174,7 @@ hold off
 title(['Momentum error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
-ylim([1e-11, 1e2])
+% ylim([1e-11, 1e2])
 lgd = legend('Location', 'northeast');
 lgd.NumColumns = 2;
 saveas(h, strcat('zerog-plots/error-speed', fileName, '.png'))

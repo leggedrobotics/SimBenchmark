@@ -9,6 +9,7 @@ namespace bullet_mb_sim {
 object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
                                                      ObjectFileType fileType,
                                                      bool internalCollision,
+                                                     bool maximalCoordinate,
                                                      b3RobotSimulatorClientAPI_NoGUI *api) : api_(api) {
 
   int objectId = -1;
@@ -22,6 +23,9 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
 
       if(internalCollision)
         args.m_flags |= URDF_USE_SELF_COLLISION;
+
+      if(maximalCoordinate)
+        RAIWARN("maximal coordinate is not supported yet")
 
       objectId = api->loadURDF(filePath + "/robot.urdf", args);
       break;

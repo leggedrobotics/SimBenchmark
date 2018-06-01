@@ -53,6 +53,7 @@ class BtMbWorld: public benchmark::WorldInterface  {
   object::BtMbArticulatedSystem *addArticulatedSystem(std::string nm,
                                                       object::ObjectFileType fileType,
                                                       bool internalCollision,
+                                                      bool maximalCoordinate,
                                                       benchmark::CollisionGroupType collisionGroup,
                                                       benchmark::CollisionGroupType collisionMask);
 

@@ -42,7 +42,7 @@ do
     # bullet sim
     if [ "$test_bt" == 'ON' ]; then
         if [ "$BTSIM_ON" == "ON" ]; then
-            timeout 600 ../sim/bulletSim/benchmark/BtAnymalEnergyBenchmark \
+            timeout 600 ../sim/bulletMultibodySim/benchmark/BtMbAnymalEnergyBenchmark \
             --nogui --dt=$dt --csv=$csv_file #--log
         else
             echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
