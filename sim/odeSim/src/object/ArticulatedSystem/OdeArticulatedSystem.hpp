@@ -212,16 +212,6 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   void getComPos_W(int bodyId,
                    benchmark::Vec<3> &comPos);
 
-  /**
-   * not completed only set base velocity
-   */
-  void setGeneralizedVelocity(const Eigen::VectorXd &jointVel) override;
-
-  /**
-   * not completed only set base velocity
-   */
-  void setGeneralizedVelocity(std::initializer_list<double> jointVel) override;
-
  private:
   void init();
 
@@ -285,6 +275,17 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
 //  void updateJointVelocity(Link &link,
 //                           benchmark::Mat<3, 3> &parentRot_w,
 //                           benchmark::Vec<3> &parentPos_w);
+
+  /**
+    * not completed
+    */
+  void setGeneralizedVelocity(const Eigen::VectorXd &jointVel) override;
+
+  /**
+   * not completed
+   */
+  void setGeneralizedVelocity(std::initializer_list<double> jointVel) override;
+
 
   std::vector<std::string> jointsNames_;
 
