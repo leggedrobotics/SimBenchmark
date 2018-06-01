@@ -29,7 +29,9 @@ void setupWorld() {
 
   // anymal (no internal collision)
   auto anymal =
-      sim->addArticulatedSystem(benchmark::anymal::freedrop::getBulletURDFpath(), bullet_mb_sim::object::URDF, false);
+      sim->addArticulatedSystem(benchmark::anymal::freedrop::getBulletURDFpath(),
+                                bullet_mb_sim::object::URDF,
+                                false);
   anymal->setGeneralizedCoordinate({0,
                                     0,
                                     benchmark::anymal::freedrop::params.H,

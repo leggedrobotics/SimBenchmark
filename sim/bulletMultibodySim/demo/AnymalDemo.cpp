@@ -32,7 +32,7 @@ int main(int argc, const char* argv[]) {
        0.03, -0.4, 0.8,
        -0.03, -0.4, 0.8});
 //  anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
-//  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
+  anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
 
   sim.setGravity({0, 0, -9.81});
   sim.setERP(0.05, 0.01, 0.0);
@@ -54,13 +54,13 @@ int main(int argc, const char* argv[]) {
 #else
   while(sim.visualizerLoop(0.005, 1.0)) {
 #endif
-//    jointState = anymal->getGeneralizedCoordinate();
-//    jointVel = anymal->getGeneralizedVelocity();
-//    jointForce = anymal->getGeneralizedForce();
+    jointState = anymal->getGeneralizedCoordinate();
+    jointVel = anymal->getGeneralizedVelocity();
+    jointForce = anymal->getGeneralizedForce();
 
-//    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
-//    jointForce.head(6).setZero();
-//    anymal->setGeneralizedForce(jointForce);
+    jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
+    jointForce.head(6).setZero();
+    anymal->setGeneralizedForce(jointForce);
     sim.integrate();
   }
 

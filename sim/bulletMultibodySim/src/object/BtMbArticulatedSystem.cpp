@@ -24,8 +24,10 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
       if(internalCollision)
         args.m_flags |= URDF_USE_SELF_COLLISION;
 
-      if(maximalCoordinate)
-        RAIWARN("maximal coordinate is not supported yet")
+      if(maximalCoordinate) {
+        RAIFATAL("maximal coordinate is not supported yet")
+        args.m_useMultiBody = false;
+      }
 
       objectId = api->loadURDF(filePath, args);
       break;

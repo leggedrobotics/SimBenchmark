@@ -6,11 +6,11 @@
 ##                                                                                                                    ##
 ########################################################################################################################
 
-echo "    ___    _   ____  ____  ______    __       __________  ________________  ____  ____  ____  "
-echo "   /   |  / | / /\ \/ /  |/  /   |  / /      / ____/ __ \/ ____/ ____/ __ \/ __ \/ __ \/ __ \ "
-echo "  / /| | /  |/ /  \  / /|_/ / /| | / /      / /_  / /_/ / __/ / __/ / / / / /_/ / / / / /_/ / "
-echo " / ___ |/ /|  /   / / /  / / ___ |/ /___   / __/ / _, _/ /___/ /___/ /_/ / _, _/ /_/ / ____/  "
-echo "/_/  |_/_/ |_/   /_/_/  /_/_/  |_/_____/  /_/   /_/ |_/_____/_____/_____/_/ |_|\____/_/       "
+echo "    ___    _   ____  ____  ______    __       __  _______  __  __________   __________  ____  ___"
+echo "   /   |  / | / /\ \/ /  |/  /   |  / /      /  |/  / __ \/  |/  / ____/ | / /_  __/ / / /  |/  /"
+echo "  / /| | /  |/ /  \  / /|_/ / /| | / /      / /|_/ / / / / /|_/ / __/ /  |/ / / / / / / / /|_/ / "
+echo " / ___ |/ /|  /   / / /  / / ___ |/ /___   / /  / / /_/ / /  / / /___/ /|  / / / / /_/ / /  / /  "
+echo "/_/  |_/_/ |_/   /_/_/  /_/_/  |_/_____/  /_/  /_/\____/_/  /_/_____/_/ |_/ /_/  \____/_/  /_/   "
 
 
 ########################################################################################################################
@@ -22,7 +22,7 @@ source selectsim.sh
 ########################################################################################################################
 # test
 ########################################################################################################################
-dt_array=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" )
+dt_array=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" )
 csv_file=$( date +"%Y-%m-%d-%H:%M:%S.csv" )
 
 echo ""
@@ -32,7 +32,7 @@ do
     # rai sim
     if [ "$test_rai" == 'ON' ]; then
         if [ "$RAISIM_ON" == "ON" ]; then
-            timeout 600 ../sim/raiSim/benchmark/RaiAnymalEnergyBenchmark \
+            timeout 600 ../sim/raiSim/benchmark/RaiAnymalMomentumBenchmark \
             --nogui --dt=$dt --csv=$csv_file #--log
         else
             echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
@@ -42,7 +42,7 @@ do
     # bullet sim
     if [ "$test_bt" == 'ON' ]; then
         if [ "$BTSIM_ON" == "ON" ]; then
-            timeout 600 ../sim/bulletMultibodySim/benchmark/BtMbAnymalEnergyBenchmark \
+            timeout 600 ../sim/bulletMultibodySim/benchmark/BtMbAnymalMomentumBenchmark \
             --nogui --dt=$dt --csv=$csv_file #--log
         else
             echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
@@ -54,7 +54,7 @@ do
         if [ "$ODESIM_ON" == "ON" ] ; then
             for solver in std quick
             do
-                timeout 600 ../sim/odeSim/benchmark/OdeAnymalEnergyBenchmark \
+                timeout 600 ../sim/odeSim/benchmark/OdeAnymalMomentumBenchmark \
                 --nogui --dt=$dt --solver=$solver --csv=$csv_file #--log
             done
         else
@@ -70,7 +70,7 @@ do
                 for integrator in euler rk4
                 do
                 # note mujoco has no erp
-                timeout 600 ../sim/mujocoSim/benchmark/MjcAnymalEnergyBenchmark \
+                timeout 600 ../sim/mujocoSim/benchmark/MjcAnymalMomentumBenchmark \
                 --nogui --dt=$dt --solver=$solver --csv=$csv_file --integrator=$integrator #--log
                 done
             done
@@ -85,7 +85,7 @@ do
             for solver in dantzig pgs
             do
                 # note dart has no erp
-                timeout 600 ../sim/dartSim/benchmark/DartAnymalEnergyBenchmark \
+                timeout 600 ../sim/dartSim/benchmark/DartAnymalMomentumBenchmark \
                 --nogui --dt=$dt --solver=$solver --csv=$csv_file #--log
             done
         else
@@ -94,4 +94,4 @@ do
     fi
 done
 
-echo "ANYmal freedrop test is finished."
+echo "Zero G test is finished."

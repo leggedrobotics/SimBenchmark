@@ -6,7 +6,7 @@ format long
 addpath(genpath('../lib/yamlmatlab'))
 
 % data path
-data_dir = '../../../data/anymal-zeroG/';
+data_dir = '../../../data/anymal-momentum/';
 file_name = 'sample.csv';
 % plot_path = strcat(data_dir, 'plots/');
 
@@ -122,9 +122,17 @@ function plot_error_speed(dataTable, const, plotSpec, fileName, plotTitle, plotO
 sims = unique(dataTable.SIM);
 
 h = figure('Name','error','Position', [0, 0, 600, 500]);
+set(gca, ...
+    'YScale', 'log', ...
+    'XScale', 'log', ...
+    'Ydir', 'reverse', ...
+    'YMinorTick', 'off', ...
+    'XMinorTick', 'off', ...
+    'YMinorGrid', 'off', ...
+    'XMinorGrid', 'off')
+box on 
+grid on
 hold on
-box on
-set(gca, 'YScale', 'log', 'XScale', 'log', 'Ydir', 'reverse')
 for i = 1:length(sims)
     
     sim = sims(i);
@@ -174,8 +182,8 @@ hold off
 title(['Momentum error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
-% ylim([1e-11, 1e2])
-lgd = legend('Location', 'northeast');
+ylim([1e-30, 1e5])
+lgd = legend('Location', 'east');
 lgd.NumColumns = 2;
 saveas(h, strcat('zerog-plots/error-speed', fileName, '.png'))
 saveas(h, strcat('zerog-plots/error-speed', fileName, '.eps'), 'epsc')

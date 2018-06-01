@@ -6,11 +6,11 @@
 ##                                                                                                                    ##
 ########################################################################################################################
 
-echo "    ___    _   ____  ____  ______    __       _____   __________  ____        ______"
-echo "   /   |  / | / /\ \/ /  |/  /   |  / /      /__  /  / ____/ __ \/ __ \      / ____/"
-echo "  / /| | /  |/ /  \  / /|_/ / /| | / /         / /  / __/ / /_/ / / / /_____/ / __  "
-echo " / ___ |/ /|  /   / / /  / / ___ |/ /___      / /__/ /___/ _, _/ /_/ /_____/ /_/ /  "
-echo "/_/  |_/_/ |_/   /_/_/  /_/_/  |_/_____/     /____/_____/_/ |_|\____/      \____/   "
+echo "    ___    _   ____  ____  ______    __       _______   ____________  ________  __"
+echo "   /   |  / | / /\ \/ /  |/  /   |  / /      / ____/ | / / ____/ __ \/ ____/\ \/ /"
+echo "  / /| | /  |/ /  \  / /|_/ / /| | / /      / __/ /  |/ / __/ / /_/ / / __   \  / "
+echo " / ___ |/ /|  /   / / /  / / ___ |/ /___   / /___/ /|  / /___/ _, _/ /_/ /   / /  "
+echo "/_/  |_/_/ |_/   /_/_/  /_/_/  |_/_____/  /_____/_/ |_/_____/_/ |_|\____/   /_/   "
 
 
 ########################################################################################################################
@@ -22,7 +22,7 @@ source selectsim.sh
 ########################################################################################################################
 # test
 ########################################################################################################################
-dt_array=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" "0.04" )
+dt_array=( "0.00001" "0.00004" "0.0001" "0.0004" "0.001" "0.004" "0.01" )
 csv_file=$( date +"%Y-%m-%d-%H:%M:%S.csv" )
 
 echo ""
@@ -32,7 +32,7 @@ do
     # rai sim
     if [ "$test_rai" == 'ON' ]; then
         if [ "$RAISIM_ON" == "ON" ]; then
-            timeout 600 ../sim/raiSim/benchmark/RaiAnymalMomentumBenchmark \
+            timeout 600 ../sim/raiSim/benchmark/RaiAnymalEnergyBenchmark \
             --nogui --dt=$dt --csv=$csv_file #--log
         else
             echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
@@ -42,7 +42,7 @@ do
     # bullet sim
     if [ "$test_bt" == 'ON' ]; then
         if [ "$BTSIM_ON" == "ON" ]; then
-            timeout 600 ../sim/bulletMultibodySim/benchmark/BtMbAnymalMomentumBenchmark \
+            timeout 600 ../sim/bulletMultibodySim/benchmark/BtMbAnymalEnergyBenchmark \
             --nogui --dt=$dt --csv=$csv_file #--log
         else
             echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
@@ -54,7 +54,7 @@ do
         if [ "$ODESIM_ON" == "ON" ] ; then
             for solver in std quick
             do
-                timeout 600 ../sim/odeSim/benchmark/OdeAnymalMomentumBenchmark \
+                timeout 600 ../sim/odeSim/benchmark/OdeAnymalEnergyBenchmark \
                 --nogui --dt=$dt --solver=$solver --csv=$csv_file #--log
             done
         else
@@ -70,7 +70,7 @@ do
                 for integrator in euler rk4
                 do
                 # note mujoco has no erp
-                timeout 600 ../sim/mujocoSim/benchmark/MjcAnymalMomentumBenchmark \
+                timeout 600 ../sim/mujocoSim/benchmark/MjcAnymalEnergyBenchmark \
                 --nogui --dt=$dt --solver=$solver --csv=$csv_file --integrator=$integrator #--log
                 done
             done
@@ -85,7 +85,7 @@ do
             for solver in dantzig pgs
             do
                 # note dart has no erp
-                timeout 600 ../sim/dartSim/benchmark/DartAnymalMomentumBenchmark \
+                timeout 600 ../sim/dartSim/benchmark/DartAnymalEnergyBenchmark \
                 --nogui --dt=$dt --solver=$solver --csv=$csv_file #--log
             done
         else
@@ -94,4 +94,4 @@ do
     fi
 done
 
-echo "Zero G test is finished."
+echo "ANYmal freedrop test is finished."

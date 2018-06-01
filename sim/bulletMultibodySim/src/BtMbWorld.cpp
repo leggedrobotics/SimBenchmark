@@ -59,7 +59,7 @@ object::BtMbArticulatedSystem * BtMbWorld::addArticulatedSystem(std::string nm,
                                                                 benchmark::CollisionGroupType collisionGroup,
                                                                 benchmark::CollisionGroupType collisionMask) {
   auto *articulatedSystem =
-      new object::BtMbArticulatedSystem(nm, fileType, internalCollision, false, api_);
+      new object::BtMbArticulatedSystem(nm, fileType, internalCollision, maximalCoordinate, api_);
   objectList_.push_back(articulatedSystem);
   return articulatedSystem;
 }

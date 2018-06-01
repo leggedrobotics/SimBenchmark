@@ -67,6 +67,7 @@ class BtMbSim: public benchmark::WorldRG {
   ArticulatedSystemHandle addArticulatedSystem(std::string nm,
                                                object::ObjectFileType fileType,
                                                bool internalCollision = true,
+                                               bool maximalCoordinate = false,
                                                benchmark::CollisionGroupType collisionGroup = 1,
                                                benchmark::CollisionGroupType collisionMask = -1);
 
