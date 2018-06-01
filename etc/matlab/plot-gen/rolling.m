@@ -65,64 +65,6 @@ entry = {...
 T.Properties.VariableNames = entry;
 plotSpec = plotspec;
 
-% % testOptions
-% for i = 1:length(testOptions)
-%
-%     % erp: 1/0
-%     % dir: 1/0
-%     testOption = testOptions{i};
-%     erp = regexp(testOption, 'erp=([0-9])', 'tokens');
-%     erp = str2num(erp{1}{1});                % 0: false / 1: true
-%     direction = regexp(testOption, 'dir=([0-9])', 'tokens');
-%     direction = str2num(direction{1}{1});    % 0: y     / 1: xy
-%
-%     optionDir = strcat(data_dir, '/', testOption);
-%     sims = strsplit(ls(optionDir));
-%     sims = sims(1:end-1);
-%
-%     % simulators
-%     % RAI / BULLET / DART / MUJOCO / ODE
-%     parfor j = 1:length(sims)
-%         sim = sims{j};
-%
-%         simDir = strcat(optionDir, '/', sim);
-%         solvers = strsplit(ls(simDir));
-%         solvers = solvers(1:end-1);
-%
-%         % solvers
-%         % RAI    : RAI
-%         % BULLET : SEQUENCEIMPULSE, NNCG, ...
-%         % ODE    : QUICK, STANDARD
-%         % DART   : DANTZIG, PGS
-%         % MUJOCO : PGS, CG, NEWTON
-%         for k = 1:length(solvers)
-%
-%             solver = solvers{k};
-%
-%             solverDir = strcat(simDir, '/', solver);
-%             timesteps = strsplit(ls(solverDir));
-%             timesteps = timesteps(1:end-1);
-%
-%             % timesteps
-%             % 0.00010, 0.000040 ...
-%             for l = 1:length(timesteps)
-%
-%                 timestep = timesteps{l};
-%
-%                 curr = strcat(solverDir, '/', timestep);
-%             end
-%             % end timesteps
-%         end
-%         % end solvers
-%     end
-%     % end sims
-% end
-% % end testOtions
-%
-% % save table to csv file
-% writetable(T, 'rolling-log.csv', 'Delimiter', ',', 'QuoteStrings', true)
-
-
 
 %% error plot
 % plot option
@@ -134,6 +76,9 @@ erpNdirXY.ODESTANDARDODE = false;  % ODE is pyramid friction cone (and simulatio
 % erpNdirXY.ODEQUICK = false;     % ODE is pyramid friction cone
 % erpNdirXY.DARTDANTZIG = false;  % DART is pyramid friction cone
 % erpNdirXY.DARTPGS = false;      % DART is pyramid friction cone
+erpNdirXY.MUJOCOPGSRK4 = false;
+erpNdirXY.MUJOCOCGRK4 = false;
+erpNdirXY.MUJOCONEWTONRK4 = false;
 
 erpYdirY = plotoption;
 
@@ -203,13 +148,18 @@ dataTable = dataTable(...
 % ball + box
 sims = unique(dataTable.SIM);
 
-h = figure('Name','error','Position', [0, 0, 600, 500]);
-hold on
-box on 
+h = figure('Name','error','Position', [0, 0, 600, 500]); 
 set(gca, ...
     'YScale', 'log', ...
     'XScale', 'log', ...
-    'Ydir', 'reverse')
+    'Ydir', 'reverse', ...
+    'YMinorTick', 'off', ...
+    'XMinorTick', 'off', ...
+    'YMinorGrid', 'off', ...
+    'XMinorGrid', 'off')
+grid on
+box on
+hold on
 for i = 1:length(sims)
     
     sim = sims(i);
@@ -259,6 +209,7 @@ hold off
 title(['Velocity Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
+ylim([1e-12, 1e2])
 lgd = legend('Location', 'northeast');
 lgd.NumColumns = 2;
 saveas(h, strcat('rolling-plots/error-speed', fileName, '.png'))
