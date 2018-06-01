@@ -144,12 +144,13 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   void setColor(Eigen::Vector4d color) override {RAIFATAL("setColor is deprecated function")};
 
   /**
-* Get pose of link w.r.t. world frame
-*
-* @param linkId          linkId
-* @param orientation     orientation of link (output)
-* @param position        position of link (output)
-*/
+   * Get pose of link w.r.t. world frame
+   * Note that this pose is link reference frame (origin on joint)
+   *
+   * @param linkId          linkId
+   * @param orientation     orientation of link (output)
+   * @param position        position of link (output)
+   */
   void getBodyPose(int bodyId,
                    benchmark::Mat<3, 3> &orientation,
                    benchmark::Vec<3> &position);
@@ -212,6 +213,20 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   void getComPos_W(int bodyId,
                    benchmark::Vec<3> &comPos);
 
+  void getComRot_W(int bodyId,
+                   benchmark::Mat<3, 3> &comOrientation);
+
+
+  /**
+    * not completed
+    */
+  void setGeneralizedVelocity(const Eigen::VectorXd &jointVel) override;
+
+  /**
+   * not completed
+   */
+  void setGeneralizedVelocity(std::initializer_list<double> jointVel) override;
+
  private:
   void init();
 
@@ -261,30 +276,20 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
    * @param parentRot_w
    * @param parentPos_w
    */
-  void updateJointPos(Link &link,
-                      benchmark::Mat<3, 3> &parentRot_w,
-                      benchmark::Vec<3> &parentPos_w);
+  void updateBodyPos(Link &link,
+                     benchmark::Mat<3, 3> &parentRot_w,
+                     benchmark::Vec<3> &parentPos_w);
 
   /**
    * update joint velocity recursively from generalized velocity
    *
    * @param link
-   * @param parentRot_w
-   * @param parentPos_w
+   * @param parentAngVel_w
+   * @param parentLinVel_w
    */
-//  void updateJointVelocity(Link &link,
-//                           benchmark::Mat<3, 3> &parentRot_w,
-//                           benchmark::Vec<3> &parentPos_w);
-
-  /**
-    * not completed
-    */
-  void setGeneralizedVelocity(const Eigen::VectorXd &jointVel) override;
-
-  /**
-   * not completed
-   */
-  void setGeneralizedVelocity(std::initializer_list<double> jointVel) override;
+  void updateBodyVelocity(Link &link,
+                          benchmark::Vec<3> &parentAngVel_w,
+                          benchmark::Vec<3> &parentLinVel_w);
 
 
   std::vector<std::string> jointsNames_;

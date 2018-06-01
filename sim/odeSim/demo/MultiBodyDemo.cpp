@@ -14,9 +14,6 @@ int main() {
   ode_sim::OdeSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
   sim.setGravity({0, 0, 0});
 
-  /// NOTE erp should be set to 0.2 for articulated system simulation on ODE
-  sim.setERP(0.2, 0.2, 0.2);
-
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
   auto robot = sim.addArticulatedSystem(urdfPath);
   robot->setGeneralizedCoordinate(

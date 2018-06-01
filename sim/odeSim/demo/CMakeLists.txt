@@ -7,6 +7,9 @@ target_link_libraries(OdeAnymalDemo ${OdeSimLink})
 add_executable(OdeAnymalEnergyDemo AnymalEnergyDemo.cpp)
 target_link_libraries(OdeAnymalEnergyDemo ${OdeSimLink})
 
+add_executable(OdeAnymalZeroGravityDemo AnymalZeroGravityDemo.cpp)
+target_link_libraries(OdeAnymalZeroGravityDemo ${OdeSimLink})
+
 add_executable(OdeMultiBodyDemo MultiBodyDemo.cpp)
 target_link_libraries(OdeMultiBodyDemo ${OdeSimLink})
 

@@ -604,9 +604,9 @@ int OdeArticulatedSystem::getStateDimension() {
   return stateDimension_;
 }
 
-void OdeArticulatedSystem::updateJointPos(Link &link,
-                                          benchmark::Mat<3, 3> &parentRot_w,
-                                          benchmark::Vec<3> &parentPos_w) {
+void OdeArticulatedSystem::updateBodyPos(Link &link,
+                                         benchmark::Mat<3, 3> &parentRot_w,
+                                         benchmark::Vec<3> &parentPos_w) {
 
   {
     /*
@@ -695,7 +695,7 @@ void OdeArticulatedSystem::updateJointPos(Link &link,
       RAIFATAL("currently only support revolute/prismatic/fixed joint");
     }
 
-    updateJointPos(childLink, rot_w, pos_w);
+    updateBodyPos(childLink, rot_w, pos_w);
   }
 }
 
@@ -834,7 +834,7 @@ void OdeArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &joint
     benchmark::Vec<3> baseOrigin;
     baseOrigin.setZero();
 
-    updateJointPos(rootLink_, baseRotMat, baseOrigin);
+    updateBodyPos(rootLink_, baseRotMat, baseOrigin);
   }
   else {
     // floating body
@@ -855,7 +855,7 @@ void OdeArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &joint
         jointState[2]
     };
 
-    updateJointPos(rootLink_, baseRotMat, baseOrigin);
+    updateBodyPos(rootLink_, baseRotMat, baseOrigin);
   }
 }
 
@@ -873,7 +873,7 @@ void OdeArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double
     benchmark::Vec<3> baseOrigin;
     baseOrigin.setZero();
 
-    updateJointPos(rootLink_, baseRotMat, baseOrigin);
+    updateBodyPos(rootLink_, baseRotMat, baseOrigin);
   }
   else {
     // floating body
@@ -894,7 +894,7 @@ void OdeArticulatedSystem::setGeneralizedCoordinate(std::initializer_list<double
         jointState.begin()[2]
     };
 
-    updateJointPos(rootLink_, baseRotMat, baseOrigin);
+    updateBodyPos(rootLink_, baseRotMat, baseOrigin);
   }
 }
 
@@ -1056,6 +1056,13 @@ void OdeArticulatedSystem::getComPos_W(int bodyId, benchmark::Vec<3> &comPos) {
   comPos = {compos[0], compos[1], compos[2]};
 }
 
+void OdeArticulatedSystem::getComRot_W(int bodyId, benchmark::Mat<3, 3> &comOrientation) {
+  const dReal *comR = dBodyGetRotation(links_[bodyId]->odeBody_);
+  comOrientation.e() << comR[0], comR[1], comR[2],
+      comR[4], comR[5], comR[6],
+      comR[8], comR[9], comR[10];
+}
+
 const Eigen::Map<Eigen::Matrix<double, 3, 1>> OdeArticulatedSystem::getLinearMomentumInCartesianSpace() {
   linearMomentum_.setZero();
   for(int i = 0; i < links_.size(); i++) {
@@ -1088,13 +1095,12 @@ double OdeArticulatedSystem::getKineticEnergy() {
 
     double angular;
     benchmark::Mat<3,3> orientation_w;
-    benchmark::Vec<3> pos_w;
-    getBodyPose(i, orientation_w, pos_w);
+    getComRot_W(i, orientation_w);
 
     benchmark::Mat<3,3> I_w;
     benchmark::similarityTransform(orientation_w, links_[i]->inertial_.inertia_, I_w);
 
-    benchmark::Vec<3> omega;
+    benchmark::Vec<3> omega;  // angvel of inertial frame
     getBodyOmega_W(i, omega);
     benchmark::vecTransposeMatVecMul(omega, I_w, angular);
     kinetic += angular;
@@ -1116,55 +1122,156 @@ double OdeArticulatedSystem::getPotentialEnergy(const benchmark::Vec<3> &gravity
   return potential;
 }
 
-void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
-  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
-  RAIWARN("direct assigning joint velocity is not available. set only base velocity")
-  if(isFixed_) {
-    // fixed body
-    for(auto *joint: joints_) {
-      double rate = jointVel[joint->genvelIndex_];
-    }
-  }
-  else {
-    // floating body
-    dBodySetLinearVel(rootLink_.odeBody_,
-                      jointVel[0],
-                      jointVel[1],
-                      jointVel[2]);
-    dBodySetAngularVel(rootLink_.odeBody_,
-                       jointVel[3],
-                       jointVel[4],
-                       jointVel[5]);
 
-    for(auto *joint: joints_) {
-      double rate = jointVel[joint->genvelIndex_];
+void OdeArticulatedSystem::updateBodyVelocity(Link &link,
+                                              benchmark::Vec<3> &parentAngVel_w,
+                                              benchmark::Vec<3> &parentLinVel_w) {
+  /*
+  * body frame origin = COM (inertial frame)
+  * body frame orientation = inertial frame orientation
+  */
+
+  benchmark::Mat<3,3> parentOrientation_w;
+  benchmark::Vec<3> parentPosition_w;
+  getBodyPose(link.bodyIdx_, parentOrientation_w, parentPosition_w);
+
+  benchmark::Vec<3> parent2com_w;
+  getComPos_W(link.bodyIdx_, parent2com_w);
+  benchmark::vecsub(parentPosition_w, parent2com_w);
+
+  // {w}_bodylinvel = {w}_parentlinvel + {w}_w x {w}_r
+  benchmark::Vec<3> bodyLinVel_w = parentLinVel_w;
+  benchmark::crossThenAdd(parentAngVel_w, parent2com_w, bodyLinVel_w);
+
+  // {w}_bodyangvel = R_{com}_{w} * {w}_w
+  benchmark::Mat<3, 3> comOrientation_w;
+  getComRot_W(link.bodyIdx_, comOrientation_w);
+
+  benchmark::Vec<3> bodyAngVel_w;
+  benchmark::matTransposevecmul(comOrientation_w, parentAngVel_w, bodyAngVel_w);
+
+  dBodySetLinearVel(link.odeBody_, bodyLinVel_w[0], bodyLinVel_w[1], bodyLinVel_w[2]);
+  dBodySetAngularVel(link.odeBody_, bodyAngVel_w[0], bodyAngVel_w[1], bodyAngVel_w[2]);
+
+  // children
+  for(int i = 0; i < link.childrenLinks_.size(); i++) {
+    Link &childLink = link.childrenLinks_[i];
+
+    // joint position, axis, and orientation
+    benchmark::Vec<3> jointLinVel_w;
+    benchmark::Vec<3> jointAngVel_w;
+
+    switch (childLink.parentJoint_.type) {
+      case Joint::FIXED: {
+        jointAngVel_w = parentAngVel_w;
+
+        // {w}_bodylinvel = {w}_parentlinvel + {w}_w x {w}_r
+        benchmark::Mat<3,3> dummy;
+        benchmark::Vec<3> parent2joint_w;
+        getBodyPose(childLink.bodyIdx_, dummy, parent2joint_w);
+        benchmark::vecsub(parentPosition_w, parent2joint_w);
+
+        jointLinVel_w = parentLinVel_w;
+        benchmark::crossThenAdd(parentAngVel_w, parent2joint_w, jointLinVel_w);
+        break;
+      }
+      case Joint::REVOLUTE: {
+        double rate = genVelocity_[childLink.parentJoint_.genvelIndex_];
+        dReal axis[3];
+        dJointGetHingeAxis(childLink.parentJoint_.odeJoint_, axis);
+
+        // ang vel
+        jointAngVel_w[0] = parentAngVel_w[0] + axis[0] * rate;
+        jointAngVel_w[1] = parentAngVel_w[1] + axis[1] * rate;
+        jointAngVel_w[2] = parentAngVel_w[2] + axis[2] * rate;
+
+        // {w}_jointlinvel = {w}_parentlinvel + {w}_w x {w}_r
+        benchmark::Mat<3,3> dummy;
+        benchmark::Vec<3> parent2joint_w;
+        getBodyPose(childLink.bodyIdx_, dummy, parent2joint_w);
+        benchmark::vecsub(parentPosition_w, parent2joint_w);
+
+        jointLinVel_w = parentLinVel_w;
+        benchmark::crossThenAdd(parentAngVel_w, parent2joint_w, jointLinVel_w);
+        break;
+      }
+      case Joint::PRISMATIC: {
+        double rate = genVelocity_[childLink.parentJoint_.genvelIndex_];
+        RAIFATAL("not implemented yet");
+        break;
+      }
+      default:
+      RAIFATAL("currently only support revolute/prismatic/fixed joint");
     }
+
+    updateBodyVelocity(childLink, jointAngVel_w, jointLinVel_w);
   }
+
+
 }
 
-void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+void OdeArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel) {
   RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
-  RAIWARN("direct assigning joint velocity is not available. set only base velocity")
+  RAIWARN("direct assigning joint velocity is not tested!")
+
+  for(int i = 0; i < dof_; i++)
+    genVelocity_[i]= jointVel[i];
+
   if(isFixed_) {
     // fixed body
-    for(auto *joint: joints_) {
-      double rate = jointVel.begin()[joint->genvelIndex_];
-    }
+    benchmark::Vec<3> baseLinVel;
+    benchmark::Vec<3> baseAngVel;
+    baseLinVel = {0, 0, 0};
+    baseAngVel = {0, 0, 0};
+    updateBodyVelocity(rootLink_, baseAngVel, baseLinVel);
   }
   else {
     // floating body
-    dBodySetLinearVel(rootLink_.odeBody_,
-                      jointVel.begin()[0],
-                      jointVel.begin()[1],
-                      jointVel.begin()[2]);
-    dBodySetAngularVel(rootLink_.odeBody_,
-                       jointVel.begin()[3],
-                       jointVel.begin()[4],
-                       jointVel.begin()[5]);
+    benchmark::Vec<3> baseLinVel;
+    benchmark::Vec<3> baseAngVel;
+    baseLinVel = {
+        jointVel[0],
+        jointVel[1],
+        jointVel[2]
+    };
+    baseAngVel = {
+        jointVel[3],
+        jointVel[4],
+        jointVel[5]
+    };
+    updateBodyVelocity(rootLink_, baseAngVel, baseLinVel);
+  }
+}
+void OdeArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> jointVel) {
+  RAIFATAL_IF(jointVel.size() != dof_, "invalid generalized velocity input")
+  RAIWARN("direct assigning joint velocity is not tested!")
 
-    for(auto *joint: joints_) {
-      double rate = jointVel.begin()[joint->genvelIndex_];
-    }
+  for(int i = 0; i < dof_; i++)
+    genVelocity_[i]= jointVel.begin()[i];
+
+  if(isFixed_) {
+    // fixed body
+    benchmark::Vec<3> baseLinVel;
+    benchmark::Vec<3> baseAngVel;
+    baseLinVel = {0, 0, 0};
+    baseAngVel = {0, 0, 0};
+    updateBodyVelocity(rootLink_, baseAngVel, baseLinVel);
+  }
+  else {
+    // floating body
+    benchmark::Vec<3> baseLinVel;
+    benchmark::Vec<3> baseAngVel;
+    baseLinVel = {
+        jointVel.begin()[0],
+        jointVel.begin()[1],
+        jointVel.begin()[2]
+    };
+    baseAngVel = {
+        jointVel.begin()[3],
+        jointVel.begin()[4],
+        jointVel.begin()[5]
+    };
+    updateBodyVelocity(rootLink_, baseAngVel, baseLinVel);
   }
 }
 

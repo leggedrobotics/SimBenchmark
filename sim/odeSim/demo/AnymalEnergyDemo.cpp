@@ -26,7 +26,7 @@ int main(int argc, const char* argv[]) {
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(0.8);
 
-  auto anymal = sim.addArticulatedSystem(urdfPath);
+  auto anymal = sim.addArticulatedSystem(urdfPath, 1, 0);
   anymal->setGeneralizedCoordinate(
       {0, 0, 10,
        1.0, 0.0, 0.0, 0.0,
@@ -48,12 +48,14 @@ int main(int argc, const char* argv[]) {
 
   sim.cameraFollowObject(checkerboard, {15.0, 0.0, 15.0});
 
-  double E0 = anymal->getEnergy({0, 0, g});
+  double E0 = 0;
   for(int i = 0; i < int(5.0/dt) && sim.visualizerLoop(dt, 1.0); i++) {
     sim.integrate(dt);
+    if(i == 0) E0 = anymal->getEnergy({0, 0, g});
     kenergy.push_back(anymal->getEnergy({0, 0, g}));
   }
 
+  RAIINFO("initial E = " << E0)
   showplot(E0);
   return 0;
 }
