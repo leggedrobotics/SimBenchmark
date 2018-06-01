@@ -9,7 +9,7 @@ int main() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/Atlas/";
+  urdfPath += "../../../res/Atlas/robot.urdf";
 
   rai_sim::World_RG sim(1280, 720, 0.2, rai_sim::NO_BACKGROUND);
   sim.setLightPosition(0, -10, 10);

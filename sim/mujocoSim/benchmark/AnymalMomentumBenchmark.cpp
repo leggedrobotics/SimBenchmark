@@ -118,6 +118,9 @@ int main(int argc, const char* argv[]) {
   benchmark::anymal::zerogravity::getOptionsFromArg(argc, argv, desc);
   benchmark::mujoco::getOptionsFromArg(argc, argv, desc);
 
+  benchmark::anymal::zerogravity::getParamsFromYAML(benchmark::anymal::zerogravity::getYamlpath().c_str(),
+                                                    benchmark::MUJOCO);
+
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: MUJOCO" << std::endl

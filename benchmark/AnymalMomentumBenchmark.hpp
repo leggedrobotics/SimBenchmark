@@ -43,7 +43,7 @@ struct Parameter {
   double lightPosition[3] = {30.0, 0, 10.0};
 
   double T = 10;      // simulation time (sec)
-  double H = 2;
+  double H = 2.0;
   double x0 = -5;
   double v0 = 2;
   double M = 0;       // will be updated!
@@ -62,7 +62,7 @@ std::string getURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/ANYmal-nomesh/";
+  urdfPath += "../res/ANYmal-nomesh/robot.urdf";
 
   return urdfPath;
 }
@@ -120,7 +120,7 @@ std::string getYamlpath() {
   std::string yamlPath(__FILE__);
   while (yamlPath.back() != '/')
     yamlPath.erase(yamlPath.size() - 1, 1);
-  yamlPath += "./yaml/anymal-zerogravity.yaml";
+  yamlPath += "./yaml/anymal-momentum.yaml";
 
   return yamlPath;
 }

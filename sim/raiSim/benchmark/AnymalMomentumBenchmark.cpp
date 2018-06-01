@@ -136,6 +136,9 @@ int main(int argc, const char* argv[]) {
   benchmark::anymal::zerogravity::addDescToOption(desc);
   benchmark::anymal::zerogravity::getOptionsFromArg(argc, argv, desc);
 
+  benchmark::anymal::zerogravity::getParamsFromYAML(benchmark::anymal::zerogravity::getYamlpath().c_str(),
+                                                    benchmark::RAI);
+
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: RAI" << std::endl

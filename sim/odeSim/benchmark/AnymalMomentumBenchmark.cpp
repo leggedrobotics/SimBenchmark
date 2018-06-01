@@ -128,6 +128,9 @@ int main(int argc, const char* argv[]) {
   benchmark::anymal::zerogravity::getOptionsFromArg(argc, argv, desc);
   benchmark::ode::getOptionsFromArg(argc, argv, desc);
 
+  benchmark::anymal::zerogravity::getParamsFromYAML(benchmark::anymal::zerogravity::getYamlpath().c_str(),
+                                                    benchmark::ODE);
+
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: ODE" << std::endl

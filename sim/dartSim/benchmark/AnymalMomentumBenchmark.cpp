@@ -126,6 +126,9 @@ int main(int argc, const char* argv[]) {
   benchmark::anymal::zerogravity::getOptionsFromArg(argc, argv, desc);
   benchmark::dart::getOptionsFromArg(argc, argv, desc);
 
+  benchmark::anymal::zerogravity::getParamsFromYAML(benchmark::anymal::zerogravity::getYamlpath().c_str(),
+                                                    benchmark::DART);
+
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: DART" << std::endl

@@ -8,7 +8,7 @@ int main() {
 
   dart_sim::DartSim dartSim(800, 600, 0.5, 0,
                                  dart_sim::SOLVER_LCP_PGS,
-                                 dart_sim::COLLISION_DETECTOR_DART);
+                                 dart_sim::COLLISION_DETECTOR_BULLET);
 
   dartSim.setGravity({0,0,0});
   dartSim.setLightPosition(30, 0, 10);

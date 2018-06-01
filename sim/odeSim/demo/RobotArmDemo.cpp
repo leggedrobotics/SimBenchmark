@@ -14,7 +14,7 @@ int main() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/2DRobotArm/";
+  urdfPath += "../../../res/2DRobotArm/robot.urdf";
 
   ode_sim::OdeSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 

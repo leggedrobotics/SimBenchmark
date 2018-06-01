@@ -10,7 +10,7 @@ int main() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/Atlas/";
+  urdfPath += "../../../res/Atlas/robot.urdf";
 
   dart_sim::DartSim sim(800, 600, 0.2, benchmark::NO_BACKGROUND);
   sim.setLightPosition(0, -10, 10);

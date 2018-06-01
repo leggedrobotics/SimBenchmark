@@ -14,7 +14,6 @@ OdeArticulatedSystem::OdeArticulatedSystem(std::string urdfFile,
                                            int collisionMask)
     : worldID_(worldID), spaceID_(spaceID), collisionGroup_(collisionGroup), collisionMask_(collisionMask) {
 
-  urdfFile += "robot.urdf";
   std::ifstream model_file(urdfFile);
   RAIFATAL_IF(!model_file.good(), "Error opening file: " << urdfFile);
 

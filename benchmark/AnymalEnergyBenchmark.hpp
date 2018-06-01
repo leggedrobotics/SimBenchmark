@@ -71,7 +71,7 @@ std::string getURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/ANYmal-energy/";
+  urdfPath += "../res/ANYmal-energy/robot.urdf";
 
   return urdfPath;
 }
@@ -116,7 +116,7 @@ std::string getYamlpath() {
   std::string yamlPath(__FILE__);
   while (yamlPath.back() != '/')
     yamlPath.erase(yamlPath.size() - 1, 1);
-  yamlPath += "./yaml/anymal-freedrop.yaml";
+  yamlPath += "./yaml/anymal-energy.yaml";
 
   return yamlPath;
 }

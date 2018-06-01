@@ -19,7 +19,7 @@ int main(int argc, const char* argv[]) {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/ANYmal/";
+  urdfPath += "../../../res/ANYmal/robot.urdf";
 
   bullet_mb_sim::BtMbSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 

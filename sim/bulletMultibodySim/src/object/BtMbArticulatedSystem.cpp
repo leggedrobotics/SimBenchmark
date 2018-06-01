@@ -27,7 +27,7 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
       if(maximalCoordinate)
         RAIWARN("maximal coordinate is not supported yet")
 
-      objectId = api->loadURDF(filePath + "/robot.urdf", args);
+      objectId = api->loadURDF(filePath, args);
       break;
     }
     case SDF:
