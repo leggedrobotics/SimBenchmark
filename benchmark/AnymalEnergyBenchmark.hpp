@@ -143,7 +143,7 @@ std::string getCSVpath() {
   while (csvPath.back() != '/')
     csvPath.erase(csvPath.size() - 1, 1);
 
-  csvPath += "../data/anymal-freedrop/" + options.csvName;
+  csvPath += "../data/anymal-energy/" + options.csvName;
 
   return csvPath;
 }

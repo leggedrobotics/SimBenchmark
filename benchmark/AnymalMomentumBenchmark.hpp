@@ -95,7 +95,7 @@ std::string getLogFilepath(bool feedback) {
   while (logPath.back() != '/')
     logPath.erase(logPath.size() - 1, 1);
 
-  logPath += "../data/anymal-zero-g/log.csv";
+  logPath += "../data/anymal-momentum/log.csv";
   return logPath;
 }
 
@@ -105,7 +105,7 @@ std::string getCSVpath() {
   while (csvPath.back() != '/')
     csvPath.erase(csvPath.size() - 1, 1);
 
-  csvPath += "../data/anymal-zeroG/" + options.csvName;
+  csvPath += "../data/anymal-momentum/" + options.csvName;
 
   return csvPath;
 }
