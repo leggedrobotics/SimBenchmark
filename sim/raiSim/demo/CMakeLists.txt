@@ -4,6 +4,9 @@ target_link_libraries(RaiStackDemo ${RAI_SIM_LINK})
 add_executable(RaiAnymalDemo AnymalDemo.cpp)
 target_link_libraries(RaiAnymalDemo ${RAI_SIM_LINK})
 
+add_executable(RaiAnymalEnergyDemo AnymalEnergyDemo.cpp)
+target_link_libraries(RaiAnymalEnergyDemo ${RAI_SIM_LINK})
+
 add_executable(RaiAtlasDemo AtlasDemo.cpp)
 target_link_libraries(RaiAtlasDemo ${RAI_SIM_LINK})
 

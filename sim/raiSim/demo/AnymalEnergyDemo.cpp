@@ -3,8 +3,8 @@
 //
 
 #include <boost/program_options.hpp>
-#include "OdeSim.hpp"
 
+#include "raiSim/World_RG.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define VIDEO_SAVE_MODE
@@ -21,10 +21,9 @@ int main(int argc, const char* argv[]) {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/ANYmal-energy/robot.urdf";
 
-  ode_sim::OdeSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
+  rai_sim::World_RG sim(800, 600, 0.5, rai_sim::NO_BACKGROUND);
 
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
-  checkerboard->setFrictionCoefficient(0.8);
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
 
   auto anymal = sim.addArticulatedSystem(urdfPath);
   anymal->setGeneralizedCoordinate(
@@ -42,8 +41,8 @@ int main(int argc, const char* argv[]) {
        0.0, 0.0, 0.0,
        0.0, 0.0, 0.0});
 
-  double g = 0;
-  double dt = 0.05;
+  double g = -0;
+  double dt = 0.005;
   sim.setGravity({0, 0, g});
 
   sim.cameraFollowObject(checkerboard, {15.0, 0.0, 15.0});

@@ -48,6 +48,10 @@ ArticulatedSystemHandle BtMbSim::addArticulatedSystem(std::string nm,
     return handle;
   }
 
+  // for mesh file path
+  while (nm.back() != '/')
+    nm.erase(nm.size() - 1, 1);
+
   for (int i = 0; i < handle->visObj.size(); i++) {
     switch (std::get<3>(handle->visObj[i])) {
       case benchmark::object::Shape::Box:

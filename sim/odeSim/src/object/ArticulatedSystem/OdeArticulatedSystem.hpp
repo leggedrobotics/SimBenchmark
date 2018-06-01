@@ -212,15 +212,13 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
   void getComPos_W(int bodyId,
                    benchmark::Vec<3> &comPos);
 
- private:
-  /// these functions are not implemented yet
   /**
-   * not completed
+   * not completed only set base velocity
    */
   void setGeneralizedVelocity(const Eigen::VectorXd &jointVel) override;
 
   /**
-   * not completed
+   * not completed only set base velocity
    */
   void setGeneralizedVelocity(std::initializer_list<double> jointVel) override;
 
@@ -292,6 +290,7 @@ class OdeArticulatedSystem: public bo::ArticulatedSystemInterface,
 
   // the head of links_ is the pointer of rootLink
   std::vector<Link *> links_;
+  // the head of joints_ is NOT rootJoint.
   std::vector<Joint *> joints_;
 
   benchmark::Vec<3> linearMomentum_;
