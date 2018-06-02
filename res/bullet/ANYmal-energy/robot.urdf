@@ -142,7 +142,7 @@
     <joint name="LF_HFE" type="continuous">
         <parent link="LF_HIP"/>
         <child link="LF_THIGH"/>
-        <origin xyz="0.0585                    0.0315                    0.0"/>
+        <origin xyz="0.0585 0.0315 0.0"/>
         <axis xyz="0 1 0"/>
         <limit effort="80" velocity="15"/>
         <dynamics damping="0.0" friction="0.0"/>

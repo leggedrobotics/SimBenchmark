@@ -814,7 +814,7 @@ double object::BtMbArticulatedSystem::getKineticEnergy() {
       benchmark::Vec<3> compos;
       getComPose_W(i-1, compos, comrotmat);
       benchmark::Mat<3,3> I_w;
-      benchmark::similarityTransform(comrotmat, inertia_[i], I_w);
+      benchmark::similarityTransform(comrotmat, inertia_[i], I_w);    // checked!
 
       double angular = 0;
       benchmark::vecTransposeMatVecMul(comAngVel, I_w, angular);
@@ -922,7 +922,12 @@ void object::BtMbArticulatedSystem::getComVelocity_W(int linkId, benchmark::Vec<
     };
     benchmark::Mat<3,3> rotmat;
     benchmark::quatToRotMat(quaternion, rotmat);
-    benchmark::matvecmul(rotmat, {bAngvel.x(), bAngvel.y(), bAngvel.z()}, angVel_w);
+
+    angVel_w = {
+        bAngvel.x(),
+        bAngvel.y(),
+        bAngvel.z()
+    };
 
     benchmark::Vec<3> r_w;
     linVel_w = {
@@ -931,7 +936,7 @@ void object::BtMbArticulatedSystem::getComVelocity_W(int linkId, benchmark::Vec<
         bLinVel.z(),
     };
     benchmark::matvecmul(rotmat, localInertialPos_[0], r_w);
-    benchmark::crossThenAdd({bAngvel.x(), bAngvel.y(), bAngvel.z()}, r_w, linVel_w);
+    benchmark::crossThenAdd(angVel_w, r_w, linVel_w);
   }
   else {
 
@@ -944,14 +949,11 @@ void object::BtMbArticulatedSystem::getComVelocity_W(int linkId, benchmark::Vec<
         state.m_worldLinearVelocity[2]
     };
 
-    benchmark::Vec<3> bodyAngVel_w = {
+    benchmark::Vec<3> angVel_w = {
         state.m_worldAngularVelocity[0],
         state.m_worldAngularVelocity[1],
         state.m_worldAngularVelocity[2]
     };
-
-//    angVel_w = bodyAngVel_w;
-    benchmark::matvecmul(localInertialR_[linkId+1], bodyAngVel_w, angVel_w);
   }
 }
 
@@ -999,9 +1001,7 @@ void object::BtMbArticulatedSystem::getComPose_W(int linkId, benchmark::Vec<3> &
         linkState.m_worldOrientation[1],  // y
         linkState.m_worldOrientation[2]   // z
     };
-    benchmark::Mat<3,3> rotmat;
-    benchmark::quatToRotMat(quat, rotmat);
-    benchmark::matmul(rotmat, localInertialR_[linkId+1], inertialOrientation_w);
+    benchmark::quatToRotMat(quat, inertialOrientation_w);
   }
 }
 

@@ -19,7 +19,7 @@ int main(int argc, const char* argv[]) {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/ANYmal-energy-demo/robot.urdf";
+  urdfPath += "../../../res/ANYmal-energy/robot.urdf";
 
   rai_sim::World_RG sim(800, 600, 0.5, rai_sim::NO_BACKGROUND);
 
