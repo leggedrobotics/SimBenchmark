@@ -18,7 +18,7 @@ class DartSim: public benchmark::WorldRG {
   DartSim(int windowWidth,
           int windowHeight,
           float cms,
-          int flags,
+          int flags = 0,
           SolverOption solverOption = SOLVER_LCP_DANTZIG,
           CollisionDetectorOption detectorOption = COLLISION_DETECTOR_BULLET);
 

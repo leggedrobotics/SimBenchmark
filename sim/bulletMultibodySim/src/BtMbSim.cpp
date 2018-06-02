@@ -7,7 +7,8 @@
 namespace bullet_mb_sim {
 
 BtMbSim::BtMbSim(int windowWidth, int windowHeight, float cms, int flags)
-    : WorldRG(windowWidth, windowHeight, cms, flags), world_() {}
+    : WorldRG(windowWidth, windowHeight, cms, flags), world_() {
+}
 
 BtMbSim::BtMbSim() : world_() {}
 

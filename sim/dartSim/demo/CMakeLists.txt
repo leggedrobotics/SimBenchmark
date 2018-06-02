@@ -15,3 +15,6 @@ target_link_libraries(DartRigidBodyDemo ${DartSimLink})
 
 add_executable(DartBuildingDemo BuildingDemo.cpp)
 target_link_libraries(DartBuildingDemo ${DartSimLink})
+
+add_executable(DartStackDemo StackDemo.cpp)
+target_link_libraries(DartStackDemo ${DartSimLink})

@@ -3,8 +3,8 @@
 //
 
 #include <boost/program_options.hpp>
+#include "BtSim.hpp"
 
-#include "raiSim/World_RG.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
 //#define VIDEO_SAVE_MODE
@@ -19,11 +19,12 @@ int main(int argc, const char* argv[]) {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/ANYmal-energy-demo/robot.urdf";
+  urdfPath += "../../../res/bullet/ANYmal-energy/robot.urdf";
 
-  rai_sim::World_RG sim(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+  bullet_sim::BtSim sim(800, 600, 0.5, bullet_sim::SOLVER_MULTI_BODY, benchmark::NO_BACKGROUND);
 
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
+  checkerboard->setFrictionCoefficient(0.8);
 
   auto anymal = sim.addArticulatedSystem(urdfPath, 1, 0);
   anymal->setGeneralizedCoordinate(
@@ -40,18 +41,19 @@ int main(int argc, const char* argv[]) {
        0.0, 0.0, 0.0,
        0.0, 0.0, 0.0,
        0.0, 0.0, 0.0});
+  RAIINFO(anymal->getGeneralizedVelocity())
 
-  double g = -0;
-  double dt = 0.005;
+  double g = 0;
+  double dt = 0.05;
   sim.setGravity({0, 0, g});
+
   sim.cameraFollowObject(checkerboard, {15.0, 0.0, 15.0});
 
   double E0 = 0;
   for(int i = 0; i < int(5.0/dt) && sim.visualizerLoop(dt, 1.0); i++) {
-    sim.integrate1(dt);
-    if(i == 0) E0 = anymal->getEnergy({0, 0, g});
+    sim.integrate(dt);
     kenergy.push_back(anymal->getEnergy({0, 0, g}));
-    sim.integrate2(dt);
+    if(i == 0) E0 = anymal->getEnergy({0, 0, g});
   }
 
   RAIINFO("initial E = " << E0)

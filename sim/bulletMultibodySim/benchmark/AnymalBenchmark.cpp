@@ -29,7 +29,10 @@ void setupWorld() {
   for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
     for(int j = 0; j < benchmark::anymal::options.numRow; j++) {
       auto anymal =
-          sim->addArticulatedSystem(benchmark::anymal::getURDFpath(), bullet_mb_sim::object::URDF);
+          sim->addArticulatedSystem(benchmark::anymal::getURDFpath(),
+                                    bullet_mb_sim::object::URDF,
+                                    true,
+                                    benchmark::bulletmultibody::options.maximalCoordinate);
       anymal->setGeneralizedCoordinate(
           {i * 2.0,
            j * 2.0,
@@ -147,9 +150,9 @@ void simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::anymal::addDescToOption(desc);
-  benchmark::anymal::getOptionsFromArg(argc, argv, desc);
-
   benchmark::bulletmultibody::addDescToOption(desc);
+
+  benchmark::anymal::getOptionsFromArg(argc, argv, desc);
   benchmark::bulletmultibody::getOptionsFromArg(argc, argv, desc);
 
   benchmark::anymal::getParamsFromYAML(benchmark::anymal::getYamlpath().c_str(),

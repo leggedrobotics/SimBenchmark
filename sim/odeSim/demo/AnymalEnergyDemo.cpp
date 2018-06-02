@@ -41,6 +41,7 @@ int main(int argc, const char* argv[]) {
        0.0, 0.0, 0.0,
        0.0, 0.0, 0.0,
        0.0, 0.0, 0.0});
+  RAIINFO(anymal->getGeneralizedVelocity())
 
   double g = 0;
   double dt = 0.05;
@@ -48,11 +49,10 @@ int main(int argc, const char* argv[]) {
 
   sim.cameraFollowObject(checkerboard, {15.0, 0.0, 15.0});
 
-  double E0 = 0;
+  double E0 = anymal->getEnergy({0, 0, g});
   for(int i = 0; i < int(5.0/dt) && sim.visualizerLoop(dt, 1.0); i++) {
-    sim.integrate(dt);
-    if(i == 0) E0 = anymal->getEnergy({0, 0, g});
     kenergy.push_back(anymal->getEnergy({0, 0, g}));
+    sim.integrate(dt);
   }
 
   RAIINFO("initial E = " << E0)

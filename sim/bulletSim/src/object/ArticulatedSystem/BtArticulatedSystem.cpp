@@ -9,7 +9,6 @@ namespace object {
 
 BtArticulatedSystem::BtArticulatedSystem(std::string urdfFile, btMultiBodyDynamicsWorld *world): dynamicsWorld_(world) {
 
-  urdfFile += "robot.urdf";
   importer_ = new BulletURDFImporter(0, 0, 1.0, CUF_USE_IMPLICIT_CYLINDER | CUF_USE_URDF_INERTIA | CUF_USE_SELF_COLLISION);
   bool loadOK = importer_->loadURDF(urdfFile.c_str());
 
@@ -65,7 +64,6 @@ void BtArticulatedSystem::init() {
 
   for (int i = 0; i < multiBody_->getNumLinks(); i++) {
     switch(multiBody_->getLink(i).m_jointType) {
-      
       case btMultibodyLink::eRevolute: {
         // 1 DOF
         movableLinkIdx_.push_back(i);
@@ -382,7 +380,7 @@ void BtArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel
     // fixed
     int i = 0;
     for (int l: movableLinkIdx_) {
-      multiBody_->setJointPos(l, jointVel[i++]);
+      multiBody_->setJointVel(l, jointVel[i++]);
     }
   } else {
     // floating
@@ -397,7 +395,7 @@ void BtArticulatedSystem::setGeneralizedVelocity(const Eigen::VectorXd &jointVel
 
     int i = 6;
     for (int l: movableLinkIdx_) {
-      multiBody_->setJointPos(l, jointVel[i++]);
+      multiBody_->setJointVel(l, jointVel[i++]);
     }
   }
 }
@@ -437,7 +435,7 @@ void BtArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> j
     // fixed
     int i = 0;
     for (int l: movableLinkIdx_) {
-      multiBody_->setJointPos(l, jointVel.begin()[i++]);
+      multiBody_->setJointVel(l, jointVel.begin()[i++]);
     }
   } else {
     // floating
@@ -452,7 +450,7 @@ void BtArticulatedSystem::setGeneralizedVelocity(std::initializer_list<double> j
 
     int i = 6;
     for (int l: movableLinkIdx_) {
-      multiBody_->setJointPos(l, jointVel.begin()[i++]);
+      multiBody_->setJointVel(l, jointVel.begin()[i++]);
     }
   }
 }

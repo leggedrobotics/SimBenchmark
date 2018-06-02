@@ -34,15 +34,23 @@ int main(int argc, const char* argv[]) {
        -0.03, 0.4, -0.8,
        0.03, -0.4, 0.8,
        -0.03, -0.4, 0.8});
+//  anymal->setGeneralizedCoordinate(
+//      {0, 0, 10,
+//       1.0, 0.0, 0.0, 0.0,
+//       0, 0, 0,
+//       0, 0, 0,
+//       0, 0, 0,
+//       0, 0, 0});
   anymal->setGeneralizedVelocity(
       {0, 0, 0,
        0.2, 1.0, 0.5,
-       0.1, 0.2, 0.3,
-       0.4, 0.5, 0.6,
-       0.7, 0.8, 0.9,
-       1.0, 1.1, 1.2});
+       0.0, 0.0, 0.0,
+       0.0, 0.0, 0.0,
+       0.0, 0.0, 0.0,
+       0.0, 0.0, 0.0});
+  RAIINFO(anymal->getGeneralizedVelocity())
 
-  double g = -0;
+  double g = 0;
   double dt = 0.005;
   sim.setGravity({0, 0, g});
   sim.setTimeStep(dt);
@@ -51,8 +59,8 @@ int main(int argc, const char* argv[]) {
 
   double E0 = anymal->getEnergy({0, 0, g});
   for(int i = 0; i < int(5.0/dt) && sim.visualizerLoop(dt, 1.0); i++) {
-    sim.integrate();
     kenergy.push_back(anymal->getEnergy({0, 0, g}));
+    sim.integrate();
   }
 
   RAIINFO("initial E = " << E0)

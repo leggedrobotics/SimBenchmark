@@ -65,12 +65,30 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     api_->getDynamicsInfo(objectId, -1, &info);
     mass_.push_back(info.m_mass);
 
+    // inertia expressed in principal axis
     benchmark::Mat<3,3> inertia;
     inertia.setZero();
     inertia[0] = info.m_localInertialDiagonal[0];
     inertia[4] = info.m_localInertialDiagonal[1];
     inertia[8] = info.m_localInertialDiagonal[2];
     inertia_.push_back(inertia);
+
+    benchmark::Mat<3,3> localInertialR;
+    benchmark::Vec<4> localInertialQuat = {
+        info.m_localInertialFrame[6], // w
+        info.m_localInertialFrame[3], // x
+        info.m_localInertialFrame[4], // y
+        info.m_localInertialFrame[5]  // z
+    };
+    benchmark::quatToRotMat(localInertialQuat, localInertialR);
+    localInertialR_.push_back(localInertialR);
+
+    benchmark::Vec<3> localInertialPos = {
+        info.m_localInertialFrame[0],
+        info.m_localInertialFrame[1],
+        info.m_localInertialFrame[2]
+    };
+    localInertialPos_.push_back(localInertialPos);
 
     b3RobotSimulatorChangeDynamicsArgs arg;
     arg.m_lateralFriction = 0.8;
@@ -90,12 +108,30 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     api_->getDynamicsInfo(objectId, i, &info);
     mass_.push_back(info.m_mass);
 
+    // inertia expressed in principal axis
     benchmark::Mat<3,3> inertia;
     inertia.setZero();
     inertia[0] = info.m_localInertialDiagonal[0];
     inertia[4] = info.m_localInertialDiagonal[1];
     inertia[8] = info.m_localInertialDiagonal[2];
     inertia_.push_back(inertia);
+
+    benchmark::Mat<3,3> localInertialR;
+    benchmark::Vec<4> localInertialQuat = {
+        info.m_localInertialFrame[6], // w
+        info.m_localInertialFrame[3], // x
+        info.m_localInertialFrame[4], // y
+        info.m_localInertialFrame[5] // z
+    };
+    benchmark::quatToRotMat(localInertialQuat, localInertialR);
+    localInertialR_.push_back(localInertialR);
+
+    benchmark::Vec<3> localInertialPos = {
+        info.m_localInertialFrame[0],
+        info.m_localInertialFrame[1],
+        info.m_localInertialFrame[2]
+    };
+    localInertialPos_.push_back(localInertialPos);
 
     b3RobotSimulatorChangeDynamicsArgs arg;
     arg.m_lateralFriction = 0.8;
@@ -708,23 +744,26 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1>> object::BtMbArticulatedSystem::get
 
   {
     // base
-    btVector3 bLinVel;
-    btVector3 bAngvel;
-    api_->getBaseVelocity(objectId_, bLinVel, bAngvel);
+    benchmark::Vec<3> comlinvel;
+    benchmark::Vec<3> comangvel;
+    getComVelocity_W(-1, comlinvel, comangvel);
 
-    linearMomentum_[0] = bLinVel.x() * mass_[0];
-    linearMomentum_[1] = bLinVel.y() * mass_[0];
-    linearMomentum_[2] = bLinVel.z() * mass_[0];
+
+    linearMomentum_[0] = comlinvel[0] * mass_[0];
+    linearMomentum_[1] = comlinvel[1] * mass_[0];
+    linearMomentum_[2] = comlinvel[2] * mass_[0];
   }
 
   // link
   for (int i = 1; i < mass_.size(); i++) {
-    benchmark::Vec<3> comVel;
-    getComVelocity_W(i-1, comVel);
+    benchmark::Vec<3> comlinvel;
+    benchmark::Vec<3> comangvel;
+    getComVelocity_W(i-1, comlinvel, comangvel);
 
-    linearMomentum_[0] += comVel[0] * mass_[i];
-    linearMomentum_[1] += comVel[1] * mass_[i];
-    linearMomentum_[2] += comVel[2] * mass_[i];
+
+    linearMomentum_[0] = comlinvel[0] * mass_[i];
+    linearMomentum_[1] = comlinvel[1] * mass_[i];
+    linearMomentum_[2] = comlinvel[2] * mass_[i];
   }
 
   return linearMomentum_.e();
@@ -742,75 +781,45 @@ double object::BtMbArticulatedSystem::getKineticEnergy() {
 
   {
     // base
-    // kinetic energy (x 0.5 at the last)
-    btVector3 bLinVel;
-    btVector3 bAngvel;
-    api_->getBaseVelocity(objectId_, bLinVel, bAngvel);
-
-    btVector3 bPosition;
-    btQuaternion bQuaternion;
-    api_->getBasePositionAndOrientation(objectId_, bPosition, bQuaternion);
+    // kinetic energy (x 0.5 at the last
+    benchmark::Vec<3> comLinVel;
+    benchmark::Vec<3> comAngVel;
+    getComVelocity_W(-1, comLinVel, comAngVel);
 
     // linear
-    kinetic += mass_[0] * bLinVel.dot(bLinVel);
+    kinetic += mass_[0] * pow(comLinVel.norm(), 2);
 
-    benchmark::Vec<4> quaternion = {
-        bQuaternion.w(),   // w
-        bQuaternion.x(),   // x
-        bQuaternion.y(),   // y
-        bQuaternion.z()    // z
-    };
-    benchmark::Mat<3,3> rotmat;
+    benchmark::Mat<3,3> comrotmat;
+    benchmark::Vec<3> compos;
+    getComPose_W(-1, compos, comrotmat);
     benchmark::Mat<3,3> I_w;
-    benchmark::quatToRotMat(quaternion, rotmat);
-    benchmark::similarityTransform(rotmat, inertia_[0], I_w);
+    benchmark::similarityTransform(comrotmat, inertia_[0], I_w);
 
-    double angular;
-    benchmark::Vec<3> angVel = {
-        bAngvel.x(),
-        bAngvel.y(),
-        bAngvel.z()
-    };
-    benchmark::vecTransposeMatVecMul(angVel, I_w, angular);
+    double angular = 0;
+    benchmark::vecTransposeMatVecMul(comAngVel, I_w, angular);
     kinetic += angular;
   }
 
   {
     // link
     for (int i = 1; i < mass_.size(); i++) {
-      b3LinkState state;
-      api_->getLinkState(objectId_, i-1, &state);
-      {
-        // from com velocity
-        kinetic += mass_[i] * (
-            pow(state.m_worldLinearVelocity[0], 2)
-                + pow(state.m_worldLinearVelocity[1], 2)
-                + pow(state.m_worldLinearVelocity[2], 2)
-        );
+      benchmark::Vec<3> comLinVel;
+      benchmark::Vec<3> comAngVel;
+      getComVelocity_W(i-1, comLinVel, comAngVel);
 
-        benchmark::Vec<4> quaternion = {
-            state.m_worldOrientation[3],   // w
-            state.m_worldOrientation[0],   // x
-            state.m_worldOrientation[1],   // y
-            state.m_worldOrientation[2]    // z
-        };
-        benchmark::Mat<3,3> rotmat;
-        benchmark::Mat<3,3> I_w;
-        benchmark::quatToRotMat(quaternion, rotmat);
-        benchmark::similarityTransform(rotmat, inertia_[i], I_w);
+      // linear
+      kinetic += mass_[i] * pow(comLinVel.norm(), 2);
 
-        double angular;
-        benchmark::Vec<3> angVel = {
-            state.m_worldAngularVelocity[0],
-            state.m_worldAngularVelocity[1],
-            state.m_worldAngularVelocity[2]
-        };
-        benchmark::vecTransposeMatVecMul(angVel, I_w, angular);
-        kinetic += angular;
-      }
+      benchmark::Mat<3,3> comrotmat;
+      benchmark::Vec<3> compos;
+      getComPose_W(i-1, compos, comrotmat);
+      benchmark::Mat<3,3> I_w;
+      benchmark::similarityTransform(comrotmat, inertia_[i], I_w);
 
+      double angular = 0;
+      benchmark::vecTransposeMatVecMul(comAngVel, I_w, angular);
+      kinetic += angular;
     }
-
   }
 
   return 0.5 * kinetic;
@@ -821,27 +830,24 @@ double object::BtMbArticulatedSystem::getPotentialEnergy(const benchmark::Vec<3>
 
   {
     // base
-    btVector3 bPosition;
-    btQuaternion bQuaternion;
-    api_->getBasePositionAndOrientation(objectId_, bPosition, bQuaternion);
+    benchmark::Vec<3> compos_w;
+    benchmark::Mat<3,3> comR_w;
+    getComPose_W(-1, compos_w, comR_w);
 
-    // potential energy
-    potential -= mass_[0] * bPosition.dot({gravity[0], gravity[1], gravity[2]});
+    potential -= mass_[0] *
+        (compos_w[0] * gravity[0] + compos_w[1] * gravity[1] + compos_w[2] * gravity[2]);
   }
 
   {
     // link
     for (int i = 1; i < mass_.size(); i++) {
-      b3LinkState state;
-      api_->getLinkState(objectId_, i-1, &state);
+      benchmark::Vec<3> compos_w;
+      benchmark::Mat<3,3> comR_w;
+      getComPose_W(i-1, compos_w, comR_w);
 
       {
-        btVector3 compos(
-            state.m_worldPosition[0],
-            state.m_worldPosition[1],
-            state.m_worldPosition[2]
-        );
-        potential -= mass_[i] * compos.dot({gravity[0], gravity[1], gravity[2]});
+        potential -= mass_[i] *
+            (compos_w[0] * gravity[0] + compos_w[1] * gravity[1] + compos_w[2] * gravity[2]);
       }
     }
   }
@@ -881,54 +887,122 @@ void object::BtMbArticulatedSystem::getBodyPose(int linkId,
     b3LinkState linkState;
     RAIFATAL_IF(!api_->getLinkState(objectId_, linkId, &linkState), "getBasePositionAndOrientation failed");
 
-    btTransform comTf_W;
-    comTf_W.setOrigin(
-        {linkState.m_worldPosition[0],
-         linkState.m_worldPosition[1],
-         linkState.m_worldPosition[2]});
-    comTf_W.setRotation(
-        {linkState.m_worldOrientation[0],
-         linkState.m_worldOrientation[1],
-         linkState.m_worldOrientation[2],
-         linkState.m_worldOrientation[3]});
-
-    btTransform comTf_B;
-    comTf_B.setOrigin(
-        {linkState.m_localInertialPosition[0],
-         linkState.m_localInertialPosition[1],
-         linkState.m_localInertialPosition[2]});
-    comTf_B.setRotation(
-        {linkState.m_localInertialOrientation[0],
-         linkState.m_localInertialOrientation[1],
-         linkState.m_localInertialOrientation[2],
-         linkState.m_localInertialOrientation[3]});
-
-    btTransform bTf = comTf_W * comTf_B.inverse();
-
     benchmark::Vec<4> quat = {
-        bTf.getRotation().w(),
-        bTf.getRotation().x(),
-        bTf.getRotation().y(),
-        bTf.getRotation().z()};
+        linkState.m_worldLinkFrameOrientation[3], // w
+        linkState.m_worldLinkFrameOrientation[0], // x
+        linkState.m_worldLinkFrameOrientation[1], // y
+        linkState.m_worldLinkFrameOrientation[2]  // z
+    };
     benchmark::quatToRotMat(quat, orientation);
 
     position = {
-        bTf.getOrigin().x(),
-        bTf.getOrigin().y(),
-        bTf.getOrigin().z()};
+        linkState.m_worldLinkFramePosition[0],
+        linkState.m_worldLinkFramePosition[1],
+        linkState.m_worldLinkFramePosition[2]
+    };
   }
 }
 
-void object::BtMbArticulatedSystem::getComVelocity_W(int linkId, benchmark::Vec<3> &velocity) {
+void object::BtMbArticulatedSystem::getComVelocity_W(int linkId, benchmark::Vec<3> &linVel_w, benchmark::Vec<3> &angVel_w) {
+  if(linkId == -1) {
 
-  b3LinkState state;
-  api_->getLinkState(objectId_, linkId, &state);
+    btVector3 bLinVel;
+    btVector3 bAngvel;
+    api_->getBaseVelocity(objectId_, bLinVel, bAngvel);
 
-  velocity = {
-      state.m_worldLinearVelocity[0],
-      state.m_worldLinearVelocity[1],
-      state.m_worldLinearVelocity[2]
-  };
+    btVector3 bPosition;
+    btQuaternion bQuaternion;
+    api_->getBasePositionAndOrientation(objectId_, bPosition, bQuaternion);
+
+    benchmark::Vec<4> quaternion = {
+        bQuaternion.w(),   // w
+        bQuaternion.x(),   // x
+        bQuaternion.y(),   // y
+        bQuaternion.z()    // z
+    };
+    benchmark::Mat<3,3> rotmat;
+    benchmark::quatToRotMat(quaternion, rotmat);
+    benchmark::matvecmul(rotmat, {bAngvel.x(), bAngvel.y(), bAngvel.z()}, angVel_w);
+
+    benchmark::Vec<3> r_w;
+    linVel_w = {
+        bLinVel.x(),
+        bLinVel.y(),
+        bLinVel.z(),
+    };
+    benchmark::matvecmul(rotmat, localInertialPos_[0], r_w);
+    benchmark::crossThenAdd({bAngvel.x(), bAngvel.y(), bAngvel.z()}, r_w, linVel_w);
+  }
+  else {
+
+    b3LinkState state;
+    api_->getLinkState(objectId_, linkId, &state);
+
+    linVel_w = {
+        state.m_worldLinearVelocity[0],
+        state.m_worldLinearVelocity[1],
+        state.m_worldLinearVelocity[2]
+    };
+
+    benchmark::Vec<3> bodyAngVel_w = {
+        state.m_worldAngularVelocity[0],
+        state.m_worldAngularVelocity[1],
+        state.m_worldAngularVelocity[2]
+    };
+
+//    angVel_w = bodyAngVel_w;
+    benchmark::matvecmul(localInertialR_[linkId+1], bodyAngVel_w, angVel_w);
+  }
+}
+
+void object::BtMbArticulatedSystem::getComPose_W(int linkId, benchmark::Vec<3> &inertialPosition_w, benchmark::Mat<3, 3> &inertialOrientation_w) {
+  if(linkId == -1) {
+    // base
+    btVector3 bPosition;
+    btQuaternion bQuat;
+    RAIFATAL_IF(!api_->getBasePositionAndOrientation(objectId_, bPosition, bQuat), "getBasePositionAndOrientation failed");
+
+    btVector3 bCom =
+        bPosition +
+            btMatrix3x3(bQuat) * btVector3(localInertialPos_[0][0], localInertialPos_[0][1], localInertialPos_[0][2]);
+
+    inertialPosition_w = {
+        bCom.x(),
+        bCom.y(),
+        bCom.z()
+    };
+
+    benchmark::Vec<4> quat = {
+        bQuat.w(),
+        bQuat.x(),
+        bQuat.y(),
+        bQuat.z(),
+    };
+    benchmark::Mat<3,3> rotmat;
+    benchmark::quatToRotMat(quat, rotmat);
+    benchmark::matmul(rotmat, localInertialR_[0], inertialOrientation_w);
+  }
+  else {
+    // link
+    b3LinkState linkState;
+    RAIFATAL_IF(!api_->getLinkState(objectId_, linkId, &linkState), "getBasePositionAndOrientation failed");
+
+    inertialPosition_w = {
+        linkState.m_worldPosition[0],
+        linkState.m_worldPosition[1],
+        linkState.m_worldPosition[2]
+    };
+
+    benchmark::Vec<4> quat = {
+        linkState.m_worldOrientation[3],  // w
+        linkState.m_worldOrientation[0],  // x
+        linkState.m_worldOrientation[1],  // y
+        linkState.m_worldOrientation[2]   // z
+    };
+    benchmark::Mat<3,3> rotmat;
+    benchmark::quatToRotMat(quat, rotmat);
+    benchmark::matmul(rotmat, localInertialR_[linkId+1], inertialOrientation_w);
+  }
 }
 
 } // bullet_mb_sim

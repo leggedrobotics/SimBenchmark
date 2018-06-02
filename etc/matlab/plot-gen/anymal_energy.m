@@ -6,12 +6,12 @@ format long
 addpath(genpath('../lib/yamlmatlab'))
 
 % data path
-data_dir = '../../../data/anymal-freedrop/';
+data_dir = '../../../data/anymal-energy/';
 file_name = 'sample.csv';
 % plot_path = strcat(data_dir, 'plots/');
 
 % yaml path
-yaml_path = '../../../benchmark/yaml/anymal-freedrop.yaml';
+yaml_path = '../../../benchmark/yaml/anymal-energy.yaml';
 
 % plot path
 % mkdir(plot_path);
@@ -118,7 +118,14 @@ h = figure('Name','error','Position', [0, 0, 600, 500]);
 hold on
 box on
 grid on
-set(gca, 'YScale', 'log', 'XScale', 'log', 'Ydir', 'reverse')
+set(gca, ...
+    'YScale', 'log', ...
+    'XScale', 'log', ...
+    'Ydir', 'reverse', ...
+    'YMinorTick', 'off', ...
+    'XMinorTick', 'off', ...
+    'YMinorGrid', 'off', ...
+    'XMinorGrid', 'off')
 for i = 1:length(sims)
     
     sim = sims(i);

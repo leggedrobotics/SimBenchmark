@@ -95,7 +95,7 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
   void getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) override;
 
   /**
-  * Get pose of link w.r.t. world frame
+  * Get pose of link (URDF link frame) w.r.t. world frame
   *
   * @param linkId          linkId
   * @param orientation     orientation of link (output)
@@ -235,11 +235,20 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
   void initCollisions(int objectId, int linkId, b3CollisionShapeInformation &info);
 
   /**
-   * Get COM velocity of link
-   * @param linkId
-   * @param velocity
+   * Get COM velocity of link w.r.t. world frame
+   * @param linkId    (-1) for base
+   * @param linVel_w    linear velocity (output)
+   * @param angVel_w    angular velocity (output)
    */
-  void getComVelocity_W(int linkId, benchmark::Vec<3> &velocity);
+  void getComVelocity_W(int linkId, benchmark::Vec<3> &linVel_w, benchmark::Vec<3> &angVel_w);
+
+  /**
+   * Get COM position of link w.r.t. world frame
+   * @param linkId    (-1) for base
+   * @param linVel    linear velocity (output)
+   * @param angVel    angular velocity (output)
+   */
+  void getComPose_W(int linkId, benchmark::Vec<3> &inertialPosition_w, benchmark::Mat<3, 3> &inertialOrientation_w);
 
   /// Attiributes
   // linear momentum
@@ -248,9 +257,11 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
   // joint idx (controllable joints)
   std::vector<int> ctrbJoints_;
 
-  // link mass
+  // link mass (inertial frame)
   std::vector<double> mass_;
-  std::vector<benchmark::Mat<3,3>> inertia_;    // local inertia (w.r.t com)
+  std::vector<benchmark::Vec<3>> localInertialPos_;     // inertial frame offset (w.r.t. link)
+  std::vector<benchmark::Mat<3,3>> localInertialR_;     // inertial frame orientation (w.r.t. link)
+  std::vector<benchmark::Mat<3,3>> inertia_;            // local inertia (w.r.t inertial frame)
 
   // api
   b3RobotSimulatorClientAPI_NoGUI *api_;
