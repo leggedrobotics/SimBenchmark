@@ -64,9 +64,9 @@ T.ERROR(T.ERROR == 0, :) = 1e-40;
 %% error plot
 % plot option
 plotOption = plotoption;
-plotOption.MUJOCOCGRK4 = false;
-plotOption.MUJOCOPGSRK4 = false;
-plotOption.MUJOCONEWTONRK4 = false;
+% plotOption.MUJOCOCGRK4 = false;
+% plotOption.MUJOCOPGSRK4 = false;
+% plotOption.MUJOCONEWTONRK4 = false;
 
 % error plot vs dt
 disp('plotting error vs real-time-factor...')
@@ -87,6 +87,7 @@ speed = numIter ./ T2.TIME ./ 1000;
 
 disp('plotting bar graph')
 h = figure('Name', 'speed', 'Position', [0, 0, 800, 600])
+box on
 hold on
 for i = 1:size(T2, 1)
     data = T2(i, :);
