@@ -22,6 +22,9 @@ class BtMbCheckerBoard: public BtMbSingleBodyObject,
                    b3RobotSimulatorClientAPI_NoGUI *api,
                    bo::CheckerboardShape shape);
 
+  void getPosition_W(benchmark::Vec<3> &pos_w) override;
+  void getQuaternion(benchmark::Vec<4> &quat) override;
+
 };
 
 }

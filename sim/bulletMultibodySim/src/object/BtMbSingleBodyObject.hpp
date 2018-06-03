@@ -58,6 +58,9 @@ class BtMbSingleBodyObject: public bo::SingleBodyObjectInterface,
 
   bool isVisualizeFramesAndCom() const override;
 
+  // only for bullet
+  void setFrictionAnchor(bool enableFrictionAnchor);
+
  protected:
   /**
    * Get body rotation quaternion w.r.t. world frame from Bullet API.

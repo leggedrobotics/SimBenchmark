@@ -29,7 +29,7 @@ BtMbWorld::BtMbWorld() {
     arg.m_erp = 0;
     arg.m_contactERP = 0;
     arg.m_frictionERP = 0;
-    arg.m_solverResidualThreshold = 1e-2;
+    arg.m_solverResidualThreshold = 1e-4;
     api_->setPhysicsEngineParameter(arg);
 
   }
@@ -121,6 +121,9 @@ void BtMbWorld::integrate() {
 
   // step simulation
   api_->stepSimulation();
+}
+const std::vector<Single3DContactProblem> *BtMbWorld::getCollisionProblem() const {
+  return &contactProblemList_;
 }
 
 } // bullet_mb_sim

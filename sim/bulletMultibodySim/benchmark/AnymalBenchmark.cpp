@@ -20,11 +20,14 @@ void setupSimulation() {
 
   sim->setERP(0.05, 0.01, 0.1);
   sim->setTimeStep(benchmark::anymal::params.dt);
+
+  int numAnymal = benchmark::anymal::options.numRow * benchmark::anymal::options.numRow;
+  sim->setSolverParameter(1e-7, 1000);
 }
 
 void setupWorld() {
   auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
-//  checkerboard->setFrictionCoefficient(0.8);
+  checkerboard->setFrictionCoefficient(1.0);  // 1.0(ground) x 0.8(feet) = 0.8
 
   for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
     for(int j = 0; j < benchmark::anymal::options.numRow; j++) {

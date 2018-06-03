@@ -165,6 +165,9 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
         b3RobotSimulatorJointMotorArgs arg(CONTROL_MODE_VELOCITY);
         arg.m_maxTorqueValue = 0;
         api_->setJointMotorControl(objectId, i, arg);
+
+        // enable joint force sensor
+        api_->enableJointForceTorqueSensor(objectId, i, true);
       }
 
       switch(info.m_jointType) {
@@ -447,6 +450,37 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
 }
 
 const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticulatedSystem::getGeneralizedForce() {
+
+  if(isFixed_) {
+    // joints
+    for(int i = 0; i < numJoints_; i++) {
+      b3JointSensorState state;
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed");
+      genForce_[i] = state.m_jointMotorTorque;
+    }
+  } // end of fixed base
+  else {
+//    RAIWARN("getting base force and torque is not available. generalized force is only valid for joints")
+
+    {
+      // base
+      genForce_[0] = 0;
+      genForce_[1] = 0;
+      genForce_[2] = 0;
+
+      genForce_[3] = 0;
+      genForce_[4] = 0;
+      genForce_[5] = 0;
+    }
+
+    // joints
+    for(int i = 0; i < numJoints_; i++) {
+      b3JointSensorState state;
+      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed");
+      genVelocity_[i+6] = state.m_jointMotorTorque;
+    }
+  } // end of floating base
+
   return genForce_.e();
 }
 

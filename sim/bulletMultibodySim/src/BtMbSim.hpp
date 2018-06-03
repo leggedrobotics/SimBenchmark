@@ -85,7 +85,7 @@ class BtMbSim: public benchmark::WorldRG {
    * @return
    */
   benchmark::SingleBodyHandle addCheckerboard(double gridSize, double xLength, double yLength, double reflectanceI,
-                                              bo::CheckerboardShape shape,
+                                              bo::CheckerboardShape shape = bo::BOX_SHAPE,
                                               benchmark::CollisionGroupType collisionGroup = 1,
                                               benchmark::CollisionGroupType collisionMask = -1,
                                               int flags = 0) override;
@@ -155,6 +155,8 @@ class BtMbSim: public benchmark::WorldRG {
    * @param dt  timestep size in sec
    */
   void setTimeStep(double dt);
+
+  void setSolverParameter(double solverResidualThreshold, int solverIteration, int numSubStep = 0);
 
   /// Simulation methods
   /**

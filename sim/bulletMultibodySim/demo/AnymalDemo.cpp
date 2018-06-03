@@ -20,7 +20,7 @@ int main(int argc, const char* argv[]) {
 
   bullet_mb_sim::BtMbSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::PLANE_SHAPE, 1, -1, bo::GRID);
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(0.8);
 
   auto anymal = sim.addArticulatedSystem(urdfPath, bullet_mb_sim::object::URDF);

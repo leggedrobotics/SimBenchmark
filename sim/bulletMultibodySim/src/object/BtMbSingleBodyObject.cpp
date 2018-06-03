@@ -274,5 +274,11 @@ void BtMbSingleBodyObject::setBulletLinearAndAngularVelocity() {
   api_->resetBaseVelocity(objectId_, bLinVel, bAngVel);
 }
 
+void BtMbSingleBodyObject::setFrictionAnchor(bool enableFrictionAnchor) {
+  b3RobotSimulatorChangeDynamicsArgs arg;
+  arg.m_frictionAnchor = enableFrictionAnchor;
+  api_->changeDynamics(objectId_, -1, arg);
+}
+
 } // object
 } // bullet_mb_sim

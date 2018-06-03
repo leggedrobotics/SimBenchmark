@@ -16,7 +16,7 @@ sim_properties:
 
 # simulation constants
 constant:
-  kp: 400
+  kp: 40
   kd: 1.0
   H: 0.54
   dt: 0.005

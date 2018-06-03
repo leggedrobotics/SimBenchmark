@@ -41,6 +41,12 @@ class BtMbWorld: public benchmark::WorldInterface  {
   */
   int getNumObject() override;
 
+  /**
+   * Getter for collision problems.
+   * @return    std vector pointer contains collision problems.
+   */
+  const std::vector<Single3DContactProblem> *getCollisionProblem() const;
+
   /// Add object
   /**
    * Add articulated system to simulation from URDF / SDF / MJCF file
