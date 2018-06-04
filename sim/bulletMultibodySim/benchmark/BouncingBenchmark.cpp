@@ -8,7 +8,7 @@
 #include "BtMbBenchmark.hpp"
 
 bullet_mb_sim::BtMbSim *sim;
-std::vector<benchmark::SingleBodyHandle> objList;
+std::vector<bullet_mb_sim::ArticulatedSystemHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
@@ -41,16 +41,20 @@ void setupSimulation() {
 void setupWorld() {
   // materials
   // add objects
-  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
-  checkerboard->setFrictionCoefficient(benchmark::bouncing::params.mu_ground);
-  checkerboard->setRestitutionCoefficient(1);
+  auto checkerboard = sim->addArticulatedSystem(benchmark::bouncing::getBulletPlanepath(), bullet_mb_sim::object::URDF);
+  checkerboard->setFrictionCoefficient(-1, benchmark::bouncing::params.mu_ground);
+  checkerboard->setRestitutionCoefficient(-1, 1);
 
   for(int i = 0; i < benchmark::bouncing::params.n; i++) {
     for(int j = 0; j < benchmark::bouncing::params.n; j++) {
-      auto ball = sim->addSphere(benchmark::bouncing::params.R, benchmark::bouncing::params.m);
-      ball->setPosition(i * 2.0 - 10, j * 2.0 - 10, benchmark::bouncing::params.H);
-      ball->setFrictionCoefficient(benchmark::bouncing::params.mu_ball);
-      ball->setRestitutionCoefficient(benchmark::bouncing::options.e);
+      auto ball = sim->addArticulatedSystem(benchmark::bouncing::getBulletBallpath(), bullet_mb_sim::object::URDF);
+      ball->setGeneralizedCoordinate(
+          {i * 2.0 - 10, 
+           j * 2.0 - 10, 
+           benchmark::bouncing::params.H,
+           1, 0, 0, 0});
+      ball->setFrictionCoefficient(-1, benchmark::bouncing::params.mu_ball);
+      ball->setRestitutionCoefficient(-1, benchmark::bouncing::options.e);
 
       if(benchmark::bouncing::options.gui)
         ball.visual()[0]->setColor(
@@ -69,7 +73,7 @@ void setupWorld() {
     sim->setLightPosition((float)benchmark::bouncing::params.lightPosition[0],
                           (float)benchmark::bouncing::params.lightPosition[1],
                           (float)benchmark::bouncing::params.lightPosition[2]);
-    sim->cameraFollowObject(checkerboard, {10, 0, 6});
+//    sim->cameraFollowObject(checkerboard, {10, 0, 6});
   }
 }
 
