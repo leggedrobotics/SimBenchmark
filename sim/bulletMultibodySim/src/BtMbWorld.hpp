@@ -22,6 +22,7 @@ struct Single3DContactProblem {
   };
   Eigen::Vector3d point_;
   Eigen::Vector3d normal_;
+  double force_;
 };
 
 class BtMbWorld: public benchmark::WorldInterface  {
@@ -82,6 +83,12 @@ class BtMbWorld: public benchmark::WorldInterface  {
                                                        double mass,
                                                        benchmark::CollisionGroupType collisionGroup,
                                                        benchmark::CollisionGroupType collisionMask) override;
+
+  /**
+   * Getter for object list
+   * @return std vector contains object pointers.
+   */
+  const std::vector<object::BtMbObject *> &getObjectList() const;
 
   /**
   * One simulation step

@@ -37,8 +37,10 @@ BtMbCheckerBoard::BtMbCheckerBoard(double xLength,
   // create body
   {
     b3RobotSimulatorCreateMultiBodyArgs args;
+    args.m_baseMass = 0;
     args.m_baseCollisionShapeIndex = shapeId;
-    args.m_useMaximalCoordinates = 1;
+    args.m_useMaximalCoordinates = 1;     // not works...
+    args.m_numLinks = 0;
     objectId_ = api_->createMultiBody(args);
 
     b3RobotSimulatorChangeDynamicsArgs dynarg;
@@ -46,6 +48,8 @@ BtMbCheckerBoard::BtMbCheckerBoard(double xLength,
     dynarg.m_restitution = 0;
     dynarg.m_rollingFriction = 0;
     dynarg.m_spinningFriction = 0;
+    dynarg.m_linearDamping = 0;
+    dynarg.m_angularDamping = 0;
     RAIFATAL_IF(!api_->changeDynamics(objectId_, -1, dynarg), "changeDynamics failed")
   }
 
@@ -68,7 +72,6 @@ BtMbCheckerBoard::BtMbCheckerBoard(double xLength,
 
   // inertia
   localInertia_.setZero();
-
   RAIFATAL_IF(objectId_ ==  -1, "Checkerboard body creation error")
 }
 

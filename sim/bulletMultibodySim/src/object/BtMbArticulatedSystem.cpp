@@ -1038,5 +1038,16 @@ void object::BtMbArticulatedSystem::getComPose_W(int linkId, benchmark::Vec<3> &
     benchmark::quatToRotMat(quat, inertialOrientation_w);
   }
 }
+void object::BtMbArticulatedSystem::setRestitutionCoefficient(int linkId, double restitution) {
+  b3RobotSimulatorChangeDynamicsArgs arg;
+  arg.m_restitution = restitution;
+  api_->changeDynamics(objectId_, linkId, arg);
+}
+
+void object::BtMbArticulatedSystem::setFrictionCoefficient(int linkId, double friction) {
+  b3RobotSimulatorChangeDynamicsArgs arg;
+  arg.m_lateralFriction = friction;
+  api_->changeDynamics(objectId_, linkId, arg);
+}
 
 } // bullet_mb_sim

@@ -30,8 +30,8 @@ BtMbWorld::BtMbWorld() {
     arg.m_contactERP = 0;
     arg.m_frictionERP = 0;
     arg.m_solverResidualThreshold = 1e-4;
+    arg.m_restitutionVelocityThreshold = 0;
     api_->setPhysicsEngineParameter(arg);
-
   }
 }
 
@@ -112,18 +112,24 @@ void BtMbWorld::integrate() {
     );
 
     btVector3 normal(
-        info.m_contactPointData[i].m_positionOnBInWS[0],
-        info.m_contactPointData[i].m_positionOnBInWS[1],
-        info.m_contactPointData[i].m_positionOnBInWS[2]
+        info.m_contactPointData[i].m_contactNormalOnBInWS[0],
+        info.m_contactPointData[i].m_contactNormalOnBInWS[1],
+        info.m_contactPointData[i].m_contactNormalOnBInWS[2]
     );
+
     contactProblemList_.emplace_back(position, normal);
   }
 
   // step simulation
   api_->stepSimulation();
 }
+
 const std::vector<Single3DContactProblem> *BtMbWorld::getCollisionProblem() const {
   return &contactProblemList_;
+}
+
+const std::vector<object::BtMbObject *> &BtMbWorld::getObjectList() const {
+  return objectList_;
 }
 
 } // bullet_mb_sim

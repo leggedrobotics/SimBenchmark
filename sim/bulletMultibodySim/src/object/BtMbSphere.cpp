@@ -24,13 +24,14 @@ bullet_mb_sim::object::BtMbSphere::BtMbSphere(double radius, double mass, b3Robo
   {
     b3RobotSimulatorCreateMultiBodyArgs args;
     args.m_baseCollisionShapeIndex = shapeId;
-    args.m_useMaximalCoordinates = 1;
+    args.m_useMaximalCoordinates = 1;   // not works...
     args.m_baseMass = mass;
+    args.m_numLinks = 0;
     objectId_ = api_->createMultiBody(args);
 
     b3RobotSimulatorChangeDynamicsArgs dynarg;
-    dynarg.m_lateralFriction = 0.8;
     dynarg.m_restitution = 0;
+    dynarg.m_lateralFriction = 0.8;
     dynarg.m_rollingFriction = 0;
     dynarg.m_spinningFriction = 0;
     dynarg.m_linearDamping = 0;

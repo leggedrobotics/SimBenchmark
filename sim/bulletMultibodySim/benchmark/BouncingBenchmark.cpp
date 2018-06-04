@@ -43,7 +43,7 @@ void setupWorld() {
   // add objects
   auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(benchmark::bouncing::params.mu_ground);
-  checkerboard->setRestitutionCoefficient(1.0);
+  checkerboard->setRestitutionCoefficient(1);
 
   for(int i = 0; i < benchmark::bouncing::params.n; i++) {
     for(int j = 0; j < benchmark::bouncing::params.n; j++) {

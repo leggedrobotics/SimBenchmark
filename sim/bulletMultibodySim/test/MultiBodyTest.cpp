@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
   std::string groundpath(__FILE__);
   while (groundpath.back() != '/')
     groundpath.erase(groundpath.size() - 1, 1);
-  groundpath += "../../../res/bullet/Plane/robot.urdf";
+  groundpath += "../../../res/bullet/Plane/plane.urdf";
 
   std::string robotpath(__FILE__);
   while (robotpath.back() != '/')

@@ -214,6 +214,20 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
    */
   const Eigen::Map<Eigen::Matrix<double, 3, 1>> getLinearMomentumInCartesianSpace() override;
 
+  /**
+   * Setter for restitution coefficient (every link)
+   * @param link id
+   * @param restitution (default is 0)
+   */
+  void setRestitutionCoefficient(int linkId, double restitution);
+
+  /**
+   * Setter for friction coefficient (every link)
+   * @param link id
+   * @param friction (default is 0.8)
+   */
+  void setFrictionCoefficient(int linkId, double friction);
+
  private:
   /**
    * Initialize links's visual object from visual shape data.

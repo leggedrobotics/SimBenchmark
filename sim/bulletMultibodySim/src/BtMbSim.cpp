@@ -277,28 +277,20 @@ void BtMbSim::updateFrame() {
     contactPointMarker_->clearGhost();
 
   /// contact forces
-//  if (gui_->getCustomToggleState(2)) {
-//    double maxForce = 0;
-//    for (auto &pro: *world_.getCollisionProblem())
-//      maxForce = (maxForce < pro.imp_i.norm()) ? pro.imp_i.norm() : maxForce;
-//    contactNormalArrow_->mutexLock();
-//    contactNormalArrow_->clearGhost();
-//    for (auto &pro: world_.getObjList()) {
-//      for (auto &con: pro->getPerObjectContact().getContacts()) {
-//        const double norm = con.getImpulse()->norm();
-//        Eigen::Vector3d pos(con.getPosition().v[0], con.getPosition().v[1], con.getPosition().v[2]);
-//        Vec<3> scaledImp;
-//        matTransposevecmul(con.getContactFrame(), *con.getImpulse(), scaledImp);
-//        vecScalarMul(1.0 / norm, scaledImp);
-//        Eigen::Vector3d dir = scaledImp.e();
-//        Eigen::Vector3f color(norm / maxForce, 0.2, 1 - norm / maxForce);
-//        Eigen::Vector3f scale(norm / maxForce, 1, 1);
-//        contactNormalArrow_->addGhostWithVector(pos, dir, color, scale);
-//      }
-//    }
-//    contactNormalArrow_->mutexUnLock();
-//  } else
-//    contactNormalArrow_->clearGhost();
+  if (gui_->getCustomToggleState(2)) {
+    contactNormalArrow_->mutexLock();
+    contactNormalArrow_->clearGhost();
+    for (auto &con: *world_.getCollisionProblem()) {
+        const double norm = con.normal_.norm();
+        Eigen::Vector3d pos(con.point_.x(), con.point_.y(), con.point_.z());
+        Eigen::Vector3d dir = con.normal_;
+        Eigen::Vector3f color(1, 0.2, 0);
+        Eigen::Vector3f scale(norm, 1, 1);
+        contactNormalArrow_->addGhostWithVector(pos, dir, color, scale);
+    }
+    contactNormalArrow_->mutexUnLock();
+  } else
+    contactNormalArrow_->clearGhost();
 
   /// frames and COM
   if (gui_->getCustomToggleState(4)) {

@@ -46,7 +46,7 @@ struct Parameter {
   double lightPosition[3] = {30.0, 0, 10.0};
 
   // constans
-  double kp = 40;     // kp gain
+  double kp = 400;     // kp gain
   double kd = 1.0;    // kd gain
   double H = 0.54;    // starting height
   double dt = 0.005;  // timestep (sec)
