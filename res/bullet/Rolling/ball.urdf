@@ -1,0 +1,26 @@
+<?xml version="0.0" ?>
+<robot name="ball">
+  <link name="ball">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.5"/>
+      </geometry>
+      <material name="bullet">
+        <color rgba="0.6667, 0.2745, 0.2627 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.5"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>
+
