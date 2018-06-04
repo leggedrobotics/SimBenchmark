@@ -3,10 +3,10 @@
 
     <worldbody>
         <geom type="plane" size="100 100 5" rgba=".9 0 0 1" friction="0.4 0 0"/>
-        <body pos="0 0 0.5">
+        <body pos="0 0 0.499998">
             <inertial pos="0 0 0" mass="10" diaginertia="334.16666666666669 334.16666666666669 666.66666666666674"/>
             <joint type="free"/>
-            <geom type="box" size="10.0 10.0 0.499999" rgba="0 .9 0 1" friction="0.4 0 0"/>
+            <geom type="box" size="10.0 10.0 0.5" rgba="0 .9 0 1" friction="0.4 0 0"/>
         </body>
         <body pos="-4.000000 -4.000000 1.499998">
             <inertial pos="0 0 0" mass="1" diaginertia=".1 .1 .1"/>

@@ -1,7 +1,7 @@
 <mujoco model="thousand">
     <compiler angle="degree"/>
 
-    <option timestep="0.01" iterations="50" solver="PGS" jacobian="sparse" cone="elliptic" tolerance="1e-10"/>
+    <option jacobian="sparse" cone="elliptic"/>
 
     <size njmax="5000" nconmax="2000" nstack="1000000000"/>
 

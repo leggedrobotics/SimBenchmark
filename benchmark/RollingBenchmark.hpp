@@ -118,6 +118,51 @@ std::string getMujocoXMLpath() {
 }
 
 /**
+ * get XML file path for Mujoco
+ *
+ * @return urdf path in string
+ */
+std::string getBulletBallpath() {
+
+  std::string ballpath(__FILE__);
+  while (ballpath.back() != '/')
+    ballpath.erase(ballpath.size() - 1, 1);
+  ballpath += "../res/bullet/Rolling/ball.urdf";
+
+  return ballpath;
+}
+
+/**
+ * get XML file path for Mujoco
+ *
+ * @return urdf path in string
+ */
+std::string getBulletBoxpath() {
+
+  std::string ballpath(__FILE__);
+  while (ballpath.back() != '/')
+    ballpath.erase(ballpath.size() - 1, 1);
+  ballpath += "../res/bullet/Rolling/box.urdf";
+
+  return ballpath;
+}
+
+/**
+ * get XML file path for Mujoco
+ *
+ * @return urdf path in string
+ */
+std::string getBulletPlanepath() {
+
+  std::string planepath(__FILE__);
+  while (planepath.back() != '/')
+    planepath.erase(planepath.size() - 1, 1);
+  planepath += "../res/bullet/Rolling/plane.urdf";
+
+  return planepath;
+}
+
+/**
  * get YAML file path for parameter
  *
  * @return yaml path in string

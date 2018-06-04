@@ -8,7 +8,7 @@
 #include "BtMbBenchmark.hpp"
 
 bullet_mb_sim::BtMbSim *sim;
-std::vector<benchmark::SingleBodyHandle> objList;
+std::vector<bullet_mb_sim::ArticulatedSystemHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
@@ -24,7 +24,7 @@ void setupSimulation() {
                 benchmark::rolling::params.erpFriction);
   else
     sim->setERP(0, 0, 0);
-  
+
   // time step
   sim->setTimeStep(benchmark::rolling::options.dt);
 
@@ -44,21 +44,22 @@ void setupSimulation() {
 void setupWorld() {
 
   // add objects
-  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
-  checkerboard->setFrictionCoefficient(benchmark::rolling::params.btGroundMu);
+  auto checkerboard = sim->addArticulatedSystem(benchmark::rolling::getBulletPlanepath(), bullet_mb_sim::object::URDF);
+  checkerboard->setFrictionCoefficient(-1, benchmark::rolling::params.btGroundMu);
 
-  auto box = sim->addBox(20, 20, 1, 10);
-  box->setPosition(0, 0, 0.5 - benchmark::rolling::params.initPenetration);
-  box->setFrictionCoefficient(benchmark::rolling::params.btBoxMu);
+  auto box = sim->addArticulatedSystem(benchmark::rolling::getBulletBoxpath(), bullet_mb_sim::object::URDF);
+  box->setGeneralizedCoordinate({0, 0, 0.5 - benchmark::rolling::params.initPenetration,
+                                 1, 0, 0, 0});
+  box->setFrictionCoefficient(-1, benchmark::rolling::params.btBoxMu);
   objList.push_back(box);
 
   for(int i = 0; i < benchmark::rolling::params.n; i++) {
     for(int j = 0; j < benchmark::rolling::params.n; j++) {
-      auto ball = sim->addSphere(0.5, 1);
-      ball->setPosition(i * 2.0 - 4.0,
-                        j * 2.0 - 4.0,
-                        1.5 - 3 * benchmark::rolling::params.initPenetration);
-      ball->setFrictionCoefficient(benchmark::rolling::params.btBallMu);
+      auto ball = sim->addArticulatedSystem(benchmark::rolling::getBulletBallpath(), bullet_mb_sim::object::URDF);
+      ball->setGeneralizedCoordinate({i * 2.0 - 4.0, j * 2.0 - 4.0,
+                                      1.5 - 3 * benchmark::rolling::params.initPenetration,
+                                      1, 0, 0, 0});
+      ball->setFrictionCoefficient(-1, benchmark::rolling::params.btBallMu);
       objList.push_back(ball);
     }
   }
@@ -70,22 +71,20 @@ void setupWorld() {
     sim->setLightPosition((float)benchmark::rolling::params.lightPosition[0],
                           (float)benchmark::rolling::params.lightPosition[1],
                           (float)benchmark::rolling::params.lightPosition[2]);
-    sim->cameraFollowObject(checkerboard, {30, 0, 15});
+//    sim->cameraFollowObject(checkerboard, {30, 0, 15});
   }
 }
 
 double simulationLoop() {
 
   // force
-  Eigen::Vector3d force;
+  Eigen::VectorXd force(6);
   if(benchmark::rolling::options.forceDirection == benchmark::rolling::FORCE_Y)
-    force = {0,
-             benchmark::rolling::params.F,
-             0};
+    force << 0, benchmark::rolling::params.F, 0, 0, 0, 0;
   else if(benchmark::rolling::options.forceDirection == benchmark::rolling::FORCE_XY)
-    force = {benchmark::rolling::params.F * 0.707106781186547,
+    force << benchmark::rolling::params.F * 0.707106781186547,
              benchmark::rolling::params.F * 0.707106781186547,
-             0};
+             0, 0, 0, 0;
 
   // resever error vector
   benchmark::rolling::errors.reserve(unsigned(benchmark::rolling::params.T / benchmark::rolling::options.dt));
@@ -98,22 +97,26 @@ double simulationLoop() {
         sim->visualizerLoop(benchmark::rolling::options.dt); i++) {
 
       // set force to box
-      objList[0]->setExternalForce(force);
+      objList[0]->setGeneralizedForce(force);
 
       // log
       if(benchmark::rolling::options.log) {
-        ru::logger->appendData("velbox", objList[0]->getLinearVelocity().data());
-        ru::logger->appendData("velball", objList[1]->getLinearVelocity().data());
-        ru::logger->appendData("posbox", objList[0]->getPosition().data());
-        ru::logger->appendData("posball", objList[1]->getPosition().data());
+        Eigen::Vector3d velbox = objList[0]->getGeneralizedVelocity().head(3);
+        Eigen::Vector3d velball = objList[1]->getGeneralizedVelocity().head(3);
+        Eigen::Vector3d posbox = objList[0]->getGeneralizedCoordinate().head(3);
+        Eigen::Vector3d posball = objList[1]->getGeneralizedCoordinate().head(3);
+        ru::logger->appendData("velbox", velbox.data());
+        ru::logger->appendData("velball", velball.data());
+        ru::logger->appendData("posbox", posbox.data());
+        ru::logger->appendData("posball", posball.data());
       }
 
       Eigen::Vector3d ballVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
       Eigen::Vector3d boxVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
 
       double error = 0;
-      error += pow((boxVec - objList[0]->getLinearVelocity()).norm(), 2);
-      error += pow((ballVec - objList[1]->getLinearVelocity()).norm(), 2);
+      error += pow((boxVec - objList[0]->getGeneralizedVelocity().head(3)).norm(), 2);
+      error += pow((ballVec - objList[1]->getGeneralizedVelocity().head(3)).norm(), 2);
       benchmark::rolling::errors.push_back(error);
 
       sim->integrate();
@@ -127,22 +130,26 @@ double simulationLoop() {
     for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt); i++) {
 
       // set force to box
-      objList[0]->setExternalForce(force);
+      objList[0]->setGeneralizedForce(force);
 
       // log
       if(benchmark::rolling::options.log) {
-        ru::logger->appendData("velbox", objList[0]->getLinearVelocity().data());
-        ru::logger->appendData("velball", objList[1]->getLinearVelocity().data());
-        ru::logger->appendData("posbox", objList[0]->getPosition().data());
-        ru::logger->appendData("posball", objList[1]->getPosition().data());
+        Eigen::Vector3d velbox = objList[0]->getGeneralizedVelocity().head(3);
+        Eigen::Vector3d velball = objList[1]->getGeneralizedVelocity().head(3);
+        Eigen::Vector3d posbox = objList[0]->getGeneralizedCoordinate().head(3);
+        Eigen::Vector3d posball = objList[1]->getGeneralizedCoordinate().head(3);
+        ru::logger->appendData("velbox", velbox.data());
+        ru::logger->appendData("velball", velball.data());
+        ru::logger->appendData("posbox", posbox.data());
+        ru::logger->appendData("posball", posball.data());
       }
 
       Eigen::Vector3d ballVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
       Eigen::Vector3d boxVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
 
       double error = 0;
-      error += pow((boxVec - objList[0]->getLinearVelocity()).norm(), 2);
-      error += pow((ballVec - objList[1]->getLinearVelocity()).norm(), 2);
+      error += pow((boxVec - objList[0]->getGeneralizedVelocity().head(3)).norm(), 2);
+      error += pow((ballVec - objList[1]->getGeneralizedVelocity().head(3)).norm(), 2);
       benchmark::rolling::errors.push_back(error);
 
       sim->integrate();
