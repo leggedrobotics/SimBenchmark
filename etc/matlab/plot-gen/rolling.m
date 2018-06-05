@@ -76,9 +76,9 @@ erpNdirXY.ODESTANDARDODE = false;  % ODE is pyramid friction cone (and simulatio
 % erpNdirXY.ODEQUICK = false;     % ODE is pyramid friction cone
 % erpNdirXY.DARTDANTZIG = false;  % DART is pyramid friction cone
 % erpNdirXY.DARTPGS = false;      % DART is pyramid friction cone
-erpNdirXY.MUJOCOPGSRK4 = false;
-erpNdirXY.MUJOCOCGRK4 = false;
-erpNdirXY.MUJOCONEWTONRK4 = false;
+% erpNdirXY.MUJOCOPGSRK4 = false;
+% erpNdirXY.MUJOCOCGRK4 = false;
+% erpNdirXY.MUJOCONEWTONRK4 = false;
 
 erpYdirY = plotoption;
 
@@ -89,7 +89,7 @@ erpYdirXY = plotoption;
 % erpYdirXY.DARTPGS = false;      % DART is pyramid friction cone
 
 disp('plotting error vs real-time-factor...')
-% plot_error_speed(T, const, plotSpec, false, false, '-noerp-y', '(No Erp / Y force)', erpNdirY);
+plot_error_speed(T, const, plotSpec, false, false, '-noerp-y', '(No Erp / Y force)', erpNdirY);
 plot_error_speed(T, const, plotSpec, false, true, '-noerp-xy', '(No Erp / XY force)', erpNdirXY);
 % plot_error_speed(T, const, plotSpec, true, false, '-erp-y', '(Erp / Y force)', erpYdirY);
 plot_error_speed(T, const, plotSpec, true, true, '-erp-xy', '(Erp / XY force)', erpYdirXY);
@@ -209,7 +209,7 @@ hold off
 title(['Velocity Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
-ylim([1e-12, 1e2])
+ylim([1e-13, 1e2])
 lgd = legend('Location', 'northeast');
 lgd.NumColumns = 2;
 saveas(h, strcat('rolling-plots/error-speed', fileName, '.png'))

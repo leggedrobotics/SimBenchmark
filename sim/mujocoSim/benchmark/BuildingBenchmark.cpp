@@ -41,7 +41,7 @@ void setupSimulation() {
     );
 }
 
-void setupWorld() {
+void resetWorld() {
 
   if(benchmark::building::options.gui) {
     sim->setLightPosition((float)benchmark::building::params.lightPosition[0],
@@ -133,7 +133,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
   simulationLoop();
 
   // time log

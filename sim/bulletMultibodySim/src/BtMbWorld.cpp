@@ -29,8 +29,8 @@ BtMbWorld::BtMbWorld() {
     arg.m_erp = 0;
     arg.m_contactERP = 0;
     arg.m_frictionERP = 0;
-    arg.m_solverResidualThreshold = 1e-4;
-    arg.m_restitutionVelocityThreshold = 0;
+//    arg.m_solverResidualThreshold = 1e-4;
+//    arg.m_restitutionVelocityThreshold = 0;
     api_->setPhysicsEngineParameter(arg);
   }
 }

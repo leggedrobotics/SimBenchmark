@@ -17,7 +17,7 @@ endif()
 
 # options
 option(BENCHMARK_RAISIM "benchmark raiSim" ON)
-option(BENCHMARK_BULLET "benchmark Bullet" ON)     # deprecated!
+option(BENCHMARK_BULLET "benchmark Bullet" ON)     # will be deprecated.
 option(BENCHMARK_BULLET_MULTIBODY "benchmark Bullet Multibody(bullet3 API)" ON)
 option(BENCHMARK_ODE "benchmark ODE" ON)
 option(BENCHMARK_MUJOCO "benchmark MUJOCO" ON)

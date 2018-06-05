@@ -13,6 +13,12 @@ dart_sim::object::DartCheckerBoard::DartCheckerBoard(double xLength, double yLen
 
   dart::dynamics::FreeJoint::Properties jointProp;
   jointProp.mName = "ground_joint";
+  jointProp.mDampingCoefficients[0] = 0;
+  jointProp.mDampingCoefficients[1] = 0;
+  jointProp.mDampingCoefficients[2] = 0;
+  jointProp.mDampingCoefficients[3] = 0;
+  jointProp.mDampingCoefficients[4] = 0;
+  jointProp.mDampingCoefficients[5] = 0;
 
   // body
   auto pair = skeletonPtr_->createJointAndBodyNodePair<dart::dynamics::WeldJoint>(

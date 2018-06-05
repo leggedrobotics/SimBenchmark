@@ -34,6 +34,7 @@ enum IntegratorOption {
 
 class MjcWorld: public benchmark::WorldInterface {
 
+  friend class MjcSim;
  public:
   MjcWorld(const char *modelPath,
            const char *keyPath,
@@ -92,6 +93,11 @@ class MjcWorld: public benchmark::WorldInterface {
   void integrate();
   void integrate1();
   void integrate2();
+
+  /**
+   * reset mujoco data
+   */
+  void resetSimulation();
 
   /// the functions below are articulated system related.
   /// ===================================

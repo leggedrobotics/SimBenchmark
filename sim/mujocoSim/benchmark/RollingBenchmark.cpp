@@ -13,16 +13,16 @@ po::options_description desc;
 void setupSimulation() {
   if (benchmark::rolling::options.gui)
     sim = new mujoco_sim::MjcSim(800, 600, 0.5,
-                                      benchmark::rolling::getMujocoXMLpath().c_str(),
-                                      benchmark::mujoco::getKeypath().c_str(),
-                                      benchmark::NO_BACKGROUND,
-                                      benchmark::mujoco::options.solverOption,
-                                      benchmark::mujoco::options.integratorOption);
+                                 benchmark::rolling::getMujocoXMLpath().c_str(),
+                                 benchmark::mujoco::getKeypath().c_str(),
+                                 benchmark::NO_BACKGROUND,
+                                 benchmark::mujoco::options.solverOption,
+                                 benchmark::mujoco::options.integratorOption);
   else
     sim = new mujoco_sim::MjcSim(benchmark::rolling::getMujocoXMLpath().c_str(),
-                                      benchmark::mujoco::getKeypath().c_str(),
-                                      benchmark::mujoco::options.solverOption,
-                                      benchmark::mujoco::options.integratorOption);
+                                 benchmark::mujoco::getKeypath().c_str(),
+                                 benchmark::mujoco::options.solverOption,
+                                 benchmark::mujoco::options.integratorOption);
 
   // timestep
   sim->setTimeStep(benchmark::rolling::options.dt);
@@ -30,22 +30,9 @@ void setupSimulation() {
   /// no erp for mujoco
   if(benchmark::rolling::options.erpYN)
   RAIFATAL("erp is not supported for mujoco")
-
-  // set up logger and timer
-  if(benchmark::rolling::options.log)
-    benchmark::rolling::loggerSetup(
-        benchmark::rolling::getLogDirpath(benchmark::rolling::options.erpYN,
-                                          benchmark::rolling::options.forceDirection,
-                                          benchmark::mujoco::options.simName,
-                                          benchmark::mujoco::options.solverName,
-                                          benchmark::mujoco::options.detectorName,
-                                          benchmark::mujoco::options.integratorName,
-                                          benchmark::rolling::options.dt), "var"
-    );
 }
 
 void setupWorld() {
-
   // gravity
   sim->setGravity({0, 0, benchmark::rolling::params.g});
 
@@ -74,7 +61,12 @@ void setupWorld() {
   }
 }
 
-double simulationLoop() {
+void resetWorld() {
+  sim->resetSimulation();
+  setupWorld();
+}
+
+double simulationLoop(bool timer = true, bool error = true) {
 
   // force
   Eigen::Vector3d force;
@@ -88,78 +80,47 @@ double simulationLoop() {
              0};
 
   // resever error vector
-  benchmark::rolling::errors.reserve(unsigned(benchmark::rolling::params.T / benchmark::rolling::options.dt));
+  benchmark::rolling::data.setN(unsigned(benchmark::rolling::params.T / benchmark::rolling::options.dt));
 
+  // timer start
   StopWatch watch;
-  watch.start();
-  if(benchmark::rolling::options.gui) {
+  if(timer)
+    watch.start();
+
+  // gui
+  if(benchmark::rolling::options.saveVideo && benchmark::rolling::options.gui)
+    sim->startRecordingVideo("/tmp", "mujoco-rolling");
+
+  for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt); i++) {
     // gui
-    if(benchmark::rolling::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "mujoco-rolling");
+    if(benchmark::rolling::options.gui && !sim->visualizerLoop(benchmark::rolling::options.dt))
+      break;
 
-    for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt) &&
-        sim->visualizerLoop(benchmark::rolling::options.dt); i++) {
+    // integrate step1
+    sim->integrate1();
 
-      // set force to box
-      sim->integrate1();
-      sim->getSingleBodyHandle(1)->setExternalForce(force);
+    // set force to box
+    sim->getSingleBodyHandle(1)->setExternalForce(force);
 
-      // log
-      if(benchmark::rolling::options.log) {
-        ru::logger->appendData("velbox", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
-        ru::logger->appendData("velball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());
-        ru::logger->appendData("posbox", sim->getSingleBodyHandle(1)->getPosition().data());
-        ru::logger->appendData("posball", sim->getSingleBodyHandle(2)->getPosition().data());
-      }
-
-      Eigen::Vector3d ballVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
-      Eigen::Vector3d boxVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
-
-      double error = 0;
-      error += pow((boxVec - sim->getSingleBodyHandle(1)->getLinearVelocity()).norm(), 2);
-      error += pow((ballVec - sim->getSingleBodyHandle(2)->getLinearVelocity()).norm(), 2);
-      benchmark::rolling::errors.push_back(error);
-      sim->integrate2();
+    // data save
+    if(error) {
+      benchmark::rolling::data.boxVel.push_back(sim->getSingleBodyHandle(1)->getLinearVelocity());
+      benchmark::rolling::data.boxPos.push_back(sim->getSingleBodyHandle(1)->getPosition());
+      benchmark::rolling::data.ballVel.push_back(sim->getSingleBodyHandle(2)->getLinearVelocity());
+      benchmark::rolling::data.ballPos.push_back(sim->getSingleBodyHandle(2)->getPosition());
     }
 
-    if(benchmark::rolling::options.saveVideo)
-      sim->stopRecordingVideo();
-
-  }
-  else {
-    // no gui
-    if(benchmark::rolling::options.log)
-      ru::timer->startTimer("rolling");
-
-    for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt); i++) {
-
-      // set force to box
-      sim->integrate1();
-      sim->getSingleBodyHandle(1)->setExternalForce(force);
-
-      // log
-      if(benchmark::rolling::options.log) {
-        ru::logger->appendData("velbox", sim->getSingleBodyHandle(1)->getLinearVelocity().data());
-        ru::logger->appendData("velball", sim->getSingleBodyHandle(2)->getLinearVelocity().data());
-        ru::logger->appendData("posbox", sim->getSingleBodyHandle(1)->getPosition().data());
-        ru::logger->appendData("posball", sim->getSingleBodyHandle(2)->getPosition().data());
-      }
-
-      Eigen::Vector3d ballVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
-      Eigen::Vector3d boxVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
-
-      double error = 0;
-      error += pow((boxVec - sim->getSingleBodyHandle(1)->getLinearVelocity()).norm(), 2);
-      error += pow((ballVec - sim->getSingleBodyHandle(2)->getLinearVelocity()).norm(), 2);
-      benchmark::rolling::errors.push_back(error);
-      sim->integrate2();
-    }
-
-    if(benchmark::rolling::options.log)
-      ru::timer->stopTimer("rolling");
+    // integrate step2
+    sim->integrate2();
   }
 
-  return watch.measure();
+  if(benchmark::rolling::options.saveVideo && benchmark::rolling::options.gui)
+    sim->stopRecordingVideo();
+
+  double time = 0;
+  if(timer)
+    time = watch.measure();
+  return time;
 }
 
 int main(int argc, const char* argv[]) {
@@ -184,9 +145,18 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
+  // set-up
   setupSimulation();
   setupWorld();
-  double time = simulationLoop();
+
+  // trial1: get Error
+  resetWorld();
+  simulationLoop(false, true);
+  double error = benchmark::rolling::data.computeError();
+
+  // trial2: get CPU time
+  resetWorld();
+  double time = simulationLoop(true, false);
 
   if(benchmark::rolling::options.csv)
     benchmark::rolling::printCSV(benchmark::rolling::getCSVpath(),
@@ -194,11 +164,12 @@ int main(int argc, const char* argv[]) {
                                  benchmark::mujoco::options.solverName,
                                  benchmark::mujoco::options.detectorName,
                                  benchmark::mujoco::options.integratorName,
-                                 time);
+                                 time,
+                                 error);
 
   RAIINFO(
-      std::endl << "time       : " << time << std::endl
-                << "mean error : " << benchmark::rolling::computeMeanError() << std::endl
+      std::endl << "CPU time   : " << time << std::endl
+                << "mean error : " << error << std::endl
                 << "=======================" << std::endl
   )
 

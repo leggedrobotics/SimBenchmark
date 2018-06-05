@@ -50,6 +50,16 @@ class MjcSim: public benchmark::WorldRG {
   void integrate1();
   void integrate2();
   void forwardKinematics();
+  
+  /**
+   * reset mujoco data
+   */
+  void resetSimulation();
+
+  /**
+   * Setter of fixed simulation timestep
+   * @param timeStep  timestep size in sec
+   */
   void setTimeStep(double timeStep);
 
   benchmark::SingleBodyHandle getSingleBodyHandle(int index);

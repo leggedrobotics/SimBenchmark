@@ -35,7 +35,7 @@ void setupSimulation() {
     );
 }
 
-void setupWorld() {
+void resetWorld() {
   // add objects
   auto checkerboard = sim->addCheckerboard(10.0, 400.0, 400.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
 
@@ -189,7 +189,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
   simulationLoop();
 
   // time log

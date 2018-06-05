@@ -38,7 +38,7 @@ void setupSimulation() {
     );
 }
 
-void setupWorld() {
+void resetWorld() {
   // materials
   // add objects
   auto checkerboard = sim->addArticulatedSystem(benchmark::bouncing::getBulletPlanepath(), bullet_mb_sim::object::URDF);
@@ -47,7 +47,7 @@ void setupWorld() {
 
   for(int i = 0; i < benchmark::bouncing::params.n; i++) {
     for(int j = 0; j < benchmark::bouncing::params.n; j++) {
-      auto ball = sim->addArticulatedSystem(benchmark::bouncing::getBulletBallpath(), bullet_mb_sim::object::URDF);
+      auto ball = sim->addArticulatedSystem(benchmark::bouncing::getBulletBallPath(), bullet_mb_sim::object::URDF);
       ball->setGeneralizedCoordinate(
           {i * 2.0 - 10, 
            j * 2.0 - 10, 
@@ -130,7 +130,7 @@ int main(int argc, const char* argv[]) {
   benchmark::bouncing::getOptionsFromArg(argc, argv, desc);
   benchmark::bulletmultibody::getOptionsFromArg(argc, argv, desc);
 
-  benchmark::bouncing::getParamsFromYAML(benchmark::bouncing::getYamlpath().c_str(),
+  benchmark::bouncing::getParamsFromYAML(benchmark::bouncing::getYamlPath().c_str(),
                                          benchmark::BULLET);
 
   RAIINFO(
@@ -145,7 +145,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
   simulationLoop();
 
   // time log

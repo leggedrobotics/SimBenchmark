@@ -42,7 +42,7 @@ void setupSimulation() {
     );
 }
 
-void setupWorld() {
+void resetWorld() {
   // materials
   // add objects
   int cnt = 0;
@@ -128,7 +128,7 @@ int main(int argc, const char* argv[]) {
   benchmark::bouncing::getOptionsFromArg(argc, argv, desc);
   benchmark::mujoco::getOptionsFromArg(argc, argv, desc);
 
-  benchmark::bouncing::getParamsFromYAML(benchmark::bouncing::getYamlpath().c_str(),
+  benchmark::bouncing::getParamsFromYAML(benchmark::bouncing::getYamlPath().c_str(),
                                          benchmark::DART);
 
   RAIINFO(
@@ -143,7 +143,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
   simulationLoop();
 
   // time log

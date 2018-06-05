@@ -25,7 +25,7 @@ void setupSimulation() {
   sim->setSolverParameter(1e-7, 1000);
 }
 
-void setupWorld() {
+void resetWorld() {
   auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(1.0);  // 1.0(ground) x 0.8(feet) = 0.8
 
@@ -171,7 +171,7 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
   setupSimulation();
-  setupWorld();
+  resetWorld();
   simulationLoop();
 
   RAIINFO(

@@ -26,7 +26,7 @@ void setupSimulation() {
   sim->setMaxContacts(5000);
 }
 
-void setupWorld() {
+void resetWorld() {
   auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(0.8);
 
@@ -168,7 +168,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
   simulationLoop();
 
   RAIINFO(

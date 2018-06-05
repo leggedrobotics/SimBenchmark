@@ -33,7 +33,7 @@ void setupSimulation() {
     );
 }
 
-void setupWorld() {
+void resetWorld() {
   // materials
   rai_sim::MaterialManager materials;
   materials.setMaterialNames({"ground", "ball"});
@@ -122,7 +122,7 @@ int main(int argc, const char* argv[]) {
 
   benchmark::bouncing::addDescToOption(desc);
   benchmark::bouncing::getOptionsFromArg(argc, argv, desc);
-  benchmark::bouncing::getParamsFromYAML(benchmark::bouncing::getYamlpath().c_str(),
+  benchmark::bouncing::getParamsFromYAML(benchmark::bouncing::getYamlPath().c_str(),
                                          benchmark::RAI);
 
   RAIINFO(
@@ -136,7 +136,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
   simulationLoop();
 
   // time log

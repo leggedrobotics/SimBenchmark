@@ -23,7 +23,7 @@ void setupSimulation() {
     sim->setERP(0);
 }
 
-void setupWorld() {
+void resetWorld() {
 
   // gravity
   sim->setGravity({0, 0, benchmark::sixsixsix::params.g});
@@ -212,7 +212,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
   simulationLoop();
 
   if(benchmark::sixsixsix::options.plot)

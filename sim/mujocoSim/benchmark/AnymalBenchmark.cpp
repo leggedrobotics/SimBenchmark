@@ -36,7 +36,7 @@ void setupSimulation() {
   sim->setTimeStep(benchmark::anymal::params.dt);
 }
 
-void setupWorld() {
+void resetWorld() {
   int numRow = benchmark::anymal::options.numRow;
   Eigen::VectorXd genCoord(sim->getStateDimension());
 
@@ -220,7 +220,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
   simulationLoop();
 
   RAIINFO(

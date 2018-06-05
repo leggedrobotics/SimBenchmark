@@ -496,3 +496,7 @@ void mujoco_sim::MjcSim::updateFrame() {
 //    }
 //  }
 }
+
+void mujoco_sim::MjcSim::resetSimulation() {
+  world_.resetSimulation();
+}

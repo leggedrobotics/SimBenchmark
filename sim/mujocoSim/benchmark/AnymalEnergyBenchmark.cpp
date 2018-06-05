@@ -28,7 +28,7 @@ void setupSimulation() {
   sim->setTimeStep(benchmark::anymal::freedrop::options.dt);
 }
 
-void setupWorld() {
+void resetWorld() {
 
   sim->setGeneralizedCoordinate({0, 0, benchmark::anymal::freedrop::params.H,
                                  1.0, 0.0, 0.0, 0.0,
@@ -183,7 +183,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
 
   RAIINFO(
       std::endl << "Timer    : " << simulationLoop() << std::endl

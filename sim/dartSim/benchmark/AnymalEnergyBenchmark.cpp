@@ -23,7 +23,7 @@ void setupSimulation() {
   sim->setTimeStep(benchmark::anymal::freedrop::options.dt);
 }
 
-void setupWorld() {
+void resetWorld() {
 
   // add objects
   auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
@@ -174,7 +174,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
 
   RAIINFO(
       std::endl << "Timer     : " << simulationLoop() << std::endl

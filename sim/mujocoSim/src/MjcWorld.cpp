@@ -327,4 +327,9 @@ void MjcWorld::forwardKinematics() {
   mj_forward(worldModel_, worldData_);
 }
 
+void MjcWorld::resetSimulation() {
+  mj_resetData(worldModel_, worldData_);
+  mj_forward(worldModel_, worldData_);
+}
+
 } // mujoco_sim

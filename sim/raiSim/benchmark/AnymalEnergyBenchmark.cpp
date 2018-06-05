@@ -20,7 +20,7 @@ void setupSimulation() {
   sim->setERP(0);
 }
 
-void setupWorld() {
+void resetWorld() {
 
   // add objects
   auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
@@ -180,7 +180,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
 
   RAIINFO(
       std::endl << "Timer    : " << simulationLoop() << std::endl

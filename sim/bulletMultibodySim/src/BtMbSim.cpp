@@ -384,4 +384,19 @@ void BtMbSim::setSolverParameter(double solverResidualThreshold, int solverItera
   world_.api_->setPhysicsEngineParameter(arg);
 }
 
+void BtMbSim::cameraFollowObject(ArticulatedSystemHandle followingObject, Eigen::Vector3d relativePosition) {
+  RAIFATAL_IF(!gui_, "RaiSim is running without visualization")
+  RAIFATAL_IF(followingObject.visual().empty(), "could not find visual objects")
+  WorldRG::cameraFollowObject(followingObject.visual()[0], relativePosition);
+}
+
+void BtMbSim::cameraFollowObject(benchmark::SingleBodyHandle followingObject, Eigen::Vector3d relativePosition) {
+  WorldRG::cameraFollowObject(followingObject, relativePosition);
+}
+
+void BtMbSim::cameraFollowObject(rai_graphics::object::SingleBodyObject *followingObject,
+                                 Eigen::Vector3d relativePosition) {
+  WorldRG::cameraFollowObject(followingObject, relativePosition);
+}
+
 } // bullet_mb_sim

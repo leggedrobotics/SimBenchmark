@@ -35,7 +35,7 @@ void setupSimulation() {
     );
 }
 
-void setupWorld() {
+void resetWorld() {
   // materials
   // add objects
   auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
@@ -123,7 +123,7 @@ int main(int argc, const char* argv[]) {
   benchmark::bouncing::getOptionsFromArg(argc, argv, desc);
   benchmark::bullet::getOptionsFromArg(argc, argv, desc);
 
-  benchmark::bouncing::getParamsFromYAML(benchmark::bouncing::getYamlpath().c_str(),
+  benchmark::bouncing::getParamsFromYAML(benchmark::bouncing::getYamlPath().c_str(),
                                          benchmark::BULLET);
 
   RAIINFO(
@@ -138,7 +138,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
   simulationLoop();
 
   // time log

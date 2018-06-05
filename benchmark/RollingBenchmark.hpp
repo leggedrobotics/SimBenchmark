@@ -26,13 +26,32 @@ namespace ru = rai::Utils;
 
 namespace benchmark::rolling {
 
-// error list
-std::vector<double> errors;
-
+/// enum
 enum ForceDirection {
   FORCE_Y,    // force along the y axis
   FORCE_XY    // force along the diagonal direction
 };
+
+/// functions
+std::string getMujocoXMLpath();
+std::string getBulletBallPath();
+std::string getBulletBoxPath();
+std::string getBulletPlanePath();
+std::string getYamlpath();
+std::string getLogDirpath(bool, ForceDirection,
+                          std::string, std::string, std::string, std::string, double);
+std::string getCSVpath();
+
+void addDescToOption(po::options_description&);
+void getOptionsFromArg(int argc, const char *argv[], po::options_description &);
+void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator);
+
+void loggerSetup(std::string path, std::string name);
+void printCSV(std::string, std::string, std::string, std::string, std::string, double, double error);
+
+Eigen::Vector3d computeAnalyticalSol(double t, bool isBall);
+
+/// struct
 
 /**
  * options for rolling simulation
@@ -102,6 +121,72 @@ struct Parameter {
 Parameter params;
 
 /**
+ * data from rolling simulation
+ */
+struct Data {
+  void setN(int n) {
+    Data::n = n;
+    ballVel.reserve(n);
+    ballPos.reserve(n);
+    boxVel.reserve(n);
+    boxPos.reserve(n);
+  }
+
+  /**
+   * compute sum of mean squared error box and mean squared error ball
+   * @return
+   */
+  double computeError() {
+    Eigen::MatrixXd velErrorSq(n, 3);
+    for(int i = 0; i < n; i++) {
+      Eigen::Vector3d ballVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
+      Eigen::Vector3d boxVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
+
+      velErrorSq.row(i).x() = pow((ballVel[i].x() - ballVec.x()), 2) + pow((boxVel[i].x() - boxVec.x()), 2);
+      velErrorSq.row(i).y() = pow((ballVel[i].y() - ballVec.y()), 2) + pow((boxVel[i].y() - boxVec.y()), 2);
+      velErrorSq.row(i).z() = pow((ballVel[i].z() - ballVec.z()), 2) + pow((boxVel[i].z() - boxVec.z()), 2);
+    }
+
+    if(options.plot) {
+      Eigen::MatrixXd tdata(n, 1);        // time
+      Eigen::MatrixXd xdata(n, 1);        // x elements
+      Eigen::MatrixXd ydata(n, 1);        // y elements
+      Eigen::MatrixXd zdata(n, 1);        // z elements
+      Eigen::MatrixXd sumdata(n, 1);      // sum elements
+
+      for(int i = 0; i < n; i++) {
+        tdata(i, 0) = i * benchmark::rolling::options.dt;
+        xdata(i, 0) = velErrorSq(i, 0);
+        ydata(i, 0) = velErrorSq(i, 1);
+        zdata(i, 0) = velErrorSq(i, 2);
+        sumdata(i, 0) = velErrorSq.row(i).sum();
+      }
+
+      rai::Utils::Graph::FigProp2D figure1properties("time", "squared velocity error", "squared velocity error");
+      rai::Utils::graph->figure(1, figure1properties);
+      rai::Utils::graph->appendData(1, tdata.data(), xdata.data(), n, "x error sq");
+      rai::Utils::graph->appendData(1, tdata.data(), ydata.data(), n, "y error sq");
+      rai::Utils::graph->appendData(1, tdata.data(), zdata.data(), n, "z error sq");
+      rai::Utils::graph->appendData(1, tdata.data(), sumdata.data(), n, "sum");
+      rai::Utils::graph->drawFigure(1);
+      rai::Utils::graph->waitForEnter();
+    }
+
+    return velErrorSq.rowwise().sum().mean();
+  }
+
+  // data list
+  std::vector<Eigen::Vector3d> ballVel;
+  std::vector<Eigen::Vector3d> ballPos;
+  std::vector<Eigen::Vector3d> boxVel;
+  std::vector<Eigen::Vector3d> boxPos;
+
+  // num data
+  int n = 0;
+};
+Data data;
+
+/**
  * get XML file path for Mujoco
  *
  * @param rowNum # of row
@@ -122,7 +207,7 @@ std::string getMujocoXMLpath() {
  *
  * @return urdf path in string
  */
-std::string getBulletBallpath() {
+std::string getBulletBallPath() {
 
   std::string ballpath(__FILE__);
   while (ballpath.back() != '/')
@@ -137,7 +222,7 @@ std::string getBulletBallpath() {
  *
  * @return urdf path in string
  */
-std::string getBulletBoxpath() {
+std::string getBulletBoxPath() {
 
   std::string ballpath(__FILE__);
   while (ballpath.back() != '/')
@@ -152,7 +237,7 @@ std::string getBulletBoxpath() {
  *
  * @return urdf path in string
  */
-std::string getBulletPlanepath() {
+std::string getBulletPlanePath() {
 
   std::string planepath(__FILE__);
   while (planepath.back() != '/')
@@ -226,6 +311,7 @@ void addDescToOption(po::options_description &desc) {
   benchmark::addDescToOption(desc);
   desc.add_options()
       ("erp-on", po::value<bool>(), "erp on (true / false)")
+      ("plot", "plot on")
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
       ("force", po::value<std::string>(), "applied force direction (y / xy)")
       ;
@@ -252,6 +338,11 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   // log option
   if(vm.count("log")) {
     options.log = true;
+  }
+
+  // log option
+  if(vm.count("plot")) {
+    options.plot = true;
   }
 
   // nogui option
@@ -357,7 +448,7 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
       params.dartBoxMu = constant["dart"]["mu_box"].as<double>();
       break;
     default:
-      RAIFATAL("invalid simulator value")
+    RAIFATAL("invalid simulator value")
   }
 }
 
@@ -412,17 +503,13 @@ Eigen::Vector3d computeAnalyticalSol(double t, bool isBall) {
     return {0, v, 0};
 }
 
-double computeMeanError() {
-  return std::accumulate(benchmark::rolling::errors.begin(), benchmark::rolling::errors.end(), 0.0)
-      / benchmark::rolling::errors.size();
-}
-
 void printCSV(std::string filePath,
               std::string sim,
               std::string solver,
               std::string detector,
               std::string integrator,
-              double time) {
+              double time,
+              double error) {
   std::ofstream myfile;
   myfile.open (filePath, std::ios_base::app);
 
@@ -433,7 +520,7 @@ void printCSV(std::string filePath,
          << options.erpYN << ","
          << options.forceDirection << ","
          << options.dt << ","
-         << computeMeanError() << ","
+         << error << ","
          << time << std::endl;
   myfile.close();
 }

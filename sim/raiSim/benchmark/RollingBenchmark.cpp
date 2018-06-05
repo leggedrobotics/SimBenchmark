@@ -22,21 +22,10 @@ void setupSimulation() {
     sim->setERP(benchmark::rolling::params.erp);
   else
     sim->setERP(0);
-
-  // set up logger and timer
-  if(benchmark::rolling::options.log)
-    benchmark::rolling::loggerSetup(
-        benchmark::rolling::getLogDirpath(benchmark::rolling::options.erpYN,
-                                          benchmark::rolling::options.forceDirection,
-                                          "RAI",
-                                          "RAI",
-                                          "RAI",
-                                          "RAI",
-                                          benchmark::rolling::options.dt), "var"
-    );
 }
 
 void setupWorld() {
+
   // materials
   rai_sim::MaterialManager materials;
   materials.setMaterialNames({"ground", "box", "ball"});
@@ -88,7 +77,24 @@ void setupWorld() {
   }
 }
 
-double simulationLoop() {
+void resetWorld() {
+  objList[0]->setPosition(0, 0, 0.5 - benchmark::rolling::params.initPenetration);
+  objList[0]->setVelocity(0, 0, 0, 0, 0, 0);
+
+  // balls
+  int idx = 1;
+  for(int i = 0; i < benchmark::rolling::params.n; i++) {
+    for(int j = 0; j < benchmark::rolling::params.n; j++) {
+      objList[idx]->setPosition(i * 2.0 - 4.0,
+                                j * 2.0 - 4.0,
+                                1.5 - 3 * benchmark::rolling::params.initPenetration);
+      objList[idx++]->setVelocity(0, 0, 0,
+                                  0, 0, 0);
+    }
+  }
+}
+
+double simulationLoop(bool timer = true, bool error = true) {
 
   // force
   rai_sim::Vec<3> force;
@@ -102,75 +108,37 @@ double simulationLoop() {
              0};
 
   // resever error vector
-  benchmark::rolling::errors.reserve(unsigned(benchmark::rolling::params.T / benchmark::rolling::options.dt));
+  benchmark::rolling::data.setN(unsigned(benchmark::rolling::params.T / benchmark::rolling::options.dt));
 
+  // timer start
   StopWatch watch;
-  watch.start();
-  if(benchmark::rolling::options.gui) {
+  if(timer)
+    watch.start();
+
+  for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt); i++) {
     // gui
-    if(benchmark::rolling::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "rai-rolling");
+    if(benchmark::rolling::options.gui && !sim->visualizerLoop(benchmark::rolling::options.dt))
+      break;
 
-    for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt) &&
-        sim->visualizerLoop(benchmark::rolling::options.dt); i++) {
+    // set force to box
+    objList[0]->setExternalForce(force, 0);
 
-      // set force to box
-      objList[0]->setExternalForce(force, 0);
-
-      // log
-      if(benchmark::rolling::options.log) {
-        ru::logger->appendData("velbox", objList[0]->getLinearVelocity().data());
-        ru::logger->appendData("velball", objList[1]->getLinearVelocity().data());
-        ru::logger->appendData("posbox", objList[0]->getPosition().data());
-        ru::logger->appendData("posball", objList[1]->getPosition().data());
-      }
-
-      Eigen::Vector3d ballVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
-      Eigen::Vector3d boxVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
-
-      double error = 0;
-      error += pow((boxVec - objList[0]->getLinearVelocity()).norm(), 2);
-      error += pow((ballVec - objList[1]->getLinearVelocity()).norm(), 2);
-      benchmark::rolling::errors.push_back(error);
-      sim->integrate(benchmark::rolling::options.dt);
+    // data save
+    if(error) {
+      benchmark::rolling::data.boxVel.push_back(objList[0]->getLinearVelocity());
+      benchmark::rolling::data.boxPos.push_back(objList[0]->getPosition());
+      benchmark::rolling::data.ballVel.push_back(objList[1]->getLinearVelocity());
+      benchmark::rolling::data.ballPos.push_back(objList[1]->getPosition());
     }
 
-    if(benchmark::rolling::options.saveVideo)
-      sim->stopRecordingVideo();
-  }
-  else {
-    // no gui
-    if(benchmark::rolling::options.log)
-      ru::timer->startTimer("rolling");
-
-    for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt); i++) {
-
-      // set force to box
-      objList[0]->setExternalForce(force, 0);
-
-      // log
-      if(benchmark::rolling::options.log) {
-        ru::logger->appendData("velbox", objList[0]->getLinearVelocity().data());
-        ru::logger->appendData("velball", objList[1]->getLinearVelocity().data());
-        ru::logger->appendData("posbox", objList[0]->getPosition().data());
-        ru::logger->appendData("posball", objList[1]->getPosition().data());
-      }
-
-      Eigen::Vector3d ballVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
-      Eigen::Vector3d boxVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
-
-      double error = 0;
-      error += pow((boxVec - objList[0]->getLinearVelocity()).norm(), 2);
-      error += pow((ballVec - objList[1]->getLinearVelocity()).norm(), 2);
-      benchmark::rolling::errors.push_back(error);
-      sim->integrate(benchmark::rolling::options.dt);
-    }
-
-    if(benchmark::rolling::options.log)
-      ru::timer->stopTimer("rolling");
+    // step
+    sim->integrate(benchmark::rolling::options.dt);
   }
 
-  return watch.measure();
+  double time = 0;
+  if(timer)
+    time = watch.measure();
+  return time;
 }
 
 int main(int argc, const char* argv[]) {
@@ -190,21 +158,31 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
+  // set-up
   setupSimulation();
   setupWorld();
-  double time = simulationLoop();
+
+  // trial1: get Error
+  resetWorld();
+  simulationLoop(false, true);
+  double error = benchmark::rolling::data.computeError();
+
+  // trial2: get CPU time
+  resetWorld();
+  double time = simulationLoop(true, false);
 
   if(benchmark::rolling::options.csv)
     benchmark::rolling::printCSV(benchmark::rolling::getCSVpath(),
                                  "RAI",
                                  "RAI",
-                                 "RAI", // defualt rai detector is modified ode
                                  "RAI",
-                                 time);
+                                 "RAI",
+                                 time,
+                                 error);
 
   RAIINFO(
-      std::endl << "time       : " << time << std::endl
-                << "mean error : " << benchmark::rolling::computeMeanError() << std::endl
+      std::endl << "CPU time   : " << time << std::endl
+                << "mean error : " << error << std::endl
                 << "=======================" << std::endl
   )
 

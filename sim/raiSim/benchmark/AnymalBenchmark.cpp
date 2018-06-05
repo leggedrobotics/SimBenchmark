@@ -18,7 +18,7 @@ void setupSimulation() {
     sim = new rai_sim::World_RG();
 }
 
-void setupWorld() {
+void resetWorld() {
   auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
 
   for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
@@ -155,7 +155,7 @@ int main(int argc, const char* argv[]) {
   )
 
   setupSimulation();
-  setupWorld();
+  resetWorld();
   simulationLoop();
 
   RAIINFO(

@@ -164,6 +164,18 @@ class BtMbSim: public benchmark::WorldRG {
    */
   void integrate();
 
+  /**
+   * Focus on object (articulated system)
+   *
+   * @param followingObject
+   * @param relativePosition
+   */
+  void cameraFollowObject(ArticulatedSystemHandle followingObject, Eigen::Vector3d relativePosition);
+
+  void cameraFollowObject(benchmark::SingleBodyHandle followingObject, Eigen::Vector3d relativePosition) override;
+  void cameraFollowObject(rai_graphics::object::SingleBodyObject *followingObject,
+                          Eigen::Vector3d relativePosition) override;
+
  private:
   /// deprecated pure virtual function
   /**

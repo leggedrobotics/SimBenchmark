@@ -7,8 +7,13 @@
 #include "RollingBenchmark.hpp"
 #include "BtMbBenchmark.hpp"
 
+// sim
 bullet_mb_sim::BtMbSim *sim;
+
+// objects
 std::vector<bullet_mb_sim::ArticulatedSystemHandle> objList;
+
+// options description
 po::options_description desc;
 
 void setupSimulation() {
@@ -27,38 +32,42 @@ void setupSimulation() {
 
   // time step
   sim->setTimeStep(benchmark::rolling::options.dt);
-
-  // set up logger and timer
-  if(benchmark::rolling::options.log)
-    benchmark::rolling::loggerSetup(
-        benchmark::rolling::getLogDirpath(benchmark::rolling::options.erpYN,
-                                          benchmark::rolling::options.forceDirection,
-                                          benchmark::bulletmultibody::options.simName,
-                                          benchmark::bulletmultibody::options.solverName,
-                                          benchmark::bulletmultibody::options.detectorName,
-                                          benchmark::bulletmultibody::options.integratorName,
-                                          benchmark::rolling::options.dt), "var"
-    );
 }
 
 void setupWorld() {
-
-  // add objects
-  auto checkerboard = sim->addArticulatedSystem(benchmark::rolling::getBulletPlanepath(), bullet_mb_sim::object::URDF);
+  // plane
+  auto checkerboard = sim->addArticulatedSystem(
+      benchmark::rolling::getBulletPlanePath(),
+      bullet_mb_sim::object::URDF,
+      false
+  );
   checkerboard->setFrictionCoefficient(-1, benchmark::rolling::params.btGroundMu);
 
-  auto box = sim->addArticulatedSystem(benchmark::rolling::getBulletBoxpath(), bullet_mb_sim::object::URDF);
-  box->setGeneralizedCoordinate({0, 0, 0.5 - benchmark::rolling::params.initPenetration,
-                                 1, 0, 0, 0});
+  // box
+  auto box = sim->addArticulatedSystem(
+      benchmark::rolling::getBulletBoxPath(),
+      bullet_mb_sim::object::URDF,
+      false
+  );
+  box->setGeneralizedCoordinate(
+      {0, 0, 0.5 - benchmark::rolling::params.initPenetration,
+       1, 0, 0, 0}
+  );
   box->setFrictionCoefficient(-1, benchmark::rolling::params.btBoxMu);
   objList.push_back(box);
-
+  
+  // balls
   for(int i = 0; i < benchmark::rolling::params.n; i++) {
     for(int j = 0; j < benchmark::rolling::params.n; j++) {
-      auto ball = sim->addArticulatedSystem(benchmark::rolling::getBulletBallpath(), bullet_mb_sim::object::URDF);
-      ball->setGeneralizedCoordinate({i * 2.0 - 4.0, j * 2.0 - 4.0,
-                                      1.5 - 3 * benchmark::rolling::params.initPenetration,
-                                      1, 0, 0, 0});
+      auto ball = sim->addArticulatedSystem(
+          benchmark::rolling::getBulletBallPath(),
+          bullet_mb_sim::object::URDF,
+          false
+      );
+      ball->setGeneralizedCoordinate(
+          {i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5 - 3 * benchmark::rolling::params.initPenetration,
+           1, 0, 0, 0}
+      );
       ball->setFrictionCoefficient(-1, benchmark::rolling::params.btBallMu);
       objList.push_back(ball);
     }
@@ -71,95 +80,79 @@ void setupWorld() {
     sim->setLightPosition((float)benchmark::rolling::params.lightPosition[0],
                           (float)benchmark::rolling::params.lightPosition[1],
                           (float)benchmark::rolling::params.lightPosition[2]);
-//    sim->cameraFollowObject(checkerboard, {30, 0, 15});
+    sim->cameraFollowObject(checkerboard, {30, 0, 15});
+  }
+};
+
+void resetWorld() {
+  objList[0]->setGeneralizedCoordinate(
+      {0, 0, 0.5 - benchmark::rolling::params.initPenetration,
+       1, 0, 0, 0}
+  );
+  objList[0]->setGeneralizedVelocity(
+      {0, 0, 0,
+       0, 0, 0});
+
+  // balls
+  int idx = 1;
+  for(int i = 0; i < benchmark::rolling::params.n; i++) {
+    for(int j = 0; j < benchmark::rolling::params.n; j++) {
+      objList[idx]->setGeneralizedCoordinate(
+          {i * 2.0 - 4.0, j * 2.0 - 4.0, 1.5 - 3 * benchmark::rolling::params.initPenetration,
+           1, 0, 0, 0}
+      );
+      objList[idx++]->setGeneralizedVelocity(
+          {0, 0, 0,
+           0, 0, 0});
+    }
   }
 }
 
-double simulationLoop() {
+double simulationLoop(bool timer = true, bool error = true) {
 
   // force
   Eigen::VectorXd force(6);
-  if(benchmark::rolling::options.forceDirection == benchmark::rolling::FORCE_Y)
-    force << 0, benchmark::rolling::params.F, 0, 0, 0, 0;
-  else if(benchmark::rolling::options.forceDirection == benchmark::rolling::FORCE_XY)
-    force << benchmark::rolling::params.F * 0.707106781186547,
-             benchmark::rolling::params.F * 0.707106781186547,
-             0, 0, 0, 0;
+  if(benchmark::rolling::options.forceDirection == benchmark::rolling::FORCE_Y) {
+    force << 0, benchmark::rolling::params.F, 0,
+        0, 0, 0;
+  }
+  else if(benchmark::rolling::options.forceDirection == benchmark::rolling::FORCE_XY) {
+    force << benchmark::rolling::params.F * 0.707106781186547, benchmark::rolling::params.F * 0.707106781186547, 0,
+        0, 0, 0;
+  }
 
   // resever error vector
-  benchmark::rolling::errors.reserve(unsigned(benchmark::rolling::params.T / benchmark::rolling::options.dt));
+  benchmark::rolling::data.setN(unsigned(benchmark::rolling::params.T / benchmark::rolling::options.dt));
 
+  // timer start
   StopWatch watch;
-  watch.start();
-  if(benchmark::rolling::options.gui) {
+  if(timer)
+    watch.start();
+
+  for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt); i++) {
     // gui
-    for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt) &&
-        sim->visualizerLoop(benchmark::rolling::options.dt); i++) {
+    if(benchmark::rolling::options.gui && !sim->visualizerLoop(benchmark::rolling::options.dt))
+      break;
 
-      // set force to box
-      objList[0]->setGeneralizedForce(force);
+    // set force to box
+    objList[0]->setGeneralizedForce(force);
 
-      // log
-      if(benchmark::rolling::options.log) {
-        Eigen::Vector3d velbox = objList[0]->getGeneralizedVelocity().head(3);
-        Eigen::Vector3d velball = objList[1]->getGeneralizedVelocity().head(3);
-        Eigen::Vector3d posbox = objList[0]->getGeneralizedCoordinate().head(3);
-        Eigen::Vector3d posball = objList[1]->getGeneralizedCoordinate().head(3);
-        ru::logger->appendData("velbox", velbox.data());
-        ru::logger->appendData("velball", velball.data());
-        ru::logger->appendData("posbox", posbox.data());
-        ru::logger->appendData("posball", posball.data());
-      }
-
-      Eigen::Vector3d ballVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
-      Eigen::Vector3d boxVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
-
-      double error = 0;
-      error += pow((boxVec - objList[0]->getGeneralizedVelocity().head(3)).norm(), 2);
-      error += pow((ballVec - objList[1]->getGeneralizedVelocity().head(3)).norm(), 2);
-      benchmark::rolling::errors.push_back(error);
-
-      sim->integrate();
-    }
-  }
-  else {
-    // no gui
-    if(benchmark::rolling::options.log)
-      ru::timer->startTimer("rolling");
-
-    for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt); i++) {
-
-      // set force to box
-      objList[0]->setGeneralizedForce(force);
-
-      // log
-      if(benchmark::rolling::options.log) {
-        Eigen::Vector3d velbox = objList[0]->getGeneralizedVelocity().head(3);
-        Eigen::Vector3d velball = objList[1]->getGeneralizedVelocity().head(3);
-        Eigen::Vector3d posbox = objList[0]->getGeneralizedCoordinate().head(3);
-        Eigen::Vector3d posball = objList[1]->getGeneralizedCoordinate().head(3);
-        ru::logger->appendData("velbox", velbox.data());
-        ru::logger->appendData("velball", velball.data());
-        ru::logger->appendData("posbox", posbox.data());
-        ru::logger->appendData("posball", posball.data());
-      }
-
-      Eigen::Vector3d ballVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, true);
-      Eigen::Vector3d boxVec = benchmark::rolling::computeAnalyticalSol(benchmark::rolling::options.dt * i, false);
-
-      double error = 0;
-      error += pow((boxVec - objList[0]->getGeneralizedVelocity().head(3)).norm(), 2);
-      error += pow((ballVec - objList[1]->getGeneralizedVelocity().head(3)).norm(), 2);
-      benchmark::rolling::errors.push_back(error);
-
-      sim->integrate();
+    // data save
+    if(error) {
+      benchmark::rolling::data.boxVel.push_back(objList[0]->getGeneralizedVelocity().head(3));
+      benchmark::rolling::data.boxPos.push_back(objList[0]->getGeneralizedCoordinate().head(3));
+      benchmark::rolling::data.ballVel.push_back(objList[1]->getGeneralizedVelocity().head(3));
+      benchmark::rolling::data.ballPos.push_back(objList[1]->getGeneralizedCoordinate().head(3));
     }
 
-    if(benchmark::rolling::options.log)
-      ru::timer->stopTimer("rolling");
+    // step
+    sim->integrate();
   }
 
-  return watch.measure();
+  double time = 0;
+  if(timer)
+    time = watch.measure();
+  return time;
 }
 
 int main(int argc, const char* argv[]) {
@@ -184,21 +177,32 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
+  // set-up
   setupSimulation();
   setupWorld();
-  double time = simulationLoop();
 
+  // trial1: get Error
+  resetWorld();
+  simulationLoop(false, true);
+  double error = benchmark::rolling::data.computeError();
+
+  // trial2: get CPU time
+  resetWorld();
+  double time = simulationLoop(true, false);
+
+  // logging
   if(benchmark::rolling::options.csv)
     benchmark::rolling::printCSV(benchmark::rolling::getCSVpath(),
                                  benchmark::bulletmultibody::options.simName,
                                  benchmark::bulletmultibody::options.solverName,
                                  benchmark::bulletmultibody::options.detectorName,
                                  benchmark::bulletmultibody::options.integratorName,
-                                 time);
+                                 time,
+                                 error);
 
   RAIINFO(
-      std::endl << "time       : " << time << std::endl
-                << "mean error : " << benchmark::rolling::computeMeanError() << std::endl
+      std::endl << "CPU time   : " << time << std::endl
+                << "mean error : " << error << std::endl
                 << "=======================" << std::endl
   )
 

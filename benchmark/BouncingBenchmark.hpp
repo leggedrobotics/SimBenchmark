@@ -15,6 +15,17 @@ namespace ru = rai::Utils;
 
 namespace benchmark::bouncing {
 
+/// functions
+std::string getMujocoXMLpath();
+std::string getBulletBallPath();
+std::string getBulletPlanepath();
+std::string getYamlPath();
+std::string getLogDirpath(bool erpYN, double restCoeff, std::string simulation, std::string solver, double dt);
+void addDescToOption(po::options_description &desc);
+void getOptionsFromArg(int argc, const char *argv[], po::options_description &desc);
+void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator);
+void loggerSetup(std::string path, std::string name);
+
 /**
  * options for bouncing simulation
  */
@@ -67,6 +78,21 @@ struct Parameter {
 };
 Parameter params;
 
+struct Data {
+  void setN(int n) {
+    Data::n = n;
+    ballVel.reserve(n);
+    ballPos.reserve(n);
+  }
+
+  // data list
+  std::vector<Eigen::Vector3d> ballVel;
+  std::vector<Eigen::Vector3d> ballPos;
+
+  // num data
+  int n = 0;
+};
+
 /**
  * get XML file path for Mujoco
  *
@@ -88,7 +114,7 @@ std::string getMujocoXMLpath() {
  *
  * @return urdf path in string
  */
-std::string getBulletBallpath() {
+std::string getBulletBallPath() {
 
   std::string ballpath(__FILE__);
   while (ballpath.back() != '/')
