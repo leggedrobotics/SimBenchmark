@@ -144,7 +144,7 @@ std::string getBulletPlanepath() {
  *
  * @return yaml path in string
  */
-std::string getYamlpath() {
+std::string getYamlPath() {
 
   std::string yamlPath(__FILE__);
   while (yamlPath.back() != '/')
