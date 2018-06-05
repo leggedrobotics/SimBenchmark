@@ -95,14 +95,6 @@ double simulationLoop() {
   StopWatch watch;
   watch.start();
 
-//  anymals[0]->setGeneralizedCoordinate({
-//                                           0, 0, 10,
-//                                           1, 0, 0, 0,
-//                                           0, 0, 0,
-//                                           0, 0, 0,
-//                                           0, 0, 0,
-//                                           0, 0, 0
-//                                       });
   if(benchmark::anymal::freedrop::options.gui) {
     // gui
     // step1: applying force

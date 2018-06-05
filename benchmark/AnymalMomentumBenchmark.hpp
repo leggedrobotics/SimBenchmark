@@ -45,7 +45,7 @@ struct Parameter {
   double T = 10;      // simulation time (sec)
   double H = 2.0;
   double x0 = -5;
-  double v0 = 2;
+  double v0 = 5;
   double M = 0;       // will be updated!
   double m = 10; 
   double g = -9.81;

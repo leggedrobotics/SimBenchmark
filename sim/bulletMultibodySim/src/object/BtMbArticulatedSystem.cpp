@@ -794,10 +794,9 @@ const Eigen::Map<Eigen::Matrix<double, 3, 1>> object::BtMbArticulatedSystem::get
     benchmark::Vec<3> comangvel;
     getComVelocity_W(i-1, comlinvel, comangvel);
 
-
-    linearMomentum_[0] = comlinvel[0] * mass_[i];
-    linearMomentum_[1] = comlinvel[1] * mass_[i];
-    linearMomentum_[2] = comlinvel[2] * mass_[i];
+    linearMomentum_[0] += comlinvel[0] * mass_[i];
+    linearMomentum_[1] += comlinvel[1] * mass_[i];
+    linearMomentum_[2] += comlinvel[2] * mass_[i];
   }
 
   return linearMomentum_.e();

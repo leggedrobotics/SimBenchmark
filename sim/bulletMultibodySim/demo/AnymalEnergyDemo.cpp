@@ -34,20 +34,20 @@ int main(int argc, const char* argv[]) {
        -0.03, 0.4, -0.8,
        0.03, -0.4, 0.8,
        -0.03, -0.4, 0.8});
-  anymal->setGeneralizedCoordinate(
-      {0, 0, 10,
-       1.0, 0.0, 0.0, 0.0,
-       0, 0, 0,
-       0, 0, 0,
-       0, 0, 0,
-       0, 0, 0});
-//  anymal->setGeneralizedVelocity(
-//      {0, 0, 0,
-//       0.2, 1.0, 0.5,
-//       0.0, 0.0, 0.0,
-//       0.0, 0.0, 0.0,
-//       0.0, 0.0, 0.0,
-//       0.0, 0.0, 0.0});
+//  anymal->setGeneralizedCoordinate(
+//      {0, 0, 10,
+//       1.0, 0.0, 0.0, 0.0,
+//       0, 0, 0,
+//       0, 0, 0,
+//       0, 0, 0,
+//       0, 0, 0});
+  anymal->setGeneralizedVelocity(
+      {0, 0, 0,
+       0.2, 1.0, 0.5,
+       0.0, 0.0, 0.0,
+       0.0, 0.0, 0.0,
+       0.0, 0.0, 0.0,
+       0.0, 0.0, 0.0});
   RAIINFO(anymal->getGeneralizedVelocity())
 
   double g = 0;
