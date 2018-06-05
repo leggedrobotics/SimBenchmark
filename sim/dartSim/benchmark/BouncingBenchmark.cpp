@@ -14,8 +14,8 @@ po::options_description desc;
 void setupSimulation() {
   if (benchmark::bouncing::options.gui)
     sim = new dart_sim::DartSim(800, 600, 0.5,
-                                     benchmark::NO_BACKGROUND,
-                                     benchmark::dart::options.solverOption);
+                                benchmark::NO_BACKGROUND,
+                                benchmark::dart::options.solverOption);
   else
     sim = new dart_sim::DartSim(benchmark::dart::options.solverOption);
 
@@ -25,21 +25,9 @@ void setupSimulation() {
   /// no erp for dart
   if(benchmark::bouncing::options.erpYN)
   RAIFATAL("erp is not supported for dart")
-
-  // set up logger and timer
-  if(benchmark::bouncing::options.log)
-    benchmark::bouncing::loggerSetup(
-        benchmark::bouncing::getLogDirpath(benchmark::bouncing::options.erpYN,
-                                           benchmark::bouncing::options.e,
-                                           benchmark::dart::options.simName,
-                                           benchmark::dart::options.solverName,
-                                           benchmark::bouncing::options.dt), "var"
-    );
 }
 
-void resetWorld() {
-  // materials
-  // add objects
+void setupWorld() {
   auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
   checkerboard->setFrictionCoefficient(benchmark::bouncing::params.mu_ground);
   checkerboard->setRestitutionCoefficient(1.0);
@@ -72,49 +60,58 @@ void resetWorld() {
   }
 }
 
-void simulationLoop() {
-  if(benchmark::bouncing::options.gui) {
+void resetWorld() {
+  int cnt = 0;
+  for(int i = 0; i < benchmark::bouncing::params.n; i++) {
+    for(int j = 0; j < benchmark::bouncing::params.n; j++) {
+      objList[cnt]->setPosition(
+          i * 2.0 - 10,
+          j * 2.0 - 10,
+          benchmark::bouncing::params.H
+      );
+      objList[cnt++]->setVelocity(
+          0, 0, 0, 0, 0, 0
+      );
+    }
+  }
+}
+
+double simulationLoop(bool timer = true, bool error = true) {
+  if(benchmark::bouncing::options.saveVideo)
+    sim->startRecordingVideo("/tmp", "bullet-bouncing");
+
+  // resever error vector
+  benchmark::bouncing::data.setN(unsigned(benchmark::bouncing::params.T / benchmark::bouncing::options.dt));
+
+  // timer start
+  StopWatch watch;
+  if(timer)
+    watch.start();
+
+  for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt); i++) {
     // gui
-    if(benchmark::bouncing::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "dart-bouncing");
+    if (benchmark::bouncing::options.gui && !sim->visualizerLoop(benchmark::bouncing::options.dt))
+      break;
 
-    for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt)
-        && sim->visualizerLoop(benchmark::bouncing::options.dt); i++) {
-      sim->integrate();
-
-      // energy log
-      if(benchmark::bouncing::options.log) {
-        double energy = 0;
-        for(int j = 0; j < objList.size(); j++) {
-          energy += objList[j]->getEnergy({0, 0, benchmark::bouncing::params.g});
-        }
-        rai::Utils::logger->appendData("energy", energy);
+    // data save
+    if (error) {
+      double E = 0;
+      for(int j = 0; j < objList.size(); j++) {
+        E += objList[j]->getEnergy({0, 0, benchmark::bouncing::params.g});
       }
+      benchmark::bouncing::data.ballEnergy.push_back(E);
     }
 
-    if(benchmark::bouncing::options.saveVideo)
-      sim->stopRecordingVideo();
+    sim->integrate();
   }
-  else {
-    // no gui
-    if(benchmark::bouncing::options.log)
-      ru::timer->startTimer("bouncing");
 
-    for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt); i++) {
-      sim->integrate();
+  if(benchmark::bouncing::options.saveVideo)
+    sim->stopRecordingVideo();
 
-      if(benchmark::bouncing::options.log) {
-        double energy = 0;
-        for(int j = 0; j < objList.size(); j++) {
-          energy += objList[j]->getEnergy({0, 0, benchmark::bouncing::params.g});
-        }
-        rai::Utils::logger->appendData("energy", energy);
-      }
-    }
-
-    if(benchmark::bouncing::options.log)
-      ru::timer->stopTimer("bouncing");
-  }
+  double time = 0;
+  if(timer)
+    time = watch.measure();
+  return time;
 }
 
 int main(int argc, const char* argv[]) {
@@ -139,13 +136,33 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
+  // set-up
   setupSimulation();
-  resetWorld();
-  simulationLoop();
+  setupWorld();
 
-  // time log
-//  if(benchmark::bouncing::options.log)
-//    ru::timer->dumpToStdOuput();
+  // trial1: get Error
+  resetWorld();
+  simulationLoop(false, true);
+  double error = benchmark::bouncing::data.computeError();
+
+  // trial2: get CPU time
+  resetWorld();
+  double time = simulationLoop(true, false);
+
+  if(benchmark::bouncing::options.csv)
+    benchmark::bouncing::printCSV(benchmark::bouncing::getCSVpath(),
+                                  benchmark::dart::options.simName,
+                                  benchmark::dart::options.solverName,
+                                  benchmark::dart::options.detectorName,
+                                  benchmark::dart::options.integratorName,
+                                  time,
+                                  error);
+
+  RAIINFO(
+      std::endl << "CPU time   : " << time << std::endl
+                << "mean error : " << error << std::endl
+                << "=======================" << std::endl
+  )
 
   delete sim;
   return 0;

@@ -30,20 +30,9 @@ void setupSimulation() {
   /// no erp for dart
   if(benchmark::bouncing::options.erpYN)
   RAIFATAL("erp is not supported for dart")
-
-  // set up logger and timer
-  if(benchmark::bouncing::options.log)
-    benchmark::bouncing::loggerSetup(
-        benchmark::bouncing::getLogDirpath(benchmark::bouncing::options.erpYN,
-                                           benchmark::bouncing::options.e,
-                                           benchmark::mujoco::options.simName,
-                                           benchmark::mujoco::options.solverName,
-                                           benchmark::bouncing::options.dt), "var"
-    );
 }
 
-void resetWorld() {
-  // materials
+void setupWorld() {
   // add objects
   int cnt = 0;
   for(int i = 0; i < benchmark::bouncing::params.n; i++) {
@@ -71,53 +60,45 @@ void resetWorld() {
   }
 }
 
-void simulationLoop() {
-  if(benchmark::bouncing::options.gui) {
+void resetWorld() {
+  sim->resetSimulation();
+  setupWorld();
+}
+
+double simulationLoop(bool timer = true, bool error = true) {
+  // gui
+  if(benchmark::bouncing::options.saveVideo)
+    sim->startRecordingVideo("/tmp", "mjc-bouncing");
+
+  // resever error vector
+  benchmark::bouncing::data.setN(unsigned(benchmark::bouncing::params.T / benchmark::bouncing::options.dt));
+
+  // timer start
+  StopWatch watch;
+  if(timer)
+    watch.start();
+
+  for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt); i++) {
     // gui
-    if(benchmark::bouncing::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "mujoco-bouncing");
+    if (benchmark::bouncing::options.gui && !sim->visualizerLoop(benchmark::bouncing::options.dt))
+      break;
 
-    for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt)
-        && sim->visualizerLoop(benchmark::bouncing::options.dt); i++) {
-      sim->integrate();
-
-      // energy log
-      if(benchmark::bouncing::options.log) {
-        double energy = 0;
-
-        /// j=0 is ground
-        for(int j = 1; j < sim->getNumObject(); j++) {
-          energy += sim->getSingleBodyHandle(j)->getEnergy({0, 0, benchmark::bouncing::params.g});
-        }
-        rai::Utils::logger->appendData("energy", energy);
-      }
+    // data save
+    if (error) {
+      double E = sim->getEnergy({0, 0, benchmark::bouncing::params.g});
+      benchmark::bouncing::data.ballEnergy.push_back(E);
     }
 
-    if(benchmark::bouncing::options.saveVideo)
-      sim->stopRecordingVideo();
+    sim->integrate();
   }
-  else {
-    // no gui
-    if(benchmark::bouncing::options.log)
-      ru::timer->startTimer("bouncing");
 
-    for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt); i++) {
-      sim->integrate();
+  if(benchmark::bouncing::options.saveVideo)
+    sim->stopRecordingVideo();
 
-      if(benchmark::bouncing::options.log) {
-        double energy = 0;
-
-        /// j=0 is ground
-        for(int j = 1; j < sim->getNumObject(); j++) {
-          energy += sim->getSingleBodyHandle(j)->getEnergy({0, 0, benchmark::bouncing::params.g});
-        }
-        rai::Utils::logger->appendData("energy", energy);
-      }
-    }
-
-    if(benchmark::bouncing::options.log)
-      ru::timer->stopTimer("bouncing");
-  }
+  double time = 0;
+  if(timer)
+    time = watch.measure();
+  return time;
 }
 
 int main(int argc, const char* argv[]) {
@@ -142,13 +123,33 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
+  // set-up
   setupSimulation();
-  resetWorld();
-  simulationLoop();
+  setupWorld();
 
-  // time log
-//  if(benchmark::bouncing::options.log)
-//    ru::timer->dumpToStdOuput();
+  // trial1: get Error
+  resetWorld();
+  simulationLoop(false, true);
+  double error = benchmark::bouncing::data.computeError();
+
+  // trial2: get CPU time
+  resetWorld();
+  double time = simulationLoop(true, false);
+
+  if(benchmark::bouncing::options.csv)
+    benchmark::bouncing::printCSV(benchmark::bouncing::getCSVpath(),
+                                  benchmark::mujoco::options.simName,
+                                  benchmark::mujoco::options.solverName,
+                                  benchmark::mujoco::options.detectorName,
+                                  benchmark::mujoco::options.integratorName,
+                                  time,
+                                  error);
+
+  RAIINFO(
+      std::endl << "CPU time   : " << time << std::endl
+                << "mean error : " << error << std::endl
+                << "=======================" << std::endl
+  )
 
   delete sim;
   return 0;

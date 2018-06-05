@@ -21,19 +21,9 @@ void setupSimulation() {
     sim->setERP(benchmark::bouncing::params.erp);
   else
     sim->setERP(0);
-
-  // set up logger and timer
-  if(benchmark::bouncing::options.log)
-    benchmark::bouncing::loggerSetup(
-        benchmark::bouncing::getLogDirpath(benchmark::bouncing::options.erpYN,
-                                           benchmark::bouncing::options.e,
-                                           "RAI",
-                                           "RAI",
-                                           benchmark::bouncing::options.dt), "var"
-    );
 }
 
-void resetWorld() {
+void setupWorld() {
   // materials
   rai_sim::MaterialManager materials;
   materials.setMaterialNames({"ground", "ball"});
@@ -71,51 +61,58 @@ void resetWorld() {
   }
 }
 
-void simulationLoop() {
-  if(benchmark::bouncing::options.gui) {
+void resetWorld() {
+  int cnt = 0;
+  for(int i = 0; i < benchmark::bouncing::params.n; i++) {
+    for(int j = 0; j < benchmark::bouncing::params.n; j++) {
+      objList[cnt]->setPosition(
+          i * 2.0 - 10,
+          j * 2.0 - 10,
+          benchmark::bouncing::params.H
+      );
+      objList[cnt++]->setVelocity(
+          0, 0, 0, 0, 0, 0
+      );
+    }
+  }
+}
+
+double simulationLoop(bool timer = true, bool error = true) {
+  if(benchmark::bouncing::options.saveVideo)
+    sim->startRecordingVideo("/tmp", "ode-bouncing");
+
+  // resever error vector
+  benchmark::bouncing::data.setN(unsigned(benchmark::bouncing::params.T / benchmark::bouncing::options.dt));
+
+  // timer start
+  StopWatch watch;
+  if(timer)
+    watch.start();
+
+  for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt); i++) {
     // gui
-    if(benchmark::bouncing::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "rai-bouncing");
+    if (benchmark::bouncing::options.gui && !sim->visualizerLoop(benchmark::bouncing::options.dt))
+      break;
 
-    for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt)
-        && sim->visualizerLoop(benchmark::bouncing::options.dt); i++) {
-
-      // energy log
-      if(benchmark::bouncing::options.log) {
-        double energy = 0;
-        for(int j = 0; j < objList.size(); j++) {
-          energy += objList[j]->getEnergy({0, 0, benchmark::bouncing::params.g});
-        }
-        rai::Utils::logger->appendData("energy", energy);
+    // data save
+    if (error) {
+      double E = 0;
+      for(int j = 0; j < objList.size(); j++) {
+        E += objList[j]->getEnergy({0, 0, benchmark::bouncing::params.g});
       }
-
-      sim->integrate(benchmark::bouncing::options.dt);
+      benchmark::bouncing::data.ballEnergy.push_back(E);
     }
 
-    if(benchmark::bouncing::options.saveVideo)
-      sim->stopRecordingVideo();
+    sim->integrate(benchmark::bouncing::options.dt);
   }
-  else {
-    // no gui
-    if(benchmark::bouncing::options.log)
-      ru::timer->startTimer("bouncing");
 
-    for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt); i++) {
+  if(benchmark::bouncing::options.saveVideo)
+    sim->stopRecordingVideo();
 
-      if(benchmark::bouncing::options.log) {
-        double energy = 0;
-        for(int j = 0; j < objList.size(); j++) {
-          energy += objList[j]->getEnergy({0, 0, benchmark::bouncing::params.g});
-        }
-        rai::Utils::logger->appendData("energy", energy);
-      }
-
-      sim->integrate(benchmark::bouncing::options.dt);
-    }
-
-    if(benchmark::bouncing::options.log)
-      ru::timer->stopTimer("bouncing");
-  }
+  double time = 0;
+  if(timer)
+    time = watch.measure();
+  return time;
 }
 
 int main(int argc, const char* argv[]) {
@@ -135,14 +132,35 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
+  // set-up
   setupSimulation();
+  setupWorld();
+
+  // trial1: get Error
   resetWorld();
-  simulationLoop();
+  simulationLoop(false, true);
+  double error = benchmark::bouncing::data.computeError();
 
-  // time log
-//  if(benchmark::bouncing::options.log)
-//    ru::timer->dumpToStdOuput();
+  // trial2: get CPU time
+  resetWorld();
+  double time = simulationLoop(true, false);
 
+
+  if(benchmark::bouncing::options.csv)
+    benchmark::bouncing::printCSV(benchmark::bouncing::getCSVpath(),
+                                  "RAI",
+                                  "RAI",
+                                  "RAI",
+                                  "RAI",
+                                  time,
+                                  error);
+
+  RAIINFO(
+      std::endl << "CPU time   : " << time << std::endl
+                << "mean error : " << error << std::endl
+                << "=======================" << std::endl
+  )
+  
   delete sim;
   return 0;
 }

@@ -16,6 +16,7 @@ namespace ru = rai::Utils;
 namespace benchmark::bouncing {
 
 /// functions
+std::string getCSVpath();
 std::string getMujocoXMLpath();
 std::string getBulletBallPath();
 std::string getBulletPlanepath();
@@ -25,6 +26,7 @@ void addDescToOption(po::options_description &desc);
 void getOptionsFromArg(int argc, const char *argv[], po::options_description &desc);
 void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator);
 void loggerSetup(std::string path, std::string name);
+void printCSV(std::string, std::string, std::string, std::string, std::string, double, double error);
 
 /**
  * options for bouncing simulation
@@ -60,7 +62,7 @@ struct Parameter {
 
   // simulation parameters
   double m = 10;              // mass of ball
-  int n = 11;                 // (num obj) = n x n
+  int n = 7;                 // (num obj) = n x n
   double H = 5;
   double R = 0.1;               // radius of ball
   double g = -9.81;
@@ -81,17 +83,56 @@ Parameter params;
 struct Data {
   void setN(int n) {
     Data::n = n;
-    ballVel.reserve(n);
-    ballPos.reserve(n);
+    ballEnergy.reserve(n);
+  }
+
+  double computeError() {
+    Eigen::MatrixXd energyErrorSq(n, 1);
+
+    double E =
+        - benchmark::bouncing::params.m * benchmark::bouncing::params.n * benchmark::bouncing::params.n
+        * benchmark::bouncing::params.g * benchmark::bouncing::params.H;
+
+    for(int i = 0; i < n; i++) {
+      energyErrorSq(i, 0) = pow(ballEnergy[i] - E,2);
+    }
+
+    if(options.plot) {
+      Eigen::MatrixXd tdata(n, 1);        // time
+
+      for(int i = 0; i < n; i++) {
+        tdata(i, 0) = i * benchmark::bouncing::options.dt;
+      }
+
+      rai::Utils::Graph::FigProp2D figure1properties("time", "squared energy error", "squared energy error");
+      rai::Utils::graph->figure(1, figure1properties);
+      rai::Utils::graph->appendData(1, tdata.data(), energyErrorSq.data(), n, "E error sq");
+      rai::Utils::graph->drawFigure(1);
+      rai::Utils::graph->waitForEnter();
+    }
+
+    return energyErrorSq.mean();
   }
 
   // data list
-  std::vector<Eigen::Vector3d> ballVel;
-  std::vector<Eigen::Vector3d> ballPos;
+  std::vector<double> ballEnergy;
 
   // num data
   int n = 0;
 };
+Data data;
+
+
+std::string getCSVpath() {
+
+  std::string csvPath(__FILE__);
+  while (csvPath.back() != '/')
+    csvPath.erase(csvPath.size() - 1, 1);
+
+  csvPath += "../data/boucning/" + options.csvName;
+
+  return csvPath;
+}
 
 /**
  * get XML file path for Mujoco
@@ -119,7 +160,7 @@ std::string getBulletBallPath() {
   std::string ballpath(__FILE__);
   while (ballpath.back() != '/')
     ballpath.erase(ballpath.size() - 1, 1);
-  ballpath += "../res/bullet/Ball/ball.urdf";
+  ballpath += "../res/bullet/Bouncing/ball.urdf";
 
   return ballpath;
 }
@@ -134,7 +175,7 @@ std::string getBulletPlanepath() {
   std::string planepath(__FILE__);
   while (planepath.back() != '/')
     planepath.erase(planepath.size() - 1, 1);
-  planepath += "../res/bullet/Plane/plane.urdf";
+  planepath += "../res/bullet/Bouncing/plane.urdf";
 
   return planepath;
 }
@@ -191,6 +232,7 @@ void addDescToOption(po::options_description &desc) {
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
       ("e", po::value<double>(), "restitution coefficient (0-1)")
       ("friction", "non-zero friction")
+      ("plot", "plot on")
       ;
 }
 
@@ -236,6 +278,12 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   // restitution coeff
   if(vm.count("e")) {
     options.e = vm["e"].as<double>();
+    RAIWARN_IF(options.e != 1, "only elastic collision analytic solution is supported")
+  }
+
+  // plot option
+  if(vm.count("plot")) {
+    options.plot = true;
   }
 
   // erp
@@ -320,6 +368,28 @@ void loggerSetup(std::string path, std::string name) {
   std::string timer = name + "timer";
   ru::timer->setLogPath(path);
   ru::timer->setLogFileName(timer);
+}
+
+void printCSV(std::string filePath,
+              std::string sim,
+              std::string solver,
+              std::string detector,
+              std::string integrator,
+              double time,
+              double error) {
+  std::ofstream myfile;
+  myfile.open (filePath, std::ios_base::app);
+
+  myfile << sim << ","
+         << solver << ","
+         << detector << ","
+         << integrator << ","
+         << options.erpYN << ","
+         << options.e << ","
+         << options.dt << ","
+         << error << ","
+         << time << std::endl;
+  myfile.close();
 }
 
 } // benchmark::bouncing
