@@ -77,21 +77,6 @@ void setupWorld() {
   }
 }
 
-void resetWorld() {
-  int cnt = 0;
-  for(int i = 0; i < benchmark::bouncing::params.n; i++) {
-    for(int j = 0; j < benchmark::bouncing::params.n; j++) {
-      objList[cnt]->setGeneralizedCoordinate(
-          {i * 2.0 - 10,
-           j * 2.0 - 10,
-           benchmark::bouncing::params.H,
-           1, 0, 0, 0});
-      objList[cnt++]->setGeneralizedVelocity(
-          {0, 0, 0, 0, 0, 0});
-    }
-  }
-}
-
 double simulationLoop(bool timer = true, bool error = true) {
   // gui
   if(benchmark::bouncing::options.saveVideo)
@@ -153,17 +138,19 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
-  // set-up
+  // trial1: get Error
   setupSimulation();
   setupWorld();
-
-  // trial1: get Error
-  resetWorld();
   simulationLoop(false, true);
   double error = benchmark::bouncing::data.computeError();
 
+  // reset
+  objList.clear();
+  delete sim;
+
   // trial2: get CPU time
-  resetWorld();
+  setupSimulation();
+  setupWorld();
   double time = simulationLoop(true, false);
 
   if(benchmark::bouncing::options.csv)

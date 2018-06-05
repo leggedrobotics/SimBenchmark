@@ -30,15 +30,15 @@ echo "====================================================================="
 # benchmark test
 for dt in ${dt_array[@]}
 do
-    for e in "1.0" "0.8"
+    for e in "1.0"
     do
         # rai sim
         if [ "$test_rai" == 'ON' ]; then
             if [ "$RAISIM_ON" == "ON" ]; then
                 for erpon in true false
                 do
-                    timeout 600 ../sim/raiSim/benchmark/RaiBouncingBenchmark \
-                    --nogui --erp-on="$erpon" --dt=$dt --e="$e" --log
+                    ../sim/raiSim/benchmark/RaiBouncingBenchmark \
+                    --nogui --erp-on="$erpon" --dt=$dt --e="$e" --csv=$csv_file
                 done
             else
                 echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
@@ -48,14 +48,11 @@ do
         # bullet sim
         if [ "$test_bt" == 'ON' ]; then
             if [ "$BTSIM_ON" == "ON" ]; then
-                for solver in seqimp nncg pgs #dantzig lemke
-                do
-                    for erpon in true false
-                    do
-                        timeout 600 ../sim/bulletSim/benchmark/BtBouncingBenchmark \
-                         --nogui --erp-on="$erpon" --dt=$dt --solver=$solver --e="$e" --log
-                    done
-                done
+				for erpon in true false
+				do
+					../sim/bulletMultibodySim/benchmark/BtMbBouncingBenchmark \
+					 --nogui --erp-on="$erpon" --dt=$dt --e="$e" --csv=$csv_file
+				done
             else
                 echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
             fi
@@ -68,8 +65,8 @@ do
                 do
                     for erpon in true false
                     do
-                        timeout 600 ../sim/odeSim/benchmark/OdeBouncingBenchmark \
-                        --nogui --erp-on="$erpon" --dt=$dt --solver=$solver --e="$e" --log
+                        ../sim/odeSim/benchmark/OdeBouncingBenchmark \
+                        --nogui --erp-on="$erpon" --dt=$dt --solver=$solver --e="$e" --csv=$csv_file
                     done
                 done
             else
@@ -88,8 +85,8 @@ do
                 for solver in dantzig pgs
                 do
                     # note dart has no erp
-                    timeout 600 ../sim/dartSim/benchmark/DartBouncingBenchmark \
-                    --nogui --dt=$dt --solver=$solver --e="$e" --log
+                    ../sim/dartSim/benchmark/DartBouncingBenchmark \
+                    --nogui --dt=$dt --solver=$solver --e="$e" --csv=$csv_file
                 done
             else
                 echo "dartsim is not built. turn on BENCHMARK_DARTSIM option in cmake"

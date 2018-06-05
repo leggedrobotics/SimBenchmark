@@ -24,8 +24,6 @@ namespace po = boost::program_options;
 
 namespace benchmark::anymal::zerogravity {
 
-// data lists
-std::vector<double> errorList;
 
 /**
  * options for ANYmal simulation
@@ -47,10 +45,109 @@ struct Parameter {
   double x0 = -5;
   double v0 = 5;
   double M = 0;       // will be updated!
-  double m = 10; 
+  double m = 10;
   double g = -9.81;
 };
 Parameter params;
+
+struct Data {
+  void setN(int n) {
+    Data::n = n;
+    ballMomentum.reserve(n);
+    anymalMomentum.reserve(n);
+  }
+
+  double computeError() {
+    Eigen::MatrixXd momentumErrorSq(n, 1);
+    Eigen::Vector3d momentum = {0, params.m * params.v0, 0};
+
+    for(int i = 0; i < n; i++) {
+      momentumErrorSq(i, 0) = pow((ballMomentum[i] + anymalMomentum[i] - momentum).norm(),2);
+    }
+
+    if(options.plot) {
+      Eigen::MatrixXd tdata(n, 1);        // time
+      Eigen::MatrixXd bMdata(n, 1);        // ball momentum y
+      Eigen::MatrixXd aMdata(n, 1);        // anymal momentum y
+      Eigen::MatrixXd tMdata(n, 1);        // total momentum y
+
+      for(int i = 0; i < n; i++) {
+        tdata(i, 0) = i * options.dt;
+        bMdata(i, 0) = ballMomentum[i].y();
+        aMdata(i, 0) = anymalMomentum[i].y();
+        tMdata(i, 0) = (ballMomentum[i] + anymalMomentum[i]).y();
+      }
+
+      rai::Utils::Graph::FigProp2D figure1properties("time", "squared energy error", "squared energy error");
+      rai::Utils::graph->figure(1, figure1properties);
+      rai::Utils::graph->appendData(1, tdata.data(), momentumErrorSq.data(), n, "E error sq");
+      rai::Utils::graph->drawFigure(1);
+
+      rai::Utils::Graph::FigProp2D figure2properties("time", "momentum", "momentum");
+      rai::Utils::graph->figure(2, figure2properties);
+      rai::Utils::graph->appendData(2, tdata.data(), bMdata.data(), n, "ball momentum");
+      rai::Utils::graph->appendData(2, tdata.data(), aMdata.data(), n, "anymal momentum");
+      rai::Utils::graph->appendData(2, tdata.data(), tMdata.data(), n, "total momentum");
+      rai::Utils::graph->drawFigure(2);
+      rai::Utils::graph->waitForEnter();
+    }
+
+    return momentumErrorSq.mean();
+  }
+
+  // data list
+  std::vector<Eigen::Vector3d> ballMomentum;
+  std::vector<Eigen::Vector3d> anymalMomentum;
+
+  // num data
+  int n = 0;
+};
+Data data;
+
+/**
+ * get URDF file path of ANYmal
+ *
+ * @return urdfPath in string
+ */
+std::string getBulletPlanePath() {
+
+  std::string urdfPath(__FILE__);
+  while (urdfPath.back() != '/')
+    urdfPath.erase(urdfPath.size() - 1, 1);
+  urdfPath += "../res/bullet/ANYmal-momentum/plane.urdf";
+
+  return urdfPath;
+}
+
+/**
+ * get URDF file path of ANYmal
+ *
+ * @return urdfPath in string
+ */
+std::string getBulletBallPath() {
+
+  std::string urdfPath(__FILE__);
+  while (urdfPath.back() != '/')
+    urdfPath.erase(urdfPath.size() - 1, 1);
+  urdfPath += "../res/bullet/ANYmal-momentum/ball.urdf";
+
+  return urdfPath;
+}
+
+/**
+ * get URDF file path of ANYmal
+ *
+ * @return urdfPath in string
+ */
+std::string getBulletANYmalPath() {
+
+  std::string urdfPath(__FILE__);
+  while (urdfPath.back() != '/')
+    urdfPath.erase(urdfPath.size() - 1, 1);
+  urdfPath += "../res/bullet/ANYmal-momentum/robot.urdf";
+
+  return urdfPath;
+}
 
 /**
  * get URDF file path of ANYmal
@@ -190,12 +287,6 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
   }
 }
 
-double computeMeanError() {
-  return std::accumulate(benchmark::anymal::zerogravity::errorList.begin(),
-                         benchmark::anymal::zerogravity::errorList.end(), 0.0)
-      / benchmark::anymal::zerogravity::errorList.size();
-}
-
 /**
  * get params from YAML
  *
@@ -244,7 +335,8 @@ void printCSV(std::string filePath,
               std::string solver,
               std::string detector,
               std::string integrator,
-              double time) {
+              double time,
+              double error) {
   std::ofstream myfile;
   myfile.open (filePath, std::ios_base::app);
   myfile << sim << ","
@@ -252,30 +344,9 @@ void printCSV(std::string filePath,
          << detector << ","
          << integrator << ","
          << options.dt << ","
-         << computeMeanError() << ","
+         << error << ","
          << time << std::endl;
   myfile.close();
-}
-
-void showPlot() {
-  int n = benchmark::anymal::zerogravity::errorList.size();
-  Eigen::MatrixXd ydata(n, 1);
-  Eigen::MatrixXd xdata(n, 1);
-
-  for(int i = 0; i < n; i++) {
-    xdata(i, 0) = i;
-    ydata(i, 0) = benchmark::anymal::zerogravity::errorList[i];
-  }
-
-  rai::Utils::Graph::FigProp2D figure1properties("step", "squared momentum error", "momentum error");
-  rai::Utils::graph->figure(1, figure1properties);
-  rai::Utils::graph->appendData(1,
-                                xdata.data(),
-                                ydata.data(),
-                                n,
-                                "momentum error");
-  rai::Utils::graph->drawFigure(1);
-  rai::Utils::graph->waitForEnter();
 }
 
 } // benchmark::anymal

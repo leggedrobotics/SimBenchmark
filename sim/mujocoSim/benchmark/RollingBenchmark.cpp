@@ -63,7 +63,6 @@ void setupWorld() {
 
 void resetWorld() {
   sim->resetSimulation();
-  setupWorld();
 }
 
 double simulationLoop(bool timer = true, bool error = true) {
@@ -145,17 +144,17 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
-  // set-up
+  // trial1: get Error
   setupSimulation();
   setupWorld();
-
-  // trial1: get Error
-  resetWorld();
   simulationLoop(false, true);
   double error = benchmark::rolling::data.computeError();
 
-  // trial2: get CPU time
+  // reset
   resetWorld();
+
+  // trial2: get CPU time
+  setupWorld();
   double time = simulationLoop(true, false);
 
   if(benchmark::rolling::options.csv)

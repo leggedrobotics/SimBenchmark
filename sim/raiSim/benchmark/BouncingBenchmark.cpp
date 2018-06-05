@@ -61,22 +61,6 @@ void setupWorld() {
   }
 }
 
-void resetWorld() {
-  int cnt = 0;
-  for(int i = 0; i < benchmark::bouncing::params.n; i++) {
-    for(int j = 0; j < benchmark::bouncing::params.n; j++) {
-      objList[cnt]->setPosition(
-          i * 2.0 - 10,
-          j * 2.0 - 10,
-          benchmark::bouncing::params.H
-      );
-      objList[cnt++]->setVelocity(
-          0, 0, 0, 0, 0, 0
-      );
-    }
-  }
-}
-
 double simulationLoop(bool timer = true, bool error = true) {
   if(benchmark::bouncing::options.saveVideo)
     sim->startRecordingVideo("/tmp", "ode-bouncing");
@@ -132,19 +116,20 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
-  // set-up
+  // trial1: get Error
   setupSimulation();
   setupWorld();
-
-  // trial1: get Error
-  resetWorld();
   simulationLoop(false, true);
   double error = benchmark::bouncing::data.computeError();
 
-  // trial2: get CPU time
-  resetWorld();
-  double time = simulationLoop(true, false);
+  // reset
+  objList.clear();
+  delete sim;
 
+  // trial2: get CPU time
+  setupSimulation();
+  setupWorld();
+  double time = simulationLoop(true, false);
 
   if(benchmark::bouncing::options.csv)
     benchmark::bouncing::printCSV(benchmark::bouncing::getCSVpath(),

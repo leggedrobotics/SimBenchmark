@@ -77,25 +77,6 @@ void setupWorld() {
   }
 }
 
-void resetWorld() {
-  objList[0]->setPosition(0, 0, 0.5 - benchmark::rolling::params.initPenetration);
-  objList[0]->setVelocity(0, 0, 0, 0, 0, 0);
-  objList[0]->setExternalForce({0, 0, 0});
-
-  // balls
-  int idx = 1;
-  for(int i = 0; i < benchmark::rolling::params.n; i++) {
-    for(int j = 0; j < benchmark::rolling::params.n; j++) {
-      objList[idx]->setPosition(i * 2.0 - 4.0,
-                                j * 2.0 - 4.0,
-                                1.5 - 3 * benchmark::rolling::params.initPenetration);
-      objList[idx]->setVelocity(0, 0, 0,
-                                0, 0, 0);
-      objList[idx++]->setExternalForce({0, 0, 0});
-    }
-  }
-}
-
 double simulationLoop(bool timer = true, bool error = true) {
 
   // force
@@ -165,18 +146,20 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
-  // set-up
+  // trial1: get Error
   setupSimulation();
   setupWorld();
-
-  // trial1: get Error
-  resetWorld();
   simulationLoop(false, true);
   double error = benchmark::rolling::data.computeError();
 
+  // reset
+  objList.clear();
+  delete sim;
+
   // trial2: get CPU time
-  resetWorld();
-  double time = simulationLoop(true, true);
+  setupSimulation();
+  setupWorld();
+  double time = simulationLoop(true, false);
 
   if(benchmark::rolling::options.csv)
     benchmark::rolling::printCSV(benchmark::rolling::getCSVpath(),

@@ -123,17 +123,17 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
-  // set-up
+  // trial1: get Error
   setupSimulation();
   setupWorld();
-
-  // trial1: get Error
-  resetWorld();
   simulationLoop(false, true);
   double error = benchmark::bouncing::data.computeError();
 
-  // trial2: get CPU time
+  // reset
   resetWorld();
+
+  // trial2: get CPU time
+  setupWorld();
   double time = simulationLoop(true, false);
 
   if(benchmark::bouncing::options.csv)
