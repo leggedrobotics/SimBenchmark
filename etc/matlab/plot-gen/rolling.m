@@ -130,9 +130,9 @@ text(1:length(speed), ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
 ylim([0, 25])
-saveas(h, strcat('rolling-plots/rollingbar.png'))
-saveas(h, strcat('rolling-plots/rollingbar.eps'), 'epsc')
-saveas(h, strcat('rolling-plots/rollingbar.fig'), 'fig')
+saveas(h, strcat('rolling-plots/rolling-speed-bar.png'))
+saveas(h, strcat('rolling-plots/rolling-speed-bar.eps'), 'epsc')
+saveas(h, strcat('rolling-plots/rolling-speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -212,9 +212,9 @@ ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
 ylim([1e-13, 1e2])
 lgd = legend('Location', 'northeast');
 lgd.NumColumns = 2;
-saveas(h, strcat('rolling-plots/error-speed', fileName, '.png'))
-saveas(h, strcat('rolling-plots/error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('rolling-plots/error-speed', fileName, '.fig'), 'fig')
+saveas(h, strcat('rolling-plots/rolling-error-speed', fileName, '.png'))
+saveas(h, strcat('rolling-plots/rolling-error-speed', fileName, '.eps'), 'epsc')
+saveas(h, strcat('rolling-plots/rolling-error-speed', fileName, '.fig'), 'fig')
 
 end
 
