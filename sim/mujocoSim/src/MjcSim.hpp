@@ -78,6 +78,21 @@ class MjcSim: public benchmark::WorldRG {
    */
   double getEnergy(const benchmark::Vec<3> &gravity);
 
+  /**
+  * Get kinetic energy of the robot
+  *
+  * @return        Kinetic energy of the robot
+  */
+  double getKineticEnergy();
+
+  /**
+   * Get potential energy of the robot
+   *
+   * @param gravity Gravitational acceleration
+   * @return        Potential energy of the robot
+   */
+  double getPotentialEnergy(const benchmark::Vec<3> &gravity);
+
   /// the functions below are articulated system related.
   /// ===================================
   const EigenVec getGeneralizedCoordinate();

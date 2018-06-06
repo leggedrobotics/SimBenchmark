@@ -25,17 +25,6 @@ namespace po = boost::program_options;
 namespace benchmark::anymal::freedrop {
 
 /**
- * data for simulation
- */
-struct Data {
-  std::vector<double> errorList;
-  std::vector<double> EList;
-  std::vector<double> kEList;
-  std::vector<double> pEList;
-};
-Data data;
-
-/**
  * options for simulation
  */
 struct Option: benchmark::Option {
@@ -57,9 +46,65 @@ struct Parameter {
   double H = 2;       // initial height
   double M = 0;       // will be updated! (anymal mass)
   double g = -9.81;
-  double F = 0;
+  double F = 0;       // will be updated
 };
 Parameter params;
+
+/**
+ * data for simulation
+ */
+struct Data {
+  void setN(int n) {
+    Data::n = n;
+    kineticE.reserve(n);
+    potentialE.reserve(n);
+  }
+
+  double computeError() {
+    Eigen::MatrixXd energyErrorSq(n, 1);
+
+    for(int i = 0; i < n; i++) {
+      energyErrorSq(i, 0) = pow(kineticE[i] + potentialE[i] - E0, 2);
+    }
+
+    if(options.plot) {
+      Eigen::MatrixXd tdata(n, 1);        // time
+      Eigen::MatrixXd kEdata(n, 1);       // kinetic E
+      Eigen::MatrixXd pEdata(n, 1);       // potential E
+      Eigen::MatrixXd tEdata(n, 1);       // total E
+
+      for(int i = 0; i < n; i++) {
+        tdata(i, 0) = i * options.dt;
+        kEdata(i, 0) = kineticE[i];
+        pEdata(i, 0) = potentialE[i];
+        tEdata(i, 0) = potentialE[i] + kineticE[i];
+      }
+
+      rai::Utils::Graph::FigProp2D figure1properties("time", "squared energy error", "squared energy error");
+      rai::Utils::graph->figure(1, figure1properties);
+      rai::Utils::graph->appendData(1, tdata.data(), energyErrorSq.data(), n, "error sq");
+      rai::Utils::graph->drawFigure(1);
+
+      rai::Utils::Graph::FigProp2D figure2properties("time", "momentum", "momentum");
+      rai::Utils::graph->figure(2, figure2properties);
+      rai::Utils::graph->appendData(2, tdata.data(), kEdata.data(), n, "kinetic E");
+      rai::Utils::graph->appendData(2, tdata.data(), pEdata.data(), n, "potential E");
+      rai::Utils::graph->appendData(2, tdata.data(), tEdata.data(), n, "total E");
+      rai::Utils::graph->drawFigure(2);
+      rai::Utils::graph->waitForEnter();
+    }
+
+    return energyErrorSq.mean();
+  }
+
+  std::vector<double> kineticE;
+  std::vector<double> potentialE;
+
+  // num data
+  double E0 = 0;
+  int n = 0;
+};
+Data data;
 
 /**
  * get URDF file path of ANYmal
@@ -77,11 +122,26 @@ std::string getURDFpath() {
 }
 
 /**
+ * get URDF file path of ANYmal
+ *
+ * @return urdfPath in string
+ */
+std::string getBulletPlanePath() {
+
+  std::string urdfPath(__FILE__);
+  while (urdfPath.back() != '/')
+    urdfPath.erase(urdfPath.size() - 1, 1);
+  urdfPath += "../res/bullet/ANYmal-energy/plane.urdf";
+
+  return urdfPath;
+}
+
+/**
  * get URDF file path of ANYmal for Bullet
  *
  * @return urdfPath in string
  */
-std::string getBulletURDFpath() {
+std::string getBulletANYmalPath() {
 
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
@@ -213,13 +273,6 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
   }
 }
 
-double computeMeanError() {
-  return std::accumulate(benchmark::anymal::freedrop::data.errorList.begin(),
-                         benchmark::anymal::freedrop::data.errorList.end(), 0.0)
-      / benchmark::anymal::freedrop::data.errorList.size();
-}
-
-
 /**
  * get params from YAML
  *
@@ -266,7 +319,8 @@ void printCSV(std::string filePath,
               std::string solver,
               std::string detector,
               std::string integrator,
-              double time) {
+              double time,
+              double error) {
   std::ofstream myfile;
   myfile.open (filePath, std::ios_base::app);
   myfile << sim << ","
@@ -274,59 +328,10 @@ void printCSV(std::string filePath,
          << detector << ","
          << integrator << ","
          << options.dt << ","
-         << computeMeanError() << ","
+         << error << ","
          << time << std::endl;
   myfile.close();
 }
-
-void showPlot() {
-  int n = data.errorList.size();
-  Eigen::MatrixXd edata(n, 1);
-  Eigen::MatrixXd tdata(n, 1);
-  Eigen::MatrixXd Edata(n, 1);
-  Eigen::MatrixXd pEdata(n, 1);
-  Eigen::MatrixXd kEdata(n, 1);
-
-  for(int i = 0; i < n; i++) {
-    tdata(i, 0) = i;
-    edata(i, 0) = data.errorList[i];
-    Edata(i, 0) = data.EList[i];
-    if(data.kEList.size() != 0 && data.pEList.size() != 0) {
-      pEdata(i, 0) = data.pEList[i];
-      kEdata(i, 0) = data.kEList[i];
-    }
-  }
-
-  rai::Utils::Graph::FigProp2D figure1properties("step", "squared energy error", "energy error");
-  rai::Utils::graph->figure(1, figure1properties);
-  rai::Utils::graph->appendData(1,
-                                tdata.data(),
-                                edata.data(),
-                                n,
-                                "energy error");
-  rai::Utils::graph->drawFigure(1);
-
-  rai::Utils::Graph::FigProp2D figure2properties("step", "energy", "energy");
-  rai::Utils::graph->figure(2, figure2properties);
-  rai::Utils::graph->appendData(2,
-                                tdata.data(),
-                                Edata.data(),
-                                n,
-                                "energy");
-  rai::Utils::graph->appendData(2,
-                                tdata.data(),
-                                kEdata.data(),
-                                n,
-                                "kineticenergy");
-  rai::Utils::graph->appendData(2,
-                                tdata.data(),
-                                pEdata.data(),
-                                n,
-                                "potentialenergy");
-  rai::Utils::graph->drawFigure(2);
-  rai::Utils::graph->waitForEnter();
-}
-
 
 } // benchmark::anymal
 
