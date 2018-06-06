@@ -108,7 +108,7 @@ text(1:length(speed), ...
     'horiz','center', ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-ylim([0, 260])
+ylim([0, 190])
 saveas(h, strcat('freedrop-plots/speed-bar.png'))
 saveas(h, strcat('freedrop-plots/speed-bar.eps'), 'epsc')
 saveas(h, strcat('freedrop-plots/speed-bar.fig'), 'fig')
