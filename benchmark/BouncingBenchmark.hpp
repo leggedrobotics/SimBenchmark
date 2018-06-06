@@ -129,7 +129,7 @@ std::string getCSVpath() {
   while (csvPath.back() != '/')
     csvPath.erase(csvPath.size() - 1, 1);
 
-  csvPath += "../data/boucning/" + options.csvName;
+  csvPath += "../data/bouncing/" + options.csvName;
 
   return csvPath;
 }
@@ -298,6 +298,12 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   // friction
   if(vm.count("friction")) {
     options.friction = true;
+  }
+
+  // csv
+  if(vm.count("csv")) {
+    options.csv = true;
+    options.csvName = vm["csv"].as<std::string>();
   }
 }
 

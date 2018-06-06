@@ -1,5 +1,4 @@
 format long
-% TODO analytic solution for different F
 
 %% path
 % lib path
@@ -39,102 +38,30 @@ testOptions = {testOptions{:, dirflags}};
 
 %% save data to table
 
+% csv format
+formatSpec = '%C%C%C%C%d%d%f%f%f';
+
+% load csv
+T = readtable(...
+    '../../../data/bouncing/sample.csv', ...
+    'Delimiter', ',', ...
+    'Format',formatSpec ...
+    );
+
 % create table
 entry = {...
     'SIM', ...
     'SOLVER', ...
+    'DETECTOR', ...
+    'INTEGRATOR', ...
     'ERP', ...
     'RESTITUTION', ...
     'TIMESTEP', ...
     'ERROR', ...
     'TIME'
     };
-
-plotSpec = plotspec;
-
-T = cell2table(cell(0, length(entry)));
 T.Properties.VariableNames = entry;
-
-% testOptions
-for i = 1:length(testOptions)
-    
-    % erp: 1/0
-    % res: double number
-    testOption = testOptions{i};
-    erp = regexp(testOption, 'erp=([0-9])', 'tokens');
-    erp = str2num(erp{1}{1});                % 0: false / 1: true
-    res = regexp(testOption, 'res=(\d+\.?\d*)', 'tokens');
-    res = str2double(res{1}{1});    % 0: y     / 1: xy
-    
-    optionDir = strcat(data_dir, '/', testOption);
-    sims = strsplit(ls(optionDir));
-    sims = sims(1:end-1);
-    
-    % simulators
-    % RAI / BULLET / DART / MUJOCO / ODE
-    parfor j = 1:length(sims)
-        sim = sims{j};
-        
-        simDir = strcat(optionDir, '/', sim);
-        solvers = strsplit(ls(simDir));
-        solvers = solvers(1:end-1);
-        
-        % solvers
-        % RAI    : RAI
-        % BULLET : SEQUENCEIMPULSE, NNCG, ...
-        % ODE    : QUICK, STANDARD
-        % DART   : DANTZIG, PGS
-        % MUJOCO : PGS, CG, NEWTON
-        for k = 1:length(solvers)
-            
-            solver = solvers{k};
-            
-            solverDir = strcat(simDir, '/', solver);
-            timesteps = strsplit(ls(solverDir));
-            timesteps = timesteps(1:end-1);
-            
-            % timesteps
-            % 0.00010, 0.000040 ...
-            for l = 1:length(timesteps)
-                
-                timestep = timesteps{l};
-                
-                curr = strcat(solverDir, '/', timestep);
-                energy = data_values(curr, 'var_energy.rlog');
-                
-                opt = struct(...
-                    'erp', logical(erp), ...
-                    'e', res, ...
-                    'dt', str2double(timestep), ...
-                    'sim', sim, ...
-                    'solver', solver ...
-                    );
-                
-                meanerror = mean(energy_error(const, opt, energy));
-                time = timer_value(curr);
-                
-                data = {...
-                    sim, ...
-                    solver, ...
-                    logical(erp), ...
-                    res, ...
-                    str2double(timestep), ...
-                    meanerror, ...
-                    time ...
-                    };
-                T = [T; data];
-            end
-            % end timesteps
-        end
-        % end solvers
-    end
-    % end sims
-end
-% end testOtions
-
-% save table to csv file
-writetable(T, 'bouncing-log.csv', 'Delimiter', ',', 'QuoteStrings', true)
-
+plotSpec = plotspec;
 
 
 %% error plot
@@ -152,9 +79,55 @@ erpYe08 = plotoption;
 disp('plotting error vs timestep...')
 plot_error_speed(T, const, plotSpec, false, 1.0, '-noerp-e=1.0', '(No Erp / e = 1.0)', erpNe1);
 % plot_error_speed(T, const, plotSpec, false, 0.8, '-noerp-e=0.8', '(No Erp / e = 0.8)', erpNe08);
-% plot_error_speed(T, const, plotSpec, true, 1.0, '-erp-e=1.0', '(Erp / e = 1.0)', erpYe1);
+plot_error_speed(T, const, plotSpec, true, 1.0, '-erp-e=1.0', '(Erp / e = 1.0)', erpYe1);
 % plot_error_speed(T, const, plotSpec, true, 0.8, '-erp-e=0.8', '(Erp / e = 0.8)', erpYe08);
 
+%% bar plot (for min dt)
+T2 = T(T.ERP == false & T.RESTITUTION == 1, :);
+dt = min(T2.TIMESTEP);
+
+simTime = const.T;
+numIter = simTime / dt;
+
+% filtering
+T2 = T2(T2.TIMESTEP == dt, :);
+T2 = sortrows(T2, 9);
+
+speed = numIter ./ T2.TIME ./ 1000;
+
+disp('plotting bar graph')
+h = figure('Name', 'speed', 'Position', [0, 0, 600, 500]);
+set(gca, ...
+    'YMinorTick', 'off', ...
+    'XMinorTick', 'off', ...
+    'YMinorGrid', 'off', ...
+    'XMinorGrid', 'off')
+box on 
+% grid on
+hold on
+for i = 1:size(T2, 1)
+    data = T2(i, :);
+    
+    spec = getfield(plotSpec, strcat(char(data.SIM), char(data.SOLVER), char(data.INTEGRATOR)));
+    
+    bar(categorical(cellstr(spec{2})), ...
+        speed(i), ...
+        'FaceColor', spec{3})
+end
+hold off
+title(sprintf('Rolling test speed'))
+% numbers on bars
+text(1:length(speed), ...
+    speed, ...
+    num2str(speed, '%0.2f'),...
+    'vert', 'bottom', ...
+    'horiz','center', ...
+    'FontWeight','bold');
+ylabel(sprintf('timestep per second (kHz) \n FAST →'))
+% ylim([0, 25])
+saveas(h, strcat('bouncing-plots/rollingbar.png'))
+saveas(h, strcat('bouncing-plots/rollingbar.eps'), 'epsc')
+saveas(h, strcat('bouncing-plots/rollingbar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -172,8 +145,17 @@ dataTable = dataTable(...
 sims = unique(dataTable.SIM);
 
 h = figure('Name','error','Position', [0, 0, 600, 500]);
+set(gca, ...
+    'YScale', 'log', ...
+    'XScale', 'log', ...
+    'Ydir', 'reverse', ...
+    'YMinorTick', 'off', ...
+    'XMinorTick', 'off', ...
+    'YMinorGrid', 'off', ...
+    'XMinorGrid', 'off')
+box on
+grid on
 hold on
-set(gca, 'YScale', 'log', 'XScale', 'log',  'Ydir', 'reverse')
 for i = 1:length(sims)
     
     sim = sims(i);
@@ -214,9 +196,9 @@ title(['Energy Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
 legend('Location', 'northeast')
-saveas(h, strcat('bouncing-plots/bounce-error-dt', fileName, '.png'))
-saveas(h, strcat('bouncing-plots/bounce-error-dt', fileName, '.eps'), 'epsc')
-saveas(h, strcat('bouncing-plots/bounce-error-dt', fileName, '.fig'), 'fig')
+saveas(h, strcat('bouncing-plots/bounce-error-speed', fileName, '.png'))
+saveas(h, strcat('bouncing-plots/bounce-error-speed', fileName, '.eps'), 'epsc')
+saveas(h, strcat('bouncing-plots/bounce-error-speed', fileName, '.fig'), 'fig')
 
 end
 
