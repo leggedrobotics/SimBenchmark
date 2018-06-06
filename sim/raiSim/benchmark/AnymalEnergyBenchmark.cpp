@@ -63,9 +63,17 @@ double computeEnergy() {
   return anymal->getEnergy({0, 0, benchmark::anymal::freedrop::params.g});
 }
 
+double computeKineticEnergy() {
+  return anymal->getKineticEnergy();
+}
+
+double computePotentialEnergy() {
+  return anymal->getPotentialEnergy({0, 0, benchmark::anymal::freedrop::params.g});
+}
+
 double computeEnergyError(double E0) {
   // compute linear momentum
-  return pow(computeEnergy() - E0, 2);
+  return pow(computeKineticEnergy() + computePotentialEnergy() - E0, 2);
 }
 
 double simulationLoop() {
@@ -113,6 +121,8 @@ double simulationLoop() {
                                       0, 0, 0});
       benchmark::anymal::freedrop::data.errorList.push_back(computeEnergyError(E0));
       benchmark::anymal::freedrop::data.EList.push_back(computeEnergy());
+      benchmark::anymal::freedrop::data.kEList.push_back(computeKineticEnergy());
+      benchmark::anymal::freedrop::data.pEList.push_back(computePotentialEnergy());
       sim->integrate2(benchmark::anymal::freedrop::options.dt);
     }
 
@@ -148,6 +158,8 @@ double simulationLoop() {
                                       0, 0, 0});
       benchmark::anymal::freedrop::data.errorList.push_back(computeEnergyError(E0));
       benchmark::anymal::freedrop::data.EList.push_back(computeEnergy());
+      benchmark::anymal::freedrop::data.kEList.push_back(computeKineticEnergy());
+      benchmark::anymal::freedrop::data.pEList.push_back(computePotentialEnergy());
       sim->integrate2(benchmark::anymal::freedrop::options.dt);
     }
   }
