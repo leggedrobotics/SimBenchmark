@@ -260,7 +260,14 @@ double mujoco_sim::MjcSim::getTotalMass() {
 
 
 double mujoco_sim::MjcSim::getEnergy(const benchmark::Vec<3> &gravity) {
-  return world_.getEnergy(gravity);
+  return getKineticEnergy() + getPotentialEnergy(gravity);
+}
+
+double mujoco_sim::MjcSim::getKineticEnergy() {
+  return world_.worldData_->energy[1];
+}
+double mujoco_sim::MjcSim::getPotentialEnergy(const benchmark::Vec<3> &gravity) {
+  return world_.worldData_->energy[0];
 }
 
 void mujoco_sim::MjcSim::forwardKinematics() {
@@ -270,17 +277,17 @@ void mujoco_sim::MjcSim::forwardKinematics() {
 void mujoco_sim::MjcSim::loop(double dt, double realTimeFactor) {
   RAIFATAL("use setTimeStep(double dt) + loop() instead")
 }
-
 void mujoco_sim::MjcSim::integrate(double dt) {
   RAIFATAL("use setTimeStep(double dt) + integrate() instead")
 }
 void mujoco_sim::MjcSim::integrate1(double dt) {
   RAIFATAL("use setTimeStep(double dt) + integrate1() instead")
 }
+
+
 void mujoco_sim::MjcSim::integrate2(double dt) {
   RAIFATAL("use setTimeStep(double dt) + integrate2() instead")
 }
-
 
 void mujoco_sim::MjcSim::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
@@ -496,7 +503,6 @@ void mujoco_sim::MjcSim::updateFrame() {
 //    }
 //  }
 }
-
 void mujoco_sim::MjcSim::resetSimulation() {
   world_.resetSimulation();
 }

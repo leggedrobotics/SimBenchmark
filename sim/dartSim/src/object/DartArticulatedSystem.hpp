@@ -73,6 +73,21 @@ class DartArticulatedSystem: public DartObject,
    */
   double getEnergy(const benchmark::Vec<3> &gravity) override;
 
+  /**
+  * Get kinetic energy of the robot
+  *
+  * @return        Kinetic energy of the robot
+  */
+  double getKineticEnergy();
+
+  /**
+   * Get potential energy of the robot
+   *
+   * @param gravity Gravitational acceleration
+   * @return        Potential energy of the robot
+   */
+  double getPotentialEnergy(const benchmark::Vec<3> &gravity);
+
  private:
   void init();
   void initVisual(dart::dynamics::BodyNode *body);

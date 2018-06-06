@@ -186,7 +186,7 @@ ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
 % xlim([1e-1, 10^5.5])
 % ylim([1e-8, 1e6])
 lgd = legend('Location', 'northeast');
-lgd.NumColumns = 1;
+lgd.NumColumns = 2;
 saveas(h, strcat('freedrop-plots/error-speed', fileName, '.png'))
 saveas(h, strcat('freedrop-plots/error-speed', fileName, '.eps'), 'epsc')
 saveas(h, strcat('freedrop-plots/error-speed', fileName, '.fig'), 'fig')

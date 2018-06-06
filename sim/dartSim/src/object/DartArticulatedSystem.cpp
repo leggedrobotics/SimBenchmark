@@ -470,11 +470,19 @@ double DartArticulatedSystem::getTotalMass() {
 }
 
 double DartArticulatedSystem::getEnergy(const benchmark::Vec<3> &gravity) {
-  return skeletonPtr_->computePotentialEnergy() + skeletonPtr_->computeKineticEnergy();
+  return getKineticEnergy() + getPotentialEnergy(gravity);
 }
 
 void DartArticulatedSystem::setInternalCollision(bool Yn) {
   skeletonPtr_->setSelfCollisionCheck(Yn);
+}
+
+double DartArticulatedSystem::getKineticEnergy() {
+  return skeletonPtr_->computeKineticEnergy();
+}
+
+double DartArticulatedSystem::getPotentialEnergy(const benchmark::Vec<3> &gravity) {
+  return skeletonPtr_->computePotentialEnergy();
 }
 
 } // object
