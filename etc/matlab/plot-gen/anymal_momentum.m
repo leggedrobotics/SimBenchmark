@@ -108,10 +108,10 @@ text(1:length(speed), ...
     'horiz','center', ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-ylim([0, 160])
-saveas(h, strcat('zerog-plots/rollingbar.png'))
-saveas(h, strcat('zerog-plots/rollingbar.eps'), 'epsc')
-saveas(h, strcat('zerog-plots/rollingbar.fig'), 'fig')
+ylim([0, 190])
+saveas(h, strcat('zerog-plots/speed-bar.png'))
+saveas(h, strcat('zerog-plots/speed-bar.eps'), 'epsc')
+saveas(h, strcat('zerog-plots/speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
