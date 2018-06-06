@@ -96,7 +96,7 @@ double simulationLoop(bool timer = true, bool error = true) {
       break;
 
     // integrate step1
-    sim->integrate1();
+    sim->forwardKinematics();
 
     // set force to box
     sim->getSingleBodyHandle(1)->setExternalForce(force);
@@ -110,7 +110,7 @@ double simulationLoop(bool timer = true, bool error = true) {
     }
 
     // integrate step2
-    sim->integrate2();
+    sim->integrate();
   }
 
   if(benchmark::rolling::options.saveVideo && benchmark::rolling::options.gui)

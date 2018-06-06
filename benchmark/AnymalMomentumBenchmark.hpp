@@ -78,9 +78,9 @@ struct Data {
         tMdata(i, 0) = (ballMomentum[i] + anymalMomentum[i]).y();
       }
 
-      rai::Utils::Graph::FigProp2D figure1properties("time", "squared energy error", "squared energy error");
+      rai::Utils::Graph::FigProp2D figure1properties("time", "squared momentum error", "squared momentum error");
       rai::Utils::graph->figure(1, figure1properties);
-      rai::Utils::graph->appendData(1, tdata.data(), momentumErrorSq.data(), n, "E error sq");
+      rai::Utils::graph->appendData(1, tdata.data(), momentumErrorSq.data(), n, "error norm sq");
       rai::Utils::graph->drawFigure(1);
 
       rai::Utils::Graph::FigProp2D figure2properties("time", "momentum", "momentum");

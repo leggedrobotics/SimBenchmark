@@ -28,7 +28,7 @@ void setupSimulation() {
   sim->setTimeStep(benchmark::anymal::zerogravity::options.dt);
 }
 
-void resetWorld() {
+void setupWorld() {
 
   Eigen::VectorXd genCoord(26);
   genCoord << 0, 0, benchmark::anymal::zerogravity::params.H,
@@ -64,49 +64,52 @@ void resetWorld() {
         sim->getSingleBodyHandle(sim->getNumObject()-1), {10.0, 0.0, 1.0});  // focus on ground
 }
 
-double computeLinearMomentumError() {
-  // compute linear momentum
-  Eigen::Vector3d linearMomentum = sim->getLinearMomentumInCartesianSpace();
-  Eigen::Vector3d analyticSol(0, benchmark::anymal::zerogravity::params.m * benchmark::anymal::zerogravity::params.v0, 0);
-
-  return pow((linearMomentum - analyticSol).norm(), 2);
+void resetWorld() {
+  sim->resetSimulation();
 }
 
+double simulationLoop(bool timer = true, bool error = true) {
+  if(benchmark::anymal::zerogravity::options.gui && benchmark::anymal::zerogravity::options.saveVideo)
+    sim->startRecordingVideo("/tmp", "bullet-anymal-momentum");
 
-double simulationLoop() {
+  // resever error vector
+  if(error)
+    benchmark::anymal::zerogravity::data.setN(
+        unsigned(benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt)
+    );
 
-  // error list
-  benchmark::anymal::zerogravity::errorList.reserve(
-      unsigned(benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt));
-
+  // timer start
   StopWatch watch;
-  watch.start();
-  if(benchmark::anymal::zerogravity::options.gui) {
+  if(timer)
+    watch.start();
+  for(int i = 0; i < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); i++) {
     // gui
-    for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt) &&
-        sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt, 1.0); t++) {
+    if(benchmark::anymal::zerogravity::options.gui && !sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt))
+      break;
 
-      sim->forwardKinematics();
-      benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
-      sim->integrate();
-    }
-  } else {
-    for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); t++) {
+    // integrate step1
+    sim->forwardKinematics();
 
-      sim->forwardKinematics();
-      benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
-      sim->integrate2();
+    // data save
+    if(error) {
+      Eigen::Vector3d ballM = sim->getSingleBodyHandle(0)->getLinearMomentum();
+      Eigen::Vector3d totalM = sim->getLinearMomentumInCartesianSpace();
+
+      benchmark::anymal::zerogravity::data.ballMomentum.push_back(
+          ballM
+      );
+      benchmark::anymal::zerogravity::data.anymalMomentum.push_back(
+          (totalM - ballM)
+      );
     }
+
+    // step 2
+    sim->integrate();
   }
 
-  double time = watch.measure();
-  if(benchmark::anymal::zerogravity::options.csv)
-    benchmark::anymal::zerogravity::printCSV(benchmark::anymal::zerogravity::getCSVpath(),
-                                             benchmark::mujoco::options.simName,
-                                             benchmark::mujoco::options.solverName,
-                                             benchmark::mujoco::options.detectorName,
-                                             benchmark::mujoco::options.integratorName,
-                                             time);
+  double time = 0;
+  if(timer)
+    time = watch.measure();
   return time;
 }
 
@@ -130,19 +133,33 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
+  // trial1: get Error
   setupSimulation();
+  setupWorld();
+  simulationLoop(false, true);
+  double error = benchmark::anymal::zerogravity::data.computeError();
+
+  // reset
   resetWorld();
 
+  // trial2: get CPU time
+  setupWorld();
+  double time = simulationLoop(true, false);
+
+  if(benchmark::anymal::zerogravity::options.csv)
+    benchmark::anymal::zerogravity::printCSV(benchmark::anymal::zerogravity::getCSVpath(),
+                                             benchmark::mujoco::options.simName,
+                                             benchmark::mujoco::options.solverName,
+                                             benchmark::mujoco::options.detectorName,
+                                             benchmark::mujoco::options.integratorName,
+                                             time,
+                                             error);
+
   RAIINFO(
-      std::endl << "Timer    : " << simulationLoop() << std::endl
-                << "Mean Error: " << benchmark::anymal::zerogravity::computeMeanError() << std::endl
+      std::endl << "CPU Timer : " << time << std::endl
+                << "Mean Error: " << error << std::endl
                 << "======================="
   )
-
-  // show plot
-  if(benchmark::anymal::zerogravity::options.plot) {
-    benchmark::anymal::zerogravity::showPlot();
-  }
 
   delete sim;
   return 0;

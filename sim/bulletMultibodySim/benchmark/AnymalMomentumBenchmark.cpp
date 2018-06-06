@@ -8,7 +8,7 @@
 #include "BtMbBenchmark.hpp"
 
 bullet_mb_sim::BtMbSim *sim;
-std::vector<benchmark::SingleBodyHandle> balls;
+std::vector<bullet_mb_sim::ArticulatedSystemHandle> balls;
 std::vector<bullet_mb_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
@@ -23,22 +23,33 @@ void setupSimulation() {
   sim->setTimeStep(benchmark::anymal::zerogravity::options.dt);
 }
 
-void resetWorld() {
-
-  // add objects
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
+void setupWorld() {
+// add objects
+  auto checkerboard = sim->addArticulatedSystem(
+      benchmark::anymal::zerogravity::getBulletPlanePath(),
+      bullet_mb_sim::object::URDF
+  );
 
   // ball
-  auto ball = sim->addSphere(0.2, benchmark::anymal::zerogravity::params.m);
-  ball->setPosition(0,
-                    benchmark::anymal::zerogravity::params.x0,
-                    benchmark::anymal::zerogravity::params.H);
-  ball->setVelocity(0, benchmark::anymal::zerogravity::params.v0, 0, 0, 0, 0);
+  auto ball = sim->addArticulatedSystem(
+      benchmark::anymal::zerogravity::getBulletBallPath(),
+      bullet_mb_sim::object::URDF
+  );
+  ball->setGeneralizedCoordinate({0,
+                                  benchmark::anymal::zerogravity::params.x0,
+                                  benchmark::anymal::zerogravity::params.H,
+                                  1, 0, 0, 0});
+  ball->setGeneralizedVelocity({0,
+                                benchmark::anymal::zerogravity::params.v0,
+                                0,
+                                0, 0, 0});
   balls.push_back(ball);
 
   // anymal
-  auto anymal =
-      sim->addArticulatedSystem(benchmark::anymal::zerogravity::getURDFpath(), bullet_mb_sim::object::URDF);
+  auto anymal = sim->addArticulatedSystem(
+      benchmark::anymal::zerogravity::getBulletANYmalPath(),
+      bullet_mb_sim::object::URDF
+  );
   anymal->setGeneralizedCoordinate({0,
                                     0,
                                     benchmark::anymal::zerogravity::params.H,
@@ -47,7 +58,6 @@ void resetWorld() {
                                     -0.03, 0.4, -0.8,
                                     0.03, -0.4, 0.8,
                                     -0.03, -0.4, 0.8});
-
   anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
   anymals.push_back(anymal);
 
@@ -60,72 +70,46 @@ void resetWorld() {
     sim->cameraFollowObject(checkerboard, {10.0, 0.0, 1.0});
 }
 
-double computeLinearMomentumError() {
-  // compute linear momentum
-  Eigen::Vector3d linearMomentum;
-  linearMomentum.setZero();
+double simulationLoop(bool timer = true, bool error = true) {
+  if(benchmark::anymal::zerogravity::options.gui && benchmark::anymal::zerogravity::options.saveVideo)
+    sim->startRecordingVideo("/tmp", "bullet-anymal-momentum");
 
-  for(int i = 0; i < anymals.size(); i++) {
-    linearMomentum += anymals[i]->getLinearMomentumInCartesianSpace();
-  }
-  for(int i = 0; i < balls.size(); i++) {
-    linearMomentum += balls[i]->getLinearMomentum();
-  }
+  // resever error vector
+  if(error)
+    benchmark::anymal::zerogravity::data.setN(
+        unsigned(benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt)
+    );
 
-  Eigen::Vector3d analyticSol(0, benchmark::anymal::zerogravity::params.m * benchmark::anymal::zerogravity::params.v0, 0);
-
-  return pow((linearMomentum - analyticSol).norm(), 2);
-}
-
-double simulationLoop() {
-
-  // error list
-  benchmark::anymal::zerogravity::errorList.reserve(
-      unsigned(benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt));
-
+  // timer start
   StopWatch watch;
-  watch.start();
-  if(benchmark::anymal::zerogravity::options.gui) {
+  if(timer)
+    watch.start();
+  for(int i = 0; i < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); i++) {
     // gui
-    if(benchmark::anymal::zerogravity::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "bullet-zero-gravity");
+    if(benchmark::anymal::zerogravity::options.gui && !sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt))
+      break;
 
-    for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt) &&
-        sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt, 1.0); t++) {
-
-      benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
-      sim->integrate();
+    // data save
+    if(error) {
+      benchmark::anymal::zerogravity::data.ballMomentum.push_back(
+          balls[0]->getLinearMomentumInCartesianSpace()
+      );
+      benchmark::anymal::zerogravity::data.anymalMomentum.push_back(
+          anymals[0]->getLinearMomentumInCartesianSpace()
+      );
     }
 
-    if(benchmark::anymal::zerogravity::options.saveVideo)
-      sim->stopRecordingVideo();
-
-  } else {
-    for (int t = 0; t < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); t++) {
-      benchmark::anymal::zerogravity::errorList.push_back(computeLinearMomentumError());
-      sim->integrate();
-    }
+    // step
+    sim->integrate();
   }
 
-  double time = watch.measure();
-  if(benchmark::anymal::zerogravity::options.csv)
-    benchmark::anymal::zerogravity::printCSV(benchmark::anymal::zerogravity::getCSVpath(),
-                                             benchmark::bulletmultibody::options.simName,
-                                             benchmark::bulletmultibody::options.solverName,
-                                             benchmark::bulletmultibody::options.detectorName,
-                                             benchmark::bulletmultibody::options.integratorName,
-                                             time);
+  double time = 0;
+  if(timer)
+    time = watch.measure();
   return time;
 }
 
-double computeMeanError() {
-  return std::accumulate(benchmark::anymal::zerogravity::errorList.begin(),
-                         benchmark::anymal::zerogravity::errorList.end(), 0.0)
-      / benchmark::anymal::zerogravity::errorList.size();
-}
-
 int main(int argc, const char* argv[]) {
-
 
   benchmark::anymal::zerogravity::addDescToOption(desc);
   benchmark::bulletmultibody::addDescToOption(desc);
@@ -145,19 +129,36 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
+  // trial1: get Error
   setupSimulation();
-  resetWorld();
+  setupWorld();
+  simulationLoop(false, true);
+  double error = benchmark::anymal::zerogravity::data.computeError();
+
+  // reset
+  balls.clear();
+  anymals.clear();
+  delete sim;
+
+  // trial2: get CPU time
+  setupSimulation();
+  setupWorld();
+  double time = simulationLoop(true, false);
+
+  if(benchmark::anymal::zerogravity::options.csv)
+    benchmark::anymal::zerogravity::printCSV(benchmark::anymal::zerogravity::getCSVpath(),
+                                             benchmark::bulletmultibody::options.simName,
+                                             benchmark::bulletmultibody::options.solverName,
+                                             benchmark::bulletmultibody::options.detectorName,
+                                             benchmark::bulletmultibody::options.integratorName,
+                                             time,
+                                             error);
 
   RAIINFO(
-      std::endl << "Timer    : " << simulationLoop() << std::endl
-                << "Mean Error: " << benchmark::anymal::zerogravity::computeMeanError() << std::endl
+      std::endl << "CPU Timer : " << time << std::endl
+                << "Mean Error: " << error << std::endl
                 << "======================="
   )
-
-  // show plot
-  if(benchmark::anymal::zerogravity::options.plot) {
-    benchmark::anymal::zerogravity::showPlot();
-  }
 
   delete sim;
   return 0;

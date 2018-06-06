@@ -28,7 +28,7 @@ void DartArticulatedSystem::init() {
   if(skeletonPtr_->getRootJoint()->getNumDofs() == 0) {
     // fixed base
     isFixed_ = true;
-  stateDimension_ = dof_;
+    stateDimension_ = dof_;
   }
   else {
     // floating base
@@ -37,6 +37,9 @@ void DartArticulatedSystem::init() {
   }
 
   // remove damping
+  for(int j = 0; j < skeletonPtr_->getRootJoint()->getNumDofs(); j++)
+    skeletonPtr_->getRootJoint()->setDampingCoefficient(j, 0);
+
   for(int i = 0; i < skeletonPtr_->getNumJoints(); i++) {
     for(int j = 0; j < skeletonPtr_->getJoint(i)->getNumDofs(); j++)
       skeletonPtr_->getJoint(i)->setDampingCoefficient(j, 0);

@@ -114,7 +114,8 @@ double simulationLoop() {
                                              "MULTIBODY",
                                              "BULLET",
                                              "BULLET",
-                                             time);
+                                             time,
+                                             0);
   return time;
 }
 
