@@ -62,7 +62,6 @@ void setupWorld() {
 
 void resetWorld() {
   sim->resetSimulation();
-  setupWorld();
 }
 
 double simulationLoop(bool timer = true, bool error = true) {

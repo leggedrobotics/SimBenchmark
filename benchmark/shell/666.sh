@@ -35,7 +35,7 @@ do
         if [ "$RAISIM_ON" == "ON" ]; then
             for erpon in true false
             do
-                timeout 600 ../sim/raiSim/benchmark/Rai666Benchmark \
+                ../sim/raiSim/benchmark/Rai666Benchmark \
                 --nogui --erp-on=$erpon --dt=$dt --csv=$csv_file
             done
         else
@@ -46,14 +46,11 @@ do
     # bullet sim
     if [ "$test_bt" == 'ON' ]; then
         if [ "$BTSIM_ON" == "ON" ]; then
-            for solver in seqimp nncg pgs #dantzig lemke
-            do
-                for erpon in true false
-                do
-                    timeout 600 ../sim/bulletSim/benchmark/Bt666Benchmark \
-                    --nogui --erp-on=$erpon --dt=$dt --solver=$solver --csv=$csv_file
-                done
-            done
+			for erpon in true false
+			do
+				../sim/bulletMultibodySim/benchmark/BtMb666Benchmark \
+				--nogui --erp-on=$erpon --dt=$dt --csv=$csv_file
+			done
         else
             echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
         fi
@@ -66,7 +63,7 @@ do
             do
                 for erpon in true false
                 do
-                    timeout 600 ../sim/odeSim/benchmark/Ode666Benchmark \
+                    ../sim/odeSim/benchmark/Ode666Benchmark \
                     --nogui --erp-on=$erpon --dt=$dt --solver=$solver --csv=$csv_file
                 done
             done
@@ -83,7 +80,7 @@ do
                 for integrator in euler rk4
                 do
                     # note mujoco has no erp
-                    timeout 600 ../sim/mujocoSim/benchmark/Mjc666Benchmark \
+                    ../sim/mujocoSim/benchmark/Mjc666Benchmark \
                     --nogui --dt=$dt --solver=$solver --csv=$csv_file --integrator=$integrator
                 done
             done
@@ -98,7 +95,7 @@ do
             for solver in dantzig pgs
             do
                 # note dart has no erp
-                timeout 600 ../sim/dartSim/benchmark/Dart666Benchmark \
+                ../sim/dartSim/benchmark/Dart666Benchmark \
                 --nogui --dt=$dt --solver=$solver --csv=$csv_file
             done
         else

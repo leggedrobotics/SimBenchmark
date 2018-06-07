@@ -23,7 +23,37 @@ void setupSimulation() {
     sim->setERP(0);
 }
 
-void resetWorld() {
+double penetrationCheck() {
+  double error = 0;
+  int numObj = objList.size();
+
+  for (int i = 0; i < numObj; i++) {
+    for (int j = i + 1; j < numObj; j++) {
+      double dist = (objList[i]->getPosition() - objList[j]->getPosition()).norm();
+
+      // error between spheres
+      if (dist < benchmark::sixsixsix::params.ballR * 2)
+        error += (benchmark::sixsixsix::params.ballR * 2 - dist) * (benchmark::sixsixsix::params.ballR * 2 - dist);
+    }
+
+    // error sphere ~ ground
+    if (objList[i]->getPosition()[2] < benchmark::sixsixsix::params.ballR) {
+      error +=
+          pow(benchmark::sixsixsix::params.ballR - objList[i]->getPosition()[2], 2);
+    }
+  }
+
+  return error;
+}
+
+double computeEnergy() {
+  double energy = 0;
+  for(int j = 0; j < objList.size(); j++)
+    energy += objList[j]->getEnergy({0, 0, benchmark::sixsixsix::params.g});
+  return energy;
+};
+
+void setupWorld() {
 
   // gravity
   sim->setGravity({0, 0, benchmark::sixsixsix::params.g});
@@ -107,92 +137,49 @@ void resetWorld() {
   }
 }
 
-double penetrationCheck() {
-  double error = 0;
-  int numObj = objList.size();
+double simulationLoop(bool timer = true, bool error = true) {
+  // gui
+  if(benchmark::sixsixsix::options.gui && benchmark::sixsixsix::options.saveVideo)
+    sim->startRecordingVideo("/tmp", "rai-666");
 
-  for (int i = 0; i < numObj; i++) {
-    for (int j = i + 1; j < numObj; j++) {
-      double dist = (objList[i]->getPosition() - objList[j]->getPosition()).norm();
+  // resever error vector
+  benchmark::sixsixsix::data.setN(unsigned(benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt));
 
-      // error between spheres
-      if (dist < benchmark::sixsixsix::params.ballR * 2)
-        error += (benchmark::sixsixsix::params.ballR * 2 - dist) * (benchmark::sixsixsix::params.ballR * 2 - dist);
-    }
-
-    // error sphere ~ ground
-    if (objList[i]->getPosition()[2] < benchmark::sixsixsix::params.ballR) {
-      error +=
-          (benchmark::sixsixsix::params.ballR - objList[i]->getPosition()[2]) * (benchmark::sixsixsix::params.ballR - objList[i]->getPosition()[2]);
-    }
-  }
-
-  return error;
-}
-
-double computeEnergy() {
-  double energy = 0;
-  for(int j = 0; j < objList.size(); j++)
-    energy += objList[j]->getEnergy({0, 0, benchmark::sixsixsix::params.g});
-  return energy;
-};
-
-void simulationLoop() {
-
-  // init
-  double E0 = 0;
-  benchmark::sixsixsix::energyList.reserve(unsigned(benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt));
-  benchmark::sixsixsix::errorList.reserve(unsigned(benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt));
-
-  // loop
+  // timer start
   StopWatch watch;
-  watch.start();
-  if(benchmark::sixsixsix::options.gui) {
-    // gui
-    if(benchmark::sixsixsix::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "rai-666");
+  if(timer)
+    watch.start();
 
-    for(int i = 0; i < (int) (benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt)
-        && sim->visualizerLoop(benchmark::sixsixsix::options.dt); i++) {
+  for(int i = 0; i < (int) (benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt); i++) {
+    if (benchmark::sixsixsix::options.gui && !sim->visualizerLoop(benchmark::sixsixsix::options.dt))
+      break;
 
-      double error = penetrationCheck();
-      double energy = computeEnergy();
-      if(i==0) E0 = energy;
+    // data save
+    if (error) {
+      static double E0 = 0;
+      if(i==0)
+        E0 = computeEnergy();
 
-      benchmark::sixsixsix::energyList.push_back(energy);
-      benchmark::sixsixsix::errorList.push_back(error);
-
-      sim->integrate(benchmark::sixsixsix::options.dt);
+      if (benchmark::sixsixsix::options.elasticCollision) {
+        double error = pow(computeEnergy() - E0, 2);
+        benchmark::sixsixsix::data.error.push_back(error);
+      }
+      else {
+        double error = penetrationCheck();
+        benchmark::sixsixsix::data.error.push_back(error);
+      }
     }
 
-    if(benchmark::sixsixsix::options.saveVideo)
-      sim->stopRecordingVideo();
+    sim->integrate(benchmark::sixsixsix::options.dt);
   }
-  else {
-    // no gui
-    for(int i = 0; i < (int) (benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt); i++) {
 
-      double error = penetrationCheck();
-      double energy = computeEnergy();
-      if(i==0) E0 = energy;
+  if(benchmark::sixsixsix::options.saveVideo)
+    sim->stopRecordingVideo();
 
-      benchmark::sixsixsix::energyList.push_back(energy);
-      benchmark::sixsixsix::errorList.push_back(error);
-
-      sim->integrate(benchmark::sixsixsix::options.dt);
-    }
-  }
-  double time = watch.measure();
-
-  benchmark::sixsixsix::printError(E0, time);
-  if(benchmark::sixsixsix::options.csv)
-    benchmark::sixsixsix::printCSV(benchmark::sixsixsix::getCSVpath(),
-                                   "RAI",
-                                   "RAI",
-                                   "RAI",
-                                   "RAI",
-                                   time,
-                                   E0);
+  double time = 0;
+  if(timer)
+    time = watch.measure();
+  return time;
 }
 
 int main(int argc, const char* argv[]) {
@@ -204,19 +191,45 @@ int main(int argc, const char* argv[]) {
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: RAI" << std::endl
+                << "Simulator: " << "RAI" << std::endl
                 << "GUI      : " << benchmark::sixsixsix::options.gui << std::endl
                 << "ERP      : " << benchmark::sixsixsix::options.erpYN << std::endl
+                << "Elastic  : " << benchmark::sixsixsix::options.elasticCollision << std::endl
                 << "Timestep : " << benchmark::sixsixsix::options.dt << std::endl
+                << "Solver   : " << "RAI" << std::endl
                 << "-----------------------"
   )
 
+  // trial1: get Error
   setupSimulation();
-  resetWorld();
-  simulationLoop();
+  setupWorld();
+  simulationLoop(false, true);
+  double error = benchmark::sixsixsix::data.computeError();
 
-  if(benchmark::sixsixsix::options.plot)
-    benchmark::sixsixsix::showPlot();
+  // reset
+  objList.clear();
+  delete sim;
+
+  // trial2: get CPU time
+  setupSimulation();
+  setupWorld();
+  double time = simulationLoop(true, false);
+
+
+  if(benchmark::sixsixsix::options.csv)
+    benchmark::sixsixsix::printCSV(benchmark::sixsixsix::getCSVpath(),
+                                   "RAI",
+                                   "RAI",
+                                   "RAI",
+                                   "RAI",
+                                   time,
+                                   error);
+
+  RAIINFO(
+      std::endl << "CPU time   : " << time << std::endl
+                << "mean error : " << error << std::endl
+                << "=======================" << std::endl
+  )
 
   delete sim;
   return 0;

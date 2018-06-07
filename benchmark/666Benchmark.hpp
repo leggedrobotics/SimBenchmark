@@ -24,10 +24,6 @@ namespace ru = rai::Utils;
 
 namespace benchmark::sixsixsix {
 
-// data lists
-std::vector<double> errorList;
-std::vector<double> energyList;
-
 /**
  * options for building simulation
  */
@@ -39,7 +35,7 @@ struct Option: benchmark::Option {
   double dt = 0.001;
 
   // simulation time
-  double T = 15.0;
+  double T = 10.0;
 
   // restitution
   bool elasticCollision = false;   /// for elastic collision test
@@ -76,6 +72,74 @@ struct Parameter {
   double g = -9.81;
 };
 Parameter params;
+
+struct Data {
+  void setN(int n) {
+    Data::n = n;
+    error.reserve(n);
+  }
+
+  double computeError() {
+    Eigen::MatrixXd errorSq(n, 1); // energy error or penetration error
+
+    for(int i = 0; i < n; i++) {
+      errorSq(i, 0) = error[i];
+    }
+
+    if(options.plot) {
+      Eigen::MatrixXd tdata(n, 1);        // time
+
+      for(int i = 0; i < n; i++) {
+        tdata(i, 0) = i * benchmark::sixsixsix::options.dt;
+      }
+
+      rai::Utils::Graph::FigProp2D figure1properties("time", "squared error", "squared error");
+      rai::Utils::graph->figure(1, figure1properties);
+      rai::Utils::graph->appendData(1, tdata.data(), errorSq.data(), n, "error sq");
+      rai::Utils::graph->drawFigure(1);
+      rai::Utils::graph->waitForEnter();
+    }
+
+    return errorSq.mean();
+  }
+
+  // data list
+  std::vector<double> error;
+
+  // num data
+  int n = 0;
+};
+Data data;
+
+/**
+ * get XML file path for Mujoco
+ *
+ * @return urdf path in string
+ */
+std::string getBulletBallPath() {
+
+  std::string ballpath(__FILE__);
+  while (ballpath.back() != '/')
+    ballpath.erase(ballpath.size() - 1, 1);
+  ballpath += "../res/bullet/666/ball.urdf";
+
+  return ballpath;
+}
+
+/**
+ * get XML file path for Mujoco
+ *
+ * @return urdf path in string
+ */
+std::string getBulletPlanePath() {
+
+  std::string planepath(__FILE__);
+  while (planepath.back() != '/')
+    planepath.erase(planepath.size() - 1, 1);
+  planepath += "../res/bullet/666/plane.urdf";
+
+  return planepath;
+}
 
 /**
  * get XML file path for Mujoco
@@ -141,7 +205,7 @@ void addDescToOption(po::options_description &desc) {
       ("T", po::value<double>(), "simulation time (e.g. 15)")
       ("plot", "plot energy and pen error")
       ("elastic", "if elastic collision")
-    ;
+      ;
 }
 
 /**
@@ -254,40 +318,7 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
     case benchmark::DART:
       break;
     default:
-      RAIFATAL("invalid simulator value")
-  }
-}
-
-double computeMeanPenetrationError() {
-  return std::accumulate( errorList.begin(), errorList.end(), 0.0) / errorList.size();
-}
-
-double computeMeanEnergyError(double E0) {
-  std::vector<double> energyErrors;
-  energyErrors.reserve(energyList.size());
-
-  for(int i = 0; i < energyList.size(); i++) {
-    energyErrors.push_back(pow(energyList[i] - E0, 2));
-  }
-  return std::accumulate( energyErrors.begin(), energyErrors.end(), 0.0) / energyErrors.size();
-}
-
-/**
- *
- * @param E0 initial energy
- */
-void printError(double E0, double time) {
-  RAIINFO(
-      std::endl << "time       = " << time << std::endl
-                << "pen. error = "
-                << computeMeanPenetrationError() << std::endl
-  )
-
-  if(benchmark::sixsixsix::options.elasticCollision) {
-    RAIINFO(
-        std::endl << "E error    = "
-                  << computeMeanEnergyError(E0) << std::endl
-    )
+    RAIFATAL("invalid simulator value")
   }
 }
 
@@ -297,73 +328,23 @@ void printCSV(std::string filePath,
               std::string detector,
               std::string integrator,
               double time,
-              double E0) {
+              double error) {
   std::ofstream myfile;
   myfile.open (filePath, std::ios_base::app);
 
-  if(options.elasticCollision)
-    myfile
-        << sim << ","
-        << solver << ","
-        << detector << ","
-        << integrator << ","
-        << options.erpYN << ","
-        << options.elasticCollision << ","
-        << options.dt << ","
-        << computeMeanPenetrationError() << ","
-        << computeMeanEnergyError(E0) << ","
-        << time
-        << std::endl;
-  else
-    myfile
-        << sim << ","
-        << solver << ","
-        << detector << ","
-        << integrator << ","
-        << options.erpYN << ","
-        << options.elasticCollision << ","
-        << options.dt << ","
-        << computeMeanPenetrationError() << ","
-        << "" << ","
-        << time
-        << std::endl;
+  myfile
+      << sim << ","
+      << solver << ","
+      << detector << ","
+      << integrator << ","
+      << options.erpYN << ","
+      << options.elasticCollision << ","
+      << options.dt << ","
+      << error << ","
+      << time
+      << std::endl;
 
   myfile.close();
-}
-
-void showPlot() {
-  int n = errorList.size();
-  Eigen::MatrixXd edata(n, 1);
-  Eigen::MatrixXd tdata(n, 1);
-  Eigen::MatrixXd Edata(n, 1);
-
-  for(int i = 0; i < n; i++) {
-    tdata(i, 0) = i;
-    edata(i, 0) = errorList[i];
-    Edata(i, 0) = energyList[i];
-  }
-
-  rai::Utils::Graph::FigProp2D figure1properties("step", "squared penetration error", "penetration error");
-  rai::Utils::graph->figure(1, figure1properties);
-  rai::Utils::graph->appendData(1,
-                                tdata.data(),
-                                edata.data(),
-                                n,
-                                "penetration error");
-  rai::Utils::graph->drawFigure(1);
-
-  if(options.elasticCollision) {
-    rai::Utils::Graph::FigProp2D figure2properties("step", "energy", "energy");
-    rai::Utils::graph->figure(2, figure2properties);
-    rai::Utils::graph->appendData(2,
-                                  tdata.data(),
-                                  Edata.data(),
-                                  n,
-                                  "energy");
-    rai::Utils::graph->drawFigure(2);
-  }
-
-  rai::Utils::graph->waitForEnter();
 }
 
 } // benchmark::sixsixsix

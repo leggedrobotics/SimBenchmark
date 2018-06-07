@@ -79,7 +79,7 @@ void setupWorld() {
 
 double simulationLoop(bool timer = true, bool error = true) {
   // gui
-  if(benchmark::bouncing::options.saveVideo)
+  if(benchmark::bouncing::options.gui && benchmark::bouncing::options.saveVideo)
     sim->startRecordingVideo("/tmp", "bullet-bouncing");
 
   // resever error vector
@@ -107,7 +107,7 @@ double simulationLoop(bool timer = true, bool error = true) {
     sim->integrate();
   }
 
-  if(benchmark::bouncing::options.saveVideo)
+  if(benchmark::bouncing::options.gui && benchmark::bouncing::options.saveVideo)
     sim->stopRecordingVideo();
 
   double time = 0;

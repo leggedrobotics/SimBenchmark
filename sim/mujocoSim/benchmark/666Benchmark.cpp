@@ -10,6 +10,30 @@
 mujoco_sim::MjcSim *sim;
 po::options_description desc;
 
+double penetrationCheck() {
+  double error = 0;
+  int numObj = sim->getNumObject()-1;
+
+  for (int i = 0; i < numObj; i++) {
+    for (int j = i + 1; j < numObj; j++) {
+      double dist = (sim->getSingleBodyHandle(i+1)->getPosition() - sim->getSingleBodyHandle(j+1)->getPosition()).norm();
+
+      // error between spheres
+      if (dist < benchmark::sixsixsix::params.ballR * 2)
+        error += (benchmark::sixsixsix::params.ballR * 2 - dist) * (benchmark::sixsixsix::params.ballR * 2 - dist);
+    }
+
+    // error sphere ~ ground
+    if (sim->getSingleBodyHandle(i+1)->getPosition()[2] < benchmark::sixsixsix::params.ballR) {
+      error +=
+          (benchmark::sixsixsix::params.ballR - sim->getSingleBodyHandle(i+1)->getPosition()[2]) *
+              (benchmark::sixsixsix::params.ballR - sim->getSingleBodyHandle(i+1)->getPosition()[2]);
+    }
+  }
+
+  return error;
+}
+
 void setupSimulation() {
   if (benchmark::sixsixsix::options.gui)
     sim = new mujoco_sim::MjcSim(800, 600, 0.5,
@@ -33,6 +57,10 @@ void setupSimulation() {
 }
 
 void resetWorld() {
+  sim->resetSimulation();
+}
+
+void setupWorld() {
 
   // gravity
   sim->setGravity({0, 0, benchmark::sixsixsix::params.g});
@@ -75,75 +103,44 @@ void resetWorld() {
   }
 }
 
-double penetrationCheck() {
-  double error = 0;
-  int numObj = sim->getNumObject()-1;
+double simulationLoop(bool timer = true, bool error = true) {
+  // gui
+  if(benchmark::sixsixsix::options.gui && benchmark::sixsixsix::options.saveVideo)
+    sim->startRecordingVideo("/tmp", "mujoco-666");
 
-  for (int i = 0; i < numObj; i++) {
-    for (int j = i + 1; j < numObj; j++) {
-      double dist = (sim->getSingleBodyHandle(i+1)->getPosition() - sim->getSingleBodyHandle(j+1)->getPosition()).norm();
+  // resever error vector
+  benchmark::sixsixsix::data.setN(unsigned(benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt));
 
-      // error between spheres
-      if (dist < benchmark::sixsixsix::params.ballR * 2)
-        error += (benchmark::sixsixsix::params.ballR * 2 - dist) * (benchmark::sixsixsix::params.ballR * 2 - dist);
-    }
-
-    // error sphere ~ ground
-    if (sim->getSingleBodyHandle(i+1)->getPosition()[2] < benchmark::sixsixsix::params.ballR) {
-      error +=
-          (benchmark::sixsixsix::params.ballR - sim->getSingleBodyHandle(i+1)->getPosition()[2]) *
-              (benchmark::sixsixsix::params.ballR - sim->getSingleBodyHandle(i+1)->getPosition()[2]);
-    }
-  }
-
-  return error;
-}
-
-void simulationLoop() {
-
-  // init
-  benchmark::sixsixsix::errorList.reserve(unsigned(benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt));
-
-  // loop
+  // timer start
   StopWatch watch;
-  watch.start();
-  if(benchmark::sixsixsix::options.gui) {
-    // gui
-    if(benchmark::sixsixsix::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "mujoco-666");
+  if(timer)
+    watch.start();
 
-    for(int i = 0; i < (int) (benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt)
-        && sim->visualizerLoop(benchmark::sixsixsix::options.dt); i++) {
+  for(int i = 0; i < (int) (benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt); i++) {
+    if (benchmark::sixsixsix::options.gui && !sim->visualizerLoop(benchmark::sixsixsix::options.dt))
+      break;
 
-      double error = penetrationCheck();
-      benchmark::sixsixsix::errorList.push_back(error);
-      sim->integrate();
+    // data save
+    if (error) {
+      if (benchmark::sixsixsix::options.elasticCollision) {
+        RAIFATAL("elastic collision is not supported for mujoco")
+      }
+      else {
+        double error = penetrationCheck();
+        benchmark::sixsixsix::data.error.push_back(error);
+      }
     }
 
-    if(benchmark::sixsixsix::options.saveVideo)
-      sim->stopRecordingVideo();
+    sim->integrate();
   }
-  else {
-    // no gui
-    for(int i = 0; i < (int) (benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt); i++) {
 
-      double error = penetrationCheck();
-      benchmark::sixsixsix::errorList.push_back(error);
-      sim->integrate();
-    }
-  }
-  double time = watch.measure();
+  if(benchmark::sixsixsix::options.saveVideo)
+    sim->stopRecordingVideo();
 
-  /// note. energy test is not available for mujoco
-  benchmark::sixsixsix::printError(0, time);
-  if(benchmark::sixsixsix::options.csv)
-    benchmark::sixsixsix::printCSV(benchmark::sixsixsix::getCSVpath(),
-                                   benchmark::mujoco::options.simName,
-                                   benchmark::mujoco::options.solverName,
-                                   benchmark::mujoco::options.detectorName,
-                                   benchmark::mujoco::options.integratorName,
-                                   time,
-                                   0);
+  double time = 0;
+  if(timer)
+    time = watch.measure();
+  return time;
 }
 
 int main(int argc, const char* argv[]) {
@@ -170,12 +167,33 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
+  // trial1: get Error
   setupSimulation();
-  resetWorld();
-  simulationLoop();
+  setupWorld();
+  simulationLoop(false, true);
+  double error = benchmark::sixsixsix::data.computeError();
 
-  if(benchmark::sixsixsix::options.plot)
-    benchmark::sixsixsix::showPlot();
+  // reset
+  resetWorld();
+
+  // trial2: get CPU time
+  setupWorld();
+  double time = simulationLoop(true, false);
+
+  if(benchmark::sixsixsix::options.csv)
+    benchmark::sixsixsix::printCSV(benchmark::sixsixsix::getCSVpath(),
+                                   benchmark::mujoco::options.simName,
+                                   benchmark::mujoco::options.solverName,
+                                   benchmark::mujoco::options.detectorName,
+                                   benchmark::mujoco::options.integratorName,
+                                   time,
+                                   error);
+
+  RAIINFO(
+      std::endl << "CPU time   : " << time << std::endl
+                << "mean error : " << error << std::endl
+                << "=======================" << std::endl
+  )
 
   delete sim;
   return 0;
