@@ -165,7 +165,7 @@ for i = 1:length(sims)
             
             % data
             data = Tsimsol(Tsimsol.INTEGRATOR == categorical(integrator), :);
-            data = sortrows(data, 9, 'descend');
+            data = sortrows(data, 7);
             
             % plot
             plotspec = getfield(plotSpec, char(name));
@@ -188,7 +188,7 @@ title(['Penetration Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
 % xlim([1e-2 10^2.5])
-lgd = legend('Location', 'northeast');
+lgd = legend('Location', 'southwest');
 lgd.NumColumns = 2;
 saveas(h, strcat('666-plots/error-speed', fileName, '.png'))
 saveas(h, strcat('666-plots/error-speed', fileName, '.eps'), 'epsc')
