@@ -35,7 +35,7 @@ do
         if [ "$RAISIM_ON" == "ON" ]; then
             for erpon in true false
             do
-                timeout 600 ../sim/raiSim/benchmark/Rai666Benchmark \
+                ../sim/raiSim/benchmark/Rai666Benchmark \
                 --nogui --erp-on=$erpon --dt=$dt --csv=$csv_file --elastic
             done
         else
@@ -50,8 +50,8 @@ do
             do
                 for erpon in true false
                 do
-                    timeout 600 ../sim/bulletSim/benchmark/Bt666Benchmark \
-                    --nogui --erp-on=$erpon --dt=$dt --solver=$solver --csv=$csv_file --elastic
+                    ../sim/bulletMultibodySim/benchmark/BtMb666Benchmark \
+					--nogui --erp-on=$erpon --dt=$dt --csv=$csv_file --elastic
                 done
             done
         else
@@ -66,7 +66,7 @@ do
             do
                 for erpon in true false
                 do
-                    timeout 600 ../sim/odeSim/benchmark/Ode666Benchmark \
+                    ../sim/odeSim/benchmark/Ode666Benchmark \
                     --nogui --erp-on=$erpon --dt=$dt --solver=$solver --csv=$csv_file --elastic
                 done
             done
@@ -86,7 +86,7 @@ do
             for solver in dantzig pgs
             do
                 # note dart has no erp
-                timeout 600 ../sim/dartSim/benchmark/Dart666Benchmark \
+                ../sim/dartSim/benchmark/Dart666Benchmark \
                 --nogui --dt=$dt --solver=$solver --csv=$csv_file --elastic
             done
         else

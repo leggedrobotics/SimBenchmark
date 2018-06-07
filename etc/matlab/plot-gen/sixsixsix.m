@@ -6,7 +6,7 @@ addpath(genpath('../lib/yamlmatlab'))
 
 % data path
 data_dir = '../../../data/666/';
-file_name = '2018-05-23-00:21:08.csv';
+file_name = 'sample.csv';
 
 % yaml path
 yaml_path = '../../../benchmark/yaml/666.yaml';
@@ -29,7 +29,7 @@ const = yaml_data.constant;
 const.T = 15;       % TODO should be get from somewhere
 
 % csv format
-formatSpec = '%C%C%C%C%d%d%f%f%f%f';
+formatSpec = '%C%C%C%C%d%d%f%f%f';
 
 T = readtable(...
     strcat(data_dir, file_name), ...
@@ -46,7 +46,6 @@ entry = {...
     'ELASTIC', ...
     'TIMESTEP', ...
     'PENETRATION', ...
-    'ENERGYERROR', ...
     'TIME' ...
     };
 
@@ -58,9 +57,9 @@ plotSpec = plotspec;
 erpN = plotoption;
 erpN.DARTDANTZIGDART = false;
 erpN.DARTPGSDART = false;
-erpN.MUJOCOCGRK4 = false;
-erpN.MUJOCONEWTONRK4 = false;
-erpN.MUJOCOPGSRK4 = false;
+% erpN.MUJOCOCGRK4 = false;
+% erpN.MUJOCONEWTONRK4 = false;
+% erpN.MUJOCOPGSRK4 = false;
 
 erpY = plotoption;
 erpY.DARTDANTZIGDART = false;
@@ -72,24 +71,24 @@ erpY.MUJOCOPGSRK4 = false;
 % error plot vs dt
 disp('plotting penetration error vs real-time-factor...')
 plot_error_speed(T, const, plotSpec, false, false, '-noerp', '(No ERP)', erpN);
-plot_error_speed(T, const, plotSpec, true, false, '-erp', '(ERP)', erpY);
+% plot_error_speed(T, const, plotSpec, true, false, '-erp', '(ERP)', erpY);
 
 %% bar plot (for min dt)
-T2 = T(T.ERP == false & isnan(T.ENERGYERROR), :);
-% dt = min(T2.TIMESTEP);
-dt = 0.001;
+T2 = T(T.ERP == false, :);
+dt = min(T2.TIMESTEP);
 
 simTime = const.T;
 numIter = simTime / dt;
 
 % filtering
 T2 = T2(T2.TIMESTEP == dt, :);
-T2 = sortrows(T2, 10);
+T2 = sortrows(T2, 9);
 
 speed = numIter ./ T2.TIME ./ 1000;
 
 disp('plotting bar graph')
 h = figure('Name', 'speed', 'Position', [0, 0, 600, 500])
+box on
 hold on
 for i = 1:size(T2, 1)
     data = T2(i, :);
@@ -128,7 +127,16 @@ sims = unique(dataTable.SIM);
 
 h = figure('Name','error','Position', [0, 0, 600, 500]);
 hold on
-set(gca, 'YScale', 'log', 'XScale', 'log', 'Ydir', 'reverse')
+box on
+grid on
+set(gca, ...
+    'YScale', 'log', ...
+    'XScale', 'log', ...
+    'Ydir', 'reverse', ...
+    'YMinorTick', 'off', ...
+    'XMinorTick', 'off', ...
+    'YMinorGrid', 'off', ...
+    'XMinorGrid', 'off')
 for i = 1:length(sims)
     
     sim = sims(i);
@@ -157,7 +165,7 @@ for i = 1:length(sims)
             
             % data
             data = Tsimsol(Tsimsol.INTEGRATOR == categorical(integrator), :);
-            data = sortrows(data, 10, 'descend');
+            data = sortrows(data, 9, 'descend');
             
             % plot
             plotspec = getfield(plotSpec, char(name));
@@ -179,8 +187,9 @@ hold off
 title(['Penetration Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
-xlim([1e-2 10^2.5])
-legend('Location', 'northeast');
+% xlim([1e-2 10^2.5])
+lgd = legend('Location', 'northeast');
+lgd.NumColumns = 2;
 saveas(h, strcat('666-plots/error-speed', fileName, '.png'))
 saveas(h, strcat('666-plots/error-speed', fileName, '.eps'), 'epsc')
 saveas(h, strcat('666-plots/error-speed', fileName, '.fig'), 'fig')
