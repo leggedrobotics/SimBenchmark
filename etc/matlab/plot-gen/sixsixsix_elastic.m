@@ -5,8 +5,8 @@ format long
 addpath(genpath('../lib/yamlmatlab'))
 
 % data path
-data_dir = '../../../data/666/';
-file_name = 'sample-elastic.csv';
+data_dir = '../../../data/666-elastic/';
+file_name = 'sample.csv';
 
 % yaml path
 yaml_path = '../../../benchmark/yaml/666.yaml';
@@ -26,10 +26,10 @@ disp('===================================================================')
 % const
 yaml_data = yaml.ReadYaml(yaml_path);
 const = yaml_data.constant;
-const.T = 15;       % TODO should be get from somewhere
+const.T = 10;       % TODO should be get from somewhere
 
 % csv format
-formatSpec = '%C%C%C%C%d%d%f%f%f%f';
+formatSpec = '%C%C%C%C%d%d%f%f%f';
 
 T = readtable(...
     strcat(data_dir, file_name), ...
@@ -45,7 +45,6 @@ entry = {...
     'ERP', ...
     'ELASTIC', ...
     'TIMESTEP', ...
-    'PENETRATION', ...
     'ENERGYERROR', ...
     'TIME' ...
     };
@@ -78,19 +77,19 @@ erpY.MUJOCOPGSRK4 = false;
 % error energy plot (only for elastic collision)
 disp('plotting energy error vs real-time-factor...')
 plot_error_speed(T, const, plotSpec, false, '-noerp', '(No ERP)', erpN)
-plot_error_speed(T, const, plotSpec, true, '-erp', '(ERP)', erpY)
+% plot_error_speed(T, const, plotSpec, true, '-erp', '(ERP)', erpY)
 
 %% bar plot (for min dt)
-T2 = T(T.ERP == false & ~isnan(T.ENERGYERROR), :);
-% dt = min(T2.TIMESTEP);
-dt = 0.0004;
+T2 = T(T.ERP == false, :);
+dt = min(T2.TIMESTEP);
+% dt = 0.0004;
 
 simTime = const.T;
 numIter = simTime / dt;
 
 % filtering
 T2 = T2(T2.TIMESTEP == dt, :);
-T2 = sortrows(T2, 10);
+T2 = sortrows(T2, 9);
 
 speed = numIter ./ T2.TIME ./ 1000;
 
@@ -100,6 +99,7 @@ barOption.DARTPGSDART = false;
 
 disp('plotting bar graph')
 h = figure('Name', 'speed', 'Position', [0, 0, 600, 500])
+box on
 hold on
 for i = 1:size(T2, 1)
     data = T2(i, :);
@@ -126,10 +126,9 @@ text(1:length(speed), ...
     'horiz','center', ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-ylim([0, 6])
-saveas(h, strcat('666-plots/elastic-speed-bar.png'))
-saveas(h, strcat('666-plots/elastic-speed-bar.eps'), 'epsc')
-saveas(h, strcat('666-plots/elastic-speed-bar.fig'), 'fig')
+saveas(h, strcat('666-elastic-plots/elastic-speed-bar.png'))
+saveas(h, strcat('666-elastic-plots/elastic-speed-bar.eps'), 'epsc')
+saveas(h, strcat('666-elastic-plots/elastic-speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -145,7 +144,16 @@ sims = unique(dataTable.SIM);
 
 h = figure('Name','error','Position', [0, 0, 600, 500]);
 hold on
-set(gca, 'YScale', 'log', 'XScale', 'log', 'Ydir', 'reverse')
+box on
+grid on
+set(gca, ...
+    'YScale', 'log', ...
+    'XScale', 'log', ...
+    'Ydir', 'reverse', ...
+    'YMinorTick', 'off', ...
+    'XMinorTick', 'off', ...
+    'YMinorGrid', 'off', ...
+    'XMinorGrid', 'off')
 for i = 1:length(sims)
     
     sim = sims(i);
@@ -174,7 +182,7 @@ for i = 1:length(sims)
             
             % data
             data = Tsimsol(Tsimsol.INTEGRATOR == categorical(integrator), :);
-            data = sortrows(data, 10, 'descend');
+            data = sortrows(data, 7);
             
             % plot
             plotspec = getfield(plotSpec, char(name));
@@ -200,9 +208,9 @@ ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
 % ylim([10^-4 10^9])
 % legend('Location', 'eastoutside');
 legend('Location', 'northeast');
-saveas(h, strcat('666-plots/energy-error-speed', fileName, '.png'))
-saveas(h, strcat('666-plots/energy-error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('666-plots/energy-error-speed', fileName, '.fig'), 'fig')
+saveas(h, strcat('666-elastic-plots/666-elastic-error-speed', fileName, '.png'))
+saveas(h, strcat('666-elastic-plots/666-elastic-error-speed', fileName, '.eps'), 'epsc')
+saveas(h, strcat('666-elastic-plots/666-elastic-error-speed', fileName, '.fig'), 'fig')
 
 end
 

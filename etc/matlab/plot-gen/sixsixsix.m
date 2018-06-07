@@ -26,7 +26,7 @@ disp('===================================================================')
 % const 
 yaml_data = yaml.ReadYaml(yaml_path);
 const = yaml_data.constant;
-const.T = 15;       % TODO should be get from somewhere
+const.T = 10;       % TODO should be get from somewhere
 
 % csv format
 formatSpec = '%C%C%C%C%d%d%f%f%f';
@@ -187,7 +187,7 @@ hold off
 title(['Penetration Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
-% xlim([1e-2 10^2.5])
+xlim([10^-3 10^3])
 lgd = legend('Location', 'southwest');
 lgd.NumColumns = 2;
 saveas(h, strcat('666-plots/error-speed', fileName, '.png'))
