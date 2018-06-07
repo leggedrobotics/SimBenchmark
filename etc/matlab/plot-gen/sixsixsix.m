@@ -87,7 +87,7 @@ T2 = sortrows(T2, 9);
 speed = numIter ./ T2.TIME ./ 1000;
 
 disp('plotting bar graph')
-h = figure('Name', 'speed', 'Position', [0, 0, 600, 500])
+h = figure('Name', 'speed', 'Position', [0, 0, 600, 500]);
 box on
 hold on
 for i = 1:size(T2, 1)

@@ -98,7 +98,7 @@ barOption.DARTDANTZIGDART = false;
 barOption.DARTPGSDART = false;
 
 disp('plotting bar graph')
-h = figure('Name', 'speed', 'Position', [0, 0, 600, 500])
+h = figure('Name', 'speed', 'Position', [0, 0, 600, 500]);
 box on
 hold on
 for i = 1:size(T2, 1)
