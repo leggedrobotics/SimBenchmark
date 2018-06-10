@@ -7,8 +7,6 @@ sim_properties:
 solver_params:
   raiSim:
     erp: 0.2              # when erp_on = true
-    maxiter: 100
-    threshold: 1e-7
   bullet:
     erp: 0.2              # when erp_on = true
     erp2: 0.1             # when erp_on = true

@@ -53,8 +53,8 @@ struct Parameter {
   double erp2 = 0.1;              // for bullet
   double erpFriction = 0.01;      // for bullet
 
-  int raiMaxIter = 100;
-  double raiThreshold = 1e-7;
+//  int raiMaxIter = 100;
+//  double raiThreshold = 1e-7;
 
   // simulation parameters
   /// Remark! doesn't work for MUJOCO
@@ -67,6 +67,22 @@ struct Parameter {
   const float heightLen = 0.1;
 };
 Parameter params;
+
+struct Data {
+  void setN(int n) {
+    Data::n = n;
+    numContacts.reserve(n);
+  }
+
+  double computeMeanContacts() {
+    return std::accumulate( numContacts.begin(), numContacts.end(), 0.0) / numContacts.size();
+  }
+
+  double time;
+  int step;
+  int n;
+  std::vector<int> numContacts;   // the number of contact for each step
+};
 
 /**
  * get XML file path for Mujoco
@@ -83,6 +99,52 @@ std::string getMujocoXMLpath() {
   return xmlPath;
 }
 
+
+/**
+ * get URDF file for bullet multibody
+ *
+ * @return urdf path in string
+ */
+std::string getBulletPlanePath() {
+
+  std::string ballpath(__FILE__);
+  while (ballpath.back() != '/')
+    ballpath.erase(ballpath.size() - 1, 1);
+  ballpath += "../res/bullet/Building/plane.urdf";
+
+  return ballpath;
+}
+
+/**
+ * get URDF file for bullet multibody
+ *
+ * @return urdf path in string
+ */
+std::string getBulletBasePath() {
+
+  std::string planepath(__FILE__);
+  while (planepath.back() != '/')
+    planepath.erase(planepath.size() - 1, 1);
+  planepath += "../res/bullet/Building/base.urdf";
+
+  return planepath;
+}
+
+/**
+ * get URDF file for bullet multibody
+ *
+ * @return urdf path in string
+ */
+std::string getBulletWallPath() {
+
+  std::string planepath(__FILE__);
+  while (planepath.back() != '/')
+    planepath.erase(planepath.size() - 1, 1);
+  planepath += "../res/bullet/Building/wall.urdf";
+
+  return planepath;
+}
+
 /**
  * get YAML file path for parameter
  *
@@ -96,6 +158,17 @@ std::string getYamlpath() {
   yamlPath += "./yaml/building.yaml";
 
   return yamlPath;
+}
+
+std::string getCSVpath() {
+
+  std::string csvPath(__FILE__);
+  while (csvPath.back() != '/')
+    csvPath.erase(csvPath.size() - 1, 1);
+
+  csvPath += "../data/building/" + options.csvName;
+
+  return csvPath;
 }
 
 /**
@@ -215,8 +288,6 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   switch (simulator) {
     case benchmark::RAI:
       params.erp = solver_params["raiSim"]["erp"].as<double>();
-      params.raiMaxIter = solver_params["raiSim"]["maxiter"].as<int>();
-      params.raiThreshold = solver_params["raiSim"]["threshold"].as<double>();
       break;
     case benchmark::BULLET:
       params.erp = solver_params["bullet"]["erp"].as<double>();
@@ -246,6 +317,29 @@ void loggerSetup(std::string path, std::string name) {
   std::string timer = name + "timer";
   ru::timer->setLogPath(path);
   ru::timer->setLogFileName(timer);
+}
+
+void printCSV(std::string filePath,
+              std::string sim,
+              std::string solver,
+              std::string detector,
+              std::string integrator,
+              double time,
+              double steps,
+              double numContacts) {
+  std::ofstream myfile;
+  myfile.open (filePath, std::ios_base::app);
+
+  myfile << sim << ","
+         << solver << ","
+         << detector << ","
+         << integrator << ","
+         << options.erpYN << ","
+         << options.dt << ","
+         << steps << ","
+         << numContacts << ","
+         << time << std::endl;
+  myfile.close();
 }
 
 } // benchmark::rolling

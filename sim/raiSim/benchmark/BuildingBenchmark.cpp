@@ -12,7 +12,7 @@ po::options_description desc;
 
 void setupSimulation() {
   if (benchmark::building::options.gui)
-    sim = new rai_sim::World_RG(800, 600, 0.05, rai_sim::NO_BACKGROUND);
+    sim = new rai_sim::World_RG(800, 600, 0.015, rai_sim::NO_BACKGROUND);
   else
     sim = new rai_sim::World_RG();
 
@@ -21,18 +21,9 @@ void setupSimulation() {
     sim->setERP(benchmark::building::params.erp);
   else
     sim->setERP(0);
-
-  // set up logger and timer
-  if(benchmark::building::options.log)
-    benchmark::building::loggerSetup(
-        benchmark::building::getLogDirpath(benchmark::building::options.erpYN,
-                                           "RAI",
-                                           "RAI",
-                                           benchmark::building::options.dt), "var"
-    );
 }
 
-void resetWorld() {
+void setupWorld() {
   // add objects
   auto checkerboard = sim->addCheckerboard(10.0, 400.0, 400.0, 0.1, 1, -1, rai_sim::GRID);
 
@@ -103,49 +94,44 @@ void resetWorld() {
   }
 }
 
-void simulationLoop() {
-  if(benchmark::building::options.gui) {
+benchmark::building::Data simulationLoop() {
+  if(benchmark::building::options.saveVideo)
+    sim->startRecordingVideo("/tmp", "rai-building");
+
+  // data
+  benchmark::building::Data data;
+  data.setN(unsigned(benchmark::building::options.T / benchmark::building::options.dt));
+
+  // timer start
+  StopWatch watch;
+  watch.start();
+
+  int cnt = 0;
+  for(int i = 0; i < (int) (benchmark::building::options.T / benchmark::building::options.dt); i++) {
     // gui
-    if(benchmark::building::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "rai-building");
+    if (benchmark::building::options.gui && !sim->visualizerLoop(benchmark::building::options.dt))
+      break;
 
-    while(sim->visualizerLoop(benchmark::building::options.dt)) {
+    // num contacts
+    data.numContacts.push_back(sim->getContactProblem().size());
 
-      if(objList.back()->getPosition()[2] <
-          benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
-        // break if the building collapses
-        RAIINFO("building collapsed!")
-        break;
-      }
-
-      sim->integrate(benchmark::building::options.dt);
+    if(objList.back()->getPosition()[2] <
+        benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
+      // break if the building collapses
+      cnt = i+1;
+      RAIINFO("building collapsed after " << cnt << " steps = " << cnt * benchmark::building::options.dt << " sec!")
+      break;
     }
 
-    if(benchmark::building::options.saveVideo)
-      sim->stopRecordingVideo();
+    sim->integrate(benchmark::building::options.dt);
   }
-  else {
-    // no gui
-    StopWatch watch;
-    watch.start();
 
-    int i = 0;
-    for(i = 0; i < (int) (benchmark::building::options.T / benchmark::building::options.dt); i++) {
+  if(benchmark::building::options.saveVideo)
+    sim->stopRecordingVideo();
 
-      if(objList.back()->getPosition()[2] <
-          benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
-        // break if the building collapses
-        RAIINFO("building collapsed!")
-        break;
-      }
-
-      sim->integrate(benchmark::building::options.dt);
-    }
-
-    // print to screen
-    double time = watch.measure();
-    std::cout << "time taken for " << i << " steps "<< time <<"s \n";
-  }
+  data.time = watch.measure();
+  data.step = cnt;
+  return data;
 }
 
 int main(int argc, const char* argv[]) {
@@ -154,6 +140,9 @@ int main(int argc, const char* argv[]) {
   benchmark::building::getOptionsFromArg(argc, argv, desc);
   benchmark::building::getParamsFromYAML(benchmark::building::getYamlpath().c_str(),
                                          benchmark::RAI);
+
+  setupSimulation();
+  setupWorld();
 
   RAIINFO(
       std::endl << "=======================" << std::endl
@@ -165,13 +154,24 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
-  setupSimulation();
-  resetWorld();
-  simulationLoop();
+  benchmark::building::Data data = simulationLoop();
 
-  // time log
-//  if(benchmark::building::options.log)
-//    ru::timer->dumpToStdOuput();
+  if(benchmark::building::options.csv)
+    benchmark::building::printCSV(benchmark::building::getCSVpath(),
+                                  "RAI",
+                                  "RAI",
+                                  "RAI",
+                                  "RAI",
+                                  data.time,
+                                  data.step,
+                                  data.computeMeanContacts());
+
+  RAIINFO(
+      std::endl << "Avg. Num Contacts : " << data.computeMeanContacts() << std::endl
+                << "CPU time          : " << data.time << std::endl
+                << "num steps         : " << data.step << std::endl
+                << "=======================" << std::endl
+  )
 
   delete sim;
   return 0;

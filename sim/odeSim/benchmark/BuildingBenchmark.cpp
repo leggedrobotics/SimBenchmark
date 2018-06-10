@@ -24,18 +24,9 @@ void setupSimulation() {
     sim->setERP(benchmark::building::params.erp, 0, 0);
   else
     sim->setERP(0, 0, 0);
-
-  // set up logger and timer
-  if(benchmark::building::options.log)
-    benchmark::building::loggerSetup(
-        benchmark::building::getLogDirpath(benchmark::building::options.erpYN,
-                                           benchmark::ode::options.simName,
-                                           benchmark::ode::options.solverName,
-                                           benchmark::building::options.dt), "var"
-    );
 }
 
-void resetWorld() {
+void setupWorld() {
   // add objects
   auto checkerboard = sim->addCheckerboard(10.0, 400.0, 400.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
 
@@ -106,64 +97,44 @@ void resetWorld() {
   }
 }
 
-void simulationLoop() {
-  if(benchmark::building::options.gui) {
+benchmark::building::Data simulationLoop() {
+  if(benchmark::building::options.saveVideo)
+    sim->startRecordingVideo("/tmp", "ode-building");
+
+  // data
+  benchmark::building::Data data;
+  data.setN(unsigned(benchmark::building::options.T / benchmark::building::options.dt));
+
+  // timer start
+  StopWatch watch;
+  watch.start();
+
+  int cnt = 0;
+  for(int i = 0; i < (int) (benchmark::building::options.T / benchmark::building::options.dt); i++) {
     // gui
-    double numContact = 0;
-    int i = 0;
+    if (benchmark::building::options.gui && !sim->visualizerLoop(benchmark::building::options.dt))
+      break;
 
-    if(benchmark::building::options.saveVideo)
-      sim->startRecordingVideo("/tmp", "ode-building");
+    // num contacts
+    data.numContacts.push_back(sim->getWorldNumContacts());
 
-    while(sim->visualizerLoop(benchmark::building::options.dt)) {
-
-      if(objList.back()->getPosition()[2] <
-          benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
-        // break if the building collapses
-        RAIINFO("building collapsed!")
-        break;
-      }
-
-      sim->integrate(benchmark::building::options.dt);
-
-      // calculate average contacts
-      numContact = double(i) / double(i+1) * numContact + sim->getWorldNumContacts() / double(i+1);
-      i++;
+    if(objList.back()->getPosition()[2] <
+        benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
+      // break if the building collapses
+      cnt = i+1;
+      RAIINFO("building collapsed after " << cnt << " steps = " << cnt * benchmark::building::options.dt << " sec!")
+      break;
     }
 
-    if(benchmark::building::options.saveVideo)
-      sim->stopRecordingVideo();
-
-    std::cout << "average contact " << numContact << "\n";
+    sim->integrate(benchmark::building::options.dt);
   }
-  else {
-    // no gui
-    double numContact = 0;
 
-    StopWatch watch;
-    watch.start();
+  if(benchmark::building::options.saveVideo)
+    sim->stopRecordingVideo();
 
-    int i = 0;
-    for(i = 0; i < (int) (benchmark::building::options.T / benchmark::building::options.dt); i++) {
-
-      if(objList.back()->getPosition()[2] <
-          benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
-        // break if the building collapses
-        RAIINFO("building collapsed!")
-        break;
-      }
-
-      sim->integrate(benchmark::building::options.dt);
-
-      // calculate average contacts
-      numContact = double(i) / double(i+1) * numContact + sim->getWorldNumContacts() / double(i+1);
-    }
-
-    // print to screen
-    double time = watch.measure();
-    std::cout << "time taken for " << i << " steps "<< time <<"s \n";
-    std::cout << "average contact " << numContact << "\n";
-  }
+  data.time = watch.measure();
+  data.step = cnt;
+  return data;
 }
 
 int main(int argc, const char* argv[]) {
@@ -177,6 +148,9 @@ int main(int argc, const char* argv[]) {
   benchmark::building::getParamsFromYAML(benchmark::building::getYamlpath().c_str(),
                                          benchmark::ODE);
 
+  setupSimulation();
+  setupWorld();
+
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: ODE" << std::endl
@@ -188,13 +162,24 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
-  setupSimulation();
-  resetWorld();
-  simulationLoop();
+  benchmark::building::Data data = simulationLoop();
 
-  // time log
-//  if(benchmark::building::options.log)
-//    ru::timer->dumpToStdOuput();
+  if(benchmark::building::options.csv)
+    benchmark::building::printCSV(benchmark::building::getCSVpath(),
+                                  benchmark::ode::options.simName,
+                                  benchmark::ode::options.solverName,
+                                  benchmark::ode::options.detectorName,
+                                  benchmark::ode::options.integratorName,
+                                  data.time,
+                                  data.step,
+                                  data.computeMeanContacts());
+
+  RAIINFO(
+      std::endl << "Avg. Num Contacts : " << data.computeMeanContacts() << std::endl
+                << "CPU time          : " << data.time << std::endl
+                << "num steps         : " << data.step << std::endl
+                << "=======================" << std::endl
+  )
 
   delete sim;
   return 0;

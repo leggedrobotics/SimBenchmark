@@ -122,7 +122,6 @@ struct Data {
 };
 Data data;
 
-
 std::string getCSVpath() {
 
   std::string csvPath(__FILE__);
