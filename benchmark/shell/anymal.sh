@@ -31,7 +31,7 @@ num_test=10
 num_row_rai=( 1 2 3 4 5 7 10 15 )
 num_row_mjc=( 1 2 3 4 5 7 10 15 )
 num_row_ode=( 1 2 3 4 5 7 10 15 )
-num_row_bt=( 1 2 3 4 5 7 10 15 )
+num_row_bt=( 1 2 3 4 5 )
 num_row_dart=( 1 2 3 4 5 7 10 15 )
 
 # feedback (PD control)

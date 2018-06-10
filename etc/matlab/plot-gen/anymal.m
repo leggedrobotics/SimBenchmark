@@ -1,5 +1,5 @@
 % csv format
-formatSpec = '%C%C%C%d%f';
+formatSpec = '%C%C%C%C%d%f';
 
 % load csv
 T = readtable(...
@@ -44,28 +44,6 @@ DART_PGS_BT_mins = splitapply(...
     DART_PGS_BT.TIME, ...
     DART_PGS_BT_G);
 
-% data from dart-dantzig-ode
-DART_DAN_ODE = T(...
-    T.SIM == 'DART' ...
-    & T.SOLVER == 'DANTZIG' ...
-    & T.DETECTOR == 'ODE', :);
-[DART_DAN_ODE_G, DART_DAN_ODE_numrows] = findgroups(DART_DAN_ODE.NUMROW);
-DART_DAN_ODE_mins = splitapply(...
-    @min, ...
-    DART_DAN_ODE.TIME, ...
-    DART_DAN_ODE_G);
-
-% data from dart-pgs-ode
-DART_PGS_ODE = T(...
-    T.SIM == 'DART' ...
-    & T.SOLVER == 'PGS' ...
-    & T.DETECTOR == 'ODE', :);
-[DART_PGS_ODE_G, DART_PGS_ODE_numrows] = findgroups(DART_PGS_ODE.NUMROW);
-DART_PGS_ODE_mins = splitapply(...
-    @min, ...
-    DART_PGS_ODE.TIME, ...
-    DART_PGS_ODE_G);
-
 % data from mujoco-pgs
 MJC_PGS = T(...
     T.SIM == 'MUJOCO' ...
@@ -106,7 +84,7 @@ ODE_mins = splitapply(...
 
 %% plot
 % linear
-figure('Name', 'linear', 'Position', [0, 0, 600, 450])
+figure('Name', 'linear', 'Position', [0, 0, 600, 500])
 plot(RAI_numrows.^2, ...
     numIter ./ RAI_mins ./ 1000, ...
     plotspec.RAIRAIRAI{1}, ...
@@ -155,12 +133,12 @@ ylabel(sprintf('timestep per second (kHz) \n FAST →'))
 legend('Location', 'eastoutside')
 title('ANYmal PD control test')
 hold off
-saveas(gcf,'plots/sampleplot.eps','epsc')
-saveas(gcf,'plots/sampleplot.fig','fig')
-saveas(gcf,'plots/sampleplot.png')
+saveas(gcf,'anymal-pd-plots/speed-number.eps','epsc')
+saveas(gcf,'anymal-pd-plots/speed-number.fig','fig')
+saveas(gcf,'anymal-pd-plots/speed-number.png')
 
 % log scale
-figure('Name', 'log', 'Position', [0, 0, 600, 450])
+figure('Name', 'log', 'Position', [0, 0, 600, 500])
 plot(RAI_numrows.^2, ...
     numIter ./ RAI_mins ./ 1000, ...
     plotspec.RAIRAIRAI{1}, ...
@@ -212,9 +190,9 @@ title('ANYmal PD control test (log scale)')
 ylim([0, 10^2.5])
 xlim([0, 10^2.5])
 set(gca, 'YScale', 'log', 'XScale', 'log')
-saveas(gcf,'plots/sampleplot-log.eps','epsc')
-saveas(gcf,'plots/sampleplot-log.fig','fig')
-saveas(gcf,'plots/sampleplot-log.png')
+saveas(gcf,'anymal-pd-plots/sampleplot-log.eps','epsc')
+saveas(gcf,'anymal-pd-plots/sampleplot-log.fig','fig')
+saveas(gcf,'anymal-pd-plots/sampleplot-log.png')
 
 % speed bar graph (1 anymal)
 c = categorical({...
@@ -244,7 +222,7 @@ T2 = sortrows(T2, 2, 'descend');
 
 T2.sim = reordercats(T2.sim,cellstr(T2.sim));
 
-figure('Name', 'speed', 'Position', [0, 0, 600, 450])
+figure('Name', 'speed', 'Position', [0, 0, 600, 500])
 bar(T2.sim(1), T2.speed(1), 'FaceColor', plotspec.RAIRAIRAI{3})            
 hold on
 bar(T2.sim(2), T2.speed(2), 'FaceColor', plotspec.MUJOCOPGSEULER{3})         
@@ -266,6 +244,6 @@ text(1:length(T2.speed), ...
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
 ylim([0, 110])
 
-saveas(gcf,'plots/samplebar.eps','epsc')
-saveas(gcf,'plots/samplebar.fig','fig')
-saveas(gcf,'plots/samplebar.png')
+saveas(gcf,'anymal-pd-plots/speed-bar.eps','epsc')
+saveas(gcf,'anymal-pd-plots/speed-bar.fig','fig')
+saveas(gcf,'anymal-pd-plots/speed-bar.png')
