@@ -7,7 +7,7 @@
 
 #include <common/interface/SingleBodyObjectInterface.hpp>
 
-#include "api/b3RobotSimulatorClientAPI_NoGUI.h"
+#include "bullet/b3RobotSimulatorClientAPI_NoGUI.h"
 #include "BtMbObject.hpp"
 
 namespace bo = benchmark::object;

@@ -6,7 +6,6 @@ set(CMAKE_CXX_FLAGS_RELEASE
 
 # bullet double precision
 add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
-#add_definitions(-DB3_USE_DOUBLE_PRECISION=1) TODO
 
 # bullet package
 find_package(Bullet CONFIG REQUIRED)
@@ -20,10 +19,6 @@ include_directories(src)
 set(BtMbSimSrc
         src/BtMbWorld.hpp
         src/BtMbWorld.cpp
-        src/api/b3RobotSimulatorClientAPI_NoGUI.h
-        src/api/b3RobotSimulatorClientAPI_NoGUI.cpp
-        src/api/b3RobotSimulatorClientAPI.h
-        src/api/b3RobotSimulatorClientAPI.cpp
         src/BtMbSim.cpp
         src/BtMbSim.hpp
         src/BtMbUserHandle.hpp

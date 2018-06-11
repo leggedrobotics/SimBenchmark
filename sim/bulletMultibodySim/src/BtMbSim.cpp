@@ -399,4 +399,12 @@ void BtMbSim::cameraFollowObject(rai_graphics::object::SingleBodyObject *followi
   WorldRG::cameraFollowObject(followingObject, relativePosition);
 }
 
+int BtMbSim::startBulletProfiling(std::string fileName) {
+  return world_.api_->startStateLogging(STATE_LOGGING_PROFILE_TIMINGS, fileName);
+}
+
+void BtMbSim::stopBulletProfiling(int id) {
+  world_.api_->stopStateLogging(id);
+}
+
 } // bullet_mb_sim

@@ -176,6 +176,22 @@ class BtMbSim: public benchmark::WorldRG {
   void cameraFollowObject(rai_graphics::object::SingleBodyObject *followingObject,
                           Eigen::Vector3d relativePosition) override;
 
+  /// Bullet profiling
+  /**
+   * start profiling using Bullet Profile Timing
+   *
+   * @param fileName    save logging file path
+   * @return            logging ID
+   */
+  int startBulletProfiling(std::string fileName);
+
+  /**
+   * stop profiling
+   *
+   * @param id          logging ID
+   */
+  void stopBulletProfiling(int id);
+
  private:
   /// deprecated pure virtual function
   /**

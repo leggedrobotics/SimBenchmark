@@ -8,7 +8,7 @@
 #include <string>
 #include <bullet/SharedMemoryPublic.h>
 
-#include "api/b3RobotSimulatorClientAPI_NoGUI.h"
+#include "bullet/b3RobotSimulatorClientAPI_NoGUI.h"
 #include "common/interface/ArticulatedSystemInterface.hpp"
 
 #include "BtMbObject.hpp"

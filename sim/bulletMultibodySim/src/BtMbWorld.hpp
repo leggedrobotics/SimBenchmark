@@ -5,7 +5,7 @@
 #ifndef BENCHMARK_BTMBWORLD_HPP
 #define BENCHMARK_BTMBWORLD_HPP
 
-#include "api/b3RobotSimulatorClientAPI_NoGUI.h"
+#include "bullet/b3RobotSimulatorClientAPI_NoGUI.h"
 #include "common/interface/WorldInterface.hpp"
 
 #include "object/BtMbArticulatedSystem.hpp"
