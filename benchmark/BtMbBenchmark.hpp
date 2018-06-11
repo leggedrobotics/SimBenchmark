@@ -27,7 +27,7 @@ struct Option {
   std::string integratorName = "BULLET";
 
   bool maximalCoordinate = false;
-  bool profiling = true;
+  bool profiling = false;
 };
 Option options;
 

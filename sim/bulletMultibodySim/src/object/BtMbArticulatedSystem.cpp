@@ -95,7 +95,6 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
     arg.m_linearDamping = 0;
     arg.m_angularDamping = 0;
     arg.m_restitution = 0;
-    arg.m_canSleep = 0;
     api_->changeDynamics(objectId, -1, arg);
   }
 
