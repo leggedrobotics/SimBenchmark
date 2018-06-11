@@ -1,0 +1,23 @@
+h = figure('Name', 'speed', 'Position', [0, 0, 600, 500]);
+box on
+xlabel(sprintf('simulation speed (real time factor) \n FAST →'))
+ylabel(sprintf('accuracy \n ACCURATE →'))
+set(gca, ...
+    'YScale', 'log', ...
+    'XScale', 'log', ...
+    'YTick', [], ...
+    'XTick', [], ...
+    'YMinorTick', 'off', ...
+    'XMinorTick', 'off', ...
+    'YMinorGrid', 'off');
+hold on
+xrange1 = 1.1:0.01:1.9;
+yrange1 = 1.85:-0.01:1.05;
+plot(xrange1, yrange1, 'b', 'LineWidth', 2)
+xrange2 = 1.1:0.01:1.9;
+yrange2 = 1.95:-0.01:1.15;
+plot(xrange2, yrange2, 'g', 'LineWidth', 2)
+plot(1.9, 1.9, 'ro', 'MarkerFaceColor', 'r', 'MarkerSize', 10)
+hold off
+ylim([1,2])
+xlim([1,2])
