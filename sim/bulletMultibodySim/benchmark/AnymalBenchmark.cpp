@@ -172,7 +172,13 @@ int main(int argc, const char* argv[]) {
   )
   setupSimulation();
   resetWorld();
+
+  int profileID = -1;
+  if(benchmark::bulletmultibody::options.profiling)
+    profileID= sim->startBulletProfiling("/tmp/btmb-anymal-benchmark");
   simulationLoop();
+  if(benchmark::bulletmultibody::options.profiling)
+    sim->stopBulletProfiling(profileID);
 
   RAIINFO(
       std::endl << "-----------------------" << std::endl
