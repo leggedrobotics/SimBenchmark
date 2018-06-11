@@ -163,7 +163,7 @@ benchmark::building::Data simulationLoop() {
   StopWatch watch;
   watch.start();
 
-  int cnt = 0;
+  int cnt = (int) (benchmark::building::options.T / benchmark::building::options.dt);
   for(int i = 0; i < (int) (benchmark::building::options.T / benchmark::building::options.dt); i++) {
     // gui
     if (benchmark::building::options.gui && !sim->visualizerLoop(benchmark::building::options.dt))
