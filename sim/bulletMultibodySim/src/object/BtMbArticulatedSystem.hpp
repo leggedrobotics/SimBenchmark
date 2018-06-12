@@ -77,16 +77,6 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
   const EigenVec getGeneralizedVelocity() override;
 
   /**
-   * Get generalized force of robot
-   * The dimension of output vector is degree of freedom:
-   * If the robot is floating based then (base force ; base torque ; joint torque(or force))
-   * If the robot is fixed based then (joint torque(or force))
-   *
-   * @return Eigenvec of generalized force
-   */
-  const EigenVec getGeneralizedForce() override;
-
-  /**
    * Get generalized coordinate and velocity
    *
    * @param genco   VectorXd of generalized coordinate (output)
@@ -263,6 +253,18 @@ class BtMbArticulatedSystem : public benchmark::object::ArticulatedSystemInterfa
    * @param angVel    angular velocity (output)
    */
   void getComPose_W(int linkId, benchmark::Vec<3> &inertialPosition_w, benchmark::Mat<3, 3> &inertialOrientation_w);
+
+
+  /// DEPRECATED!
+  /**
+   * Get generalized force of robot
+   * The dimension of output vector is degree of freedom:
+   * If the robot is floating based then (base force ; base torque ; joint torque(or force))
+   * If the robot is fixed based then (joint torque(or force))
+   *
+   * @return Eigenvec of generalized force
+   */
+  const EigenVec getGeneralizedForce() override {};
 
   /// Attiributes
   // linear momentum
