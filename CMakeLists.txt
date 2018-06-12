@@ -33,26 +33,23 @@ link_directories(/usr/lib)
 link_directories(/usr/lib/x86_64-linux-gnu/)
 
 ## =========================== DEPENDENCIES ===========================
-# raiCommons
-find_package(raiCommon CONFIG REQUIRED)
-include_directories(${RAI_COMMON_INCLUDE_DIR})
+set(BENCHMARK_LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
 
-# raiGraphics
-find_package(raiGraphicsOpengl CONFIG REQUIRED)
-include_directories(${RAI_GRAPHICS_OPENGL_INCLUDE_DIRS})
-
+# global libs
 # eigen
 find_package(Eigen3 REQUIRED)
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-# yaml-cpp
-find_package(YAML-CPP REQUIRED)
-include_directories(${YAML_CPP_INCLUDE_DIR})
-
 # boost
-find_package( Boost COMPONENTS system filesystem program_options REQUIRED )
+find_package(Boost COMPONENTS system filesystem program_options REQUIRED )
 include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
+
+# local libs
+add_subdirectory(lib)
+include_directories(${BENCHMARK_LIB_DIR}/raiCommon/include)         # raiCommon
+include_directories(${BENCHMARK_LIB_DIR}/raiGraphics/include)       # raiGraphics
+include_directories(${BENCHMARK_LIB_DIR}/yaml-cpp/include)          # yaml-cpp
 
 ## =========================== LINK ===========================
 set(BENCHMARK_LINK
@@ -63,13 +60,13 @@ set(BENCHMARK_LINK
         ${RAI_GRAPHICS_OPENGL_LINK}
         )
 
-## =========================== FILES ===========================
+## =========================== SIMS ===========================
 include_directories(sim)
 add_subdirectory(sim)
-add_subdirectory(benchmark)
 
-#file(INSTALL ${CMAKE_SOURCE_DIR}/res
-#        DESTINATION ${CMAKE_BINARY_DIR})
+if(BUILD_BENCHMARK)
+    add_subdirectory(benchmark)
+endif(BUILD_BENCHMARK)
 
 if(BUILD_TEST)
     add_subdirectory(test)

@@ -78,40 +78,8 @@ else
     exit -1
 fi
 
-# install raiCommon
-echo "Installing raiCommon..."
-cd $ROOT_DIR/lib
-git clone git@bitbucket.org:jhwangbo/raicommon.git
-cd raicommon
-sudo rm -rf build
-mkdir build && cd build
-cmake ../
-sudo make install
-
-# install raiGraphicsOpengl
-echo "Installing raiGraphicsOpengl..."
-cd $ROOT_DIR/lib
-git clone git@bitbucket.org:jhwangbo/raigraphics_opengl.git
-cd raigraphics_opengl
-sudo rm -rf build
-mkdir build && cd build
-cmake ../
-sudo make install -j4
-
-# install yaml-cpp
-echo "Installing yaml-cpp..."
-cd $ROOT_DIR/lib
-git clone https://github.com/jbeder/yaml-cpp.git
-cd yaml-cpp
-sudo rm -rf build
-mkdir build && cd build
-cmake ../
-sudo make install -j4
-
-# TODO urdf
-
 # install raiSim (optional)
-if [ "$raisim_flag" == 'ON' ]; then
+if [ "$raisim_flag" == 'ON' ]; thenf
     echo "Installing raiSim..."
     echo "raiSim is currently only available for raiSim developers."
 fi
