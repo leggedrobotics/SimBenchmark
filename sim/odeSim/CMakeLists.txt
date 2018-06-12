@@ -10,8 +10,8 @@ set(CMAKE_CXX_FLAGS_RELEASE
 # ode double precision
 add_definitions(-DODE_DOUBLE_PRECISION)
 
-find_package(ode CONFIG REQUIRED)
-include_directories(${ODE_INCLUDE_DIRS})
+include_directories(${BENCHMARK_LIB_DIR}/ode/include)
+link_directories(${BENCHMARK_LIB_DIR}/ode)
 
 # source
 include_directories(src)
