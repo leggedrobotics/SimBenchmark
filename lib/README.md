@@ -1,11 +1,12 @@
 This directory is for external libraries: 
+- yaml-cpp (0.6.2)
 - RaiCommons 
 - RaiGraphics
 - RaiSim
-- Bullet
-- ODE
-- MUJOCO
-- Dart
+- Bullet (2.88)
+- ODE (0.15.2)
+- MUJOCO (1.50)
+- Dart 
 
 If you want to install the libraries above, run install.sh (the file is in the project root directory) 
 
