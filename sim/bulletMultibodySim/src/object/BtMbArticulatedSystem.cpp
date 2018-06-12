@@ -492,8 +492,62 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
 }
 
 void object::BtMbArticulatedSystem::getState(Eigen::VectorXd &genco, Eigen::VectorXd &genvel) {
-  genco = getGeneralizedCoordinate();
-  genvel = getGeneralizedVelocity();
+  if(isFixed_) {
+    // joints
+    b3JointStates2 states;
+    RAIFATAL_IF(!api_->getJointStates(objectId_, states), "getJointStates failed");
+
+    for(int i = 0; i < numJoints_; i++) {
+      genCoordinate_[i] = states.m_actualStateQ[i];
+      genVelocity_[i] = states.m_actualStateQdot[i];
+    }
+  } // end of fixed base
+  else {
+    btVector3 bPosition;
+    btQuaternion bQuaternion;
+    RAIFATAL_IF(!api_->getBasePositionAndOrientation(objectId_, bPosition, bQuaternion),
+                "getBasePositionAndOrientation failed");
+
+    {
+      // base
+      genCoordinate_[0] = bPosition.x();
+      genCoordinate_[1] = bPosition.y();
+      genCoordinate_[2] = bPosition.z();
+
+      genCoordinate_[3] = bQuaternion.w();
+      genCoordinate_[4] = bQuaternion.x();
+      genCoordinate_[5] = bQuaternion.y();
+      genCoordinate_[6] = bQuaternion.z();
+    }
+
+    btVector3 bLinVel;
+    btVector3 bAngVel;
+    RAIFATAL_IF(!api_->getBaseVelocity(objectId_, bLinVel, bAngVel),
+                "getBaseVelocity failed")
+
+    {
+      // base
+      genVelocity_[0] = bLinVel.x();
+      genVelocity_[1] = bLinVel.y();
+      genVelocity_[2] = bLinVel.z();
+
+      genVelocity_[3] = bAngVel.x();
+      genVelocity_[4] = bAngVel.y();
+      genVelocity_[5] = bAngVel.z();
+    }
+
+    // joints
+    b3JointStates2 states;
+    RAIFATAL_IF(!api_->getJointStates(objectId_, states), "getJointStates failed");
+
+    for(int i = 0; i < numJoints_; i++) {
+      genVelocity_[i+6] = states.m_actualStateQdot[i+6];
+      genCoordinate_[i+7] = states.m_actualStateQ[i+7];
+    }
+  } // end of floating base
+
+  genco = genCoordinate_.e();
+  genvel = genVelocity_.e();
 }
 
 void object::BtMbArticulatedSystem::setGeneralizedCoordinate(const Eigen::VectorXd &jointState) {
