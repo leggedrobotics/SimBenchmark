@@ -104,7 +104,7 @@ void simulationLoop() {
         for (int i = 0; i < anymals.size(); i++) {
           jointState = anymals[i]->getGeneralizedCoordinate();
           jointVel = anymals[i]->getGeneralizedVelocity();
-          jointForce = anymals[i]->getGeneralizedForce();
+//          jointForce = anymals[i]->getGeneralizedForce();
 
           jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
           jointForce.head(6).setZero();
@@ -122,7 +122,7 @@ void simulationLoop() {
         for (int i = 0; i < anymals.size(); i++) {
           jointState = anymals[i]->getGeneralizedCoordinate();
           jointVel = anymals[i]->getGeneralizedVelocity();
-          jointForce = anymals[i]->getGeneralizedForce();
+//          jointForce = anymals[i]->getGeneralizedForce();
 
           jointForce = kp * (jointNominalConfig - jointState).tail(18) - kd * jointVel;
           jointForce.head(6).setZero();

@@ -377,10 +377,11 @@ int object::BtMbArticulatedSystem::getStateDimension() {
 const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticulatedSystem::getGeneralizedCoordinate() {
   if(isFixed_) {
     // joints
+    b3JointStates2 states;
+    RAIFATAL_IF(!api_->getJointStates(objectId_, states), "getJointStates failed");
+
     for(int i = 0; i < numJoints_; i++) {
-      b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed");
-      genCoordinate_[i] = state.m_jointPosition;
+      genCoordinate_[i] = states.m_actualStateQ[i];
     }
   } // end of fixed base
   else {
@@ -402,10 +403,11 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
     }
 
     // joints
+    b3JointStates2 states;
+    RAIFATAL_IF(!api_->getJointStates(objectId_, states), "getJointStates failed");
+
     for(int i = 0; i < numJoints_; i++) {
-      b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed");
-      genCoordinate_[i+7] = state.m_jointPosition;
+      genCoordinate_[i+7] = states.m_actualStateQ[i+7];
     }
   } // end of floating base
 
@@ -416,10 +418,11 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
 
   if(isFixed_) {
     // joints
+    b3JointStates2 states;
+    RAIFATAL_IF(!api_->getJointStates(objectId_, states), "getJointStates failed");
+
     for(int i = 0; i < numJoints_; i++) {
-      b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed");
-      genVelocity_[i] = state.m_jointVelocity;
+      genVelocity_[i] = states.m_actualStateQdot[i];
     }
   } // end of fixed base
   else {
@@ -440,10 +443,11 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
     }
 
     // joints
+    b3JointStates2 states;
+    RAIFATAL_IF(!api_->getJointStates(objectId_, states), "getJointStates failed");
+
     for(int i = 0; i < numJoints_; i++) {
-      b3JointSensorState state;
-      RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed");
-      genVelocity_[i+6] = state.m_jointVelocity;
+      genVelocity_[i+6] = states.m_actualStateQdot[i+6];
     }
   } // end of floating base
   return genVelocity_.e();
@@ -474,10 +478,13 @@ const benchmark::object::ArticulatedSystemInterface::EigenVec object::BtMbArticu
     }
 
     // joints
+    b3JointStates2 states;
+    RAIFATAL_IF(!api_->getJointStates(objectId_, states), "getJointStates failed");
+
     for(int i = 0; i < numJoints_; i++) {
       b3JointSensorState state;
       RAIFATAL_IF(!api_->getJointState(objectId_, ctrbJoints_[i], &state), "getJointState failed");
-      genVelocity_[i+6] = state.m_jointMotorTorque;
+      genForce_[i+6] = state.m_jointMotorTorque;
     }
   } // end of floating base
 
@@ -638,13 +645,15 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &t
     {
       b3RobotSimulatorJointMotorArrayArgs arg(CONTROL_MODE_TORQUE, numJoints_);
 
+      int jointIdices[numJoints_];
       double jointForces[numJoints_];
       for(int i = 0; i < numJoints_; i++) {
+        jointIdices[i] = ctrbJoints_[i];
         jointForces[i] = tau[i];
         genForce_[i] = tau[i];
       }
       arg.m_forces = jointForces;
-      arg.m_jointIndices = &ctrbJoints_[0]; // vector -> array conversion
+      arg.m_jointIndices = jointIdices;
       arg.m_targetPositions = 0;
       arg.m_targetVelocities = 0;
 
@@ -685,13 +694,15 @@ void object::BtMbArticulatedSystem::setGeneralizedForce(const Eigen::VectorXd &t
     {
       b3RobotSimulatorJointMotorArrayArgs arg(CONTROL_MODE_TORQUE, numJoints_);
 
+      int jointIdices[numJoints_];
       double jointForces[numJoints_];
       for(int i = 0; i < numJoints_; i++) {
+        jointIdices[i] = ctrbJoints_[i];
         jointForces[i] = tau[i+6];
         genForce_[i+6] = tau[i+6];
       }
       arg.m_forces = jointForces;
-      arg.m_jointIndices = &ctrbJoints_[0]; // vector -> array conversion
+      arg.m_jointIndices = jointIdices; // vector -> array conversion
       arg.m_targetPositions = 0;
       arg.m_targetVelocities = 0;
 

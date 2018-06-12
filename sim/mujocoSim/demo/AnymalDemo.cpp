@@ -17,7 +17,7 @@ int main(int argc, const char* argv[]) {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/mujoco/ANYmal/robot.urdf";
+  urdfPath += "../../../res/mujoco/ANYmal/robot1.urdf";
 
   std::string keyPath(__FILE__);
   while (keyPath.back() != '/')

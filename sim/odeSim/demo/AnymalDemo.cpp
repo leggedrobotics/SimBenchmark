@@ -12,7 +12,7 @@ int main() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../../../res/ANYmal/robot.urdf";
+  urdfPath += "../../../res/ANYmal-nomesh/robot.urdf";
 
   ode_sim::OdeSim sim(800, 600, 0.5, benchmark::NO_BACKGROUND);
 
