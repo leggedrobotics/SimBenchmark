@@ -26,11 +26,13 @@ BtMbWorld::BtMbWorld() {
   {
     // engine parameters
     b3RobotSimulatorSetPhysicsEngineParameters arg;
-    arg.m_erp = 0;
-    arg.m_contactERP = 0;
+    arg.m_defaultContactERP = 0;
+    arg.m_defaultNonContactERP = 0;
     arg.m_frictionERP = 0;
-//    arg.m_solverResidualThreshold = 1e-4;
+    arg.m_solverResidualThreshold = 1e-4;
 //    arg.m_restitutionVelocityThreshold = 0;
+    arg.m_defaultGlobalCFM = 0;
+    arg.m_frictionCFM = 0;
     api_->setPhysicsEngineParameter(arg);
   }
 }

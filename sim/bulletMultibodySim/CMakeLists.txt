@@ -8,10 +8,8 @@ set(CMAKE_CXX_FLAGS_RELEASE
 add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
 
 # bullet package
-find_package(Bullet CONFIG REQUIRED)
-include_directories(${BULLET_ROOT_DIR}/${BULLET_INCLUDE_DIR})
-message(${BULLET_ROOT_DIR}/${BULLET_INCLUDE_DIR})
-link_directories(${BULLET_ROOT_DIR}/${BULLET_LIBRARY_DIRS})
+include_directories(${BENCHMARK_LIB_DIR}/bullet)
+link_directories(${BENCHMARK_LIB_DIR}/bullet)
 
 # source
 include_directories(src)
