@@ -16,21 +16,16 @@ else ()
 endif()
 
 # options
-option(BENCHMARK_RAISIM "benchmark raiSim" ON)
-option(BENCHMARK_BULLET "benchmark Bullet" ON)     # will be deprecated.
+option(BENCHMARK_RAISIM "benchmark raiSim" OFF)
+option(BENCHMARK_BULLET "benchmark Bullet" OFF)     # will be deprecated.
 option(BENCHMARK_BULLET_MULTIBODY "benchmark Bullet Multibody(bullet3 API)" ON)
-option(BENCHMARK_ODE "benchmark ODE" ON)
-option(BENCHMARK_MUJOCO "benchmark MUJOCO" ON)
-option(BENCHMARK_DART "benchmark DART" ON)
-option(BUILD_DEMO "build demos" ON)
-option(BUILD_TEST "build tests" ON)
+option(BENCHMARK_ODE "benchmark ODE" OFF)
+option(BENCHMARK_MUJOCO "benchmark MUJOCO" OFF)
+option(BENCHMARK_DART "benchmark DART" OFF)
+option(BUILD_DEMO "build demos" OFF)
+option(BUILD_TEST "build tests" OFF)
 option(BUILD_BENCHMARK "build benchmark tests" ON)
 #option(BUILD_UTIL "build utils" ON)
-
-## =========================== LINK DIRECTORIES ===========================
-link_directories(/usr/local/lib)
-link_directories(/usr/lib)
-link_directories(/usr/lib/x86_64-linux-gnu/)
 
 ## =========================== DEPENDENCIES ===========================
 set(BENCHMARK_LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
