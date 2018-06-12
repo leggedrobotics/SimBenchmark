@@ -22,7 +22,7 @@ object::BtMbArticulatedSystem::BtMbArticulatedSystem(std::string filePath,
           URDF_USE_INERTIA_FROM_FILE | URDF_USE_IMPLICIT_CYLINDER | MJCF_COLORS_FROM_FILE;
 
       if(internalCollision)
-        args.m_flags |= URDF_USE_SELF_COLLISION;
+        args.m_flags |= URDF_USE_SELF_COLLISION_EXCLUDE_PARENT;
 
       if(maximalCoordinate) {
         RAIFATAL("maximal coordinate is not supported yet")
