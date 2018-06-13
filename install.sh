@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-
-ROOT_DIR = "$PWD"
+SIMBENCHMARK_ROOT_DIR="$PWD"
 
 raisim_flag='OFF'
 bullet_flag='OFF'
@@ -9,15 +8,14 @@ mujoco_flag='OFF'
 dart_flag='OFF'
 
 # sim bench logo
-echo "------------------------------------------------------------------------------"
-echo "     _______. __  .___  ___. .______    _______ .__   __.   ______  __    __  "
-echo "    /       ||  | |   \/   | |   _  \  |   ____||  \ |  |  /      ||  |  |  | "
-echo "   |   (----'|  | |  \  /  | |  |_)  | |  |__   |   \|  | |  ,----'|  |__|  | "
-echo "    \   \    |  | |  |\/|  | |   _  <  |   __|  |  . '  | |  |     |   __   | "
-echo ".----)   |   |  | |  |  |  | |  |_)  | |  |____ |  |\   | |  '----.|  |  |  | "
-echo "|_______/    |__| |__|  |__| |______/  |_______||__| \__|  \______||__|  |__| "
-echo "                                                                              "
-echo "------------------------------------------------------------------------------"
+echo "   _____ ______  _______  _______   __________  ____  ______    ____  __ __"
+echo "  / ___//  _/  |/  / __ )/ ____/ | / / ____/ / / /  |/  /   |  / __ \/ //_/"
+echo "  \__ \ / // /|_/ / __  / __/ /  |/ / /   / /_/ / /|_/ / /| | / /_/ / ,<   "
+echo " ___/ // // /  / / /_/ / /___/ /|  / /___/ __  / /  / / ___ |/ _, _/ /| |  "
+echo "/____/___/_/  /_/_____/_____/_/ |_/\____/_/ /_/_/  /_/_/  |_/_/ |_/_/ |_|  "
+
+echo ""
+echo "==========================================================================="
 
 # select sim engines
 while true; do
@@ -65,9 +63,19 @@ while true; do
     esac
 done
 
+echo "==========================================================================="
+
+# install build tools 
+echo "Install build tools..."
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt update
+sudo apt install g++-7 -y
+
 # install dependencies
 echo "Install dependencies..."
 #sudo rm -rf $ROOT_DIR/lib/mjpro150
+sudo apt install libeigen3-dev libboost-all-dev libglew-dev libglm-dev libsdl2-dev \
+libassimp-dev libsoil-dev libsdl2-ttf-dev
 
 # check if git is installed
 echo "Check if git is installed."
@@ -79,31 +87,9 @@ else
 fi
 
 # install raiSim (optional)
-if [ "$raisim_flag" == 'ON' ]; thenf
+if [ "$raisim_flag" == 'ON' ]; then
     echo "Installing raiSim..."
     echo "raiSim is currently only available for raiSim developers."
-fi
-
-# install bullet (optional)
-if [ "$bullet_flag" == 'ON' ]; then
-    echo "Installing Bullet..."
-    cd $ROOT_DIR/lib
-    git clone https://github.com/bulletphysics/bullet3.git
-    mkdir build && cd build
-    cmake -DCMAKE_BUILD_TYPE=Release -DUSE_DOUBLE_PRECISION=ON ../
-    sudo make install -j4
-fi
-
-# install ode (optional)
-if [ "$ode_flag" == 'ON' ]; then
-    echo "Installing ODE... (0.15.2 version)"
-    cd $ROOT_DIR/lib
-    wget https://bitbucket.org/odedevs/ode/downloads/ode-0.15.2.tar.gz
-    tar -xvf ode-0.15.2.tar.gz
-    cd ode-0.15.2
-    mkdir cmake-build && cd cmake-build
-    cmake -DCMAKE_BUILD_TYPE=Release -DODE_WITH_LIBCCD=ON ../
-    sudo make install -j4
 fi
 
 # install mujoco (optional)
@@ -116,11 +102,13 @@ if [ "mujoco_flag" == 'ON' ]; then
 fi
 
 # bulid
-mkdir $ROOT_DIR/build & cd $ROOT_DIR/build
+mkdir $SIMBENCHMARK_ROOT_DIR/build & cd $SIMBENCHMARK_ROOT_DIR/build
 cmake -DCMAKE_BUILD_TYPE=Release ../
-make -j4
+make
 
 # finished
-cd $ROOT_DIR
+cd $SIMBENCHMARK_ROOT_DIR
 
+echo "==========================================================================="
+echo "SimBenchmark installed."
 echo "Put mjkey.txt file into lib/mjpro150"
