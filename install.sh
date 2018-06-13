@@ -68,6 +68,7 @@ done
 # install dependencies
 echo "Install dependencies..."
 #sudo rm -rf $ROOT_DIR/lib/mjpro150
+sudo apt-get install libeigen3-dev
 
 # check if git is installed
 echo "Check if git is installed."
@@ -79,31 +80,9 @@ else
 fi
 
 # install raiSim (optional)
-if [ "$raisim_flag" == 'ON' ]; thenf
+if [ "$raisim_flag" == 'ON' ]; then
     echo "Installing raiSim..."
     echo "raiSim is currently only available for raiSim developers."
-fi
-
-# install bullet (optional)
-if [ "$bullet_flag" == 'ON' ]; then
-    echo "Installing Bullet..."
-    cd $ROOT_DIR/lib
-    git clone https://github.com/bulletphysics/bullet3.git
-    mkdir build && cd build
-    cmake -DCMAKE_BUILD_TYPE=Release -DUSE_DOUBLE_PRECISION=ON ../
-    sudo make install -j4
-fi
-
-# install ode (optional)
-if [ "$ode_flag" == 'ON' ]; then
-    echo "Installing ODE... (0.15.2 version)"
-    cd $ROOT_DIR/lib
-    wget https://bitbucket.org/odedevs/ode/downloads/ode-0.15.2.tar.gz
-    tar -xvf ode-0.15.2.tar.gz
-    cd ode-0.15.2
-    mkdir cmake-build && cd cmake-build
-    cmake -DCMAKE_BUILD_TYPE=Release -DODE_WITH_LIBCCD=ON ../
-    sudo make install -j4
 fi
 
 # install mujoco (optional)
@@ -118,7 +97,7 @@ fi
 # bulid
 mkdir $ROOT_DIR/build & cd $ROOT_DIR/build
 cmake -DCMAKE_BUILD_TYPE=Release ../
-make -j4
+make
 
 # finished
 cd $ROOT_DIR
