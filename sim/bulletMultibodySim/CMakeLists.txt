@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS_RELEASE
 add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
 
 # bullet package
-include_directories(${BENCHMARK_LIB_DIR}/bullet/include)
+include_directories(${BENCHMARK_LIB_DIR})
 link_directories(${BENCHMARK_LIB_DIR}/bullet)
 
 # source
