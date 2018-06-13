@@ -100,13 +100,6 @@ double simulationLoop(bool timer = true, bool error = true) {
           !sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor))
         break;
 
-      anymals[0]->setGeneralizedForce({0, 0, 0,
-                                       0, 0, 0,
-                                       0, 0, 0,
-                                       0, 0, 0,
-                                       0, 0, 0,
-                                       0, 0, 0});
-
       if(error) {
         if(t == 0)
           benchmark::anymal::freedrop::data.E0 = anymals[0]->getEnergy({0, 0, benchmark::anymal::freedrop::params.g});

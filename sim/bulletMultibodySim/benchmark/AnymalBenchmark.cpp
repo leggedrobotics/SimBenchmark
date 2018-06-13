@@ -22,7 +22,7 @@ void setupSimulation() {
   sim->setTimeStep(benchmark::anymal::params.dt);
 
   int numAnymal = benchmark::anymal::options.numRow * benchmark::anymal::options.numRow;
-  sim->setSolverParameter(1e-7, 1000);
+//  sim->setSolverParameter(1e-7, 1000);
 }
 
 void resetWorld() {

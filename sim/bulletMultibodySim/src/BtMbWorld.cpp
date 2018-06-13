@@ -29,8 +29,8 @@ BtMbWorld::BtMbWorld() {
     arg.m_defaultContactERP = 0;
     arg.m_defaultNonContactERP = 0;
     arg.m_frictionERP = 0;
-    arg.m_solverResidualThreshold = 1e-4;
-//    arg.m_restitutionVelocityThreshold = 0;
+//    arg.m_solverResidualThreshold = 1e-4;       // TODO tuning!
+//    arg.m_restitutionVelocityThreshold = 0;     // TODO tuning!
     arg.m_defaultGlobalCFM = 0;
     arg.m_frictionCFM = 0;
     api_->setPhysicsEngineParameter(arg);
