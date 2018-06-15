@@ -99,7 +99,7 @@ for i = 1:size(T2, 1)
         'FaceColor', spec{3})
 end
 hold off
-title(sprintf('ANYmal free drop test speed'))
+title('ANYmal Energy')
 % numbers on bars
 text(1:length(speed), ...
     speed, ...
@@ -108,10 +108,10 @@ text(1:length(speed), ...
     'horiz','center', ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-ylim([0, 190])
-saveas(h, strcat('freedrop-plots/speed-bar.png'))
-saveas(h, strcat('freedrop-plots/speed-bar.eps'), 'epsc')
-saveas(h, strcat('freedrop-plots/speed-bar.fig'), 'fig')
+% ylim([0, 190])
+saveas(h, strcat('anymal-energy-plots/speed-bar.png'))
+saveas(h, strcat('anymal-energy-plots/speed-bar.eps'), 'epsc')
+saveas(h, strcat('anymal-energy-plots/speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -180,16 +180,16 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title(['Energy Error ', plotTitle])
+title('ANYmal Energy')
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
 % xlim([1e-1, 10^5.5])
 % ylim([1e-8, 1e6])
 lgd = legend('Location', 'northeast');
 lgd.NumColumns = 2;
-saveas(h, strcat('freedrop-plots/error-speed', fileName, '.png'))
-saveas(h, strcat('freedrop-plots/error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('freedrop-plots/error-speed', fileName, '.fig'), 'fig')
+saveas(h, strcat('anymal-energy-plots/error-speed', fileName, '.png'))
+saveas(h, strcat('anymal-energy-plots/error-speed', fileName, '.eps'), 'epsc')
+saveas(h, strcat('anymal-energy-plots/error-speed', fileName, '.fig'), 'fig')
 
 
 end
