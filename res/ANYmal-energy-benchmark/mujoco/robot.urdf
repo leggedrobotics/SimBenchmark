@@ -54,10 +54,6 @@
     <material name="anymal_material">
         <color rgba="0 0 0 0"/>
     </material>
-    <!-- Xacro:Properties -->
-    <!-- [m] -->
-    <!-- Base link -->
-    <!-- Base link -->
     <link name="world">
     </link>
     <link name="base_0">
@@ -80,9 +76,6 @@
         <child link="base_0"/>
         <origin rpy="0 0 0" xyz="0 0 1"/>
     </joint>
-    <!-- Xacro:Properties -->
-    <!-- [m] -->
-    <!-- [Nm] -->
     <link name="LF_HIP_0">
         <collision>
             <origin rpy="1.57079632679 0 0" xyz="0.0585 0.0315 0.0"/>
@@ -103,9 +96,6 @@
         <origin xyz="0.2629 0.115 0.0"/>
         <axis xyz="1 0 0"/>
     </joint>
-    <!-- Xacro:Properties -->
-    <!-- [m] -->
-    <!-- [Nm] -->
     <link name="LF_THIGH_0">
         <!--collision>
             <origin rpy="0.145 0 0" xyz="0 0.02 -0.1"/>
