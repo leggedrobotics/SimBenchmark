@@ -4,7 +4,7 @@
 
 #include <MjcSim.hpp>
 
-#include "AnymalBenchmark.hpp"
+#include "AnymalPDBenchmark.hpp"
 #include "MjcBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 

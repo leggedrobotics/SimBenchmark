@@ -506,3 +506,10 @@ void mujoco_sim::MjcSim::updateFrame() {
 void mujoco_sim::MjcSim::resetSimulation() {
   world_.resetSimulation();
 }
+
+void mujoco_sim::MjcSim::setWorldContactFlag(bool flagYN) {
+  if (flagYN == true)
+    world_.simOption_->disableflags &= ~mjDSBL_CONTACT;
+  else
+    world_.simOption_->disableflags |= mjDSBL_CONTACT;
+}

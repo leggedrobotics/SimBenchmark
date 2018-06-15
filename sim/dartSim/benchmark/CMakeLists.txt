@@ -1,11 +1,11 @@
 include_directories(${CMAKE_SOURCE_DIR}/benchmark)
 
-add_executable(DartAnymalBenchmark
-        AnymalBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/AnymalBenchmark.hpp
+add_executable(DartAnymalPDBenchmark
+        AnymalPDBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AnymalPDBenchmark.hpp
         ${CMAKE_SOURCE_DIR}/benchmark/DartBenchmark.hpp
         )
-target_link_libraries(DartAnymalBenchmark ${DartSimLink})
+target_link_libraries(DartAnymalPDBenchmark ${DartSimLink})
 
 add_executable(DartAnymalMomentumBenchmark
         AnymalMomentumBenchmark.cpp

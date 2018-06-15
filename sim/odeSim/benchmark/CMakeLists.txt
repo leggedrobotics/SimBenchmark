@@ -1,10 +1,10 @@
 include_directories(${CMAKE_SOURCE_DIR}/benchmark)
 
-add_executable(OdeAnymalBenchmark
-        AnymalBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/AnymalBenchmark.hpp
+add_executable(OdeAnymalPDBenchmark
+        AnymalPDBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AnymalPDBenchmark.hpp
         ${CMAKE_SOURCE_DIR}/benchmark/OdeBenchmark.hpp)
-target_link_libraries(OdeAnymalBenchmark ${OdeSimLink})
+target_link_libraries(OdeAnymalPDBenchmark ${OdeSimLink})
 
 add_executable(OdeAnymalMomentumBenchmark
         AnymalMomentumBenchmark.cpp

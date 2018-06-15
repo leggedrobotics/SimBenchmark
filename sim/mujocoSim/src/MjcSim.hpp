@@ -62,6 +62,12 @@ class MjcSim: public benchmark::WorldRG {
    */
   void setTimeStep(double timeStep);
 
+  /**
+   * Set flagYN = false to disable contact in the world
+   * @param flagYN
+   */
+  void setWorldContactFlag(bool flagYN);
+
   benchmark::SingleBodyHandle getSingleBodyHandle(int index);
   int getWorldNumContacts() override ;
   int getNumObject() override ;

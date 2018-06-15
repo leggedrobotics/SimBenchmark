@@ -85,7 +85,39 @@ std::string getURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/ANYmal-nomesh/robot.urdf";
+  urdfPath += "../res/ANYmal-PD-benchmark/ode-rai-dart/robot.urdf";
+
+  return urdfPath;
+}
+
+/**
+ * get URDF file path of plane
+ * (For Bullet)
+ *
+ * @return urdfPath in string
+ */
+std::string getBulletPlanePath() {
+
+  std::string urdfPath(__FILE__);
+  while (urdfPath.back() != '/')
+    urdfPath.erase(urdfPath.size() - 1, 1);
+  urdfPath += "../res/ANYmal-PD-benchmark/bullet/plane.urdf";
+
+  return urdfPath;
+}
+
+/**
+ * get URDF file path of ANYmal
+ * (For Bullet)
+ *
+ * @return urdfPath in string
+ */
+std::string getBulletANYmalPath() {
+
+  std::string urdfPath(__FILE__);
+  while (urdfPath.back() != '/')
+    urdfPath.erase(urdfPath.size() - 1, 1);
+  urdfPath += "../res/ANYmal-PD-benchmark/bullet/robot.urdf";
 
   return urdfPath;
 }
@@ -116,7 +148,7 @@ std::string getMujocoURDFpath(int rowNum) {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/mujoco/ANYmal/robot" + std::to_string(rowNum * rowNum) + ".urdf";
+  urdfPath += "../res/ANYmal-PD-benchmark/mujoco/robot" + std::to_string(rowNum * rowNum) + ".urdf";
 
   return urdfPath;
 }

@@ -2,31 +2,40 @@
 // Created by kangd on 26.04.18.
 //
 
-#include <raiSim/World_RG.hpp>
+#include <DartSim.hpp>
 
-#include "AnymalBenchmark.hpp"
+#include "AnymalPDBenchmark.hpp"
+#include "DartBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
-rai_sim::World_RG *sim;
-std::vector<rai_sim::ArticulatedSystemHandle> anymals;
+dart_sim::DartSim *sim;
+std::vector<dart_sim::ArticulatedSystemHandle> anymals;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::anymal::options.gui)
-    sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+    sim = new dart_sim::DartSim(800, 600, 0.5,
+                                     benchmark::NO_BACKGROUND,
+                                     benchmark::dart::options.solverOption,
+                                     benchmark::dart::options.detectorOption);
   else
-    sim = new rai_sim::World_RG();
+    sim = new dart_sim::DartSim(benchmark::dart::options.solverOption,
+                                     benchmark::dart::options.detectorOption);
+
+  sim->setTimeStep(benchmark::anymal::params.dt);
+  sim->setMaxContacts(5000);
 }
 
 void resetWorld() {
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
+  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
+  checkerboard->setFrictionCoefficient(0.8);
 
   for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
     for(int j = 0; j < benchmark::anymal::options.numRow; j++) {
       auto anymal = sim->addArticulatedSystem(
           benchmark::anymal::getURDFpath()
       );
-//      anymal->setColor({1, 0, 0, 1});
+      anymal->setColor({1, 1, 0, 1});
       anymal->setGeneralizedCoordinate(
           {i * 2,
            j * 2,
@@ -35,18 +44,18 @@ void resetWorld() {
            benchmark::anymal::params.baseQuat[1],
            benchmark::anymal::params.baseQuat[2],
            benchmark::anymal::params.baseQuat[3],
-           benchmark::anymal::params.jointPos[0],
-           benchmark::anymal::params.jointPos[1],
-           benchmark::anymal::params.jointPos[2],
-           benchmark::anymal::params.jointPos[3],
-           benchmark::anymal::params.jointPos[4],
-           benchmark::anymal::params.jointPos[5],
-           benchmark::anymal::params.jointPos[6],
-           benchmark::anymal::params.jointPos[7],
-           benchmark::anymal::params.jointPos[8],
-           benchmark::anymal::params.jointPos[9],
-           benchmark::anymal::params.jointPos[10],
-           benchmark::anymal::params.jointPos[11]
+           benchmark::anymal::params.dartjointPos[0],
+           benchmark::anymal::params.dartjointPos[1],
+           benchmark::anymal::params.dartjointPos[2],
+           benchmark::anymal::params.dartjointPos[3],
+           benchmark::anymal::params.dartjointPos[4],
+           benchmark::anymal::params.dartjointPos[5],
+           benchmark::anymal::params.dartjointPos[6],
+           benchmark::anymal::params.dartjointPos[7],
+           benchmark::anymal::params.dartjointPos[8],
+           benchmark::anymal::params.dartjointPos[9],
+           benchmark::anymal::params.dartjointPos[10],
+           benchmark::anymal::params.dartjointPos[11]
           });
       anymal->setGeneralizedVelocity(Eigen::VectorXd::Zero(anymal->getDOF()));
       anymal->setGeneralizedForce(Eigen::VectorXd::Zero(anymal->getDOF()));
@@ -75,18 +84,18 @@ void simulationLoop() {
       benchmark::anymal::params.baseQuat[1],
       benchmark::anymal::params.baseQuat[2],
       benchmark::anymal::params.baseQuat[3],
-      benchmark::anymal::params.jointPos[0],
-      benchmark::anymal::params.jointPos[1],
-      benchmark::anymal::params.jointPos[2],
-      benchmark::anymal::params.jointPos[3],
-      benchmark::anymal::params.jointPos[4],
-      benchmark::anymal::params.jointPos[5],
-      benchmark::anymal::params.jointPos[6],
-      benchmark::anymal::params.jointPos[7],
-      benchmark::anymal::params.jointPos[8],
-      benchmark::anymal::params.jointPos[9],
-      benchmark::anymal::params.jointPos[10],
-      benchmark::anymal::params.jointPos[11];
+      benchmark::anymal::params.dartjointPos[0],
+      benchmark::anymal::params.dartjointPos[1],
+      benchmark::anymal::params.dartjointPos[2],
+      benchmark::anymal::params.dartjointPos[3],
+      benchmark::anymal::params.dartjointPos[4],
+      benchmark::anymal::params.dartjointPos[5],
+      benchmark::anymal::params.dartjointPos[6],
+      benchmark::anymal::params.dartjointPos[7],
+      benchmark::anymal::params.dartjointPos[8],
+      benchmark::anymal::params.dartjointPos[9],
+      benchmark::anymal::params.dartjointPos[10],
+      benchmark::anymal::params.dartjointPos[11];
 
   if(benchmark::anymal::options.gui) {
     // gui
@@ -100,13 +109,13 @@ void simulationLoop() {
         jointForce.head(6).setZero();
         anymals[i]->setGeneralizedForce(jointForce);
       }
-      sim->integrate(benchmark::anymal::params.dt);
+      sim->integrate();
     }
   } else {
     // no gui
     StopWatch watch;
     watch.start();
-    for(int t = 0; t < (int) (benchmark::anymal::params.T / benchmark::anymal::params.dt); t++) {
+    for(int t = 0; t < (int)(benchmark::anymal::params.T / benchmark::anymal::params.dt); t++) {
       for(int i = 0; i < anymals.size(); i++) {
         jointState = anymals[i]->getGeneralizedCoordinate();
         jointVel = anymals[i]->getGeneralizedVelocity();
@@ -116,7 +125,7 @@ void simulationLoop() {
         jointForce.head(6).setZero();
         anymals[i]->setGeneralizedForce(jointForce);
       }
-      sim->integrate(benchmark::anymal::params.dt);
+      sim->integrate();
     }
 
     double time = watch.measure();
@@ -128,10 +137,10 @@ void simulationLoop() {
 
     if(benchmark::anymal::options.csv)
       benchmark::anymal::printCSV(benchmark::anymal::getCSVpath(benchmark::anymal::options.feedback),
-                                  "RAI",
-                                  "RAI",
-                                  "RAI",
-                                  "RAI",
+                                  benchmark::dart::options.simName,
+                                  benchmark::dart::options.solverName,
+                                  benchmark::dart::options.detectorName,
+                                  benchmark::dart::options.integratorName,
                                   benchmark::anymal::options.numRow,
                                   time);
   }
@@ -140,17 +149,21 @@ void simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::anymal::addDescToOption(desc);
+  benchmark::dart::addDescToOption(desc);
+
   benchmark::anymal::getOptionsFromArg(argc, argv, desc);
+  benchmark::dart::getOptionsFromArg(argc, argv, desc);
 
   benchmark::anymal::getParamsFromYAML(benchmark::anymal::getYamlpath().c_str(),
-                                       benchmark::RAI);
+                                       benchmark::DART);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: RAI" << std::endl
+                << "Simulator: DART" << std::endl
                 << "GUI      : " << benchmark::anymal::options.gui << std::endl
                 << "Row      : " << benchmark::anymal::options.numRow << std::endl
                 << "Feedback : " << benchmark::anymal::options.feedback << std::endl
+                << "Solver   : " << benchmark::dart::options.solverOption << std::endl
                 << "-----------------------"
   )
 
@@ -159,7 +172,9 @@ int main(int argc, const char* argv[]) {
   simulationLoop();
 
   RAIINFO(
-      std::endl << "=======================" 
+      std::endl << "-----------------------" << std::endl
+                << "Contacts : " << sim->getWorldNumContacts() << std::endl
+                << "======================="
   )
 
   delete sim;

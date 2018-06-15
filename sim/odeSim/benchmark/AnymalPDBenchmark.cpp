@@ -4,7 +4,7 @@
 
 #include <OdeSim.hpp>
 
-#include "AnymalBenchmark.hpp"
+#include "AnymalPDBenchmark.hpp"
 #include "OdeBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 

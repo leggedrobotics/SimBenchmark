@@ -20,9 +20,6 @@
 <!--along with this program. If not, see <http://www.gnu.org/licenses/>.     -->
 <!-- This file contains the description of the ANYmal Beth robot. -->
 <robot name="anymal" xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <mujoco>
-        <size njmax="5000" nconmax="2000" nstack="1000000000"/>
-    </mujoco>
     <material name="black">
         <color rgba="0.0 0.0 0.0 1.0"/>
     </material>
@@ -50,21 +47,31 @@
     <material name="white">
         <color rgba="1.0 1.0 1.0 1.0"/>
     </material>
+    <gazebo>
+        <plugin filename="libanymal_gazebo.so" name="gazebo_ros_control">
+            <robotNamespace>anymal</robotNamespace>
+            <!-- Currently unused -->
+            <robotDescription>quadruped_description</robotDescription>
+            <robotBaseLink>base</robotBaseLink>
+            <statePublisherRate>400.0</statePublisherRate>
+        </plugin>
+    </gazebo>
     <!-- Material for the visual primitives -->
     <material name="anymal_material">
         <color rgba="0 0 0 0"/>
     </material>
-    <link name="world">
-    </link>
-    <link name="ground">
-        <collision>
-            <origin rpy="0,0,0" xyz="0 0 0"/>
+    <!-- Xacro:Properties -->
+    <!-- [m] -->
+    <!-- Base link -->
+    <link name="base">
+        <visual>
+            <!-- Main Body -->
+            <origin rpy="0 0 0" xyz="0 0 0.08"/>
             <geometry>
-                <box size="100 100 0.01"/>
+                <box size="0.531 0.232 0.26"/>
             </geometry>
-        </collision>
-    </link>
-    <link name="base_0">
+            <material name="anymal_material"/>
+        </visual>
         <collision>
             <!-- Main Body -->
             <origin rpy="0 0 0" xyz="0 0 0.08"/>
@@ -78,13 +85,16 @@
             <inertia ixx="0.268388530624" ixy="0.000775392455422" ixz="-0.0151848534451" iyy="0.884235660795" iyz="-0.000989297489507" izz="0.829158678306"/>
         </inertial>
     </link>
-    <!-- Fixed joint to add dummy inertia link -->
-    <joint name="base_to_world_0" type="floating">
-        <parent link="world"/>
-        <child link="base_0"/>
-        <origin rpy="0 0 0" xyz="0 0 1"/>
-    </joint>
-    <link name="LF_HIP_0">
+    <!-- Xacro:Properties -->
+    <!-- [m] -->
+    <!-- [Nm] -->
+    <link name="LF_HIP">
+        <visual>
+            <origin rpy="1.57079632679 0 0" xyz="0.0585 0.0315 0.0"/>
+            <geometry>
+                <cylinder length="0.08" radius="0.04"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="1.57079632679 0 0" xyz="0.0585 0.0315 0.0"/>
             <geometry>
@@ -98,19 +108,24 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="LF_HAA_0" type="continuous">
-        <parent link="base_0"/>
-        <child link="LF_HIP_0"/>
+    <joint name="LF_HAA" type="revolute">
+        <parent link="base"/>
+        <child link="LF_HIP"/>
         <origin xyz="0.2629 0.115 0.0"/>
         <axis xyz="1 0 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
-    <link name="LF_THIGH_0">
-        <!--collision>
-            <origin rpy="0.145 0 0" xyz="0 0.02 -0.1"/>
+    <!-- Xacro:Properties -->
+    <!-- [m] -->
+    <!-- [Nm] -->
+    <link name="LF_THIGH">
+        <visual>
+            <origin rpy="1.57079632679 0 0" xyz="0.0 0.07 -0.25"/>
             <geometry>
-                <cylinder length="0.2" radius="0.01"/>
+                <cylinder length="0.08" radius="0.04"/>
             </geometry>
-        </collision-->
+        </visual>
         <collision>
             <origin rpy="1.57079632679 0 0" xyz="0.0 0.07 -0.25"/>
             <geometry>
@@ -124,16 +139,24 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="LF_HFE_0" type="continuous">
-        <parent link="LF_HIP_0"/>
-        <child link="LF_THIGH_0"/>
-        <origin xyz="0.0585                    0.0315                    0.0"/>
+    <joint name="LF_HFE" type="revolute">
+        <parent link="LF_HIP"/>
+        <child link="LF_THIGH"/>
+        <origin xyz="0.0585 0.0315 0.0"/>
         <axis xyz="0 1 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
     <!-- [m] -->
     <!-- [Nm] -->
-    <link name="LF_SHANK_0">
+    <link name="LF_SHANK">
+        <visual>
+            <origin rpy="-0.0 0.34 0" xyz="0.06 -0.03 -0.18"/>
+            <geometry>
+                <cylinder length="0.19" radius="0.015"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="-0.0 0.34 0" xyz="0.06 -0.03 -0.18"/>
             <geometry>
@@ -147,23 +170,22 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="LF_KFE_0" type="continuous">
-        <parent link="LF_THIGH_0"/>
-        <child link="LF_SHANK_0"/>
+    <joint name="LF_KFE" type="revolute">
+        <parent link="LF_THIGH"/>
+        <child link="LF_SHANK"/>
         <origin xyz="0.0 0.111 -0.25"/>
         <axis xyz="0 1 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->
-    <link name="LF_FOOT_MOUNT_0"/>
-    <!-- Foot mount joint / ankle -->
-    <joint name="LF_ANKLE_JOINT_0" type="fixed">
-        <parent link="LF_SHANK_0"/>
-        <child link="LF_FOOT_MOUNT_0"/>
-        <origin rpy="0.323 0.549 0" xyz="0.0 -0.016 -0.31"/>
-    </joint>
-    <!-- Xacro:Properties -->
-    <!-- [m] -->
-    <link name="LF_FOOT_SENSOR_0">
+    <link name="LF_FOOT_MOUNT">
+        <visual>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0"/>
+            <geometry>
+                <sphere radius="0.03"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0.0 0.0 0"/>
             <geometry>
@@ -176,12 +198,14 @@
             <inertia ixx="8.3086410294e-05" ixy="4.16901601e-07" ixz="3.99054799e-07" iyy="8.2860209667e-05" iyz="-3.45712252e-07" izz="8.1948124086e-05"/>
         </inertial>
     </link>
-    <!-- Foot sensor joint -->
-    <joint name="LF_MOUNT_TO_SENSOR_0" type="fixed">
-        <parent link="LF_FOOT_MOUNT_0"/>
-        <child link="LF_FOOT_SENSOR_0"/>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
+    <!-- Foot mount joint / ankle -->
+    <joint name="LF_ANKLE_JOINT" type="fixed">
+        <parent link="LF_SHANK"/>
+        <child link="LF_FOOT_MOUNT"/>
+        <origin rpy="0.323 0.549 0" xyz="0.0 -0.016 -0.31"/>
     </joint>
+    <!-- Xacro:Properties -->
+    <!-- [m] -->
     <!-- Gazebo customization -->
     <gazebo reference="LF_FOOT_SENSOR">
         <kp>1000000.0</kp>
@@ -190,19 +214,16 @@
         <mu2>0.8</mu2>
     </gazebo>
     <gazebo reference="LF_MOUNT_TO_SENSOR"/>
-    <!-- Foot link -->
-    <link name="LF_FOOT_0">
-    </link>
-    <!-- Foot joint -->
-    <joint name="LF_SENSOR_TO_FOOT_0" type="fixed">
-        <parent link="LF_FOOT_SENSOR_0"/>
-        <child link="LF_FOOT_0"/>
-        <origin rpy="0 0 0" xyz="0.0 0.0 -0.0385"/>
-    </joint>
     <!-- Xacro:Properties -->
     <!-- [m] -->
     <!-- [Nm] -->
-    <link name="RF_HIP_0">
+    <link name="RF_HIP">
+        <visual>
+            <origin rpy="1.57079632679 0 0" xyz="0.0585 -0.0315 0.0"/>
+            <geometry>
+                <cylinder length="0.08" radius="0.04"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="1.57079632679 0 0" xyz="0.0585 -0.0315 0.0"/>
             <geometry>
@@ -216,22 +237,24 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="RF_HAA_0" type="continuous">
-        <parent link="base_0"/>
-        <child link="RF_HIP_0"/>
+    <joint name="RF_HAA" type="revolute">
+        <parent link="base"/>
+        <child link="RF_HIP"/>
         <origin xyz="0.2629 -0.115 0.0"/>
         <axis xyz="1 0 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
     <!-- [m] -->
     <!-- [Nm] -->
-    <link name="RF_THIGH_0">
-        <!--collision>
-            <origin rpy="-0.145 0 0" xyz="0 -0.02 -0.1"/>
+    <link name="RF_THIGH">
+        <visual>
+            <origin rpy="1.57079632679 0 0" xyz="0.0 -0.07 -0.25"/>
             <geometry>
-                <cylinder length="0.2" radius="0.01"/>
+                <cylinder length="0.08" radius="0.04"/>
             </geometry>
-        </collision-->
+        </visual>
         <collision>
             <origin rpy="1.57079632679 0 0" xyz="0.0 -0.07 -0.25"/>
             <geometry>
@@ -245,16 +268,24 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="RF_HFE_0" type="continuous">
-        <parent link="RF_HIP_0"/>
-        <child link="RF_THIGH_0"/>
+    <joint name="RF_HFE" type="revolute">
+        <parent link="RF_HIP"/>
+        <child link="RF_THIGH"/>
         <origin xyz="0.0585                    -0.0315                    0.0"/>
         <axis xyz="0 1 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
     <!-- [m] -->
     <!-- [Nm] -->
-    <link name="RF_SHANK_0">
+    <link name="RF_SHANK">
+        <visual>
+            <origin rpy="0.0 0.34 0" xyz="0.06 0.03 -0.18"/>
+            <geometry>
+                <cylinder length="0.19" radius="0.015"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="0.0 0.34 0" xyz="0.06 0.03 -0.18"/>
             <geometry>
@@ -268,23 +299,22 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="RF_KFE_0" type="continuous">
-        <parent link="RF_THIGH_0"/>
-        <child link="RF_SHANK_0"/>
+    <joint name="RF_KFE" type="revolute">
+        <parent link="RF_THIGH"/>
+        <child link="RF_SHANK"/>
         <origin xyz="0.0 -0.111 -0.25"/>
         <axis xyz="0 1 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->
-    <link name="RF_FOOT_MOUNT_0"/>
-    <!-- Foot mount joint / ankle -->
-    <joint name="RF_ANKLE_JOINT_0" type="fixed">
-        <parent link="RF_SHANK_0"/>
-        <child link="RF_FOOT_MOUNT_0"/>
-        <origin rpy="-0.323 0.549 0" xyz="0.0 0.016 -0.31"/>
-    </joint>
-    <!-- Xacro:Properties -->
-    <!-- [m] -->
-    <link name="RF_FOOT_SENSOR_0">
+    <link name="RF_FOOT_MOUNT">
+        <visual>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0"/>
+            <geometry>
+                <sphere radius="0.03"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0.0 0.0 0"/>
             <geometry>
@@ -297,12 +327,14 @@
             <inertia ixx="8.3086410294e-05" ixy="-4.16901601e-07" ixz="3.99054799e-07" iyy="8.2860209667e-05" iyz="3.45712252e-07" izz="8.1948124086e-05"/>
         </inertial>
     </link>
-    <!-- Foot sensor joint -->
-    <joint name="RF_MOUNT_TO_SENSOR_0" type="fixed">
-        <parent link="RF_FOOT_MOUNT_0"/>
-        <child link="RF_FOOT_SENSOR_0"/>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
+    <!-- Foot mount joint / ankle -->
+    <joint name="RF_ANKLE_JOINT" type="fixed">
+        <parent link="RF_SHANK"/>
+        <child link="RF_FOOT_MOUNT"/>
+        <origin rpy="-0.323 0.549 0" xyz="0.0 0.016 -0.31"/>
     </joint>
+    <!-- Xacro:Properties -->
+    <!-- [m] -->
     <!-- Gazebo customization -->
     <gazebo reference="RF_FOOT_SENSOR">
         <kp>1000000.0</kp>
@@ -311,19 +343,16 @@
         <mu2>0.8</mu2>
     </gazebo>
     <gazebo reference="RF_MOUNT_TO_SENSOR"/>
-    <!-- Foot link -->
-    <link name="RF_FOOT_0">
-    </link>
-    <!-- Foot joint -->
-    <joint name="RF_SENSOR_TO_FOOT_0" type="fixed">
-        <parent link="RF_FOOT_SENSOR_0"/>
-        <child link="RF_FOOT_0"/>
-        <origin rpy="0 0 0" xyz="0.0 0.0 -0.0385"/>
-    </joint>
     <!-- Xacro:Properties -->
     <!-- [m] -->
     <!-- [Nm] -->
-    <link name="LH_HIP_0">
+    <link name="LH_HIP">
+        <visual>
+            <origin rpy="-1.57079632679 0 0" xyz="-0.0585 0.0315 0.0"/>
+            <geometry>
+                <cylinder length="0.08" radius="0.04"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="-1.57079632679 0 0" xyz="-0.0585 0.0315 0.0"/>
             <geometry>
@@ -337,16 +366,24 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="LH_HAA_0" type="continuous">
-        <parent link="base_0"/>
-        <child link="LH_HIP_0"/>
+    <joint name="LH_HAA" type="revolute">
+        <parent link="base"/>
+        <child link="LH_HIP"/>
         <origin xyz="-0.2629 0.115 0.0"/>
         <axis xyz="1 0 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
     <!-- [m] -->
     <!-- [Nm] -->
-    <link name="LH_THIGH_0">
+    <link name="LH_THIGH">
+        <visual>
+            <origin rpy="1.57079632679 0 0" xyz="0.0 0.07 -0.25"/>
+            <geometry>
+                <cylinder length="0.08" radius="0.04"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="1.57079632679 0 0" xyz="0.0 0.07 -0.25"/>
             <geometry>
@@ -360,16 +397,24 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="LH_HFE_0" type="continuous">
-        <parent link="LH_HIP_0"/>
-        <child link="LH_THIGH_0"/>
+    <joint name="LH_HFE" type="revolute">
+        <parent link="LH_HIP"/>
+        <child link="LH_THIGH"/>
         <origin xyz="-0.0585                    0.0315                    0.0"/>
         <axis xyz="0 1 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
     <!-- [m] -->
     <!-- [Nm] -->
-    <link name="LH_SHANK_0">
+    <link name="LH_SHANK">
+        <visual>
+            <origin rpy="-0.0 -0.34 0" xyz="-0.06 -0.03 -0.18"/>
+            <geometry>
+                <cylinder length="0.19" radius="0.015"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="-0.0 -0.34 0" xyz="-0.06 -0.03 -0.18"/>
             <geometry>
@@ -383,23 +428,22 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="LH_KFE_0" type="continuous">
-        <parent link="LH_THIGH_0"/>
-        <child link="LH_SHANK_0"/>
+    <joint name="LH_KFE" type="revolute">
+        <parent link="LH_THIGH"/>
+        <child link="LH_SHANK"/>
         <origin xyz="-0.0 0.111 -0.25"/>
         <axis xyz="0 1 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->
-    <link name="LH_FOOT_MOUNT_0"/>
-    <!-- Foot mount joint / ankle -->
-    <joint name="LH_ANKLE_JOINT_0" type="fixed">
-        <parent link="LH_SHANK_0"/>
-        <child link="LH_FOOT_MOUNT_0"/>
-        <origin rpy="0.323 -0.549 0" xyz="-0.0 -0.016 -0.31"/>
-    </joint>
-    <!-- Xacro:Properties -->
-    <!-- [m] -->
-    <link name="LH_FOOT_SENSOR_0">
+    <link name="LH_FOOT_MOUNT">
+        <visual>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0"/>
+            <geometry>
+                <sphere radius="0.03"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0.0 0.0 0"/>
             <geometry>
@@ -412,12 +456,14 @@
             <inertia ixx="8.3086410294e-05" ixy="-4.16901601e-07" ixz="-3.99054799e-07" iyy="8.2860209667e-05" iyz="-3.45712252e-07" izz="8.1948124086e-05"/>
         </inertial>
     </link>
-    <!-- Foot sensor joint -->
-    <joint name="LH_MOUNT_TO_SENSOR_0" type="fixed">
-        <parent link="LH_FOOT_MOUNT_0"/>
-        <child link="LH_FOOT_SENSOR_0"/>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
+    <!-- Foot mount joint / ankle -->
+    <joint name="LH_ANKLE_JOINT" type="fixed">
+        <parent link="LH_SHANK"/>
+        <child link="LH_FOOT_MOUNT"/>
+        <origin rpy="0.323 -0.549 0" xyz="-0.0 -0.016 -0.31"/>
     </joint>
+    <!-- Xacro:Properties -->
+    <!-- [m] -->
     <!-- Gazebo customization -->
     <gazebo reference="LH_FOOT_SENSOR">
         <kp>1000000.0</kp>
@@ -426,19 +472,16 @@
         <mu2>0.8</mu2>
     </gazebo>
     <gazebo reference="LH_MOUNT_TO_SENSOR"/>
-    <!-- Foot link -->
-    <link name="LH_FOOT_0">
-    </link>
-    <!-- Foot joint -->
-    <joint name="LH_SENSOR_TO_FOOT_0" type="fixed">
-        <parent link="LH_FOOT_SENSOR_0"/>
-        <child link="LH_FOOT_0"/>
-        <origin rpy="0 0 0" xyz="0.0 0.0 -0.0385"/>
-    </joint>
     <!-- Xacro:Properties -->
     <!-- [m] -->
     <!-- [Nm] -->
-    <link name="RH_HIP_0">
+    <link name="RH_HIP">
+        <visual>
+            <origin rpy="-1.57079632679 0 0" xyz="-0.0585 -0.0315 0.0"/>
+            <geometry>
+                <cylinder length="0.08" radius="0.04"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="-1.57079632679 0 0" xyz="-0.0585 -0.0315 0.0"/>
             <geometry>
@@ -452,22 +495,24 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="RH_HAA_0" type="continuous">
-        <parent link="base_0"/>
-        <child link="RH_HIP_0"/>
+    <joint name="RH_HAA" type="revolute">
+        <parent link="base"/>
+        <child link="RH_HIP"/>
         <origin xyz="-0.2629 -0.115 0.0"/>
         <axis xyz="1 0 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
     <!-- [m] -->
     <!-- [Nm] -->
-    <link name="RH_THIGH_0">
-        <!--collision>
-            <origin rpy="-0.145 0 0" xyz="0 -0.02 -0.1"/>
+    <link name="RH_THIGH">
+        <visual>
+            <origin rpy="1.57079632679 0 0" xyz="0.0 -0.07 -0.25"/>
             <geometry>
-                <cylinder length="0.2" radius="0.01"/>
+                <cylinder length="0.08" radius="0.04"/>
             </geometry>
-        </collision-->
+        </visual>
         <collision>
             <origin rpy="1.57079632679 0 0" xyz="0.0 -0.07 -0.25"/>
             <geometry>
@@ -481,22 +526,24 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="RH_HFE_0" type="continuous">
-        <parent link="RH_HIP_0"/>
-        <child link="RH_THIGH_0"/>
+    <joint name="RH_HFE" type="revolute">
+        <parent link="RH_HIP"/>
+        <child link="RH_THIGH"/>
         <origin xyz="-0.0585                    -0.0315                    0.0"/>
         <axis xyz="0 1 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
     <!-- [m] -->
     <!-- [Nm] -->
-    <link name="RH_SHANK_0">
-        <!--collision>
-            <origin rpy="0 0.9 -0.2" xyz="-0.04 0.02 -0.04"/>
+    <link name="RH_SHANK">
+        <visual>
+            <origin rpy="0.0 -0.34 0" xyz="-0.06 0.03 -0.18"/>
             <geometry>
-                <cylinder length="0.13" radius="0.015"/>
+                <cylinder length="0.19" radius="0.015"/>
             </geometry>
-        </collision-->
+        </visual>
         <collision>
             <origin rpy="0.0 -0.34 0" xyz="-0.06 0.03 -0.18"/>
             <geometry>
@@ -510,23 +557,22 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="RH_KFE_0" type="continuous">
-        <parent link="RH_THIGH_0"/>
-        <child link="RH_SHANK_0"/>
+    <joint name="RH_KFE" type="revolute">
+        <parent link="RH_THIGH"/>
+        <child link="RH_SHANK"/>
         <origin xyz="-0.0 -0.111 -0.25"/>
         <axis xyz="0 1 0"/>
+        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->
-    <link name="RH_FOOT_MOUNT_0"/>
-    <!-- Foot mount joint / ankle -->
-    <joint name="RH_ANKLE_JOINT_0" type="fixed">
-        <parent link="RH_SHANK_0"/>
-        <child link="RH_FOOT_MOUNT_0"/>
-        <origin rpy="-0.323 -0.549 0" xyz="-0.0 0.016 -0.31"/>
-    </joint>
-    <!-- Xacro:Properties -->
-    <!-- [m] -->
-    <link name="RH_FOOT_SENSOR_0">
+    <link name="RH_FOOT_MOUNT">
+        <visual>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0"/>
+            <geometry>
+                <sphere radius="0.03"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0.0 0.0 0"/>
             <geometry>
@@ -539,12 +585,14 @@
             <inertia ixx="8.3086410294e-05" ixy="4.16901601e-07" ixz="-3.99054799e-07" iyy="8.2860209667e-05" iyz="3.45712252e-07" izz="8.1948124086e-05"/>
         </inertial>
     </link>
-    <!-- Foot sensor joint -->
-    <joint name="RH_MOUNT_TO_SENSOR_0" type="fixed">
-        <parent link="RH_FOOT_MOUNT_0"/>
-        <child link="RH_FOOT_SENSOR_0"/>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
+    <!-- Foot mount joint / ankle -->
+    <joint name="RH_ANKLE_JOINT" type="fixed">
+        <parent link="RH_SHANK"/>
+        <child link="RH_FOOT_MOUNT"/>
+        <origin rpy="-0.323 -0.549 0" xyz="-0.0 0.016 -0.31"/>
     </joint>
+    <!-- Xacro:Properties -->
+    <!-- [m] -->
     <!-- Gazebo customization -->
     <gazebo reference="RH_FOOT_SENSOR">
         <kp>1000000.0</kp>
@@ -553,16 +601,13 @@
         <mu2>0.8</mu2>
     </gazebo>
     <gazebo reference="RH_MOUNT_TO_SENSOR"/>
-    <!-- Foot link -->
-    <link name="RH_FOOT_0">
-    </link>
-    <!-- Foot joint -->
-    <joint name="RH_SENSOR_TO_FOOT_0" type="fixed">
-        <parent link="RH_FOOT_SENSOR_0"/>
-        <child link="RH_FOOT_0"/>
-        <origin rpy="0 0 0" xyz="0.0 0.0 -0.0385"/>
-    </joint>
-    <link name="imu_link_0">
+    <link name="imu_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0.011"/>
+            <geometry>
+                <box size="0.058 0.058 0.022"/>
+            </geometry>
+        </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0.011"/>
             <geometry>
@@ -575,9 +620,45 @@
             <inertia ixx="1.60333333333e-05" ixy="0.0" ixz="0.0" iyy="2.80333333333e-05" iyz="0.0" izz="1.60333333333e-05"/>
         </inertial>
     </link>
-    <joint name="imu_joint_0" type="fixed">
-        <parent link="base_0"/>
-        <child link="imu_link_0"/>
+    <joint name="imu_joint" type="fixed">
+        <parent link="base"/>
+        <child link="imu_link"/>
         <origin rpy="3.14159265359 0 0" xyz="0.0245 -0.04255 0.1857"/>
     </joint>
+    <gazebo reference="imu_link">
+        <material>Gazebo/Orange</material>
+        <mu1>0.8</mu1>
+        <mu2>0.8</mu2>
+    </gazebo>
+    <gazebo reference="imu_joint">
+    </gazebo>
+    <gazebo>
+        <plugin filename="libhector_gazebo_ros_imu.so" name="imu_plugin">
+            <robotNamespace>sensors</robotNamespace>
+            <bodyName>imu_link</bodyName>
+            <frameId>/imu_link</frameId>
+            <topicName>imu</topicName>
+            <biasTopicName>imu/bias</biasTopicName>
+            <serviceName>imu/calibrate</serviceName>
+            <updateRate>400</updateRate>
+        </plugin>
+    </gazebo>
+    <!-- Omniview -->
+    <!-- <xacro:include filename="$(find anymal_beth_description)/urdf/omniview/anymal_beth_omniview_macro.urdf.xacro"/> -->
+    <!-- <xacro:anymal_beth_omniview_mesh link_name="omniview_mesh_front" parent_name="base" joint_name="omniview_mesh_front_joint"> -->
+    <!-- <origin xyz="0.3312 0.0 0.025" rpy="-1.57079632679 0.0 0.0"/> -->
+    <!-- </xacro:anymal_beth_omniview_mesh> -->
+    <!-- <xacro:anymal_beth_omniview_mesh link_name="omniview_mesh_back" parent_name="base" joint_name="omniview_mesh_back_joint"> -->
+    <!-- <origin xyz="-0.3312 0.0 0.025" rpy="-1.57079632679 0.0 3.14159265359"/> -->
+    <!-- </xacro:anymal_beth_omniview_mesh> -->
+    <!--<link name="static_lidar_front"/>-->
+    <!--<joint name="base_to_static_lidar_front" type="fixed">-->
+        <!--<origin rpy="1.57079632679 0.0 1.57079632679" xyz="0.2 0.0 0.1415"/>-->
+        <!--<parent link="base"/>-->
+        <!--<child link="static_lidar_front"/>-->
+        <!--<origin rpy="0 0 0" xyz="0 0 0"/>-->
+    <!--</joint>-->
+    <!-- <xacro:anymal_lidar_fix name="static_lidar_back" parent="base" dynamixel_lidar_offset="0.1515">
+        <origin xyz="-0.2 0.0 0.1415" rpy="1.57079632679 0.0 -1.57079632679"/>
+      </xacro:anymal_lidar_fix> -->
 </robot>

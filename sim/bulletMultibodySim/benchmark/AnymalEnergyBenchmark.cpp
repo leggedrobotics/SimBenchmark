@@ -155,7 +155,13 @@ int main(int argc, const char* argv[]) {
   // trial2: get CPU time
   setupSimulation();
   setupWorld();
+  int profileID = -1;
+  if(benchmark::bulletmultibody::options.profiling)
+    profileID= sim->startBulletProfiling("/tmp/btmb-anymal-energy-benchmark");
   double time = simulationLoop(true, false);
+  if(benchmark::bulletmultibody::options.profiling)
+    sim->stopBulletProfiling(profileID);
+
 
   if(benchmark::anymal::freedrop::options.csv)
     benchmark::anymal::freedrop::printCSV(benchmark::anymal::freedrop::getCSVpath(),

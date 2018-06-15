@@ -217,10 +217,12 @@ void OdeArticulatedSystem::processLinkFromUrdf(boost::shared_ptr<const urdf::Lin
         childRef->parentJoint_.type = Joint::FIXED;
         break;
       }
+      case urdf::Joint::CONTINUOUS:
       case urdf::Joint::REVOLUTE: {
+        // TODO joint limit for revolute joint
         raiLink.childrenLinks_.emplace_back();
         childRef = &raiLink.childrenLinks_.back();
-        childRef->parentJoint_.type = Joint::REVOLUTE;
+        childRef->parentJoint_.type = Joint::REVOLUTE;    // since there's no joint limit, continuous joint = revolute joint
         break;
       }
       case urdf::Joint::PRISMATIC: {

@@ -4,7 +4,7 @@
 
 #include <BtSim.hpp>
 
-#include "AnymalBenchmark.hpp"
+#include "AnymalPDBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
 bullet_sim::BtSim *sim;

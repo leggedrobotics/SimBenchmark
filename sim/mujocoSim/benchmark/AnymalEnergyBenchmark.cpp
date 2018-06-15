@@ -46,11 +46,8 @@ void setupWorld() {
   benchmark::anymal::freedrop::params.F =
       benchmark::anymal::freedrop::params.M * (-benchmark::anymal::freedrop::params.g) * 2;
 
-  // collision mask (no internal collision)
-  for(int i = 0 ; i < sim->getNumObject(); i++) {
-    static_cast<mujoco_sim::object::MjcSingleBodyObject *>(sim->getSingleBodyHandle(i).s_)
-        ->setCollisionGroupAndMask(1, 0);
-  }
+  // no collision
+  sim->setWorldContactFlag(false);
 
   if(benchmark::anymal::freedrop::options.gui)
     sim->cameraFollowObject(

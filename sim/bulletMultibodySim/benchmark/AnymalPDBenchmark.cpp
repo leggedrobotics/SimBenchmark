@@ -4,7 +4,7 @@
 
 #include <BtMbSim.hpp>
 
-#include "AnymalBenchmark.hpp"
+#include "AnymalPDBenchmark.hpp"
 #include "BtMbBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
@@ -26,13 +26,16 @@ void setupSimulation() {
 }
 
 void resetWorld() {
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
-  checkerboard->setFrictionCoefficient(1.0);  // 1.0(ground) x 0.8(feet) = 0.8
+  auto checkerboard = sim->addArticulatedSystem(benchmark::anymal::getBulletPlanePath(),
+                                                bullet_mb_sim::object::URDF,
+                                                true,
+                                                benchmark::bulletmultibody::options.maximalCoordinate);
+  checkerboard->setFrictionCoefficient(-1, 1.0);  // 1.0(ground) x 0.8(feet) = 0.8
 
   for(int i = 0; i < benchmark::anymal::options.numRow; i++) {
     for(int j = 0; j < benchmark::anymal::options.numRow; j++) {
       auto anymal =
-          sim->addArticulatedSystem(benchmark::anymal::getURDFpath(),
+          sim->addArticulatedSystem(benchmark::anymal::getBulletANYmalPath(),
                                     bullet_mb_sim::object::URDF,
                                     true,
                                     benchmark::bulletmultibody::options.maximalCoordinate);

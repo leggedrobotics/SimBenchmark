@@ -15,10 +15,12 @@ The URDF file of ANYmal is provided from ETH RSL.
 
 ## The list of files
 
+- ANYmal-PD-benchmark
+
 - ANYmal-energy-benchmark
  	- URDF for AnymalEnergyBenchmark
  	- revolute joint -> continous joint (no joint limit) to prevent energy loss
- 	- no collision bodies to prevent internal collision 
+ 	- no collision bodies to prevent internal collision (or set "disable contact")
 - 2DRobotArm: fixed based robot arm 
 - ANYmal: 18-DOF quadrupedal robot from [ETH RSL](http://www.rsl.ethz.ch/robots-media/anymal.html)
 - ANYmal-nomesh: ANYmal URDF no mesh version

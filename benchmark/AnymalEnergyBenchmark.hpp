@@ -165,7 +165,7 @@ std::string getMujocoURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/mujoco/ANYmal/robot-energy.urdf";
+  urdfPath += "../res/ANYmal-energy-benchmark/mujoco/robot.urdf";
 
   return urdfPath;
 }
