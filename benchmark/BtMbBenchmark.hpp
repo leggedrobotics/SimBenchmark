@@ -38,7 +38,8 @@ Option options;
  */
 void addDescToOption(po::options_description &desc) {
   desc.add_options()
-      ("maxCo", "Maximal coordinate for multibody objects")
+//      ("maxCo", "Maximal coordinate for multibody objects")
+      ("profile", "profile with bullet profiling")
       ;
 }
 
@@ -57,6 +58,10 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
   // help option
   if(vm.count("maxCo")) {
     options.maximalCoordinate = true;
+  }
+
+  if(vm.count("profile")) {
+    options.profiling = true;
   }
 }
 

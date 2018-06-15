@@ -108,6 +108,7 @@ Data data;
 
 /**
  * get URDF file path of ANYmal
+ * (For ODE, Dart and RaiSim)
  *
  * @return urdfPath in string
  */
@@ -116,13 +117,14 @@ std::string getURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/ANYmal-energy/robot.urdf";
+  urdfPath += "../res/ANYmal-energy-benchmark/ode-rai-dart/robot.urdf";
 
   return urdfPath;
 }
 
 /**
- * get URDF file path of ANYmal
+ * get URDF file path of plane
+ * (For Bullet)
  *
  * @return urdfPath in string
  */
@@ -131,13 +133,14 @@ std::string getBulletPlanePath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/bullet/ANYmal-energy/plane.urdf";
+  urdfPath += "../res/ANYmal-energy-benchmark/bullet/plane.urdf";
 
   return urdfPath;
 }
 
 /**
- * get URDF file path of ANYmal for Bullet
+ * get URDF file path of ANYmal
+ * (For Bullet)
  *
  * @return urdfPath in string
  */
@@ -146,13 +149,14 @@ std::string getBulletANYmalPath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/bullet/ANYmal-energy/robot.urdf";
+  urdfPath += "../res/ANYmal-energy-benchmark/bullet/robot.urdf";
 
   return urdfPath;
 }
 
 /**
- * get URDF file path of ANYmal for Mujoco
+ * get URDF file path of ANYmal
+ * (For MuJoCo)
  *
  * @return urdfPath in string
  */
