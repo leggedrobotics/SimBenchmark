@@ -12,6 +12,8 @@ add_definitions(-DODE_DOUBLE_PRECISION)
 
 include_directories(${BENCHMARK_LIB_DIR}/ode/include)
 link_directories(${BENCHMARK_LIB_DIR}/ode)
+#include_directories(${BENCHMARK_LIB_DIR}/ode/include)
+#link_directories(${BENCHMARK_LIB_DIR}/ode)
 
 # source
 include_directories(src)

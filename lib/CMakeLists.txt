@@ -31,3 +31,6 @@ find_library(YAML-CPP
 set(YAML_CPP_LIBRARIES
         ${YAML-CPP}
         PARENT_SCOPE)
+
+# bullet: sim/bulletMultibodySim
+# ode: sim/odeSim
