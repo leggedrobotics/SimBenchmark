@@ -133,9 +133,9 @@ ylabel(sprintf('timestep per second (kHz) \n FAST →'))
 legend('Location', 'eastoutside')
 title('ANYmal PD control test')
 hold off
-saveas(gcf,'anymal-pd-plots/speed-number.eps','epsc')
-saveas(gcf,'anymal-pd-plots/speed-number.fig','fig')
-saveas(gcf,'anymal-pd-plots/speed-number.png')
+% saveas(gcf,'anymal-pd-plots/speed-number.eps','epsc')
+% saveas(gcf,'anymal-pd-plots/speed-number.fig','fig')
+% saveas(gcf,'anymal-pd-plots/speed-number.png')
 
 % log scale
 figure('Name', 'log', 'Position', [0, 0, 600, 500])
@@ -190,9 +190,9 @@ title('ANYmal PD control test (log scale)')
 ylim([0, 10^2.5])
 xlim([0, 10^2.5])
 set(gca, 'YScale', 'log', 'XScale', 'log')
-saveas(gcf,'anymal-pd-plots/sampleplot-log.eps','epsc')
-saveas(gcf,'anymal-pd-plots/sampleplot-log.fig','fig')
-saveas(gcf,'anymal-pd-plots/sampleplot-log.png')
+saveas(gcf,'anymal-pd-plots/anymal-plot-log.eps','epsc')
+saveas(gcf,'anymal-pd-plots/anymal-plot-log.fig','fig')
+saveas(gcf,'anymal-pd-plots/anymal-plot-log.png')
 
 % speed bar graph (1 anymal)
 c = categorical({...
@@ -244,6 +244,6 @@ text(1:length(T2.speed), ...
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
 ylim([0, 110])
 
-saveas(gcf,'anymal-pd-plots/speed-bar.eps','epsc')
-saveas(gcf,'anymal-pd-plots/speed-bar.fig','fig')
-saveas(gcf,'anymal-pd-plots/speed-bar.png')
+saveas(gcf,'anymal-pd-plots/anymal-speed-bar.eps','epsc')
+saveas(gcf,'anymal-pd-plots/anymal-speed-bar.fig','fig')
+saveas(gcf,'anymal-pd-plots/anymal-speed-bar.png')

@@ -88,7 +88,7 @@ double simulationLoop(bool timer = true, bool error = true) {
 
   // gui
   if(benchmark::rolling::options.saveVideo && benchmark::rolling::options.gui)
-    sim->startRecordingVideo("/tmp", "mujoco-rolling");
+    sim->startRecordingVideo("/tmp", "mujoco-rolling-benchmark");
 
   for(int i = 0; i < (int) (benchmark::rolling::params.T / benchmark::rolling::options.dt); i++) {
     // gui

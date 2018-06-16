@@ -86,7 +86,7 @@ protected:
 
 	btScalar		m_friction;
 	btScalar		m_restitution;
-	btScalar		m_rollingFriction;//torsional friction orthogonal to contact normal (useful to stop spheres rolling forever)
+	btScalar		m_rollingFriction;//torsional friction orthogonal to contact normal (useful to stop spheres rolling-benchmark forever)
     btScalar        m_spinningFriction; // torsional friction around the contact normal (useful for grasping)
 	btScalar		m_contactDamping;
 	btScalar		m_contactStiffness;

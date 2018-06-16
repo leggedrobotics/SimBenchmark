@@ -1,10 +1,10 @@
 include_directories(${CMAKE_SOURCE_DIR}/benchmark)
 
-add_executable(BtMbAnymalBenchmark
+add_executable(BtMbAnymalPDBenchmark
         AnymalPDBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/AnymalPDBenchmark.hpp
         ${CMAKE_SOURCE_DIR}/benchmark/BtMbBenchmark.hpp)
-target_link_libraries(BtMbAnymalBenchmark ${BtMbSimLink})
+target_link_libraries(BtMbAnymalPDBenchmark ${BtMbSimLink})
 
 add_executable(BtMbAnymalMomentumBenchmark
         AnymalMomentumBenchmark.cpp

@@ -342,7 +342,7 @@ void printCSV(std::string filePath,
   myfile.close();
 }
 
-} // benchmark::rolling
+} // benchmark::rolling-benchmark
 
 
 #endif //BENCHMARK_BUILDINGBENCHMARK_HPP

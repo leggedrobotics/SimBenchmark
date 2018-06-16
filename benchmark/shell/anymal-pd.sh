@@ -50,10 +50,10 @@ if [ "$test_rai" == 'ON' ]; then
 			then
 				for (( i=1; i <= $num_test; ++i ))
 				do
-					../sim/raiSim/benchmark/RaiAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --csv=$csv_file
+					../sim/raiSim/benchmark/RaiAnymalPDBenchmark --nogui --feedback=$feedback --row=$num_row --csv=$csv_file
 				done
 			else
-				../sim/raiSim/benchmark/RaiAnymalBenchmark --nogui --feedback=$feedback --row=$num_row --csv=$csv_file
+				../sim/raiSim/benchmark/RaiAnymalPDBenchmark --nogui --feedback=$feedback --row=$num_row --csv=$csv_file
 			fi
 		done
 	else
@@ -74,11 +74,11 @@ if [ "$test_bt" == 'ON' ]; then
 			then
 				for (( i=1; i <= $num_test; ++i ))
 				do
-					../sim/bulletMultibodySim/benchmark/BtMbAnymalBenchmark \
+					../sim/bulletMultibodySim/benchmark/BtMbAnymalPDBenchmark \
 					--nogui --feedback=$feedback --row=$num_row --csv=$csv_file
 				done
 			else
-				../sim/bulletMultibodySim/benchmark/BtMbAnymalBenchmark \
+				../sim/bulletMultibodySim/benchmark/BtMbAnymalPDBenchmark \
 				--nogui --feedback=$feedback --row=$num_row --csv=$csv_file
 			fi
 		done
@@ -100,11 +100,11 @@ if [ "$test_dart" == 'ON' ]; then
 			then
 				for (( i=1; i <= $num_test; ++i ))
 				do
-					../sim/dartSim/benchmark/DartAnymalBenchmark \
+					../sim/dartSim/benchmark/DartAnymalPDBenchmark \
 					--nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=bullet --csv=$csv_file
 				done
 			else
-				../sim/dartSim/benchmark/DartAnymalBenchmark \
+				../sim/dartSim/benchmark/DartAnymalPDBenchmark \
 				--nogui --feedback=$feedback --row=$num_row --solver=dantzig --detector=bullet --csv=$csv_file
 			fi
 		done
@@ -118,11 +118,11 @@ if [ "$test_dart" == 'ON' ]; then
 			then
 				for (( i=1; i <= $num_test; ++i ))
 				do
-					../sim/dartSim/benchmark/DartAnymalBenchmark \
+					../sim/dartSim/benchmark/DartAnymalPDBenchmark \
 					--nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=bullet --csv=$csv_file
 				done
 			else
-				../sim/dartSim/benchmark/DartAnymalBenchmark \
+				../sim/dartSim/benchmark/DartAnymalPDBenchmark \
 				--nogui --feedback=$feedback --row=$num_row --solver=pgs --detector=bullet --csv=$csv_file
 			fi
 		done
@@ -145,11 +145,11 @@ if [ "$test_mjc" == 'ON' ]; then
 			then
 				for (( i=1; i <= $num_test; ++i ))
 				do
-					../sim/mujocoSim/benchmark/MjcAnymalBenchmark \
+					../sim/mujocoSim/benchmark/MjcAnymalPDBenchmark \
 					--nogui --feedback=$feedback --row=$num_row --solver=pgs --noslip --csv=$csv_file
 				done
 			else
-				../sim/mujocoSim/benchmark/MjcAnymalBenchmark \
+				../sim/mujocoSim/benchmark/MjcAnymalPDBenchmark \
 				--nogui --feedback=$feedback --row=$num_row --solver=pgs --noslip --csv=$csv_file
 			fi
 		done
@@ -162,11 +162,11 @@ if [ "$test_mjc" == 'ON' ]; then
 			then
 				for (( i=1; i <= $num_test; ++i ))
 				do
-					../sim/mujocoSim/benchmark/MjcAnymalBenchmark \
+					../sim/mujocoSim/benchmark/MjcAnymalPDBenchmark \
 					--nogui --feedback=$feedback --row=$num_row --solver=cg --noslip --csv=$csv_file
 				done
 			else
-				../sim/mujocoSim/benchmark/MjcAnymalBenchmark \
+				../sim/mujocoSim/benchmark/MjcAnymalPDBenchmark \
 				--nogui --feedback=$feedback --row=$num_row --solver=cg --noslip --csv=$csv_file
 			fi
 		done
@@ -179,11 +179,11 @@ if [ "$test_mjc" == 'ON' ]; then
 			then
 				for (( i=1; i <= $num_test; ++i ))
 				do
-					../sim/mujocoSim/benchmark/MjcAnymalBenchmark \
+					../sim/mujocoSim/benchmark/MjcAnymalPDBenchmark \
 					--nogui --feedback=$feedback --row=$num_row --solver=newton --noslip --csv=$csv_file
 				done
 			else
-				../sim/mujocoSim/benchmark/MjcAnymalBenchmark \
+				../sim/mujocoSim/benchmark/MjcAnymalPDBenchmark \
 				--nogui --feedback=$feedback --row=$num_row --solver=newton --noslip --csv=$csv_file
 			fi
 		done
@@ -206,11 +206,11 @@ if [ "$test_ode" == 'ON' ]; then
 			then
 				for (( i=1; i <= $num_test; ++i ))
 				do
-					../sim/odeSim/benchmark/OdeAnymalBenchmark \
+					../sim/odeSim/benchmark/OdeAnymalPDBenchmark \
 					--nogui --feedback=$feedback --row=$num_row --solver=std --csv=$csv_file
 				done
 			else
-				../sim/odeSim/benchmark/OdeAnymalBenchmark \
+				../sim/odeSim/benchmark/OdeAnymalPDBenchmark \
 				--nogui --feedback=$feedback --row=$num_row --solver=std --csv=$csv_file
 			fi
 		done

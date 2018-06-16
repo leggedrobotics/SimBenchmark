@@ -1,4 +1,4 @@
-file(COPY shell/anymal.sh
+file(COPY shell/anymal-pd.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 file(COPY shell/rolling.sh
@@ -29,8 +29,8 @@ configure_file(sim.sh.in ${CMAKE_CURRENT_BINARY_DIR}/sim.sh @ONLY)
 
 
 #if(BENCHMARK_BULLET)
-#    # rolling
-#    add_executable(rollingBulletSim rollingBulletSim.cpp rolling.hpp)
+#    # rolling-benchmark
+#    add_executable(rollingBulletSim rollingBulletSim.cpp rolling-benchmark.hpp)
 #    target_link_libraries(rollingBulletSim ${BulletSimLink})
 #
 #    # bounce
@@ -43,8 +43,8 @@ configure_file(sim.sh.in ${CMAKE_CURRENT_BINARY_DIR}/sim.sh @ONLY)
 #endif()
 #
 #if(BENCHMARK_ODE)
-#    # rolling
-#    add_executable(rollingODESim rolling.hpp)
+#    # rolling-benchmark
+#    add_executable(rollingODESim rolling-benchmark.hpp)
 #    target_link_libraries(rollingODESim ${ODESimLink})
 #
 #    # bounce
@@ -57,8 +57,8 @@ configure_file(sim.sh.in ${CMAKE_CURRENT_BINARY_DIR}/sim.sh @ONLY)
 #endif()
 #
 #if(BENCHMARK_MUJOCO)
-#    # rolling
-#    add_executable(rollingMuJoCoSim rollingMuJoCoSim.cpp rolling.hpp)
+#    # rolling-benchmark
+#    add_executable(rollingMuJoCoSim rollingMuJoCoSim.cpp rolling-benchmark.hpp)
 #    target_link_libraries(rollingMuJoCoSim ${MuJoCoSimLink})
 #
 #    # bouncing
@@ -67,7 +67,7 @@ configure_file(sim.sh.in ${CMAKE_CURRENT_BINARY_DIR}/sim.sh @ONLY)
 #endif()
 #
 ### --------------------------- export files ---------------------------
-#configure_file(shell/rolling.sh.in ${CMAKE_CURRENT_BINARY_DIR}/rolling.sh @ONLY)
+#configure_file(shell/rolling-benchmark.sh.in ${CMAKE_CURRENT_BINARY_DIR}/rolling-benchmark.sh @ONLY)
 #configure_file(shell/bounce.sh.in ${CMAKE_CURRENT_BINARY_DIR}/bounce.sh @ONLY)
 #
 ## mujoco model scripts
@@ -75,5 +75,5 @@ configure_file(sim.sh.in ${CMAKE_CURRENT_BINARY_DIR}/sim.sh @ONLY)
 #        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 #
 ## parameter yaml
-#file(COPY rolling.yaml
+#file(COPY rolling-benchmark.yaml
 #        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

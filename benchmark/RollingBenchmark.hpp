@@ -197,7 +197,7 @@ std::string getMujocoXMLpath() {
   std::string xmlPath(__FILE__);
   while (xmlPath.back() != '/')
     xmlPath.erase(xmlPath.size() - 1, 1);
-  xmlPath += "../res/mujoco/Rolling/rolling.xml";
+  xmlPath += "../res/mujoco/Rolling/rolling-benchmark.xml";
 
   return xmlPath;
 }
@@ -257,7 +257,7 @@ std::string getYamlpath() {
   std::string yamlPath(__FILE__);
   while (yamlPath.back() != '/')
     yamlPath.erase(yamlPath.size() - 1, 1);
-  yamlPath += "./yaml/rolling.yaml";
+  yamlPath += "./yaml/rolling-benchmark.yaml";
 
   return yamlPath;
 }
@@ -280,7 +280,7 @@ std::string getLogDirpath(bool erpYN,
   while (dirPath.back() != '/')
     dirPath.erase(dirPath.size() - 1, 1);
 
-  dirPath += "../data/rolling/erp=" + std::to_string(erpYN)
+  dirPath += "../data/rolling-benchmark/erp=" + std::to_string(erpYN)
       + "-dir=" + std::to_string(forceDirection)
       + "/" + simulation
       + "/" + solver
@@ -297,7 +297,7 @@ std::string getCSVpath() {
   while (csvPath.back() != '/')
     csvPath.erase(csvPath.size() - 1, 1);
 
-  csvPath += "../data/rolling/" + options.csvName;
+  csvPath += "../data/rolling-benchmark/" + options.csvName;
 
   return csvPath;
 }
@@ -525,6 +525,6 @@ void printCSV(std::string filePath,
   myfile.close();
 }
 
-} // benchmark::rolling
+} // benchmark::rolling-benchmark
 
 #endif //BENCHMARK_ROLLING_HPP

@@ -69,7 +69,7 @@ protected:
 																 btScalar& relaxation,
 																 bool isFriction, btScalar desiredVelocity=0, btScalar cfmSlip=0);
     
-    //either rolling or spinning friction
+    //either rolling-benchmark or spinning friction
     void setupMultiBodyTorsionalFrictionConstraint(btMultiBodySolverConstraint& solverConstraint,
                                          const btVector3& contactNormal,
                                          btManifoldPoint& cp,

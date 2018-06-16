@@ -101,7 +101,7 @@ class btManifoldPoint
 		
 			btScalar	m_distance1;
 			btScalar	m_combinedFriction;
-			btScalar	m_combinedRollingFriction;//torsional friction orthogonal to contact normal, useful to make spheres stop rolling forever
+			btScalar	m_combinedRollingFriction;//torsional friction orthogonal to contact normal, useful to make spheres stop rolling-benchmark forever
             btScalar	m_combinedSpinningFriction;//torsional friction around contact normal, useful for grasping objects
             btScalar	m_combinedRestitution;
 

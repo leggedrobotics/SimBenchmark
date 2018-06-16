@@ -100,7 +100,7 @@ protected:
     bool m_useBatching;
     bool m_useObsoleteJointConstraints;
     btAlignedObjectArray<btContactManifoldCachedInfo> m_manifoldCachedInfoArray;
-    btAlignedObjectArray<int> m_rollingFrictionIndexTable;  // lookup table mapping contact index to rolling friction index
+    btAlignedObjectArray<int> m_rollingFrictionIndexTable;  // lookup table mapping contact index to rolling-benchmark friction index
     btSpinMutex m_bodySolverArrayMutex;
     char m_antiFalseSharingPadding[CACHE_LINE_SIZE]; // padding to keep mutexes in separate cachelines
     btSpinMutex m_kinematicBodyUniqueIdToSolverBodyTableMutex;
