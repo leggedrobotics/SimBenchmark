@@ -70,7 +70,7 @@ plotOption = plotoption;
 
 % error plot vs dt
 disp('plotting error vs real-time-factor...')
-plot_error_speed(T, const, plotSpec, '-momentum', '(No Erp)', plotOption);
+plot_error_speed(T, const, plotSpec, '', '(No Erp)', plotOption);
 
 %% bar plot (for min dt)
 T2 = T;
@@ -86,7 +86,7 @@ T2 = sortrows(T2, 7);
 speed = numIter ./ T2.TIME ./ 1000;
 
 disp('plotting bar graph')
-h = figure('Name', 'speed', 'Position', [0, 0, 800, 600])
+h = figure('Name', 'speed', 'Position', [0, 0, 600, 500])
 box on
 hold on
 for i = 1:size(T2, 1)
@@ -99,19 +99,20 @@ for i = 1:size(T2, 1)
         'FaceColor', spec{3})
 end
 hold off
-title(sprintf('Zero gravity test speed'))
+title(sprintf('ANYmal Momentum'))
 % numbers on bars
 text(1:length(speed), ...
     speed, ...
     num2str(speed, '%0.2f'),...
     'vert', 'bottom', ...
     'horiz','center', ...
-    'FontWeight','bold');
+    'FontWeight','bold', ...
+    'FontSize', 8);
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
 ylim([0, 190])
-saveas(h, strcat('zerog-plots/speed-bar.png'))
-saveas(h, strcat('zerog-plots/speed-bar.eps'), 'epsc')
-saveas(h, strcat('zerog-plots/speed-bar.fig'), 'fig')
+saveas(h, strcat('anymal-momentum-plots/anymal-momentum-speed-bar.png'))
+saveas(h, strcat('anymal-momentum-plots/anymal-momentum-speed-bar.eps'), 'epsc')
+saveas(h, strcat('anymal-momentum-plots/anymal-momentum-speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -180,14 +181,14 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title(['Momentum error ', plotTitle])
+title('ANYmal Momentum')
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
 ylim([1e-30, 1e5])
 lgd = legend('Location', 'east');
 lgd.NumColumns = 2;
-saveas(h, strcat('zerog-plots/error-speed', fileName, '.png'))
-saveas(h, strcat('zerog-plots/error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('zerog-plots/error-speed', fileName, '.fig'), 'fig')
+saveas(h, strcat('anymal-momentum-plots/anymal-momentum-error-speed', fileName, '.png'))
+saveas(h, strcat('anymal-momentum-plots/anymal-momentum-error-speed', fileName, '.eps'), 'epsc')
+saveas(h, strcat('anymal-momentum-plots/anymal-momentum-error-speed', fileName, '.fig'), 'fig')
 
 end

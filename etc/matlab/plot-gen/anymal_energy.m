@@ -63,7 +63,7 @@ plotOption = plotoption;
 
 % error plot vs dt
 disp('plotting error vs real-time-factor...')
-plot_error_speed(T, const, plotSpec, '-energy', '(No Erp)', plotOption);
+plot_error_speed(T, const, plotSpec, '', '(No Erp)', plotOption);
 
 %% bar plot (for min dt)
 T2 = T;
@@ -79,7 +79,7 @@ T2 = sortrows(T2, 7);
 speed = numIter ./ T2.TIME ./ 1000;
 
 disp('plotting bar graph')
-h = figure('Name', 'speed', 'Position', [0, 0, 720, 600]);
+h = figure('Name', 'speed', 'Position', [0, 0, 600, 500]);
 set(gca, ...
     'XTick', {}, ...
     'YMinorTick', 'off', ...
@@ -106,12 +106,13 @@ text(1:length(speed), ...
     num2str(speed, '%0.2f'),...
     'vert', 'bottom', ...
     'horiz','center', ...
-    'FontWeight','bold');
+    'FontWeight','bold', ...
+    'FontSize', 8);
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
 % ylim([0, 190])
-saveas(h, strcat('anymal-energy-plots/speed-bar.png'))
-saveas(h, strcat('anymal-energy-plots/speed-bar.eps'), 'epsc')
-saveas(h, strcat('anymal-energy-plots/speed-bar.fig'), 'fig')
+saveas(h, strcat('anymal-energy-plots/anymal-energy-speed-bar.png'))
+saveas(h, strcat('anymal-energy-plots/anymal-energy-speed-bar.eps'), 'epsc')
+saveas(h, strcat('anymal-energy-plots/anymal-energy-speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -187,9 +188,9 @@ ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
 % ylim([1e-8, 1e6])
 lgd = legend('Location', 'northeast');
 lgd.NumColumns = 2;
-saveas(h, strcat('anymal-energy-plots/error-speed', fileName, '.png'))
-saveas(h, strcat('anymal-energy-plots/error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('anymal-energy-plots/error-speed', fileName, '.fig'), 'fig')
+saveas(h, strcat('anymal-energy-plots/anymal-energy-error-speed', fileName, '.png'))
+saveas(h, strcat('anymal-energy-plots/anymal-energy-error-speed', fileName, '.eps'), 'epsc')
+saveas(h, strcat('anymal-energy-plots/anymal-energy-error-speed', fileName, '.fig'), 'fig')
 
 
 end

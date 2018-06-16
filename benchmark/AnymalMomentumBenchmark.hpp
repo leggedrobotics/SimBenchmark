@@ -114,7 +114,7 @@ std::string getBulletPlanePath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/bullet/ANYmal-momentum/plane.urdf";
+  urdfPath += "../res/ANYmal-momentum-benchmark/bullet/plane.urdf";
 
   return urdfPath;
 }
@@ -129,7 +129,7 @@ std::string getBulletBallPath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/bullet/ANYmal-momentum/ball.urdf";
+  urdfPath += "../res/ANYmal-momentum-benchmark/bullet/ball.urdf";
 
   return urdfPath;
 }
@@ -144,7 +144,7 @@ std::string getBulletANYmalPath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/bullet/ANYmal-momentum/robot.urdf";
+  urdfPath += "../res/ANYmal-momentum-benchmark/bullet/robot.urdf";
 
   return urdfPath;
 }
@@ -159,7 +159,7 @@ std::string getURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/ANYmal-nomesh/robot.urdf";
+  urdfPath += "../res/ANYmal-momentum-benchmark/ode-rai-dart/robot.urdf";
 
   return urdfPath;
 }
@@ -175,7 +175,7 @@ std::string getMujocoURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/mujoco/ANYmal/robot-momentum.urdf";
+  urdfPath += "../res/ANYmal-momentum-benchmark/mujoco/robot.urdf";
 
   return urdfPath;
 }
