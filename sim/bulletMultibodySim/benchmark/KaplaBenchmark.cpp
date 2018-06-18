@@ -143,6 +143,9 @@ void setupWorld() {
     }
   }
 
+  // gravity
+  sim->setGravity({0, 0, benchmark::building::params.g});
+
   if(benchmark::building::options.gui) {
     sim->setLightPosition((float)benchmark::building::params.lightPosition[0],
                           (float)benchmark::building::params.lightPosition[1],
@@ -175,7 +178,7 @@ benchmark::building::Data simulationLoop() {
     if(benchmark::building::options.collapse && objList.back()->getGeneralizedCoordinate()[2] <
         benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
       // break if the building collapses
-      cnt = i;
+      cnt = i+1;
       RAIINFO("building collapsed after " << cnt << " steps = " << cnt * benchmark::building::options.dt << " sec!")
       break;
     }

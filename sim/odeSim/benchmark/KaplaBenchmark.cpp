@@ -89,6 +89,9 @@ void setupWorld() {
     }
   }
 
+  // gravity
+  sim->setGravity({0, 0, benchmark::building::params.g});
+
   if(benchmark::building::options.gui) {
     sim->setLightPosition((float)benchmark::building::params.lightPosition[0],
                           (float)benchmark::building::params.lightPosition[1],

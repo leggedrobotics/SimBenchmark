@@ -68,6 +68,10 @@ struct Parameter {
   const float shortLen = 0.05;
   const float longLen = 0.2;
   const float heightLen = 0.1;
+
+  // gravity
+  double g = -9.81;
+
 };
 Parameter params;
 
