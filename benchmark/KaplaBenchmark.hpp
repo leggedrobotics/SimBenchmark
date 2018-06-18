@@ -62,7 +62,7 @@ struct Parameter {
   // simulation parameters
   /// Remark! doesn't work for MUJOCO
   int numFloor = 6;
-  int numBase = 20;
+  int numBase = 4;
   /// (num of blocks) = (numFloor) x (numBase) + (numFloor) x (numWall x 2 + 1)
 
   const float shortLen = 0.05;
@@ -97,7 +97,7 @@ std::string getMujocoXMLpath() {
   std::string xmlPath(__FILE__);
   while (xmlPath.back() != '/')
     xmlPath.erase(xmlPath.size() - 1, 1);
-  xmlPath += "../res/mujoco/Building/building.xml";
+  xmlPath += "../res/benchmark/kapla-benchmark/mujoco/kapla.xml";
 
   return xmlPath;
 }
@@ -113,7 +113,7 @@ std::string getBulletPlanePath() {
   std::string ballpath(__FILE__);
   while (ballpath.back() != '/')
     ballpath.erase(ballpath.size() - 1, 1);
-  ballpath += "../res/bullet/Building/plane.urdf";
+  ballpath += "../res/benchmark/kapla-benchmark/bullet/plane.urdf";
 
   return ballpath;
 }
@@ -128,7 +128,7 @@ std::string getBulletBasePath() {
   std::string planepath(__FILE__);
   while (planepath.back() != '/')
     planepath.erase(planepath.size() - 1, 1);
-  planepath += "../res/bullet/Building/base.urdf";
+  planepath += "../res/benchmark/kapla-benchmark/bullet/base.urdf";
 
   return planepath;
 }
@@ -143,7 +143,7 @@ std::string getBulletWallPath() {
   std::string planepath(__FILE__);
   while (planepath.back() != '/')
     planepath.erase(planepath.size() - 1, 1);
-  planepath += "../res/bullet/Building/wall.urdf";
+  planepath += "../res/benchmark/kapla-benchmark/bullet/wall.urdf";
 
   return planepath;
 }

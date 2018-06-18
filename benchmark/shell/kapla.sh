@@ -34,7 +34,7 @@ do
         if [ "$RAISIM_ON" == "ON" ]; then
             for erpon in true false
             do
-                timeout 6000 ../sim/raiSim/benchmark/RaiKaplaBenchmark --nogui --erp-on=$erpon --dt=$dt
+                timeout 6000 ../sim/raiSim/benchmark/RaiKaplaBenchmark --nogui --erp-on=$erpon --dt=$dt --collapse
             done
         else
             echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
@@ -46,7 +46,7 @@ do
         if [ "$BTSIM_ON" == "ON" ]; then
 			for erpon in true false
 			do
-				timeout 6000 ../sim/bulletMultibodySim/benchmark/BtMbKaplaBenchmark --nogui --erp-on=$erpon --dt=$dt
+				timeout 6000 ../sim/bulletMultibodySim/benchmark/BtMbKaplaBenchmark --nogui --erp-on=$erpon --dt=$dt --collapse
 			done
         else
             echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
@@ -60,7 +60,7 @@ do
             do
                 for erpon in true false
                 do
-                    timeout 6000 ../sim/odeSim/benchmark/OdeKaplaBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver
+                    timeout 6000 ../sim/odeSim/benchmark/OdeKaplaBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --collapse
                 done
             done
         else
@@ -76,7 +76,7 @@ do
                 for erpon in true false
                 do
                     # note mujoco has no erp
-                    timeout 6000 ../sim/mujocoSim/benchmark/MjcKaplaBenchmark --nogui --dt=$dt --solver=$solver
+                    timeout 6000 ../sim/mujocoSim/benchmark/MjcKaplaBenchmark --nogui --dt=$dt --solver=$solver --collapse
                 done
             done
         else
@@ -92,7 +92,7 @@ do
                 for erpon in true false
                 do
                     # note dart has no erp
-                    timeout 6000 ../sim/dartSim/benchmark/DartKaplaBenchmark --nogui --dt=$dt --solver=$solver
+                    timeout 6000 ../sim/dartSim/benchmark/DartKaplaBenchmark --nogui --dt=$dt --solver=$solver --collapse
                 done
             done
         else
