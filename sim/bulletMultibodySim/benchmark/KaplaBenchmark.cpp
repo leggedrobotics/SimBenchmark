@@ -175,7 +175,7 @@ benchmark::building::Data simulationLoop() {
     if(benchmark::building::options.collapse && objList.back()->getGeneralizedCoordinate()[2] <
         benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
       // break if the building collapses
-      cnt = i+1;
+      cnt = i;
       RAIINFO("building collapsed after " << cnt << " steps = " << cnt * benchmark::building::options.dt << " sec!")
       break;
     }

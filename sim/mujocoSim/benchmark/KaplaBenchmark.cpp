@@ -63,10 +63,11 @@ benchmark::building::Data simulationLoop() {
     // num contacts
     data.numContacts.push_back(sim->getWorldNumContacts());
 
+    sim->forwardKinematics();
     if(benchmark::building::options.collapse && sim->getSingleBodyHandle(sim->getNumObject()-1)->getPosition()[2] <
         benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
       // break if the building collapses
-      cnt = i+1;
+      cnt = i;
       RAIINFO("building collapsed after " << cnt << " steps = " << cnt * benchmark::building::options.dt << " sec!")
       break;
     }
