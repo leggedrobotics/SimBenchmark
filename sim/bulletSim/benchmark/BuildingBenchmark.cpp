@@ -4,7 +4,7 @@
 
 #include <BtSim.hpp>
 
-#include "BuildingBenchmark.hpp"
+#include "KaplaBenchmark.hpp"
 #include "BtBenchmark.hpp"
 
 bullet_sim::BtSim *sim;

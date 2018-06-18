@@ -36,8 +36,8 @@ add_executable(BtMb666Benchmark
         ${CMAKE_SOURCE_DIR}/benchmark/BtMbBenchmark.hpp)
 target_link_libraries(BtMb666Benchmark ${BtMbSimLink})
 
-add_executable(BtMbBuildingBenchmark
-        BuildingBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/BuildingBenchmark.hpp
+add_executable(BtMbKaplaBenchmark
+        KaplaBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/KaplaBenchmark.hpp
         ${CMAKE_SOURCE_DIR}/benchmark/BtMbBenchmark.hpp)
-target_link_libraries(BtMbBuildingBenchmark ${BtMbSimLink})
+target_link_libraries(BtMbKaplaBenchmark ${BtMbSimLink})

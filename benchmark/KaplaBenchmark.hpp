@@ -36,6 +36,9 @@ struct Option: benchmark::Option {
 
   // simulation time
   double T = 600.0;
+
+  // collapse
+  bool collapse = false;
 };
 Option options;
 
@@ -155,7 +158,7 @@ std::string getYamlpath() {
   std::string yamlPath(__FILE__);
   while (yamlPath.back() != '/')
     yamlPath.erase(yamlPath.size() - 1, 1);
-  yamlPath += "./yaml/building.yaml";
+  yamlPath += "./yaml/kapla.yaml";
 
   return yamlPath;
 }
@@ -166,7 +169,7 @@ std::string getCSVpath() {
   while (csvPath.back() != '/')
     csvPath.erase(csvPath.size() - 1, 1);
 
-  csvPath += "../data/building/" + options.csvName;
+  csvPath += "../data/kapla/" + options.csvName;
 
   return csvPath;
 }
@@ -205,6 +208,7 @@ void addDescToOption(po::options_description &desc) {
       ("erp-on", po::value<bool>(), "erp on (true / false)")
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
       ("T", po::value<double>(), "simulation time (e.g. 60)")
+      ("collapse", "stop simulation when the kapla tower is collapsed")
       ;
 }
 
@@ -259,6 +263,17 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
     } else {
       options.erpYN = false;
     }
+  }
+
+  // csv
+  if(vm.count("csv")) {
+    options.csv = true;
+    options.csvName = vm["csv"].as<std::string>();
+  }
+
+  // collapse
+  if(vm.count("collapse")) {
+    options.collapse = true;
   }
 }
 

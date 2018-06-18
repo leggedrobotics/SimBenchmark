@@ -144,7 +144,7 @@ std::string getMujocoXMLpath() {
   std::string xmlPath(__FILE__);
   while (xmlPath.back() != '/')
     xmlPath.erase(xmlPath.size() - 1, 1);
-  xmlPath += "../res/mujoco/Bouncing/bouncing" + std::to_string(nsq) + ".xml";
+  xmlPath += "../res/benchmark/bouncing-benchmark/mujoco/bouncing" + std::to_string(nsq) + ".xml";
 
   return xmlPath;
 }
@@ -159,7 +159,7 @@ std::string getBulletBallPath() {
   std::string ballpath(__FILE__);
   while (ballpath.back() != '/')
     ballpath.erase(ballpath.size() - 1, 1);
-  ballpath += "../res/bullet/Bouncing/ball.urdf";
+  ballpath += "../res/benchmark/bouncing-benchmark/bullet/ball.urdf";
 
   return ballpath;
 }
@@ -174,7 +174,7 @@ std::string getBulletPlanepath() {
   std::string planepath(__FILE__);
   while (planepath.back() != '/')
     planepath.erase(planepath.size() - 1, 1);
-  planepath += "../res/bullet/Bouncing/plane.urdf";
+  planepath += "../res/benchmark/bouncing-benchmark/bullet/plane.urdf";
 
   return planepath;
 }

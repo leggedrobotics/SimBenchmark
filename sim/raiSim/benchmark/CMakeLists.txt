@@ -20,10 +20,10 @@ add_executable(RaiRollingBenchmark
         ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)
 target_link_libraries(RaiRollingBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
 
-add_executable(RaiBuildingBenchmark
-        BuildingBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/BuildingBenchmark.hpp)
-target_link_libraries(RaiBuildingBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+add_executable(RaiKaplaBenchmark
+        KaplaBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/KaplaBenchmark.hpp)
+target_link_libraries(RaiKaplaBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
 
 add_executable(Rai666Benchmark
         666Benchmark.cpp

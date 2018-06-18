@@ -2,51 +2,30 @@
 // Created by kangd on 09.05.18.
 //
 
-#include <BtMbSim.hpp>
+#include <raiSim/World_RG.hpp>
 
-#include "BuildingBenchmark.hpp"
-#include "BtMbBenchmark.hpp"
+#include "KaplaBenchmark.hpp"
 
-bullet_mb_sim::BtMbSim *sim;
-std::vector<bullet_mb_sim::ArticulatedSystemHandle> objList;
+rai_sim::World_RG *sim;
+std::vector<rai_sim::SingleBodyHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
   if (benchmark::building::options.gui)
-    sim = new bullet_mb_sim::BtMbSim(800, 600, 0.05,
-                                     benchmark::NO_BACKGROUND);
+    sim = new rai_sim::World_RG(800, 600, 0.015, rai_sim::NO_BACKGROUND);
   else
-    sim = new bullet_mb_sim::BtMbSim();
-
-  // time step
-  sim->setTimeStep(benchmark::building::options.dt);
-
+    sim = new rai_sim::World_RG();
 
   // erp
   if(benchmark::building::options.erpYN)
-    sim->setERP(benchmark::building::params.erp,
-                benchmark::building::params.erp2,
-                benchmark::building::params.erpFriction);
+    sim->setERP(benchmark::building::params.erp);
   else
-    sim->setERP(0, 0, 0);
-
-  // set up logger and timer
-  if(benchmark::building::options.log)
-    benchmark::building::loggerSetup(
-        benchmark::building::getLogDirpath(benchmark::building::options.erpYN,
-                                           benchmark::bulletmultibody::options.simName,
-                                           benchmark::bulletmultibody::options.solverName,
-                                           benchmark::building::options.dt), "var"
-    );
+    sim->setERP(0);
 }
 
 void setupWorld() {
-
   // add objects
-  auto checkerboard = sim->addArticulatedSystem(
-      benchmark::building::getBulletPlanePath(),
-      bullet_mb_sim::object::URDF
-  );
+  auto checkerboard = sim->addCheckerboard(10.0, 400.0, 400.0, 0.1, 1, -1, rai_sim::GRID);
 
   // block size
   const float shortLen = benchmark::building::params.shortLen;
@@ -63,15 +42,8 @@ void setupWorld() {
     // i floor
     for(int j = 0; j < numBase; j++) {
       // base
-      auto base = sim->addArticulatedSystem(
-          benchmark::building::getBulletBasePath(),
-          bullet_mb_sim::object::URDF
-      );
-      base->setGeneralizedCoordinate(
-          {j * longLen,
-           0,
-           i * heightLen * 2 + 0.05,
-           1, 0, 0, 0});
+      auto base = sim->addBox(shortLen, longLen + 0.05, heightLen, 10.0);
+      base->setPosition(j * longLen, 0, i * heightLen * 2 + 0.05);
       objList.push_back(base);
 
       if(benchmark::building::options.gui)
@@ -80,16 +52,8 @@ void setupWorld() {
 
     for(int j = 0; j < numWall; j++) {
       // right wall
-      auto wall = sim->addArticulatedSystem(
-          benchmark::building::getBulletWallPath(),
-          bullet_mb_sim::object::URDF
-      );
-      wall->setGeneralizedCoordinate(
-          {j * longLen * 2 + 0.1,
-           -0.5 * longLen,
-           i * heightLen * 2 + 0.15,
-           1, 0, 0, 0
-          });
+      auto wall = sim->addBox(longLen, shortLen, heightLen, 10.0);
+      wall->setPosition(j * longLen * 2 + 0.1, -0.5 * longLen, i * heightLen * 2 + 0.15);
       objList.push_back(wall);
 
       if(benchmark::building::options.gui)
@@ -98,15 +62,8 @@ void setupWorld() {
 
     for(int j = 0; j < numWall - 1; j++) {
       // left wall
-      auto wall = sim->addArticulatedSystem(
-          benchmark::building::getBulletWallPath(),
-          bullet_mb_sim::object::URDF
-      );
-      wall->setGeneralizedCoordinate(
-          {j * longLen * 2 + 0.3,
-           0.5 * longLen,
-           i * heightLen * 2 + 0.15,
-           1, 0, 0, 0});
+      auto wall = sim->addBox(longLen, shortLen, heightLen, 10.0);
+      wall->setPosition(j * longLen * 2 + 0.3, 0.5 * longLen, i * heightLen * 2 + 0.15);
       objList.push_back(wall);
 
       if(benchmark::building::options.gui)
@@ -114,27 +71,13 @@ void setupWorld() {
     }
 
     // first wall on left
-    auto wall1 = sim->addArticulatedSystem(
-        benchmark::building::getBulletWallPath(),
-        bullet_mb_sim::object::URDF
-    );
-    wall1->setGeneralizedCoordinate(
-        {0.1,
-         0.5 * longLen,
-         i * heightLen * 2 + 0.15,
-         1, 0, 0, 0});
+    auto wall1 = sim->addBox(longLen, shortLen, heightLen, 10.0);
+    wall1->setPosition(0.1, 0.5 * longLen, i * heightLen * 2 + 0.15);
     objList.push_back(wall1);
 
     // last wall on left
-    auto wall2 = sim->addArticulatedSystem(
-        benchmark::building::getBulletWallPath(),
-        bullet_mb_sim::object::URDF
-    );
-    wall2->setGeneralizedCoordinate(
-        {(numWall - 1) * longLen * 2 + 0.1,
-         0.5 * longLen,
-         i * heightLen * 2 + 0.15,
-         1, 0, 0, 0});
+    auto wall2 = sim->addBox(longLen, shortLen, heightLen, 10.0);
+    wall2->setPosition((numWall - 1) * longLen * 2 + 0.1, 0.5 * longLen, i * heightLen * 2 + 0.15);
     objList.push_back(wall2);
 
     if(benchmark::building::options.gui) {
@@ -170,9 +113,9 @@ benchmark::building::Data simulationLoop() {
       break;
 
     // num contacts
-    data.numContacts.push_back(sim->getWorldNumContacts());
+    data.numContacts.push_back(sim->getContactProblem().size());
 
-    if(objList.back()->getGeneralizedCoordinate()[2] <
+    if(benchmark::building::options.collapse && objList.back()->getPosition()[2] <
         benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
       // break if the building collapses
       cnt = i+1;
@@ -180,7 +123,7 @@ benchmark::building::Data simulationLoop() {
       break;
     }
 
-    sim->integrate();
+    sim->integrate(benchmark::building::options.dt);
   }
 
   if(benchmark::building::options.saveVideo)
@@ -194,20 +137,16 @@ benchmark::building::Data simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::building::addDescToOption(desc);
-  benchmark::bulletmultibody::addDescToOption(desc);
-
   benchmark::building::getOptionsFromArg(argc, argv, desc);
-  benchmark::bulletmultibody::getOptionsFromArg(argc, argv, desc);
-
   benchmark::building::getParamsFromYAML(benchmark::building::getYamlpath().c_str(),
-                                         benchmark::DART);
+                                         benchmark::RAI);
 
   setupSimulation();
   setupWorld();
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: " << benchmark::bulletmultibody::options.simName << std::endl
+                << "Simulator: RAI" << std::endl
                 << "GUI      : " << benchmark::building::options.gui << std::endl
                 << "ERP      : " << benchmark::building::options.erpYN << std::endl
                 << "Timestep : " << benchmark::building::options.dt << std::endl
@@ -219,10 +158,10 @@ int main(int argc, const char* argv[]) {
 
   if(benchmark::building::options.csv)
     benchmark::building::printCSV(benchmark::building::getCSVpath(),
-                                  benchmark::bulletmultibody::options.simName,
-                                  benchmark::bulletmultibody::options.solverName,
-                                  benchmark::bulletmultibody::options.detectorName,
-                                  benchmark::bulletmultibody::options.integratorName,
+                                  "RAI",
+                                  "RAI",
+                                  "RAI",
+                                  "RAI",
                                   data.time,
                                   data.step,
                                   data.computeMeanContacts());

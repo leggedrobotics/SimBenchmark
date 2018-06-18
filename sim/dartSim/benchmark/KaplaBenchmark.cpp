@@ -2,31 +2,36 @@
 // Created by kangd on 09.05.18.
 //
 
-#include <OdeSim.hpp>
+#include <DartSim.hpp>
 
-#include "BuildingBenchmark.hpp"
-#include "OdeBenchmark.hpp"
+#include "KaplaBenchmark.hpp"
+#include "DartBenchmark.hpp"
 
-ode_sim::OdeSim *sim;
+dart_sim::DartSim *sim;
 std::vector<benchmark::SingleBodyHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
   if (benchmark::building::options.gui)
-    sim = new ode_sim::OdeSim(800, 600, 0.05,
-                                   benchmark::NO_BACKGROUND,
-                                   benchmark::ode::options.solverOption);
+    sim = new dart_sim::DartSim(800, 600, 0.05,
+                                     benchmark::NO_BACKGROUND,
+                                     benchmark::dart::options.solverOption);
   else
-    sim = new ode_sim::OdeSim(benchmark::ode::options.solverOption);
+    sim = new dart_sim::DartSim(benchmark::dart::options.solverOption);
 
-  // erp
+  // time step
+  sim->setTimeStep(benchmark::building::options.dt);
+
+  /// no erp for dart
   if(benchmark::building::options.erpYN)
-    sim->setERP(benchmark::building::params.erp, 0, 0);
-  else
-    sim->setERP(0, 0, 0);
+    RAIFATAL("erp is not supported for dart")
+
+  // increases max contact numbers
+  sim->setMaxContacts(5000);
 }
 
 void setupWorld() {
+
   // add objects
   auto checkerboard = sim->addCheckerboard(10.0, 400.0, 400.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
 
@@ -99,7 +104,7 @@ void setupWorld() {
 
 benchmark::building::Data simulationLoop() {
   if(benchmark::building::options.saveVideo)
-    sim->startRecordingVideo("/tmp", "ode-building");
+    sim->startRecordingVideo("/tmp", "rai-building");
 
   // data
   benchmark::building::Data data;
@@ -118,7 +123,7 @@ benchmark::building::Data simulationLoop() {
     // num contacts
     data.numContacts.push_back(sim->getWorldNumContacts());
 
-    if(objList.back()->getPosition()[2] <
+    if(benchmark::building::options.collapse && objList.back()->getPosition()[2] <
         benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
       // break if the building collapses
       cnt = i+1;
@@ -126,7 +131,7 @@ benchmark::building::Data simulationLoop() {
       break;
     }
 
-    sim->integrate(benchmark::building::options.dt);
+    sim->integrate();
   }
 
   if(benchmark::building::options.saveVideo)
@@ -140,25 +145,24 @@ benchmark::building::Data simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::building::addDescToOption(desc);
-  benchmark::ode::addDescToOption(desc);
+  benchmark::dart::addDescToOption(desc);
 
   benchmark::building::getOptionsFromArg(argc, argv, desc);
-  benchmark::ode::getOptionsFromArg(argc, argv, desc);
+  benchmark::dart::getOptionsFromArg(argc, argv, desc);
 
   benchmark::building::getParamsFromYAML(benchmark::building::getYamlpath().c_str(),
-                                         benchmark::ODE);
+                                         benchmark::DART);
 
   setupSimulation();
   setupWorld();
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: ODE" << std::endl
+                << "Simulator: RAI" << std::endl
                 << "GUI      : " << benchmark::building::options.gui << std::endl
                 << "ERP      : " << benchmark::building::options.erpYN << std::endl
                 << "Timestep : " << benchmark::building::options.dt << std::endl
                 << "Num block: " << objList.size() << std::endl
-                << "Solver   : " << benchmark::ode::options.solverName << std::endl
                 << "-----------------------"
   )
 
@@ -166,10 +170,10 @@ int main(int argc, const char* argv[]) {
 
   if(benchmark::building::options.csv)
     benchmark::building::printCSV(benchmark::building::getCSVpath(),
-                                  benchmark::ode::options.simName,
-                                  benchmark::ode::options.solverName,
-                                  benchmark::ode::options.detectorName,
-                                  benchmark::ode::options.integratorName,
+                                  benchmark::dart::options.simName,
+                                  benchmark::dart::options.solverName,
+                                  benchmark::dart::options.detectorName,
+                                  benchmark::dart::options.integratorName,
                                   data.time,
                                   data.step,
                                   data.computeMeanContacts());

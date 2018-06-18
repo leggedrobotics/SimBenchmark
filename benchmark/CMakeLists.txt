@@ -4,7 +4,7 @@ file(COPY shell/anymal-pd.sh
 file(COPY shell/rolling.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-file(COPY shell/building.sh
+file(COPY shell/kapla.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 file(COPY shell/666.sh

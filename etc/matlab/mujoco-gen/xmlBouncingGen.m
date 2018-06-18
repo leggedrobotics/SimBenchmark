@@ -8,7 +8,7 @@ yaml_path = '../../../benchmark/yaml/bouncing.yaml';
 %% parameters
 % option
 H = 5.0;               % drop height 
-n = 1;
+n = 7;
 
 % constants
 yaml_data = yaml.ReadYaml(yaml_path);

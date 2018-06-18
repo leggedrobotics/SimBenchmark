@@ -197,7 +197,7 @@ std::string getMujocoXMLpath() {
   std::string xmlPath(__FILE__);
   while (xmlPath.back() != '/')
     xmlPath.erase(xmlPath.size() - 1, 1);
-  xmlPath += "../res/mujoco/Rolling/rolling-benchmark.xml";
+  xmlPath += "../res/benchmark/rolling-benchmark/mujoco/rolling.xml";
 
   return xmlPath;
 }
@@ -212,7 +212,7 @@ std::string getBulletBallPath() {
   std::string ballpath(__FILE__);
   while (ballpath.back() != '/')
     ballpath.erase(ballpath.size() - 1, 1);
-  ballpath += "../res/bullet/Rolling/ball.urdf";
+  ballpath += "../res/benchmark/rolling-benchmark/bullet/ball.urdf";
 
   return ballpath;
 }
@@ -227,7 +227,7 @@ std::string getBulletBoxPath() {
   std::string ballpath(__FILE__);
   while (ballpath.back() != '/')
     ballpath.erase(ballpath.size() - 1, 1);
-  ballpath += "../res/bullet/Rolling/box.urdf";
+  ballpath += "../res/benchmark/rolling-benchmark/bullet/box.urdf";
 
   return ballpath;
 }
@@ -242,7 +242,7 @@ std::string getBulletPlanePath() {
   std::string planepath(__FILE__);
   while (planepath.back() != '/')
     planepath.erase(planepath.size() - 1, 1);
-  planepath += "../res/bullet/Rolling/plane.urdf";
+  planepath += "../res/benchmark/rolling-benchmark/bullet/plane.urdf";
 
   return planepath;
 }
@@ -257,7 +257,7 @@ std::string getYamlpath() {
   std::string yamlPath(__FILE__);
   while (yamlPath.back() != '/')
     yamlPath.erase(yamlPath.size() - 1, 1);
-  yamlPath += "./yaml/rolling-benchmark.yaml";
+  yamlPath += "./yaml/rolling.yaml";
 
   return yamlPath;
 }
@@ -297,7 +297,7 @@ std::string getCSVpath() {
   while (csvPath.back() != '/')
     csvPath.erase(csvPath.size() - 1, 1);
 
-  csvPath += "../data/rolling-benchmark/" + options.csvName;
+  csvPath += "../data/rolling/" + options.csvName;
 
   return csvPath;
 }

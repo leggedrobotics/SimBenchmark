@@ -117,7 +117,7 @@ std::string getURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/ANYmal-energy-benchmark/ode-rai-dart/robot.urdf";
+  urdfPath += "../res/benchmark/ANYmal-energy-benchmark/ode-rai-dart/robot.urdf";
 
   return urdfPath;
 }
@@ -133,7 +133,7 @@ std::string getBulletPlanePath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/ANYmal-energy-benchmark/bullet/plane.urdf";
+  urdfPath += "../res/benchmark/ANYmal-energy-benchmark/bullet/plane.urdf";
 
   return urdfPath;
 }
@@ -149,7 +149,7 @@ std::string getBulletANYmalPath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/ANYmal-energy-benchmark/bullet/robot.urdf";
+  urdfPath += "../res/benchmark/ANYmal-energy-benchmark/bullet/robot.urdf";
 
   return urdfPath;
 }
@@ -165,7 +165,7 @@ std::string getMujocoURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/ANYmal-energy-benchmark/mujoco/robot.urdf";
+  urdfPath += "../res/benchmark/ANYmal-energy-benchmark/mujoco/robot.urdf";
 
   return urdfPath;
 }

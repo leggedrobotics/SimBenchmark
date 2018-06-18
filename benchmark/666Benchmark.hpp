@@ -121,7 +121,7 @@ std::string getBulletBallPath() {
   std::string ballpath(__FILE__);
   while (ballpath.back() != '/')
     ballpath.erase(ballpath.size() - 1, 1);
-  ballpath += "../res/bullet/666/ball.urdf";
+  ballpath += "../res/benchmark/666-benchmark/bullet/ball.urdf";
 
   return ballpath;
 }
@@ -136,7 +136,7 @@ std::string getBulletPlanePath() {
   std::string planepath(__FILE__);
   while (planepath.back() != '/')
     planepath.erase(planepath.size() - 1, 1);
-  planepath += "../res/bullet/666/plane.urdf";
+  planepath += "../res/benchmark/666-benchmark/bullet/plane.urdf";
 
   return planepath;
 }
@@ -153,7 +153,7 @@ std::string getMujocoXMLpath() {
   std::string xmlPath(__FILE__);
   while (xmlPath.back() != '/')
     xmlPath.erase(xmlPath.size() - 1, 1);
-  xmlPath += "../res/mujoco/666/sphere" + std::to_string(ncubic) + ".xml";
+  xmlPath += "../res/benchmark/666-benchmark/mujoco/sphere" + std::to_string(ncubic) + ".xml";
 
   return xmlPath;
 }

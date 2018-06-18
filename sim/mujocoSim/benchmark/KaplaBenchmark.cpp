@@ -4,7 +4,7 @@
 
 #include <MjcSim.hpp>
 
-#include "BuildingBenchmark.hpp"
+#include "KaplaBenchmark.hpp"
 #include "MjcBenchmark.hpp"
 
 mujoco_sim::MjcSim *sim;
@@ -63,7 +63,7 @@ benchmark::building::Data simulationLoop() {
     // num contacts
     data.numContacts.push_back(sim->getWorldNumContacts());
 
-    if(sim->getSingleBodyHandle(sim->getNumObject()-1)->getPosition()[2] <
+    if(benchmark::building::options.collapse && sim->getSingleBodyHandle(sim->getNumObject()-1)->getPosition()[2] <
         benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
       // break if the building collapses
       cnt = i+1;

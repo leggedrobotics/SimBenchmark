@@ -2,38 +2,51 @@
 // Created by kangd on 09.05.18.
 //
 
-#include <DartSim.hpp>
+#include <BtMbSim.hpp>
 
-#include "BuildingBenchmark.hpp"
-#include "DartBenchmark.hpp"
+#include "KaplaBenchmark.hpp"
+#include "BtMbBenchmark.hpp"
 
-dart_sim::DartSim *sim;
-std::vector<benchmark::SingleBodyHandle> objList;
+bullet_mb_sim::BtMbSim *sim;
+std::vector<bullet_mb_sim::ArticulatedSystemHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
   if (benchmark::building::options.gui)
-    sim = new dart_sim::DartSim(800, 600, 0.05,
-                                     benchmark::NO_BACKGROUND,
-                                     benchmark::dart::options.solverOption);
+    sim = new bullet_mb_sim::BtMbSim(800, 600, 0.05,
+                                     benchmark::NO_BACKGROUND);
   else
-    sim = new dart_sim::DartSim(benchmark::dart::options.solverOption);
+    sim = new bullet_mb_sim::BtMbSim();
 
   // time step
   sim->setTimeStep(benchmark::building::options.dt);
 
-  /// no erp for dart
-  if(benchmark::building::options.erpYN)
-    RAIFATAL("erp is not supported for dart")
 
-  // increases max contact numbers
-  sim->setMaxContacts(5000);
+  // erp
+  if(benchmark::building::options.erpYN)
+    sim->setERP(benchmark::building::params.erp,
+                benchmark::building::params.erp2,
+                benchmark::building::params.erpFriction);
+  else
+    sim->setERP(0, 0, 0);
+
+  // set up logger and timer
+  if(benchmark::building::options.log)
+    benchmark::building::loggerSetup(
+        benchmark::building::getLogDirpath(benchmark::building::options.erpYN,
+                                           benchmark::bulletmultibody::options.simName,
+                                           benchmark::bulletmultibody::options.solverName,
+                                           benchmark::building::options.dt), "var"
+    );
 }
 
 void setupWorld() {
 
   // add objects
-  auto checkerboard = sim->addCheckerboard(10.0, 400.0, 400.0, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
+  auto checkerboard = sim->addArticulatedSystem(
+      benchmark::building::getBulletPlanePath(),
+      bullet_mb_sim::object::URDF
+  );
 
   // block size
   const float shortLen = benchmark::building::params.shortLen;
@@ -50,8 +63,15 @@ void setupWorld() {
     // i floor
     for(int j = 0; j < numBase; j++) {
       // base
-      auto base = sim->addBox(shortLen, longLen + 0.05, heightLen, 10.0);
-      base->setPosition(j * longLen, 0, i * heightLen * 2 + 0.05);
+      auto base = sim->addArticulatedSystem(
+          benchmark::building::getBulletBasePath(),
+          bullet_mb_sim::object::URDF
+      );
+      base->setGeneralizedCoordinate(
+          {j * longLen,
+           0,
+           i * heightLen * 2 + 0.05,
+           1, 0, 0, 0});
       objList.push_back(base);
 
       if(benchmark::building::options.gui)
@@ -60,8 +80,16 @@ void setupWorld() {
 
     for(int j = 0; j < numWall; j++) {
       // right wall
-      auto wall = sim->addBox(longLen, shortLen, heightLen, 10.0);
-      wall->setPosition(j * longLen * 2 + 0.1, -0.5 * longLen, i * heightLen * 2 + 0.15);
+      auto wall = sim->addArticulatedSystem(
+          benchmark::building::getBulletWallPath(),
+          bullet_mb_sim::object::URDF
+      );
+      wall->setGeneralizedCoordinate(
+          {j * longLen * 2 + 0.1,
+           -0.5 * longLen,
+           i * heightLen * 2 + 0.15,
+           1, 0, 0, 0
+          });
       objList.push_back(wall);
 
       if(benchmark::building::options.gui)
@@ -70,8 +98,15 @@ void setupWorld() {
 
     for(int j = 0; j < numWall - 1; j++) {
       // left wall
-      auto wall = sim->addBox(longLen, shortLen, heightLen, 10.0);
-      wall->setPosition(j * longLen * 2 + 0.3, 0.5 * longLen, i * heightLen * 2 + 0.15);
+      auto wall = sim->addArticulatedSystem(
+          benchmark::building::getBulletWallPath(),
+          bullet_mb_sim::object::URDF
+      );
+      wall->setGeneralizedCoordinate(
+          {j * longLen * 2 + 0.3,
+           0.5 * longLen,
+           i * heightLen * 2 + 0.15,
+           1, 0, 0, 0});
       objList.push_back(wall);
 
       if(benchmark::building::options.gui)
@@ -79,13 +114,27 @@ void setupWorld() {
     }
 
     // first wall on left
-    auto wall1 = sim->addBox(longLen, shortLen, heightLen, 10.0);
-    wall1->setPosition(0.1, 0.5 * longLen, i * heightLen * 2 + 0.15);
+    auto wall1 = sim->addArticulatedSystem(
+        benchmark::building::getBulletWallPath(),
+        bullet_mb_sim::object::URDF
+    );
+    wall1->setGeneralizedCoordinate(
+        {0.1,
+         0.5 * longLen,
+         i * heightLen * 2 + 0.15,
+         1, 0, 0, 0});
     objList.push_back(wall1);
 
     // last wall on left
-    auto wall2 = sim->addBox(longLen, shortLen, heightLen, 10.0);
-    wall2->setPosition((numWall - 1) * longLen * 2 + 0.1, 0.5 * longLen, i * heightLen * 2 + 0.15);
+    auto wall2 = sim->addArticulatedSystem(
+        benchmark::building::getBulletWallPath(),
+        bullet_mb_sim::object::URDF
+    );
+    wall2->setGeneralizedCoordinate(
+        {(numWall - 1) * longLen * 2 + 0.1,
+         0.5 * longLen,
+         i * heightLen * 2 + 0.15,
+         1, 0, 0, 0});
     objList.push_back(wall2);
 
     if(benchmark::building::options.gui) {
@@ -123,7 +172,7 @@ benchmark::building::Data simulationLoop() {
     // num contacts
     data.numContacts.push_back(sim->getWorldNumContacts());
 
-    if(objList.back()->getPosition()[2] <
+    if(benchmark::building::options.collapse && objList.back()->getGeneralizedCoordinate()[2] <
         benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
       // break if the building collapses
       cnt = i+1;
@@ -145,20 +194,20 @@ benchmark::building::Data simulationLoop() {
 int main(int argc, const char* argv[]) {
 
   benchmark::building::addDescToOption(desc);
-  benchmark::dart::addDescToOption(desc);
+  benchmark::bulletmultibody::addDescToOption(desc);
 
   benchmark::building::getOptionsFromArg(argc, argv, desc);
-  benchmark::dart::getOptionsFromArg(argc, argv, desc);
+  benchmark::bulletmultibody::getOptionsFromArg(argc, argv, desc);
 
   benchmark::building::getParamsFromYAML(benchmark::building::getYamlpath().c_str(),
-                                         benchmark::DART);
+                                         benchmark::BULLET);
 
   setupSimulation();
   setupWorld();
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: RAI" << std::endl
+                << "Simulator: " << benchmark::bulletmultibody::options.simName << std::endl
                 << "GUI      : " << benchmark::building::options.gui << std::endl
                 << "ERP      : " << benchmark::building::options.erpYN << std::endl
                 << "Timestep : " << benchmark::building::options.dt << std::endl
@@ -170,10 +219,10 @@ int main(int argc, const char* argv[]) {
 
   if(benchmark::building::options.csv)
     benchmark::building::printCSV(benchmark::building::getCSVpath(),
-                                  benchmark::dart::options.simName,
-                                  benchmark::dart::options.solverName,
-                                  benchmark::dart::options.detectorName,
-                                  benchmark::dart::options.integratorName,
+                                  benchmark::bulletmultibody::options.simName,
+                                  benchmark::bulletmultibody::options.solverName,
+                                  benchmark::bulletmultibody::options.detectorName,
+                                  benchmark::bulletmultibody::options.integratorName,
                                   data.time,
                                   data.step,
                                   data.computeMeanContacts());
