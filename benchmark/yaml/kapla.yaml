@@ -17,5 +17,5 @@ solver_params:
 # simulation constants
 constant:
   num_floor: 6            # remark! doesn't work for MUJOCO
-  num_base: 4
+  num_base: 8
 ...

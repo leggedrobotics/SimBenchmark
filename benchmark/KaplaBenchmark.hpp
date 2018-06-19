@@ -32,7 +32,7 @@ struct Option: benchmark::Option {
   bool erpYN = false;
 
   // time step
-  double dt = 0.001;
+  double dt = 0.01;
 
   // simulation time
   double T = 600.0;
@@ -61,7 +61,7 @@ struct Parameter {
 
   // simulation parameters
   /// Remark! doesn't work for MUJOCO
-  int numFloor = 6;
+  int numFloor = 8;
   int numBase = 4;
   /// (num of blocks) = (numFloor) x (numBase) + (numFloor) x (numWall x 2 + 1)
 

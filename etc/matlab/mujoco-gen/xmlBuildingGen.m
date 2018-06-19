@@ -12,7 +12,7 @@ heightLen = 0.1;
 
 % num of blocks = numFloor x numBase + numFloor x (numWall x 2 + 1)
 numFloor = 6;
-numBase = 4;
+numBase = 8;
 numWall = numBase / 2;
 
 % object geometry wall

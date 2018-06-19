@@ -166,8 +166,8 @@ benchmark::building::Data simulationLoop() {
   StopWatch watch;
   watch.start();
 
-  int cnt = (int) (benchmark::building::options.T / benchmark::building::options.dt);
-  for(int i = 0; i < (int) (benchmark::building::options.T / benchmark::building::options.dt); i++) {
+  int i;
+  for(i = 0; i < (int) (benchmark::building::options.T / benchmark::building::options.dt); i++) {
     // gui
     if (benchmark::building::options.gui && !sim->visualizerLoop(benchmark::building::options.dt))
       break;
@@ -178,8 +178,7 @@ benchmark::building::Data simulationLoop() {
     if(benchmark::building::options.collapse && objList.back()->getGeneralizedCoordinate()[2] <
         benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
       // break if the building collapses
-      cnt = i+1;
-      RAIINFO("building collapsed after " << cnt << " steps = " << cnt * benchmark::building::options.dt << " sec!")
+      RAIINFO("building collapsed after " << i << " steps = " << i * benchmark::building::options.dt << " sec!")
       break;
     }
 
@@ -190,7 +189,7 @@ benchmark::building::Data simulationLoop() {
     sim->stopRecordingVideo();
 
   data.time = watch.measure();
-  data.step = cnt;
+  data.step = i;
   return data;
 }
 
