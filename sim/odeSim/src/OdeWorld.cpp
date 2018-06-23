@@ -206,12 +206,15 @@ int ode_sim::OdeWorld::getNumObject() {
 const std::vector<ode_sim::Single3DContactProblem> *ode_sim::OdeWorld::getCollisionProblem() {
   return &contactProblemList_;
 }
+
 void OdeWorld::integrate1(double dt) {
   RAIFATAL("not supported for ode")
 }
+
 void OdeWorld::integrate2(double dt) {
   RAIFATAL("not supported for ode")
 }
+
 
 } // ode_sim
 

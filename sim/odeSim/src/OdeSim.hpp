@@ -89,6 +89,18 @@ class OdeSim: public benchmark::WorldRG {
   void setGravity(Eigen::Vector3d gravity) override ;
   void setERP(double erp, double erp2, double frictionErp) override ;
 
+  /**
+   * Set CFM for constraint force mixing. (softness of contact)
+   * @param cfm  0 ~ 1 (ODE default is 1e-10. For benchmark we set default value 0)
+   */
+  void setCFM(double cfm);
+
+  /**
+   * Set solver parameters.
+   * @param solverIteration (for quick solver. ODE default is 20)
+   */
+  void setSolverParameter(int solverIteration);
+
  private:
   void integrate1(double dt) override;
   void integrate2(double dt) override;

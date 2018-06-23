@@ -427,6 +427,7 @@ void OdeSim::integrate(double dt) {
 void OdeSim::setGravity(Eigen::Vector3d gravity) {
   world_.setGravity({gravity.x(), gravity.y(), gravity.z()});
 }
+
 void OdeSim::setERP(double erp, double erp2, double frictionErp) {
   world_.setERP(erp);
 }
@@ -434,6 +435,7 @@ void OdeSim::setERP(double erp, double erp2, double frictionErp) {
 int OdeSim::getNumObject() {
   return world_.getNumObject();
 }
+
 int OdeSim::getWorldNumContacts() {
   return (int)world_.getCollisionProblem()->size();
 }
@@ -441,8 +443,17 @@ int OdeSim::getWorldNumContacts() {
 void OdeSim::integrate1(double dt) {
 RAIFATAL("not supported for ode")
 }
+
 void OdeSim::integrate2(double dt) {
   RAIFATAL("not supported for ode")
+}
+
+void OdeSim::setCFM(double cfm) {
+  dWorldSetCFM(world_.dynamicsWorld_, cfm);
+}
+
+void OdeSim::setSolverParameter(int solverIteration) {
+  dWorldSetQuickStepNumIterations(world_.dynamicsWorld_, solverIteration);
 }
 
 } // ode_sim

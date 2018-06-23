@@ -36,6 +36,7 @@ struct Single3DContactProblem {
 
 class OdeWorld: public benchmark::WorldInterface {
 
+  friend class OdeSim;
  public:
   explicit OdeWorld(SolverOption solverOption = SOLVER_STANDARD);
   virtual ~OdeWorld();

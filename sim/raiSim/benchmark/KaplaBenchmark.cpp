@@ -22,7 +22,7 @@ void setupSimulation() {
   else
     sim->setERP(0);
 
-  sim->setContactSolverParam(1.0, 0.7, 1.0, 100, 1e-8);
+  sim->setContactSolverParam(1.0, 0.7, 1.0, benchmark::building::options.numSolverIter, 1e-12);
 }
 
 void setupWorld() {
@@ -105,16 +105,16 @@ benchmark::building::Data simulationLoop() {
 
   // data
   benchmark::building::Data data;
-  data.setN(unsigned(benchmark::building::options.T / benchmark::building::options.dt));
+  data.setN(unsigned(benchmark::building::params.T / benchmark::building::params.dt));
 
   // timer start
   StopWatch watch;
   watch.start();
 
   int i;
-  for(i = 0; i < (int) (benchmark::building::options.T / benchmark::building::options.dt); i++) {
+  for(i = 0; i < (int) (benchmark::building::params.T / benchmark::building::params.dt); i++) {
     // gui
-    if (benchmark::building::options.gui && !sim->visualizerLoop(benchmark::building::options.dt))
+    if (benchmark::building::options.gui && !sim->visualizerLoop(benchmark::building::params.dt))
       break;
 
     // num contacts
@@ -123,11 +123,11 @@ benchmark::building::Data simulationLoop() {
     if(benchmark::building::options.collapse && objList.back()->getPosition()[2] <
         benchmark::building::params.heightLen * (benchmark::building::params.numFloor - 1) * 2) {
       // break if the building collapses
-      RAIINFO("building collapsed after " << i << " steps = " << i * benchmark::building::options.dt << " sec!")
+      RAIINFO("building collapsed after " << i << " steps = " << i * benchmark::building::params.dt << " sec!")
       break;
     }
 
-    sim->integrate(benchmark::building::options.dt);
+    sim->integrate(benchmark::building::params.dt);
   }
 
   if(benchmark::building::options.saveVideo)
@@ -153,7 +153,8 @@ int main(int argc, const char* argv[]) {
                 << "Simulator: RAI" << std::endl
                 << "GUI      : " << benchmark::building::options.gui << std::endl
                 << "ERP      : " << benchmark::building::options.erpYN << std::endl
-                << "Timestep : " << benchmark::building::options.dt << std::endl
+                << "Num iter : " << benchmark::building::options.numSolverIter << std::endl
+                << "Timestep : " << benchmark::building::params.dt << std::endl
                 << "Num block: " << objList.size() << std::endl
                 << "-----------------------"
   )
@@ -174,6 +175,7 @@ int main(int argc, const char* argv[]) {
       std::endl << "Avg. Num Contacts : " << data.computeMeanContacts() << std::endl
                 << "CPU time          : " << data.time << std::endl
                 << "num steps         : " << data.step << std::endl
+                << "speed             : " << data.step / data.time << std::endl
                 << "=======================" << std::endl
   )
 

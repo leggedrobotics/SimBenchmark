@@ -18,4 +18,6 @@ solver_params:
 constant:
   num_floor: 6            # remark! doesn't work for MUJOCO
   num_base: 8
+  T: 600
+  dt: 0.01
 ...

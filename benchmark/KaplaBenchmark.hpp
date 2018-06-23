@@ -31,14 +31,11 @@ struct Option: benchmark::Option {
   // erp
   bool erpYN = false;
 
-  // time step
-  double dt = 0.01;
-
-  // simulation time
-  double T = 600.0;
-
   // collapse
   bool collapse = false;
+
+  // num solver iter
+  int numSolverIter = 20;
 };
 Option options;
 
@@ -71,6 +68,12 @@ struct Parameter {
 
   // gravity
   double g = -9.81;
+
+  // simulation time
+  double T = 600.0;
+
+  // time step
+  double dt = 0.01;
 
 };
 Parameter params;
@@ -210,9 +213,10 @@ void addDescToOption(po::options_description &desc) {
   benchmark::addDescToOption(desc);
   desc.add_options()
       ("erp-on", po::value<bool>(), "erp on (true / false)")
-      ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
-      ("T", po::value<double>(), "simulation time (e.g. 60)")
+//      ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
+//      ("T", po::value<double>(), "simulation time (e.g. 60)")
       ("collapse", "stop simulation when the kapla tower is collapsed")
+      ("numiter", po::value<int>(), "the number of iteration. (default = 20)")
       ;
 }
 
@@ -250,16 +254,6 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
     options.saveVideo = true;
   }
 
-  // dt option
-  if(vm.count("dt")) {
-    options.dt = vm["dt"].as<double>();
-  }
-
-  // T option
-  if(vm.count("T")) {
-    options.T = vm["T"].as<double>();
-  }
-
   // erp
   if(vm.count("erp-on")) {
     if(vm["erp-on"].as<bool>()) {
@@ -278,6 +272,11 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   // collapse
   if(vm.count("collapse")) {
     options.collapse = true;
+  }
+
+  // num iter
+  if(vm.count("numiter")) {
+    options.numSolverIter = vm["numiter"].as<int>();
   }
 }
 
@@ -300,6 +299,8 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   YAML::Node constant = yaml["constant"];
   params.numFloor = constant["num_floor"].as<int>();
   params.numBase = constant["num_base"].as<int>();
+  params.T = constant["T"].as<double>();
+  params.dt = constant["dt"].as<double>();
 
   // solver parameters
   YAML::Node solver_params = yaml["solver_params"];
@@ -354,7 +355,7 @@ void printCSV(std::string filePath,
          << detector << ","
          << integrator << ","
          << options.erpYN << ","
-         << options.dt << ","
+         << options.numSolverIter << ","
          << steps << ","
          << numContacts << ","
          << time << std::endl;

@@ -23,19 +23,19 @@ source selectsim.sh
 # test
 ########################################################################################################################
 #dt_array=( "0.0001" "0.0004""0.001" "0.004" "0.01" "0.04" "0.1" )
-dt_array=( "0.001" "0.004" "0.01" "0.04" "0.1" )
+iter_array=( "10" "40" "100" "400" "1000" )
 csv_file=$( date +"%Y-%m-%d-%H:%M:%S.csv" )
 
 echo ""
 echo "====================================================================="
-for dt in ${dt_array[@]}
+for num_iter in ${iter_array[@]}
 do
     # rai sim
     if [ "$test_rai" == 'ON' ]; then
         if [ "$RAISIM_ON" == "ON" ]; then
             for erpon in true false
             do
-                timeout 6000 ../sim/raiSim/benchmark/RaiKaplaBenchmark --nogui --erp-on=$erpon --dt=$dt --collapse --csv=$csv_file
+                timeout 6000 ../sim/raiSim/benchmark/RaiKaplaBenchmark --nogui --erp-on=$erpon --numiter=$num_iter --collapse --csv=$csv_file
             done
         else
             echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
@@ -47,7 +47,7 @@ do
         if [ "$BTSIM_ON" == "ON" ]; then
 			for erpon in true false
 			do
-				timeout 6000 ../sim/bulletMultibodySim/benchmark/BtMbKaplaBenchmark --nogui --erp-on=$erpon --dt=$dt --collapse --csv=$csv_file
+				timeout 6000 ../sim/bulletMultibodySim/benchmark/BtMbKaplaBenchmark --nogui --erp-on=$erpon --numiter=$num_iter --collapse --csv=$csv_file
 			done
         else
             echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
@@ -61,7 +61,7 @@ do
             do
                 for erpon in true false
                 do
-                    timeout 6000 ../sim/odeSim/benchmark/OdeKaplaBenchmark --nogui --erp-on=$erpon --dt=$dt --solver=$solver --collapse --csv=$csv_file
+                    timeout 6000 ../sim/odeSim/benchmark/OdeKaplaBenchmark --nogui --erp-on=$erpon --dt=$num_iter --solver=$solver --collapse --csv=$csv_file
                 done
             done
         else
@@ -77,7 +77,7 @@ do
                 for erpon in true false
                 do
                     # note mujoco has no erp
-                    timeout 6000 ../sim/mujocoSim/benchmark/MjcKaplaBenchmark --nogui --dt=$dt --solver=$solver --collapse --csv=$csv_file
+                    timeout 6000 ../sim/mujocoSim/benchmark/MjcKaplaBenchmark --nogui --numiter=$num_iter --solver=$solver --collapse --csv=$csv_file
                 done
             done
         else
@@ -93,7 +93,7 @@ do
                 for erpon in true false
                 do
                     # note dart has no erp
-                    timeout 6000 ../sim/dartSim/benchmark/DartKaplaBenchmark --nogui --dt=$dt --solver=$solver --collapse --csv=$csv_file
+                    timeout 6000 ../sim/dartSim/benchmark/DartKaplaBenchmark --nogui --numiter=$num_iter --solver=$solver --collapse --csv=$csv_file
                 done
             done
         else
