@@ -21,6 +21,9 @@ void setupSimulation() {
     sim->setERP(benchmark::sixsixsix::params.erp);
   else
     sim->setERP(0);
+
+  // time step
+  sim->setTimeStep(benchmark::sixsixsix::options.dt);
 }
 
 double penetrationCheck() {
@@ -151,7 +154,7 @@ double simulationLoop(bool timer = true, bool error = true) {
     watch.start();
 
   for(int i = 0; i < (int) (benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt); i++) {
-    if (benchmark::sixsixsix::options.gui && !sim->visualizerLoop(benchmark::sixsixsix::options.dt))
+    if (benchmark::sixsixsix::options.gui && !sim->visualizerLoop())
       break;
 
     // data save
@@ -170,7 +173,7 @@ double simulationLoop(bool timer = true, bool error = true) {
       }
     }
 
-    sim->integrate(benchmark::sixsixsix::options.dt);
+    sim->integrate();
   }
 
   if(benchmark::sixsixsix::options.saveVideo)

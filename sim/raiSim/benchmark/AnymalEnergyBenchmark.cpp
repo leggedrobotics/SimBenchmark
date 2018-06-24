@@ -18,6 +18,9 @@ void setupSimulation() {
 
   // set erp 0
   sim->setERP(0);
+
+  // time step
+  sim->setTimeStep(benchmark::anymal::freedrop::options.dt);
 }
 
 void setupWorld() {
@@ -78,7 +81,7 @@ double simulationLoop(bool timer = true, bool error = true) {
     // step1: applying force
     for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T1 / benchmark::anymal::freedrop::options.dt); t++) {
       if(benchmark::anymal::freedrop::options.gui &&
-          !sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor))
+          !sim->visualizerLoop(benchmark::anymal::freedrop::options.guiRealtimeFactor))
         break;
 
       anymal->setGeneralizedForce({0, 0, benchmark::anymal::freedrop::params.F,
@@ -87,7 +90,7 @@ double simulationLoop(bool timer = true, bool error = true) {
                                    0, 0, 0,
                                    0, 0, 0,
                                    0, 0, 0});
-      sim->integrate(benchmark::anymal::freedrop::options.dt);
+      sim->integrate();
     }
   }
 
@@ -95,10 +98,10 @@ double simulationLoop(bool timer = true, bool error = true) {
     // step2: freedrop
     for (int t = 0; t < (int) (benchmark::anymal::freedrop::params.T2 / benchmark::anymal::freedrop::options.dt); t++) {
       if(benchmark::anymal::freedrop::options.gui &&
-          !sim->visualizerLoop(benchmark::anymal::freedrop::options.dt, benchmark::anymal::freedrop::options.guiRealtimeFactor))
+          !sim->visualizerLoop(benchmark::anymal::freedrop::options.guiRealtimeFactor))
         break;
 
-      sim->integrate1(benchmark::anymal::freedrop::options.dt);
+      sim->integrate1();
 
       anymal->setGeneralizedForce({0, 0, 0,
                                    0, 0, 0,
@@ -118,7 +121,7 @@ double simulationLoop(bool timer = true, bool error = true) {
             anymal->getPotentialEnergy({0, 0, benchmark::anymal::freedrop::params.g})
         );
       }
-      sim->integrate2(benchmark::anymal::freedrop::options.dt);
+      sim->integrate2();
     }
   }
 

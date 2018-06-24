@@ -86,8 +86,8 @@ double simulationLoop(bool timer = true, bool error = true) {
              benchmark::rolling::params.F,
              0};
   else if(benchmark::rolling::options.forceDirection == benchmark::rolling::FORCE_XY)
-    force = {benchmark::rolling::params.F * 0.707106781186547,
-             benchmark::rolling::params.F * 0.707106781186547,
+    force = {benchmark::rolling::params.F * 0.5,
+             benchmark::rolling::params.F * 0.866025403784439,
              0};
 
   // resever error vector

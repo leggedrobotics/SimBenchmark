@@ -19,6 +19,9 @@ void setupSimulation() {
 
   // set erp 0
   sim->setERP(0);
+
+  // time step
+  sim->setTimeStep(benchmark::anymal::zerogravity::options.dt);
 }
 
 void setupWorld() {
@@ -105,11 +108,11 @@ double simulationLoop(bool timer = true, bool error = true) {
     watch.start();
   for(int i = 0; i < (int) (benchmark::anymal::zerogravity::params.T / benchmark::anymal::zerogravity::options.dt); i++) {
     // gui
-    if(benchmark::anymal::zerogravity::options.gui && !sim->visualizerLoop(benchmark::anymal::zerogravity::options.dt))
+    if(benchmark::anymal::zerogravity::options.gui && !sim->visualizerLoop())
       break;
 
     // step1
-    sim->integrate1(benchmark::anymal::zerogravity::options.dt);
+    sim->integrate1();
 
     // data save
     if(error) {
@@ -122,7 +125,7 @@ double simulationLoop(bool timer = true, bool error = true) {
     }
 
     // step
-    sim->integrate2(benchmark::anymal::zerogravity::options.dt);
+    sim->integrate2();
   }
 
   double time = 0;

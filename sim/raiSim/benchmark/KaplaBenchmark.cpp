@@ -22,6 +22,9 @@ void setupSimulation() {
   else
     sim->setERP(0);
 
+  // time step
+  sim->setTimeStep(benchmark::building::params.dt);
+
   sim->setContactSolverParam(1.0, 0.7, 1.0,
                              benchmark::building::options.numSolverIter,
                              1e-12);
@@ -116,7 +119,7 @@ benchmark::building::Data simulationLoop() {
   int i;
   for(i = 0; i < (int) (benchmark::building::params.T / benchmark::building::params.dt); i++) {
     // gui
-    if (benchmark::building::options.gui && !sim->visualizerLoop(benchmark::building::params.dt))
+    if (benchmark::building::options.gui && !sim->visualizerLoop())
       break;
 
     // num contacts
@@ -129,7 +132,7 @@ benchmark::building::Data simulationLoop() {
       break;
     }
 
-    sim->integrate(benchmark::building::params.dt);
+    sim->integrate();
   }
 
   if(benchmark::building::options.saveVideo)

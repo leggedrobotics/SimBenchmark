@@ -16,6 +16,9 @@ void setupSimulation() {
     sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
   else
     sim = new rai_sim::World_RG();
+
+  // time step
+  sim->setTimeStep(benchmark::anymal::params.dt);
 }
 
 void resetWorld() {
@@ -28,8 +31,8 @@ void resetWorld() {
       );
 //      anymal->setColor({1, 0, 0, 1});
       anymal->setGeneralizedCoordinate(
-          {i * 2,
-           j * 2,
+          {i * 2.0,
+           j * 2.0,
            benchmark::anymal::params.H,
            benchmark::anymal::params.baseQuat[0],
            benchmark::anymal::params.baseQuat[1],
@@ -90,7 +93,7 @@ void simulationLoop() {
 
   if(benchmark::anymal::options.gui) {
     // gui
-    while(sim->visualizerLoop(benchmark::anymal::params.dt, 1.0)) {
+    while(sim->visualizerLoop()) {
       for(int i = 0; i < anymals.size(); i++) {
         jointState = anymals[i]->getGeneralizedCoordinate();
         jointVel = anymals[i]->getGeneralizedVelocity();
@@ -100,7 +103,7 @@ void simulationLoop() {
         jointForce.head(6).setZero();
         anymals[i]->setGeneralizedForce(jointForce);
       }
-      sim->integrate(benchmark::anymal::params.dt);
+      sim->integrate();
     }
   } else {
     // no gui
@@ -116,7 +119,7 @@ void simulationLoop() {
         jointForce.head(6).setZero();
         anymals[i]->setGeneralizedForce(jointForce);
       }
-      sim->integrate(benchmark::anymal::params.dt);
+      sim->integrate();
     }
 
     double time = watch.measure();

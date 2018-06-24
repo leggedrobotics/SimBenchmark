@@ -520,7 +520,8 @@ Eigen::Vector3d computeAnalyticalSol(double t, bool isBall) {
     v = a1 * t;
 
   if (benchmark::rolling::options.forceDirection == benchmark::rolling::FORCE_XY)
-    return {v * 0.707106781186547, v * 0.707106781186547, 0};
+//    return {v * 0.707106781186547, v * 0.707106781186547, 0};
+    return {v * 0.5, v * 0.866025403784439, 0};
   else
     return {0, v, 0};
 }

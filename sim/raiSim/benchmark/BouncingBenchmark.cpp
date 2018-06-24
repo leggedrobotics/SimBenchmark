@@ -16,6 +16,9 @@ void setupSimulation() {
   else
     sim = new rai_sim::World_RG();
 
+  // time step
+  sim->setTimeStep(benchmark::bouncing::options.dt);
+
   // erp
   if(benchmark::bouncing::options.erpYN)
     sim->setERP(benchmark::bouncing::params.erp);
@@ -75,7 +78,7 @@ double simulationLoop(bool timer = true, bool error = true) {
 
   for(int i = 0; i < (int) (benchmark::bouncing::params.T / benchmark::bouncing::options.dt); i++) {
     // gui
-    if (benchmark::bouncing::options.gui && !sim->visualizerLoop(benchmark::bouncing::options.dt))
+    if (benchmark::bouncing::options.gui && !sim->visualizerLoop())
       break;
 
     // data save
@@ -87,7 +90,7 @@ double simulationLoop(bool timer = true, bool error = true) {
       benchmark::bouncing::data.ballEnergy.push_back(E);
     }
 
-    sim->integrate(benchmark::bouncing::options.dt);
+    sim->integrate();
   }
 
   if(benchmark::bouncing::options.saveVideo)
