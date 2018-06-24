@@ -166,10 +166,10 @@ struct Data {
 
       for(int i = 0; i < n; i++) {
         tdata(i, 0) = i * benchmark::rolling::options.dt;
-        xdata(i, 0) = velErrorSq(i, 0) * 1e8;
-        ydata(i, 0) = velErrorSq(i, 1) * 1e8;
-        zdata(i, 0) = velErrorSq(i, 2) * 1e8;
-        sumdata(i, 0) = velErrorSq.row(i).sum() * 1e8;
+        xdata(i, 0) = velErrorSq(i, 0);
+        ydata(i, 0) = velErrorSq(i, 1);
+        zdata(i, 0) = velErrorSq(i, 2);
+        sumdata(i, 0) = velErrorSq.row(i).sum();
       }
 
       rai::Utils::Graph::FigProp2D figure1properties("time", "squared velocity error", "squared velocity error");
