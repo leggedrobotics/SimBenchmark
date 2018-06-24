@@ -143,6 +143,7 @@ int main(int argc, const char* argv[]) {
                 << "Force    : " << benchmark::rolling::options.forceDirection << std::endl
                 << "Timestep : " << benchmark::rolling::options.dt << std::endl
                 << "Solver   : " << benchmark::dart::options.solverName << std::endl
+                << "Num iter : " << benchmark::rolling::options.numSolverIter << std::endl
                 << "-----------------------"
   )
 
@@ -173,6 +174,7 @@ int main(int argc, const char* argv[]) {
   RAIINFO(
       std::endl << "CPU time   : " << time << std::endl
                 << "mean error : " << error << std::endl
+                << "speed (Hz) : " << benchmark::rolling::params.T / benchmark::rolling::options.dt / time << std::endl
                 << "=======================" << std::endl
   )
 

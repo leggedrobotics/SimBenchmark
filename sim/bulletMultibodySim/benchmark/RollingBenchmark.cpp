@@ -32,6 +32,10 @@ void setupSimulation() {
 
   // time step
   sim->setTimeStep(benchmark::rolling::options.dt);
+
+  // solver iteration
+  sim->setSolverParameter(1e-30,
+                          benchmark::rolling::options.numSolverIter);
 }
 
 void setupWorld() {
@@ -149,6 +153,7 @@ int main(int argc, const char* argv[]) {
                 << "ERP      : " << benchmark::rolling::options.erpYN << std::endl
                 << "Force    : " << benchmark::rolling::options.forceDirection << std::endl
                 << "Timestep : " << benchmark::rolling::options.dt << std::endl
+                << "Num iter : " << benchmark::rolling::options.numSolverIter << std::endl
                 << "Solver   : " << benchmark::bulletmultibody::options.solverName << std::endl
                 << "-----------------------"
   )
@@ -181,6 +186,7 @@ int main(int argc, const char* argv[]) {
   RAIINFO(
       std::endl << "CPU time   : " << time << std::endl
                 << "mean error : " << error << std::endl
+                << "speed (Hz) : " << benchmark::rolling::params.T / benchmark::rolling::options.dt / time << std::endl
                 << "=======================" << std::endl
   )
 

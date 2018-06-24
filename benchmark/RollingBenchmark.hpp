@@ -64,7 +64,17 @@ struct Option: benchmark::Option {
   bool erpYN = false;
 
   // time step
-  double dt = 0.01;
+  double dt = 0.001;
+
+  /// Note
+  /// 1. Bullet, RAI, Mujoco has both solver tolerance and iteration option
+  /// 2. ODE has no solver tolerance. (always iterate with numSolverIter value)
+  /// 3. Dart cannot set solver parameters
+  // num solver iter
+  int numSolverIter = 1000;
+
+  // solver tolerance
+  double solverTol = 1e-30;
 };
 Option options;
 
@@ -156,10 +166,10 @@ struct Data {
 
       for(int i = 0; i < n; i++) {
         tdata(i, 0) = i * benchmark::rolling::options.dt;
-        xdata(i, 0) = velErrorSq(i, 0);
-        ydata(i, 0) = velErrorSq(i, 1);
-        zdata(i, 0) = velErrorSq(i, 2);
-        sumdata(i, 0) = velErrorSq.row(i).sum();
+        xdata(i, 0) = velErrorSq(i, 0) * 1e8;
+        ydata(i, 0) = velErrorSq(i, 1) * 1e8;
+        zdata(i, 0) = velErrorSq(i, 2) * 1e8;
+        sumdata(i, 0) = velErrorSq.row(i).sum() * 1e8;
       }
 
       rai::Utils::Graph::FigProp2D figure1properties("time", "squared velocity error", "squared velocity error");
@@ -314,6 +324,8 @@ void addDescToOption(po::options_description &desc) {
       ("plot", "plot on")
       ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
       ("force", po::value<std::string>(), "applied force direction (y / xy)")
+      ("numiter", po::value<int>(), "the number of solver iteration or max number of iteration. (set default number if this option is not set)")
+      ("tolerance", po::value<double>(), "solver tolerance value. (set default number if this option is not set)")
       ;
 }
 
@@ -385,6 +397,16 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   if(vm.count("csv")) {
     options.csv = true;
     options.csvName = vm["csv"].as<std::string>();
+  }
+
+  // num iter
+  if(vm.count("numiter")) {
+    options.numSolverIter = vm["numiter"].as<int>();
+  }
+
+  // tolerance
+  if(vm.count("tolerance")) {
+    options.solverTol = vm["tolerance"].as<double>();
   }
 }
 

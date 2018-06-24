@@ -27,6 +27,10 @@ void setupSimulation() {
   // timestep
   sim->setTimeStep(benchmark::rolling::options.dt);
 
+  // solver iteration
+  sim->setSolverParameter(1000,
+                          benchmark::rolling::options.solverTol);
+
   /// no erp for mujoco
   if(benchmark::rolling::options.erpYN)
   RAIFATAL("erp is not supported for mujoco")
@@ -141,6 +145,7 @@ int main(int argc, const char* argv[]) {
                 << "Force    : " << benchmark::rolling::options.forceDirection << std::endl
                 << "Timestep : " << benchmark::rolling::options.dt << std::endl
                 << "Solver   : " << benchmark::mujoco::options.solverName << std::endl
+                << "Tolerance: " << benchmark::rolling::options.solverTol << std::endl
                 << "-----------------------"
   )
 
@@ -169,6 +174,7 @@ int main(int argc, const char* argv[]) {
   RAIINFO(
       std::endl << "CPU time   : " << time << std::endl
                 << "mean error : " << error << std::endl
+                << "speed (Hz) : " << benchmark::rolling::params.T / benchmark::rolling::options.dt / time << std::endl
                 << "=======================" << std::endl
   )
 

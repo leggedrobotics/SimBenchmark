@@ -19,8 +19,8 @@ po::options_description desc;
 void setupSimulation() {
   if (benchmark::rolling::options.gui)
     sim = new ode_sim::OdeSim(800, 600, 0.5,
-                                   benchmark::NO_BACKGROUND,
-                                   benchmark::ode::options.solverOption);
+                              benchmark::NO_BACKGROUND,
+                              benchmark::ode::options.solverOption);
   else
     sim = new ode_sim::OdeSim(benchmark::ode::options.solverOption);
 
@@ -29,6 +29,11 @@ void setupSimulation() {
     sim->setERP(benchmark::rolling::params.erp, 0, 0);
   else
     sim->setERP(0, 0, 0);
+
+
+  // solver iteration
+  sim->setSolverParameter(benchmark::rolling::options.numSolverIter);
+
 }
 
 void setupWorld() {
@@ -143,6 +148,7 @@ int main(int argc, const char* argv[]) {
                 << "Force    : " << benchmark::rolling::options.forceDirection << std::endl
                 << "Timestep : " << benchmark::rolling::options.dt << std::endl
                 << "Solver   : " << benchmark::ode::options.solverName << std::endl
+                << "Num iter : " << benchmark::rolling::options.numSolverIter << std::endl
                 << "-----------------------"
   )
 
@@ -173,6 +179,7 @@ int main(int argc, const char* argv[]) {
   RAIINFO(
       std::endl << "CPU time   : " << time << std::endl
                 << "mean error : " << error << std::endl
+                << "speed (Hz) : " << benchmark::rolling::params.T / benchmark::rolling::options.dt / time << std::endl
                 << "=======================" << std::endl
   )
 
