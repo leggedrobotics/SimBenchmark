@@ -34,8 +34,15 @@ struct Option: benchmark::Option {
   // collapse
   bool collapse = false;
 
+  /// Note
+  /// 1. Bullet, RAI, Mujoco has both solver tolerance and iteration option
+  /// 2. ODE has no solver tolerance. (always iterate with numSolverIter value)
+  /// 3. Dart cannot set solver parameters
   // num solver iter
-  int numSolverIter = 20;
+  int numSolverIter = 1000;
+
+  // solver tolerance
+  double solverTol = 1e-12;
 };
 Option options;
 
@@ -216,7 +223,8 @@ void addDescToOption(po::options_description &desc) {
 //      ("dt", po::value<double>(), "time step for simulation (e.g. 0.01)")
 //      ("T", po::value<double>(), "simulation time (e.g. 60)")
       ("collapse", "stop simulation when the kapla tower is collapsed")
-      ("numiter", po::value<int>(), "the number of iteration. (default = 20)")
+      ("numiter", po::value<int>(), "the number of solver iteration or max number of iteration. (set default number if this option is not set)")
+      ("tolerance", po::value<double>(), "solver tolerance value. (set default number if this option is not set)")
       ;
 }
 
@@ -277,6 +285,11 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   // num iter
   if(vm.count("numiter")) {
     options.numSolverIter = vm["numiter"].as<int>();
+  }
+
+  // tolerance
+  if(vm.count("tolerance")) {
+    options.solverTol = vm["tolerance"].as<double>();
   }
 }
 

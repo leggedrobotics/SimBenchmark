@@ -20,7 +20,8 @@ void setupSimulation() {
 
   // time step
   sim->setTimeStep(benchmark::building::params.dt);
-  sim->setSolverParameter(1e-12, benchmark::building::options.numSolverIter);
+  sim->setSolverParameter(1e-12,
+                          benchmark::building::options.numSolverIter);
 
   // erp
   if(benchmark::building::options.erpYN)
@@ -209,12 +210,13 @@ int main(int argc, const char* argv[]) {
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: " << benchmark::bulletmultibody::options.simName << std::endl
-                << "GUI      : " << benchmark::building::options.gui << std::endl
-                << "ERP      : " << benchmark::building::options.erpYN << std::endl
-                << "Num iter : " << benchmark::building::options.numSolverIter << std::endl
-                << "Timestep : " << benchmark::building::params.dt << std::endl
-                << "Num block: " << objList.size() << std::endl
+                << "Simulator : " << benchmark::bulletmultibody::options.simName << std::endl
+                << "GUI       : " << benchmark::building::options.gui << std::endl
+                << "ERP       : " << benchmark::building::options.erpYN << std::endl
+                << "Num iter  : " << benchmark::building::options.numSolverIter << std::endl
+                << "Tolerance : " << benchmark::building::options.solverTol << std::endl
+                << "Timestep  : " << benchmark::building::params.dt << std::endl
+                << "Num block : " << objList.size() << std::endl
                 << "-----------------------"
   )
 

@@ -22,7 +22,9 @@ void setupSimulation() {
   else
     sim->setERP(0);
 
-  sim->setContactSolverParam(1.0, 0.7, 1.0, benchmark::building::options.numSolverIter, 1e-12);
+  sim->setContactSolverParam(1.0, 0.7, 1.0,
+                             benchmark::building::options.numSolverIter,
+                             1e-12);
 }
 
 void setupWorld() {
@@ -150,12 +152,13 @@ int main(int argc, const char* argv[]) {
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: RAI" << std::endl
-                << "GUI      : " << benchmark::building::options.gui << std::endl
-                << "ERP      : " << benchmark::building::options.erpYN << std::endl
-                << "Num iter : " << benchmark::building::options.numSolverIter << std::endl
-                << "Timestep : " << benchmark::building::params.dt << std::endl
-                << "Num block: " << objList.size() << std::endl
+                << "Simulator : DART" << std::endl
+                << "GUI       : " << benchmark::building::options.gui << std::endl
+                << "ERP       : " << benchmark::building::options.erpYN << std::endl
+                << "Num iter  : " << benchmark::building::options.numSolverIter << std::endl
+                << "Tolerance : " << benchmark::building::options.solverTol << std::endl
+                << "Timestep  : " << benchmark::building::params.dt << std::endl
+                << "Num block : " << objList.size() << std::endl
                 << "-----------------------"
   )
 

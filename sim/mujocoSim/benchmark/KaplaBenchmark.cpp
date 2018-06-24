@@ -13,24 +13,25 @@ po::options_description desc;
 void setupSimulation() {
   if (benchmark::building::options.gui)
     sim = new mujoco_sim::MjcSim(800, 600, 0.05,
-                                      benchmark::building::getMujocoXMLpath().c_str(),
-                                      benchmark::mujoco::getKeypath().c_str(),
-                                      benchmark::NO_BACKGROUND,
-                                      benchmark::mujoco::options.solverOption,
-                                      benchmark::mujoco::options.integratorOption);
+                                 benchmark::building::getMujocoXMLpath().c_str(),
+                                 benchmark::mujoco::getKeypath().c_str(),
+                                 benchmark::NO_BACKGROUND,
+                                 benchmark::mujoco::options.solverOption,
+                                 benchmark::mujoco::options.integratorOption);
   else
     sim = new mujoco_sim::MjcSim(benchmark::building::getMujocoXMLpath().c_str(),
-                                      benchmark::mujoco::getKeypath().c_str(),
-                                      benchmark::mujoco::options.solverOption,
-                                      benchmark::mujoco::options.integratorOption);
+                                 benchmark::mujoco::getKeypath().c_str(),
+                                 benchmark::mujoco::options.solverOption,
+                                 benchmark::mujoco::options.integratorOption);
 
   // time step
   sim->setTimeStep(benchmark::building::params.dt);
-  sim->setSolverParameter(1000, 1e-8);
+  sim->setSolverParameter(1000,
+                          benchmark::building::options.solverTol);
 
   /// no erp for mujoco
   if(benchmark::building::options.erpYN)
-    RAIFATAL("erp is not supported for mujoco")
+  RAIFATAL("erp is not supported for mujoco")
 }
 
 void setupWorld() {
@@ -106,6 +107,8 @@ int main(int argc, const char* argv[]) {
                 << "Simulator: " << benchmark::mujoco::options.simName << std::endl
                 << "GUI      : " << benchmark::building::options.gui << std::endl
                 << "ERP      : " << benchmark::building::options.erpYN << std::endl
+                << "Num iter  : " << 1000 << std::endl
+                << "Tolerance : " << benchmark::building::options.solverTol << std::endl
                 << "Timestep : " << benchmark::building::params.dt << std::endl
                 << "Num block: " << sim->getNumObject()-1 << std::endl
                 << "-----------------------"

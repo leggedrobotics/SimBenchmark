@@ -14,8 +14,8 @@ po::options_description desc;
 void setupSimulation() {
   if (benchmark::building::options.gui)
     sim = new ode_sim::OdeSim(800, 600, 0.05,
-                                   benchmark::NO_BACKGROUND,
-                                   benchmark::ode::options.solverOption);
+                              benchmark::NO_BACKGROUND,
+                              benchmark::ode::options.solverOption);
   else
     sim = new ode_sim::OdeSim(benchmark::ode::options.solverOption);
 
@@ -27,6 +27,7 @@ void setupSimulation() {
 
   // this cfm parameter was hand tuned
   sim->setCFM(1e-4);
+  sim->setSolverParameter(benchmark::building::options.numSolverIter);
 }
 
 void setupWorld() {
@@ -162,6 +163,7 @@ int main(int argc, const char* argv[]) {
                 << "GUI      : " << benchmark::building::options.gui << std::endl
                 << "ERP      : " << benchmark::building::options.erpYN << std::endl
                 << "Timestep : " << benchmark::building::params.dt << std::endl
+                << "Num iter  : " << benchmark::building::options.numSolverIter << std::endl
                 << "Num block: " << objList.size() << std::endl
                 << "Solver   : " << benchmark::ode::options.solverName << std::endl
                 << "-----------------------"
