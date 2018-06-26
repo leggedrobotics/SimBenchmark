@@ -46,7 +46,7 @@ formatSpec = '%C%C%C%C%d%d%f%f%f';
 
 % load csv
 T = readtable(...
-    '../../../data/rolling/sample.csv', ...
+    '../../../data/rolling/2018-06-24-17:32:27.csv', ...
     'Delimiter', ',', ...
     'Format',formatSpec ...
     );
@@ -209,7 +209,7 @@ hold off
 title(['Velocity Error ', plotTitle])
 xlabel(sprintf('real time factor \n FAST →'))
 ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
-ylim([1e-13, 1e2])
+% ylim([1e-13, 1e2])
 lgd = legend('Location', 'northeast');
 lgd.NumColumns = 2;
 saveas(h, strcat('rolling-plots/rolling-error-speed', fileName, '.png'))

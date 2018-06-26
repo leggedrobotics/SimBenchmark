@@ -33,6 +33,11 @@ add_executable(Ode666Benchmark
         ${CMAKE_SOURCE_DIR}/benchmark/666Benchmark.hpp)
 target_link_libraries(Ode666Benchmark ${OdeSimLink})
 
+#add_executable(OdeElastic666Benchmark
+#        Elastic666Benchmark.cpp
+#        ${CMAKE_SOURCE_DIR}/benchmark/666Benchmark.hpp)
+#target_link_libraries(OdeElastic666Benchmark ${OdeSimLink})
+
 add_executable(OdeBouncingBenchmark
         BouncingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/BouncingBenchmark.hpp)

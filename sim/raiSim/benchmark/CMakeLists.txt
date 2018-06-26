@@ -30,6 +30,11 @@ add_executable(Rai666Benchmark
         ${CMAKE_SOURCE_DIR}/benchmark/666Benchmark.hpp)
 target_link_libraries(Rai666Benchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
 
+#add_executable(RaiElastic666Benchmark
+#        Elastic666Benchmark.cpp
+#        ${CMAKE_SOURCE_DIR}/benchmark/666Benchmark.hpp)
+#target_link_libraries(RaiElastic666Benchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+
 add_executable(RaiBouncingBenchmark
         BouncingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/BouncingBenchmark.hpp)
