@@ -10,8 +10,8 @@ classdef plotspec
         BULLETMLCPLEMKEBULLET =         {'-p', 'BtLemke',      [170, 70, 67] ./ 255};
         BULLETMLCPPGSBULLET =           {'-h', 'BtPGS',        [170, 70, 67] ./ 255};
         BULLETMULTIBODYBULLET =         {'-d', 'BtMultibody',  [170, 70, 67] ./ 255};
-        ODESTANDARDODE =                {'-o', 'OdeStd',       [219, 132, 61] ./ 255};
-        ODEQUICKODE =                   {'-*', 'OdeQuick',     [219, 132, 61] ./ 255};
+        ODESTANDARDODE =                {'-o', 'OdeDantzig',       [219, 132, 61] ./ 255};
+        ODEQUICKODE =                   {'-*', 'OdePGS',     [219, 132, 61] ./ 255};
         MUJOCOPGSEULER =                {'-s', 'MjcPGS',       [69, 114, 167] ./ 255};
         MUJOCOCGEULER =                 {'-*', 'MjcCG',        [69, 114, 167] ./ 255};
         MUJOCONEWTONEULER =             {'-o', 'MjcNewton',    [69, 114, 167] ./ 255};

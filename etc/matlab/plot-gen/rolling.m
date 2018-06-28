@@ -91,10 +91,10 @@ erpYdirXY = plotoption;
 % erpYdirXY.DARTPGS = false;      % DART is pyramid friction cone
 
 disp('plotting error vs real-time-factor...')
-plot_error_speed(T, const, plotSpec, false, false, '-noerp-y', '(No Erp / Y force)', erpNdirY);
-plot_error_speed(T, const, plotSpec, false, true, '-noerp-xy', '(No Erp / XY force)', erpNdirXY);
-% plot_error_speed(T, const, plotSpec, true, false, '-erp-y', '(Erp / Y force)', erpYdirY);
-plot_error_speed(T, const, plotSpec, true, true, '-erp-xy', '(Erp / XY force)', erpYdirXY);
+plot_error_speed(T, const, plotSpec, false, false, '-noerp-y', '(Y force)', erpNdirY);
+plot_error_speed(T, const, plotSpec, false, true, '-noerp-xy', '(XY force)', erpNdirXY);
+% plot_error_speed(T, const, plotSpec, true, false, '-erp-y', '(Y force)', erpYdirY);
+% plot_error_speed(T, const, plotSpec, true, true, '-erp-xy', '(XY force)', erpYdirXY);
 
 %% bar plot (for min dt)
 T2 = T(T.ERP == false & T.DIRECTION == true, :);
