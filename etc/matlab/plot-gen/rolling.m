@@ -42,11 +42,11 @@ testOptions = {testOptions{:, dirflags}};
 %% save data to table
 
 % csv format
-formatSpec = '%C%C%C%C%d%d%f%f%f';
+formatSpec = '%C%C%C%C%d%d%f%d%f%f%f';
 
 % load csv
 T = readtable(...
-    '../../../data/rolling/2018-06-24-17:32:27.csv', ...
+    '../../../data/rolling/sample.csv', ...
     'Delimiter', ',', ...
     'Format',formatSpec ...
     );
@@ -59,6 +59,8 @@ entry = {...
     'ERP', ...
     'DIRECTION', ...
     'TIMESTEP', ...
+    'NUMITER',...
+    'TOLERANCE',...
     'ERROR', ...
     'TIME' ...
     };
@@ -76,9 +78,9 @@ erpNdirXY.ODESTANDARDODE = false;  % ODE is pyramid friction cone (and simulatio
 % erpNdirXY.ODEQUICK = false;     % ODE is pyramid friction cone
 % erpNdirXY.DARTDANTZIG = false;  % DART is pyramid friction cone
 % erpNdirXY.DARTPGS = false;      % DART is pyramid friction cone
-% erpNdirXY.MUJOCOPGSRK4 = false;
-% erpNdirXY.MUJOCOCGRK4 = false;
-% erpNdirXY.MUJOCONEWTONRK4 = false;
+erpNdirXY.MUJOCOPGSRK4 = false;
+erpNdirXY.MUJOCOCGRK4 = false;
+erpNdirXY.MUJOCONEWTONRK4 = false;
 
 erpYdirY = plotoption;
 
@@ -103,12 +105,12 @@ numIter = simTime / dt;
 
 % filtering
 T2 = T2(T2.TIMESTEP == dt, :);
-T2 = sortrows(T2, 9);
+T2 = sortrows(T2, 11);
 
 speed = numIter ./ T2.TIME ./ 1000;
 
 disp('plotting bar graph')
-h = figure('Name', 'speed', 'Position', [0, 0, 720, 600]);
+h = figure('Name', 'speed', 'Position', [0, 0, 600, 500]);
 hold on
 for i = 1:size(T2, 1)
     data = T2(i, :);
@@ -188,7 +190,7 @@ for i = 1:length(sims)
             
             % data
             data = Tsimsol(Tsimsol.INTEGRATOR == categorical(integrator), :);
-            data = sortrows(data, 9, 'descend');
+            data = sortrows(data, 8);
             
             % plot
             plotspec = getfield(plotSpec, char(name));

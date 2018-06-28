@@ -104,12 +104,9 @@ do
 		if [ "$DARTSIM_ON" == "ON" ] ; then
 			for solver in dantzig pgs
 			do
-				for num_iter in ${iter_array[@]}
-				do
-					# note dart has no erp
-					timeout 600 ../sim/dartSim/benchmark/DartRollingBenchmark \
-					--nogui --dt=0.001 --solver=$solver --force=$forcedir --numiter=$num_iter --csv=$csv_file
-				done
+				# note dart has no erp
+				timeout 600 ../sim/dartSim/benchmark/DartRollingBenchmark \
+				--nogui --dt=0.001 --solver=$solver --force=$forcedir --csv=$csv_file
 			done
 		else
 			echo "dartsim is not built. turn on BENCHMARK_DARTSIM option in cmake"

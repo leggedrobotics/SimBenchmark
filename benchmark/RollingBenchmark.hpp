@@ -543,6 +543,8 @@ void printCSV(std::string filePath,
          << options.erpYN << ","
          << options.forceDirection << ","
          << options.dt << ","
+         << options.numSolverIter << ","
+         << options.solverTol << ","
          << error << ","
          << time << std::endl;
   myfile.close();
