@@ -81,6 +81,17 @@ The setup of the test is as follows:
     <li id="[1]">
         [1] ODE Dantzig solver is significantly slow with large number of contacts thus was excluded in this test.
     </li>
+    <li>
+        In this test, we tested both ERP=0 and ERP>0 case, since ODE and Bullet performs very poorly when ERP=0.
+        <div class="row">
+            <div class="column">
+                <img src="kapla-bullet-noerp.gif">
+            </div>
+            <div class="column">
+                <img src="kapla-ode-noerp.gif">
+            </div>
+        </div>
+    </li>
 </ul>
 
 <h2>Results</h2>
