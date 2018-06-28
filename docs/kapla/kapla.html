@@ -1,0 +1,120 @@
+---
+layout: default
+---
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+
+
+<h1>Kapla test</h1>
+
+<img src="bouncing-elastic.gif" alt="bouncing-elastic-test">
+
+<h2>Test scenario</h2>
+
+<!--<div class="row">-->
+<!--<div class="column">-->
+<!--<img src="bouncing-elastic.gif" alt="bouncing-elastic-test" style="width:100%">-->
+<!--</div>-->
+<!--<div class="column">-->
+<!--<img src="bouncing-inelastic.gif" alt="bouncing-test-mujoco-solref=0.38" style="width:100%">-->
+<!--</div>-->
+<!--</div>-->
+
+<h2>Tested solver list</h2>
+
+<ul>
+    <li>Rai
+        <ul>
+            <li>Bisection solver (Rai solver)</li>
+        </ul>
+    </li>
+    <li>Bullet<sup><a href="#[1]">[1]</a></sup>
+        <ul>
+            <li>Sequence impulse</li>
+            <li>NNCG</li>
+            <li>MLCP PGS</li>
+        </ul>
+    </li>
+    <li>ODE
+        <ul>
+            <li>Quick</li>
+            <li>Standard</li>
+        </ul>
+    </li>
+    <li><strike>MuJoCo</strike><sup><a href="#[2]">[2]</a></sup>
+        <strike><ul>
+            <li>PGS</li>
+            <li>CG</li>
+            <li>Newton</li>
+        </ul></strike>
+    </li>
+    <li>Dart
+        <ul>
+            <li>Dantzig</li>
+            <li>PGS</li>
+        </ul>
+    </li>
+</ul>
+
+<h3>Commentary</h3>
+
+<ul>
+    <li id="[1]">
+        [1] Bullet has problem in simulation of elastic/inelastic collision when the time-step is small which is seemed to be a software bug as the following video(left).
+    </li>
+    <li id="[2]">
+        [3] MuJoCo cannot simulate elastic collision. Furthermore, it is not possible to set specific restitutional coefficient in MuJoCo. The only way to make bouncy contact is adjusting solref parameter (damping parameter), however there is no one-to-one correspondence between solref and restitutional coefficient.
+
+        <p>
+        <div class="row">
+            <div class="column">
+                <img src="bouncing-mujoco-solref=1.0.gif" alt="bouncing-test-mujoco-solref=1.0" style="width:100%">
+            </div>
+            <div class="column">
+                <img src="bouncing-mujoco-solref=0.38.gif" alt="bouncing-test-mujoco-solref=0.38" style="width:100%">
+            </div>
+        </div>
+        </p>
+    </li>
+</ul>
+
+<h2>Results</h2>
+
+<p>
+    The following figure is accuracy-speed plot of elastic collision case. The energy of the system preserves in Rai and ODE.
+    Rai shows the best result among the simulators.
+
+    <img src="bouncing-error-speed-e=1.png">
+</p>
+
+<!--<p>-->
+<!--The following figure is accuracy-speed plot of inelastic collision case.-->
+
+<!--<img src="bouncing-error-speed-e=0.8.png">-->
+<!--</p>-->
+
+<p>
+    <img src="bouncing-speed-bar.png">
+</p>
