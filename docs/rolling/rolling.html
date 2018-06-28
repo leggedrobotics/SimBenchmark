@@ -58,6 +58,7 @@ The setup of the test is as follows:
       </ul>
     </li>
     <li>ERP = 0 and CFM = 0</li>
+    <li>Metric: velocity of objects</li>
 </ul>
 </p>
 
@@ -66,20 +67,18 @@ The setup of the test is as follows:
 <ul>
     <li>Rai
         <ul>
-            <li>Bisection solver (Rai solver)</li>
+            <li>Bisection method</li>
         </ul>
     </li>
     <li>Bullet
         <ul>
             <li>Sequence impulse</li>
-            <li>NNCG</li>
-            <li>MLCP PGS</li>
         </ul>
     </li>
     <li>ODE
         <ul>
-            <li><strike>Standard</strike></li>
-            <li>Quick</li>
+            <li><strike>Dantzig</strike></li>
+            <li>LCP PGS</li>
         </ul>
     </li>
     <li>MuJoCo
@@ -92,12 +91,12 @@ The setup of the test is as follows:
     <li>Dart
         <ul>
             <li>Dantzig</li>
-            <li>PGS</li>
+            <li>LCP PGS</li>
         </ul>
     </li>
 </ul>
 
-<p>Note that ODE standard solver fails without ERP, the box goes into the ground as <a href="https://youtu.be/ifO2gtINIzU">this video</a>.</p>
+<p>Note that ODE Dantzig solver fails when ERP is set to zero: the box goes into the ground as <a href="https://youtu.be/ifO2gtINIzU">this video</a>.</p>
 
 <h2>Results</h2>
 

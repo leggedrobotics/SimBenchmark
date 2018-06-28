@@ -100,7 +100,7 @@ void setupWorld() {
     sim->setLightPosition((float)benchmark::building::params.lightPosition[0],
                           (float)benchmark::building::params.lightPosition[1],
                           (float)benchmark::building::params.lightPosition[2]);
-    sim->cameraFollowObject(checkerboard, {0, 5, 2});
+    sim->cameraFollowObject(objList[47], {0, 2, 0});
   }
 }
 

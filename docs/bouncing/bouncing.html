@@ -33,37 +33,38 @@ layout: default
 
 <h2>Test scenario</h2>
 
-<!--<div class="row">-->
-    <!--<div class="column">-->
-        <!--<img src="bouncing-elastic.gif" alt="bouncing-elastic-test" style="width:100%">-->
-    <!--</div>-->
-    <!--<div class="column">-->
-        <!--<img src="bouncing-inelastic.gif" alt="bouncing-test-mujoco-solref=0.38" style="width:100%">-->
-    <!--</div>-->
-<!--</div>-->
+<p>
+    The setup of the test is as follows:
+<ul>
+    <li>static ground</li>
+    <li>free drop of 7 x 7 number of 10 kg balls</li>
+    <li>restitution coefficient = 1</li>
+    <li>zero friction</li>
+    <li>ERP = 0 and CFM = 0</li>
+    <li>Metric: system energy</li>
+</ul>
+</p>
 
 <h2>Tested solver list</h2>
 
 <ul>
     <li>Rai
         <ul>
-            <li>Bisection solver (Rai solver)</li>
+            <li>Bisection method</li>
         </ul>
     </li>
-    <li>Bullet<sup><a href="#[1]">[1]</a></sup>
+    <li>Bullet
         <ul>
             <li>Sequence impulse</li>
-            <li>NNCG</li>
-            <li>MLCP PGS</li>
         </ul>
     </li>
     <li>ODE
         <ul>
-            <li>Quick</li>
-            <li>Standard</li>
+            <li>Dantzig</li>
+            <li>LCP PGS</li>
         </ul>
     </li>
-    <li><strike>MuJoCo</strike><sup><a href="#[2]">[2]</a></sup>
+    <li><strike>MuJoCo</strike><sup><a href="#[1]">[1]</a></sup>
         <strike><ul>
             <li>PGS</li>
             <li>CG</li>
@@ -73,7 +74,7 @@ layout: default
     <li>Dart
         <ul>
             <li>Dantzig</li>
-            <li>PGS</li>
+            <li>LCP PGS</li>
         </ul>
     </li>
 </ul>
@@ -82,10 +83,7 @@ layout: default
 
 <ul>
     <li id="[1]">
-        [1] Bullet has problem in simulation of elastic/inelastic collision when the time-step is small which is seemed to be a software bug as the following video(left).
-    </li>
-    <li id="[2]">
-        [3] MuJoCo cannot simulate elastic collision. Furthermore, it is not possible to set specific restitutional coefficient in MuJoCo. The only way to make bouncy contact is adjusting solref parameter (damping parameter), however there is no one-to-one correspondence between solref and restitutional coefficient.
+        [1] MuJoCo cannot simulate elastic collision. Furthermore, it is not possible to set specific restitutional coefficient in MuJoCo. The only way to make bouncy contact is adjusting solref parameter (damping parameter), however there is no one-to-one correspondence between solref and restitutional coefficient.
 
         <p>
             <div class="row">

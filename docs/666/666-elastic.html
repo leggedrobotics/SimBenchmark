@@ -33,9 +33,11 @@ layout: default
 <h2>Test scenario</h2>
 
 <ul>
-  <li>Elastic collision (restitutional coefficient = 1)</li>
-  <li>Zero friction</li>
-  <li>6 x 6 x 6 spheres (10 kg)</li>
+    <li>Perfectly inelastic collision (restitutional coefficient = 0)</li>
+    <li>Zero friction</li>
+    <li>6 x 6 x 6 number of 10 kg spheres</li>
+    <li>Small perturbation in position to collapse</li>
+    <li>Metric: system energy</li>
 </ul>
 
 <h2>Tested solver list</h2>
@@ -49,14 +51,12 @@ layout: default
     <li>Bullet
         <ul>
             <li>Sequence impulse</li>
-            <li>NNCG</li>
-            <li>MLCP PGS</li>
         </ul>
     </li>
     <li>ODE
         <ul>
-            <li>Quick</li>
-            <li>Standard</li>
+            <li>Dantzig</li>
+            <li>LCP PGS</li>
         </ul>
     </li>
     <li><strike>MuJoCo</strike><sup><a href="#[1]">[1]</a></sup>
@@ -69,7 +69,7 @@ layout: default
     <li><strike>Dart</strike><sup><a href="#[2]">[2]</a></sup>
         <strike><ul>
             <li>Dantzig</li>
-            <li>PGS</li>
+            <li>LCP PGS</li>
         </ul></strike>
     </li>
 </ul>
