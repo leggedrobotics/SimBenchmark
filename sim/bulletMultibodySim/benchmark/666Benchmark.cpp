@@ -33,13 +33,6 @@ double penetrationCheck() {
   return error;
 }
 
-double computeEnergy() {
-  double energy = 0;
-  for(int j = 0; j < objList.size(); j++)
-    energy += objList[j]->getEnergy({0, 0, benchmark::sixsixsix::params.g});
-  return energy;
-};
-
 void setupSimulation() {
   if (benchmark::sixsixsix::options.gui)
     sim = new bullet_mb_sim::BtMbSim(800, 600, 0.5, benchmark::NO_BACKGROUND);
@@ -72,8 +65,6 @@ void setupWorld() {
       bullet_mb_sim::object::URDF
   );
   checkerboard->setFrictionCoefficient(-1, 0);
-  if(benchmark::sixsixsix::options.elasticCollision)
-    checkerboard->setRestitutionCoefficient(-1, 1.0);
 
   for(int i = 0; i < benchmark::sixsixsix::params.n; i++) {
     for(int j = 0; j < benchmark::sixsixsix::params.n; j++) {
@@ -99,8 +90,6 @@ void setupWorld() {
 
         obj->setGeneralizedCoordinate({x, y, z, 1, 0, 0, 0});
         obj->setFrictionCoefficient(-1, 0);
-        if(benchmark::sixsixsix::options.elasticCollision)
-          obj->setRestitutionCoefficient(-1, 1.0);
 
         if(benchmark::sixsixsix::options.gui) {
           if((i + j + k) % 3 == 0) {
@@ -153,17 +142,8 @@ double simulationLoop(bool timer = true, bool error = true) {
     // data save
     if (error) {
       static double E0 = 0;
-      if(i==0) 
-        E0 = computeEnergy();
-
-      if (benchmark::sixsixsix::options.elasticCollision) {
-        double error = pow(computeEnergy() - E0, 2);
-        benchmark::sixsixsix::data.error.push_back(error);
-      }
-      else {
-        double error = penetrationCheck();
-        benchmark::sixsixsix::data.error.push_back(error);
-      }
+      double error = penetrationCheck();
+      benchmark::sixsixsix::data.error.push_back(error);
     }
 
     sim->integrate();
@@ -171,7 +151,7 @@ double simulationLoop(bool timer = true, bool error = true) {
 
   if(benchmark::sixsixsix::options.saveVideo)
     sim->stopRecordingVideo();
-  
+
   double time = 0;
   if(timer)
     time = watch.measure();
@@ -194,7 +174,6 @@ int main(int argc, const char* argv[]) {
                 << "Simulator: BULLET" << std::endl
                 << "GUI      : " << benchmark::sixsixsix::options.gui << std::endl
                 << "ERP      : " << benchmark::sixsixsix::options.erpYN << std::endl
-                << "Elastic  : " << benchmark::sixsixsix::options.elasticCollision << std::endl
                 << "Timestep : " << benchmark::sixsixsix::options.dt << std::endl
                 << "Solver   : " << benchmark::bulletmultibody::options.solverName << std::endl
                 << "-----------------------"
@@ -218,12 +197,12 @@ int main(int argc, const char* argv[]) {
 
   if(benchmark::sixsixsix::options.csv)
     benchmark::sixsixsix::printCSV(benchmark::sixsixsix::getCSVpath(),
-                                  benchmark::bulletmultibody::options.simName,
-                                  benchmark::bulletmultibody::options.solverName,
-                                  benchmark::bulletmultibody::options.detectorName,
-                                  benchmark::bulletmultibody::options.integratorName,
-                                  time,
-                                  error);
+                                   benchmark::bulletmultibody::options.simName,
+                                   benchmark::bulletmultibody::options.solverName,
+                                   benchmark::bulletmultibody::options.detectorName,
+                                   benchmark::bulletmultibody::options.integratorName,
+                                   time,
+                                   error);
 
   RAIINFO(
       std::endl << "CPU time   : " << time << std::endl

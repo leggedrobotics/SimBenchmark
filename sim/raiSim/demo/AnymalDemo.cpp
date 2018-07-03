@@ -20,6 +20,7 @@ int main() {
   rai_sim::World_RG sim(800, 600, 0.5, rai_sim::NO_BACKGROUND);
 #endif
   sim.setGravity({0, 0, -9.8});
+  sim.setTimeStep(0.005);
 
   // add objects
   auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
@@ -52,10 +53,10 @@ int main() {
   sim.startRecordingVideo("/tmp", "raiAnymal");
   for(int i = 0; i < 2000 && sim.visualizerLoop(0.005, 1.0); i++) {
 #else
-    while(sim.visualizerLoop(0.005, 1.0)) {
+    while(sim.visualizerLoop()) {
 #endif
 #endif
-    sim.integrate1(0.005);
+    sim.integrate1();
 
     jointState = anymal->getGeneralizedCoordinate();
     jointVel = anymal->getGeneralizedVelocity();
@@ -65,7 +66,7 @@ int main() {
     jointForce.head(6).setZero();
     anymal->setGeneralizedForce(jointForce);
 
-    sim.integrate2(0.005);
+    sim.integrate2();
   }
 
 #if defined(SIM_TIME_MODE)

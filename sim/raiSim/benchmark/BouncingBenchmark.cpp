@@ -37,7 +37,7 @@ void setupWorld() {
   sim->updateMaterialProp(materials);
 
   // add objects
-  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, 1, -1, rai_sim::GRID);
+  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, -1, rai_sim::GRID);
   checkerboard->setMaterial(sim->getMaterialKey("ground"));
 
   for(int i = 0; i < benchmark::bouncing::params.n; i++) {

@@ -4,112 +4,81 @@
 
 #include <raiSim/World_RG.hpp>
 
-#include "666Benchmark.hpp"
+#include "Elastic666Benchmark.hpp"
 
 rai_sim::World_RG *sim;
 std::vector<rai_sim::SingleBodyHandle> objList;
 po::options_description desc;
 
 void setupSimulation() {
-  if (benchmark::sixsixsix::options.gui)
+  if (benchmark::elasticsixsixsix::options.gui)
     sim = new rai_sim::World_RG(800, 600, 1, rai_sim::NO_BACKGROUND);
   else
     sim = new rai_sim::World_RG();
 
   // erp
-  if(benchmark::sixsixsix::options.erpYN)
-    sim->setERP(benchmark::sixsixsix::params.erp);
+  if(benchmark::elasticsixsixsix::options.erpYN)
+    sim->setERP(benchmark::elasticsixsixsix::params.erp);
   else
     sim->setERP(0);
 
   // time step
-  sim->setTimeStep(benchmark::sixsixsix::options.dt);
-}
-
-double penetrationCheck() {
-  double error = 0;
-  int numObj = objList.size();
-
-  for (int i = 0; i < numObj; i++) {
-    for (int j = i + 1; j < numObj; j++) {
-      double dist = (objList[i]->getPosition() - objList[j]->getPosition()).norm();
-
-      // error between spheres
-      if (dist < benchmark::sixsixsix::params.ballR * 2)
-        error += (benchmark::sixsixsix::params.ballR * 2 - dist) * (benchmark::sixsixsix::params.ballR * 2 - dist);
-    }
-
-    // error sphere ~ ground
-    if (objList[i]->getPosition()[2] < benchmark::sixsixsix::params.ballR) {
-      error +=
-          pow(benchmark::sixsixsix::params.ballR - objList[i]->getPosition()[2], 2);
-    }
-  }
-
-  return error;
+  sim->setTimeStep(benchmark::elasticsixsixsix::options.dt);
 }
 
 double computeEnergy() {
   double energy = 0;
   for(int j = 0; j < objList.size(); j++)
-    energy += objList[j]->getEnergy({0, 0, benchmark::sixsixsix::params.g});
+    energy += objList[j]->getEnergy({0, 0, benchmark::elasticsixsixsix::params.g});
   return energy;
 };
 
 void setupWorld() {
 
   // gravity
-  sim->setGravity({0, 0, benchmark::sixsixsix::params.g});
+  sim->setGravity({0, 0, benchmark::elasticsixsixsix::params.g});
 
   // materials
   rai_sim::MaterialManager materials;
   materials.setMaterialNames({"ground", "ball"});
-  if(benchmark::sixsixsix::options.elasticCollision) {
-    materials.setMaterialPairProp("ground", "ball",
-                                  0, 1, 0);
-    materials.setMaterialPairProp("ball", "ball",
-                                  0, 1, 0);
-  }
-  else {
-    materials.setMaterialPairProp("ground", "ball",
-                                  0, 0, 0.01);
-    materials.setMaterialPairProp("ball", "ball",
-                                  0, 0, 0.01);
-  }
+  materials.setMaterialPairProp("ground", "ball",
+                                0, 1, 0);
+  materials.setMaterialPairProp("ball", "ball",
+                                0, 1, 0);
   sim->updateMaterialProp(materials);
 
   // random number generator
   rai::RandomNumberGenerator<double> rand;
-  rand.seed(benchmark::sixsixsix::params.randomSeed);
+  rand.seed(benchmark::elasticsixsixsix::params.randomSeed);
 
-  auto checkerboard = sim->addCheckerboard(5.0, 500.0, 500.0, 0.1, 1, -1, rai_sim::GRID);
+  auto checkerboard = sim->addCheckerboard(5.0, 500.0, 500.0, 0.1, -1, rai_sim::GRID);
   checkerboard->setMaterial(sim->getMaterialKey("ground"));
 
-  for(int i = 0; i < benchmark::sixsixsix::params.n; i++) {
-    for(int j = 0; j < benchmark::sixsixsix::params.n; j++) {
-      for(int k = 0; k < benchmark::sixsixsix::params.n; k++) {
+  for(int i = 0; i < benchmark::elasticsixsixsix::params.n; i++) {
+    for(int j = 0; j < benchmark::elasticsixsixsix::params.n; j++) {
+      for(int k = 0; k < benchmark::elasticsixsixsix::params.n; k++) {
 
         // add object
-        auto obj = sim->addSphere(benchmark::sixsixsix::params.ballR,
-                                  benchmark::sixsixsix::params.ballM);
+        auto obj = sim->addSphere(benchmark::elasticsixsixsix::params.ballR,
+                                  benchmark::elasticsixsixsix::params.ballM);
 
         // set position
         double x =
-            double(i) * benchmark::sixsixsix::params.gap
-                + rand.sampleUniform01() * benchmark::sixsixsix::params.perturbation;
+            double(i) * benchmark::elasticsixsixsix::params.gap
+                + rand.sampleUniform01() * benchmark::elasticsixsixsix::params.perturbation;
         double y =
-            double(j) * benchmark::sixsixsix::params.gap
-                + rand.sampleUniform01() * benchmark::sixsixsix::params.perturbation;
+            double(j) * benchmark::elasticsixsixsix::params.gap
+                + rand.sampleUniform01() * benchmark::elasticsixsixsix::params.perturbation;
         double z =
-            double(k) * benchmark::sixsixsix::params.gap
-                + rand.sampleUniform01() * benchmark::sixsixsix::params.perturbation
-                + benchmark::sixsixsix::params.H;
+            double(k) * benchmark::elasticsixsixsix::params.gap
+                + rand.sampleUniform01() * benchmark::elasticsixsixsix::params.perturbation
+                + benchmark::elasticsixsixsix::params.H;
 
         obj->setPosition(x, y, z);
         obj->setMaterial(sim->getMaterialKey("ball"));
 //        obj->setOrientationRandom();
 
-        if(benchmark::sixsixsix::options.gui) {
+        if(benchmark::elasticsixsixsix::options.gui) {
           if((i + j + k) % 3 == 0) {
             obj.visual()[0]->setColor({0.5373,
                                        0.6471,
@@ -132,29 +101,29 @@ void setupWorld() {
     }
   }
 
-  if(benchmark::sixsixsix::options.gui) {
-    sim->setLightPosition((float)benchmark::sixsixsix::params.lightPosition[0],
-                          (float)benchmark::sixsixsix::params.lightPosition[1],
-                          (float)benchmark::sixsixsix::params.lightPosition[2]);
+  if(benchmark::elasticsixsixsix::options.gui) {
+    sim->setLightPosition((float)benchmark::elasticsixsixsix::params.lightPosition[0],
+                          (float)benchmark::elasticsixsixsix::params.lightPosition[1],
+                          (float)benchmark::elasticsixsixsix::params.lightPosition[2]);
     sim->cameraFollowObject(objList[objList.size() / 2], {0, 5, 2});
   }
 }
 
 double simulationLoop(bool timer = true, bool error = true) {
   // gui
-  if(benchmark::sixsixsix::options.gui && benchmark::sixsixsix::options.saveVideo)
+  if(benchmark::elasticsixsixsix::options.gui && benchmark::elasticsixsixsix::options.saveVideo)
     sim->startRecordingVideo("/tmp", "rai-666");
 
   // resever error vector
-  benchmark::sixsixsix::data.setN(unsigned(benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt));
+  benchmark::elasticsixsixsix::data.setN(unsigned(benchmark::elasticsixsixsix::options.T / benchmark::elasticsixsixsix::options.dt));
 
   // timer start
   StopWatch watch;
   if(timer)
     watch.start();
 
-  for(int i = 0; i < (int) (benchmark::sixsixsix::options.T / benchmark::sixsixsix::options.dt); i++) {
-    if (benchmark::sixsixsix::options.gui && !sim->visualizerLoop())
+  for(int i = 0; i < (int) (benchmark::elasticsixsixsix::options.T / benchmark::elasticsixsixsix::options.dt); i++) {
+    if (benchmark::elasticsixsixsix::options.gui && !sim->visualizerLoop())
       break;
 
     // data save
@@ -163,20 +132,14 @@ double simulationLoop(bool timer = true, bool error = true) {
       if(i==0)
         E0 = computeEnergy();
 
-      if (benchmark::sixsixsix::options.elasticCollision) {
-        double error = pow(computeEnergy() - E0, 2);
-        benchmark::sixsixsix::data.error.push_back(error);
-      }
-      else {
-        double error = penetrationCheck();
-        benchmark::sixsixsix::data.error.push_back(error);
-      }
+      double error = pow(computeEnergy() - E0, 2);
+      benchmark::elasticsixsixsix::data.error.push_back(error);
     }
 
     sim->integrate();
   }
 
-  if(benchmark::sixsixsix::options.saveVideo)
+  if(benchmark::elasticsixsixsix::options.saveVideo)
     sim->stopRecordingVideo();
 
   double time = 0;
@@ -187,18 +150,17 @@ double simulationLoop(bool timer = true, bool error = true) {
 
 int main(int argc, const char* argv[]) {
 
-  benchmark::sixsixsix::addDescToOption(desc);
-  benchmark::sixsixsix::getOptionsFromArg(argc, argv, desc);
-  benchmark::sixsixsix::getParamsFromYAML(benchmark::sixsixsix::getYamlpath().c_str(),
+  benchmark::elasticsixsixsix::addDescToOption(desc);
+  benchmark::elasticsixsixsix::getOptionsFromArg(argc, argv, desc);
+  benchmark::elasticsixsixsix::getParamsFromYAML(benchmark::elasticsixsixsix::getYamlpath().c_str(),
                                          benchmark::RAI);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: " << "RAI" << std::endl
-                << "GUI      : " << benchmark::sixsixsix::options.gui << std::endl
-                << "ERP      : " << benchmark::sixsixsix::options.erpYN << std::endl
-                << "Elastic  : " << benchmark::sixsixsix::options.elasticCollision << std::endl
-                << "Timestep : " << benchmark::sixsixsix::options.dt << std::endl
+                << "GUI      : " << benchmark::elasticsixsixsix::options.gui << std::endl
+                << "ERP      : " << benchmark::elasticsixsixsix::options.erpYN << std::endl
+                << "Timestep : " << benchmark::elasticsixsixsix::options.dt << std::endl
                 << "Solver   : " << "RAI" << std::endl
                 << "-----------------------"
   )
@@ -207,7 +169,7 @@ int main(int argc, const char* argv[]) {
   setupSimulation();
   setupWorld();
   simulationLoop(false, true);
-  double error = benchmark::sixsixsix::data.computeError();
+  double error = benchmark::elasticsixsixsix::data.computeError();
 
   // reset
   objList.clear();
@@ -219,14 +181,12 @@ int main(int argc, const char* argv[]) {
   double time = simulationLoop(true, false);
 
 
-  if(benchmark::sixsixsix::options.csv)
-    benchmark::sixsixsix::printCSV(benchmark::sixsixsix::getCSVpath(),
+  if(benchmark::elasticsixsixsix::options.csv)
+    benchmark::elasticsixsixsix::printCSV(benchmark::elasticsixsixsix::getCSVpath(),
                                    "RAI",
                                    "RAI",
                                    "RAI",
                                    "RAI",
-                                   0,
-                                   0,
                                    time,
                                    error);
 

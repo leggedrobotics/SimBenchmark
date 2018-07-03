@@ -27,7 +27,7 @@ void setupSimulation() {
 void setupWorld() {
 
   // add objects
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
+  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, -1, rai_sim::GRID);
 
   // ball
   auto ball = sim->addSphere(0.2, benchmark::anymal::zerogravity::params.m);

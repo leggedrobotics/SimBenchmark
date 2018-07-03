@@ -32,7 +32,7 @@ void setupSimulation() {
 
 void setupWorld() {
   // add objects
-  auto checkerboard = sim->addCheckerboard(10.0, 400.0, 400.0, 0.1, 1, -1, rai_sim::GRID);
+  auto checkerboard = sim->addCheckerboard(10.0, 400.0, 400.0, 0.1, -1, rai_sim::GRID);
 
   // block size
   const float shortLen = benchmark::building::params.shortLen;

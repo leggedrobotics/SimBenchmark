@@ -36,10 +36,10 @@ add_executable(Dart666Benchmark
         ${CMAKE_SOURCE_DIR}/benchmark/666Benchmark.hpp)
 target_link_libraries(Dart666Benchmark ${DartSimLink})
 
-#add_executable(DartElastic666Benchmark
-#        Elastic666Benchmark.cpp
-#        ${CMAKE_SOURCE_DIR}/benchmark/666Benchmark.hpp)
-#target_link_libraries(DartElastic666Benchmark ${DartSimLink})
+add_executable(DartElastic666Benchmark
+        Elastic666Benchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/666Benchmark.hpp)
+target_link_libraries(DartElastic666Benchmark ${DartSimLink})
 
 add_executable(DartBouncingBenchmark
         BouncingBenchmark.cpp

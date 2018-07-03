@@ -64,25 +64,18 @@ void setupWorld() {
   // materials
   rai_sim::MaterialManager materials;
   materials.setMaterialNames({"ground", "ball"});
-  if(benchmark::sixsixsix::options.elasticCollision) {
-    materials.setMaterialPairProp("ground", "ball",
-                                  0, 1, 0);
-    materials.setMaterialPairProp("ball", "ball",
-                                  0, 1, 0);
-  }
-  else {
-    materials.setMaterialPairProp("ground", "ball",
-                                  0, 0, 0.01);
-    materials.setMaterialPairProp("ball", "ball",
-                                  0, 0, 0.01);
-  }
+
+  materials.setMaterialPairProp("ground", "ball",
+                                0, 0, 0.01);
+  materials.setMaterialPairProp("ball", "ball",
+                                0, 0, 0.01);
   sim->updateMaterialProp(materials);
 
   // random number generator
   rai::RandomNumberGenerator<double> rand;
   rand.seed(benchmark::sixsixsix::params.randomSeed);
 
-  auto checkerboard = sim->addCheckerboard(5.0, 500.0, 500.0, 0.1, 1, -1, rai_sim::GRID);
+  auto checkerboard = sim->addCheckerboard(5.0, 500.0, 500.0, 0.1, -1, rai_sim::GRID);
   checkerboard->setMaterial(sim->getMaterialKey("ground"));
 
   for(int i = 0; i < benchmark::sixsixsix::params.n; i++) {
@@ -163,14 +156,8 @@ double simulationLoop(bool timer = true, bool error = true) {
       if(i==0)
         E0 = computeEnergy();
 
-      if (benchmark::sixsixsix::options.elasticCollision) {
-        double error = pow(computeEnergy() - E0, 2);
-        benchmark::sixsixsix::data.error.push_back(error);
-      }
-      else {
-        double error = penetrationCheck();
-        benchmark::sixsixsix::data.error.push_back(error);
-      }
+      double error = penetrationCheck();
+      benchmark::sixsixsix::data.error.push_back(error);
     }
 
     sim->integrate();
@@ -190,14 +177,13 @@ int main(int argc, const char* argv[]) {
   benchmark::sixsixsix::addDescToOption(desc);
   benchmark::sixsixsix::getOptionsFromArg(argc, argv, desc);
   benchmark::sixsixsix::getParamsFromYAML(benchmark::sixsixsix::getYamlpath().c_str(),
-                                         benchmark::RAI);
+                                          benchmark::RAI);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
                 << "Simulator: " << "RAI" << std::endl
                 << "GUI      : " << benchmark::sixsixsix::options.gui << std::endl
                 << "ERP      : " << benchmark::sixsixsix::options.erpYN << std::endl
-                << "Elastic  : " << benchmark::sixsixsix::options.elasticCollision << std::endl
                 << "Timestep : " << benchmark::sixsixsix::options.dt << std::endl
                 << "Solver   : " << "RAI" << std::endl
                 << "-----------------------"

@@ -8,7 +8,7 @@ add_executable(RaiAnymalEnergyDemo AnymalEnergyDemo.cpp)
 target_link_libraries(RaiAnymalEnergyDemo ${RAI_SIM_LINK})
 
 add_executable(RaiAtlasDemo AtlasDemo.cpp)
-target_link_libraries(RaiAtlasDemo ${RAI_SIM_LINK})
+target_link_libraries(RaiAtlasDemo ${RAI_SIM_LINK} ${BENCHMARK_LINK})
 
 add_executable(RaiMultiBodyDemo MultiBodyDemo.cpp)
 target_link_libraries(RaiMultiBodyDemo ${RAI_SIM_LINK})

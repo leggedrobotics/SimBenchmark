@@ -48,7 +48,7 @@ void setupWorld() {
   sim->updateMaterialProp(materials);
 
   // add objects
-  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, 1, -1, rai_sim::GRID);
+  auto checkerboard = sim->addCheckerboard(5.0, 100.0, 100.0, 0.1, -1, rai_sim::GRID);
   checkerboard->setMaterial(sim->getMaterialKey("ground"));
 
   auto box = sim->addBox(20, 20, 1, 10);

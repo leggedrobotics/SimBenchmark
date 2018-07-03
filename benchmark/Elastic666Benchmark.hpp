@@ -22,7 +22,7 @@
 namespace po = boost::program_options;
 namespace ru = rai::Utils;
 
-namespace benchmark::sixsixsix {
+namespace benchmark::elasticsixsixsix {
 
 /**
  * options for building simulation
@@ -77,7 +77,7 @@ struct Data {
   }
 
   double computeError() {
-    Eigen::MatrixXd errorSq(n, 1); // energy error or penetration error
+    Eigen::MatrixXd errorSq(n, 1); // energy error
 
     for(int i = 0; i < n; i++) {
       errorSq(i, 0) = error[i];
@@ -87,7 +87,7 @@ struct Data {
       Eigen::MatrixXd tdata(n, 1);        // time
 
       for(int i = 0; i < n; i++) {
-        tdata(i, 0) = i * benchmark::sixsixsix::options.dt;
+        tdata(i, 0) = i * benchmark::elasticsixsixsix::options.dt;
       }
 
       rai::Utils::Graph::FigProp2D figure1properties("time", "squared error", "squared error");
@@ -136,23 +136,6 @@ std::string getBulletPlanePath() {
   planepath += "../res/benchmark/666-benchmark/bullet/plane.urdf";
 
   return planepath;
-}
-
-/**
- * get XML file path for Mujoco
- *
- * @return xml path in string
- */
-std::string getMujocoXMLpath() {
-
-  int ncubic = params.n * params.n * params.n;
-
-  std::string xmlPath(__FILE__);
-  while (xmlPath.back() != '/')
-    xmlPath.erase(xmlPath.size() - 1, 1);
-  xmlPath += "../res/benchmark/666-benchmark/mujoco/sphere" + std::to_string(ncubic) + ".xml";
-
-  return xmlPath;
 }
 
 /**

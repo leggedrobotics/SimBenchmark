@@ -26,7 +26,7 @@ void setupSimulation() {
 void setupWorld() {
 
   // add objects
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
+  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, -1, rai_sim::GRID);
 
   // anymal (internal collision disabled)
   anymal = sim->addArticulatedSystem(
