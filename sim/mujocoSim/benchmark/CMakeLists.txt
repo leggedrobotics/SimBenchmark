@@ -40,3 +40,8 @@ add_executable(MjcBouncingBenchmark
         BouncingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/BouncingBenchmark.hpp)
 target_link_libraries(MjcBouncingBenchmark ${MjcSimLink})
+
+add_executable(MjcAtlasContactBenchmark
+        AtlasContactBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AtlasContactBenchmark.hpp)
+target_link_libraries(MjcAtlasContactBenchmark ${MjcSimLink})

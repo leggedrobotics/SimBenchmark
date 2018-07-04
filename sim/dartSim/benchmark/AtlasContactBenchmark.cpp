@@ -2,27 +2,34 @@
 // Created by kangd on 26.04.18.
 //
 
-#include <raiSim/World_RG.hpp>
+#include <DartSim.hpp>
 
 #include "AtlasContactBenchmark.hpp"
+#include "DartBenchmark.hpp"
 #include "raiCommon/utils/StopWatch.hpp"
 
-rai_sim::World_RG *sim;
-std::vector<rai_sim::ArticulatedSystemHandle> robots;
+dart_sim::DartSim *sim;
+std::vector<dart_sim::ArticulatedSystemHandle> robots;
 po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::atlas::options.gui)
-    sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+    sim = new dart_sim::DartSim(800, 600, 0.5,
+                                benchmark::NO_BACKGROUND,
+                                benchmark::dart::options.solverOption,
+                                benchmark::dart::options.detectorOption);
   else
-    sim = new rai_sim::World_RG();
+    sim = new dart_sim::DartSim(benchmark::dart::options.solverOption,
+                                benchmark::dart::options.detectorOption);
 
   // time step
   sim->setTimeStep(benchmark::atlas::params.dt);
+  sim->setMaxContacts(5000);
 }
 
 void resetWorld() {
-  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, -1, rai_sim::GRID);
+  auto checkerboard = sim->addCheckerboard(2, 100, 100, 0.1, bo::BOX_SHAPE, 1, -1, bo::GRID);
+  checkerboard->setFrictionCoefficient(0.8);
 
   for(int i = 0; i < benchmark::atlas::options.numRow; i++) {
     for(int j = 0; j < benchmark::atlas::options.numRow; j++) {
@@ -31,11 +38,11 @@ void resetWorld() {
       );
 //      atlas->setColor({1, 0, 0, 1});
 
-      Eigen::VectorXd gc(robot->getGeneralizedCoordinateDim());
+      Eigen::VectorXd gc(robot->getStateDimension());
       Eigen::VectorXd gv(robot->getDOF());
       Eigen::VectorXd tau(robot->getDOF());
       gc.setZero();
-      gc.segment<7>(0) << i * 2.5, j * 2.5, benchmark::atlas::params.H,
+      gc.segment<7>(0) << 2.5 * i, 2.5 * j, benchmark::atlas::params.H,
           benchmark::atlas::params.baseQuat[0],
           benchmark::atlas::params.baseQuat[1],
           benchmark::atlas::params.baseQuat[2],
@@ -58,9 +65,9 @@ double simulationLoop() {
   int cnt = 0;
   if(benchmark::atlas::options.gui) {
     // gui
-    while(sim->visualizerLoop()) {
+    while(sim->visualizerLoop(benchmark::atlas::params.dt)) {
       sim->integrate();
-      numContact += sim->getContactProblem().size();
+      numContact += sim->getWorldNumContacts();
       cnt++;
     }
   } else {
@@ -69,7 +76,7 @@ double simulationLoop() {
     watch.start();
     for(int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
       sim->integrate();
-      numContact += sim->getContactProblem().size();
+      numContact += sim->getWorldNumContacts();
       cnt++;
     }
 
@@ -82,10 +89,10 @@ double simulationLoop() {
 
     if(benchmark::atlas::options.csv)
       benchmark::atlas::printCSV(benchmark::atlas::getCSVpath(),
-                                 "RAI",
-                                 "RAI",
-                                 "RAI",
-                                 "RAI",
+                                 benchmark::dart::options.simName,
+                                 benchmark::dart::options.solverName,
+                                 benchmark::dart::options.detectorName,
+                                 benchmark::dart::options.integratorName,
                                  benchmark::atlas::options.numRow,
                                  double(numContact) / cnt,
                                  time);
@@ -99,11 +106,11 @@ int main(int argc, const char* argv[]) {
   benchmark::atlas::getOptionsFromArg(argc, argv, desc);
 
   benchmark::atlas::getParamsFromYAML(benchmark::atlas::getYamlpath().c_str(),
-                                      benchmark::RAI);
+                                      benchmark::DART);
 
   RAIINFO(
       std::endl << "=======================" << std::endl
-                << "Simulator: RAI" << std::endl
+                << "Simulator: DART" << std::endl
                 << "GUI      : " << benchmark::atlas::options.gui << std::endl
                 << "Row      : " << benchmark::atlas::options.numRow << std::endl
                 << "-----------------------"

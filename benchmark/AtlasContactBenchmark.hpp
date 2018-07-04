@@ -29,9 +29,6 @@ namespace benchmark::atlas {
  * options for ANYmal simulation
  */
 struct Option: benchmark::Option {
-  // PD control to stand
-  bool feedback = true;
-
   // # of robots = numRow x numRow
   int numRow = 1;
 };
@@ -84,7 +81,7 @@ std::string getBulletPlanePath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/benchmark/ANYmal-PD-benchmark/bullet/plane.urdf";
+  urdfPath += "../res/benchmark/Atlas-contact-benchmark/bullet/plane.urdf";
 
   return urdfPath;
 }
@@ -95,12 +92,12 @@ std::string getBulletPlanePath() {
  *
  * @return urdfPath in string
  */
-std::string getBulletANYmalPath() {
+std::string getBulletAtlasPath() {
 
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/benchmark/ANYmal-PD-benchmark/bullet/robot.urdf";
+  urdfPath += "../res/benchmark/Atlas-contact-benchmark/bullet/robot.urdf";
 
   return urdfPath;
 }
@@ -131,7 +128,7 @@ std::string getMujocoURDFpath(int rowNum) {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/benchmark/ANYmal-PD-benchmark/mujoco/robot" + std::to_string(rowNum * rowNum) + ".urdf";
+  urdfPath += "../res/benchmark/Atlas-contact-benchmark/mujoco/robot" + std::to_string(rowNum * rowNum) + ".urdf";
 
   return urdfPath;
 }
@@ -142,16 +139,13 @@ std::string getMujocoURDFpath(int rowNum) {
  * @param feedback
  * @return log file path in string
  */
-std::string getCSVpath(bool feedback) {
+std::string getCSVpath() {
 
   std::string logPath(__FILE__);
   while (logPath.back() != '/')
     logPath.erase(logPath.size() - 1, 1);
 
-  if(feedback)
-    logPath += "../data/anymal-stand/" + options.csvName;
-  else
-    logPath += "../data/anymal-grounded/" + options.csvName;
+    logPath += "../data/atlas/" + options.csvName;
 
   return logPath;
 }
@@ -166,7 +160,6 @@ void addDescToOption(po::options_description &desc) {
 
   desc.add_options()
       ("row", po::value<int>(), "the number of rows")
-      ("feedback", po::value<bool>(), "feed back control y/n")
       ;
 }
 
@@ -208,11 +201,6 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
   // the number of row
   if(vm.count("row")) {
     options.numRow = vm["row"].as<int>();
-  }
-
-  // feed-back (PD control)
-  if(vm.count("feedback")) {
-    options.feedback = vm["feedback"].as<bool>();
   }
 }
 
@@ -268,6 +256,7 @@ void printCSV(std::string filePath,
               std::string detector,
               std::string integrator,
               int rownum,
+              double contacts,
               double time) {
   std::ofstream myfile;
   myfile.open (filePath, std::ios_base::app);
@@ -276,6 +265,7 @@ void printCSV(std::string filePath,
          << detector << ","
          << integrator << ","
          << rownum << ","
+         << contacts << ","
          << time << std::endl;
   myfile.close();
 }

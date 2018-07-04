@@ -45,3 +45,8 @@ add_executable(DartBouncingBenchmark
         BouncingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/BouncingBenchmark.hpp)
 target_link_libraries(DartBouncingBenchmark ${DartSimLink})
+
+add_executable(DartAtlasContactBenchmark
+        AtlasContactBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AtlasContactBenchmark.hpp)
+target_link_libraries(DartAtlasContactBenchmark ${DartSimLink})

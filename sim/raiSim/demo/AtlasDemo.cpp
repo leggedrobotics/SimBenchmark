@@ -4,7 +4,7 @@
 #include <raiSim/World_RG.hpp>
 #include "raiSim/StopWatch.hpp"
 
-//#define GUI
+#define GUI
 
 int main() {
 

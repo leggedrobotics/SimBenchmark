@@ -47,3 +47,9 @@ add_executable(BtMbKaplaBenchmark
         ${CMAKE_SOURCE_DIR}/benchmark/KaplaBenchmark.hpp
         ${CMAKE_SOURCE_DIR}/benchmark/BtMbBenchmark.hpp)
 target_link_libraries(BtMbKaplaBenchmark ${BtMbSimLink})
+
+add_executable(BtMbAtlasContactBenchmark
+        AtlasContactBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AtlasContactBenchmark.hpp
+        ${CMAKE_SOURCE_DIR}/benchmark/BtMbBenchmark.hpp)
+target_link_libraries(BtMbAtlasContactBenchmark ${BtMbSimLink})
