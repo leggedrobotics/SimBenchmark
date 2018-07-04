@@ -23,7 +23,7 @@
 
 namespace po = boost::program_options;
 
-namespace benchmark::anymal {
+namespace benchmark::atlas {
 
 /**
  * options for ANYmal simulation
@@ -46,31 +46,14 @@ struct Parameter {
   double lightPosition[3] = {30.0, 0, 10.0};
 
   // constans
-  double kp = 400;     // kp gain
-  double kd = 1.0;    // kd gain
-  double H = 0.54;    // starting height
+  double H = 0.3;    // starting height
   double dt = 0.005;  // timestep (sec)
   double T = 250;      // simulation time (sec)
   double g = -9.81;
 
   // base quaternion
   double baseQuat[4] = {
-      1.0, 0.0, 0.0, 0.0
-  };
-
-  // joint configuration
-  double jointPos[12] = {
-      0.03, 0.4, -0.8,
-      -0.03, 0.4, -0.8,
-      0.03, -0.4, 0.8,
-      -0.03, -0.4, 0.8
-  };
-
-  double dartjointPos[12] = {
-      0.03, 0.4, -0.8,
-      0.03, -0.4, 0.8,
-      -0.03, 0.4, -0.8,
-      -0.03, -0.4, 0.8
+      0.7071, 0.0, 0.7071, 0.0
   };
 };
 Parameter params;
@@ -85,7 +68,7 @@ std::string getURDFpath() {
   std::string urdfPath(__FILE__);
   while (urdfPath.back() != '/')
     urdfPath.erase(urdfPath.size() - 1, 1);
-  urdfPath += "../res/benchmark/ANYmal-PD-benchmark/ode-rai-dart/robot.urdf";
+  urdfPath += "../res/benchmark/Atlas-contact-benchmark/ode-rai-dart/robot.urdf";
 
   return urdfPath;
 }
@@ -132,7 +115,7 @@ std::string getYamlpath() {
   std::string yamlPath(__FILE__);
   while (yamlPath.back() != '/')
     yamlPath.erase(yamlPath.size() - 1, 1);
-  yamlPath += "./yaml/anymal-pd.yaml";
+  yamlPath += "./yaml/atlas-contact.yaml";
 
   return yamlPath;
 }
@@ -250,17 +233,10 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
 
   // simulation constants
   YAML::Node constant = yaml["constant"];
-  params.kp = constant["kp"].as<double>();
-  params.kd = constant["kd"].as<double>();
   params.g = constant["g"].as<double>();
   params.H = constant["H"].as<double>();
   params.dt = constant["dt"].as<double>();
   params.T = constant["T"].as<double>();
-
-  for(int i = 0; i < 12; i ++) {
-    params.jointPos[i] = constant["jointPos"].as<std::vector<double>>()[i];
-    params.dartjointPos[i] = constant["jointPosDart"].as<std::vector<double>>()[i];
-  }
 
   params.baseQuat[0] = constant["baseQuat"].as<std::vector<double >>()[0];
   params.baseQuat[1] = constant["baseQuat"].as<std::vector<double >>()[1];

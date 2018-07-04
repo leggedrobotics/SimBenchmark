@@ -36,7 +36,7 @@ do
 				for num_iter in "10" "40" "100" "400" "1000" "4000" "10000"
 				do
 					timeout 600 ../sim/raiSim/benchmark/RaiRollingBenchmark \
-					--nogui --erp-on=$erpon --dt=0.001 --force=$forcedir --numiter=$num_iter --csv=$csv_file
+					--nogui --erp-on=$erpon --dt=0.001 --force=$forcedir --numiter=$num_iter --tolerance=1e-30 --csv=$csv_file
 				done
 			done
 		else
@@ -52,7 +52,7 @@ do
 				for num_iter in "10" "40" "100" "400" "1000" "4000" "10000"
 				do
 					timeout 600 ../sim/bulletMultibodySim/benchmark/BtMbRollingBenchmark \
-					--nogui --erp-on=$erpon --dt=0.001 --force=$forcedir --numiter=$num_iter --csv=$csv_file
+					--nogui --erp-on=$erpon --dt=0.001 --force=$forcedir --numiter=$num_iter --tolerance=1e-30 --csv=$csv_file
 				done
 			done
 		else
@@ -70,7 +70,7 @@ do
 					for num_iter in "10" "40" "100" "400" "1000" "4000" "10000"
 					do
 						timeout 600 ../sim/odeSim/benchmark/OdeRollingBenchmark \
-						--nogui --erp-on=$erpon --dt=0.001 --solver=$solver --force=$forcedir --numiter=$num_iter --csv=$csv_file
+						--nogui --erp-on=$erpon --dt=0.001 --solver=$solver --force=$forcedir --numiter=$num_iter --tolerance=1e-30 --csv=$csv_file
 					done
 				done
 			done

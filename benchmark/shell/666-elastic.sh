@@ -35,8 +35,8 @@ do
         if [ "$RAISIM_ON" == "ON" ]; then
             for erpon in true false
             do
-                ../sim/raiSim/benchmark/Rai666Benchmark \
-                --nogui --erp-on=$erpon --dt=$dt --csv=$csv_file --elastic
+                ../sim/raiSim/benchmark/RaiElastic666Benchmark \
+                --nogui --erp-on=$erpon --dt=$dt --csv=$csv_file
             done
         else
             echo "raisim is not built. turn on BENCHMARK_RAISIM option in cmake"
@@ -48,8 +48,8 @@ do
         if [ "$BTSIM_ON" == "ON" ]; then
 			for erpon in true false
 			do
-				../sim/bulletMultibodySim/benchmark/BtMb666Benchmark \
-				--nogui --erp-on=$erpon --dt=$dt --csv=$csv_file --elastic
+				../sim/bulletMultibodySim/benchmark/BtMbElastic666Benchmark \
+				--nogui --erp-on=$erpon --dt=$dt --csv=$csv_file
 			done
         else
             echo "bulletsim is not built. turn on BENCHMARK_BULLETSIM option in cmake"
@@ -63,8 +63,8 @@ do
             do
                 for erpon in true false
                 do
-                    ../sim/odeSim/benchmark/Ode666Benchmark \
-                    --nogui --erp-on=$erpon --dt=$dt --solver=$solver --csv=$csv_file --elastic
+                    ../sim/odeSim/benchmark/OdeElastic666Benchmark \
+                    --nogui --erp-on=$erpon --dt=$dt --solver=$solver --csv=$csv_file
                 done
             done
         else
@@ -84,7 +84,7 @@ do
             do
                 # note dart has no erp
                 ../sim/dartSim/benchmark/Dart666Benchmark \
-                --nogui --dt=$dt --solver=$solver --csv=$csv_file --elastic
+                --nogui --dt=$dt --solver=$solver --csv=$csv_file
             done
         else
             echo "dartsim is not built. turn on BENCHMARK_DARTSIM option in cmake"

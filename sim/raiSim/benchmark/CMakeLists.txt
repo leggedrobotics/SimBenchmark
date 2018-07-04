@@ -39,3 +39,8 @@ add_executable(RaiBouncingBenchmark
         BouncingBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/BouncingBenchmark.hpp)
 target_link_libraries(RaiBouncingBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+
+add_executable(RaiAtlasContactBenchmark
+        AtlasContactBenchmark.cpp
+        ${CMAKE_SOURCE_DIR}/benchmark/AtlasContactBenchmark.hpp)
+target_link_libraries(RaiAtlasContactBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})

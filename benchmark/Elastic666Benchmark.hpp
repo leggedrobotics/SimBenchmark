@@ -165,7 +165,7 @@ std::string getCSVpath() {
   while (logPath.back() != '/')
     logPath.erase(logPath.size() - 1, 1);
 
-  logPath += "../data/666/" + options.csvName;
+  logPath += "../data/666-elastic/" + options.csvName;
   return logPath;
 }
 
