@@ -48,7 +48,7 @@ void resetWorld() {
           benchmark::atlas::params.baseQuat[2],
           benchmark::atlas::params.baseQuat[3];
 
-      robot->setState(gc, gv);
+      robot->setGeneralizedCoordinate(gc);
       robot->setGeneralizedForce(Eigen::VectorXd::Zero(robot->getDOF()));
       robots.push_back(robot);
     }
@@ -60,50 +60,41 @@ void resetWorld() {
     sim->cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
 }
 
-double simulationLoop() {
-  int numContact = 0;
-  int cnt = 0;
+double simulationLoop(bool timer = true, bool cntNumContact = true) {
+  // resever error vector
+  benchmark::atlas::data.setN(unsigned(benchmark::atlas::params.T / benchmark::atlas::params.dt));
+
+  // timer start
+  StopWatch watch;
+  if(timer)
+    watch.start();
+
   if(benchmark::atlas::options.gui) {
     // gui
     while(sim->visualizerLoop(benchmark::atlas::params.dt)) {
       sim->integrate();
-      numContact += sim->getWorldNumContacts();
-      cnt++;
+      if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
     }
   } else {
     // no gui
-    StopWatch watch;
-    watch.start();
     for(int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
       sim->integrate();
-      numContact += sim->getWorldNumContacts();
-      cnt++;
+      if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
     }
-
-    double time = watch.measure();
-
-    // print to screen
-    std::cout<<"time taken for "
-             << (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt)
-             << " steps "<< time <<"s \n";
-
-    if(benchmark::atlas::options.csv)
-      benchmark::atlas::printCSV(benchmark::atlas::getCSVpath(),
-                                 benchmark::dart::options.simName,
-                                 benchmark::dart::options.solverName,
-                                 benchmark::dart::options.detectorName,
-                                 benchmark::dart::options.integratorName,
-                                 benchmark::atlas::options.numRow,
-                                 double(numContact) / cnt,
-                                 time);
   }
-  return double(numContact) / cnt;
+  double time = 0;
+  if(timer)
+    time = watch.measure();
+  return time;
 }
 
 int main(int argc, const char* argv[]) {
 
   benchmark::atlas::addDescToOption(desc);
+  benchmark::dart::addDescToOption(desc);
+
   benchmark::atlas::getOptionsFromArg(argc, argv, desc);
+  benchmark::dart::getOptionsFromArg(argc, argv, desc);
 
   benchmark::atlas::getParamsFromYAML(benchmark::atlas::getYamlpath().c_str(),
                                       benchmark::DART);
@@ -116,16 +107,34 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
-  double contact;
+  // trial1: get Error
   setupSimulation();
   resetWorld();
-  contact = simulationLoop();
+  simulationLoop(false, true);
+  double avgNumContacts = benchmark::atlas::data.computeAvgNumContact();
 
-  RAIINFO(
-      std::endl << "-----------------------" << std::endl
-                << "Contacts : " << contact << std::endl
-                << "=======================" << std::endl
-  )
+  // reset
+  delete sim;
+
+  // trial2: get CPU time
+  setupSimulation();
+  resetWorld();
+  double time = simulationLoop(true, false);
+
+  // print to screen
+  std::cout<<"time taken for "
+           << (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt)
+           << " steps "<< time <<"s \n";
+
+  if(benchmark::atlas::options.csv)
+    benchmark::atlas::printCSV(benchmark::atlas::getCSVpath(),
+                               benchmark::dart::options.simName,
+                               benchmark::dart::options.solverName,
+                               benchmark::dart::options.detectorName,
+                               benchmark::dart::options.integratorName,
+                               benchmark::atlas::options.numRow,
+                               avgNumContacts,
+                               time);
 
   delete sim;
   return 0;

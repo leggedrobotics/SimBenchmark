@@ -22,6 +22,9 @@ file(COPY shell/anymal-momentum.sh
 file(COPY shell/anymal-energy.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+file(COPY shell/atlas-contact.sh
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 file(COPY shell/selectsim.sh
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 

@@ -55,6 +55,51 @@ struct Parameter {
 };
 Parameter params;
 
+
+struct Data {
+  void setN(int n) {
+    Data::n = n;
+    numContactList.reserve(n);
+  }
+
+  double computeAvgNumContact() {
+    Eigen::MatrixXd numcontact(n, 1);
+
+    for(int i = 0; i < n; i++) {
+      numcontact(i, 0) = numContactList[i];
+    }
+
+    if(options.plot) {
+      Eigen::MatrixXd tdata(n, 1);        // time
+
+      for(int i = 0; i < n; i++) {
+        tdata(i, 0) = i * params.dt;
+      }
+
+      rai::Utils::Graph::FigProp2D figure1properties("time", "num contacts", "num contacts");
+      rai::Utils::graph->figure(1, figure1properties);
+      rai::Utils::graph->appendData(1, tdata.data(), numcontact.data(), n, "number");
+      rai::Utils::graph->drawFigure(1);
+      rai::Utils::graph->waitForEnter();
+    }
+
+    RAIINFO(
+        std::endl << "-----------------------" << std::endl
+                  << "Contacts : " << numcontact.mean() << std::endl
+                  << "=======================" << std::endl
+    )
+
+    return numcontact.mean();
+  }
+
+  // data list
+  std::vector<int> numContactList;
+
+  // num data
+  int n = 0;
+};
+Data data;
+
 /**
  * get URDF file path of ANYmal
  *
@@ -160,6 +205,7 @@ void addDescToOption(po::options_description &desc) {
 
   desc.add_options()
       ("row", po::value<int>(), "the number of rows")
+      ("plot", "plot on")
       ;
 }
 
@@ -201,6 +247,11 @@ void getOptionsFromArg(int argc, const char **argv, po::options_description &des
   // the number of row
   if(vm.count("row")) {
     options.numRow = vm["row"].as<int>();
+  }
+
+  // plot option
+  if(vm.count("plot")) {
+    options.plot = true;
   }
 }
 

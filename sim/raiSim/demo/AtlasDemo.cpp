@@ -4,7 +4,7 @@
 #include <raiSim/World_RG.hpp>
 #include "raiSim/StopWatch.hpp"
 
-#define GUI
+//#define GUI
 
 int main() {
 
@@ -37,7 +37,7 @@ int main() {
 
   atlas->setState(gc, gv);
 
-  const double dt = 1.0 / 5000.0;
+  const double dt = 0.005;
   int counter = 0;
   sim.setTimeStep(dt);
 //  sim.loop();

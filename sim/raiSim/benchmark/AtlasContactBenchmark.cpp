@@ -19,6 +19,9 @@ void setupSimulation() {
 
   // time step
   sim->setTimeStep(benchmark::atlas::params.dt);
+//  sim->setContactSolverParam(1.0, 0.7, 1.0,
+//                             50,
+//                             1e-7);
 }
 
 void resetWorld() {
@@ -53,44 +56,32 @@ void resetWorld() {
     sim->cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
 }
 
-double simulationLoop() {
-  int numContact = 0;
-  int cnt = 0;
+double simulationLoop(bool timer = true, bool cntNumContact = true) {
+  // resever error vector
+  benchmark::atlas::data.setN(unsigned(benchmark::atlas::params.T / benchmark::atlas::params.dt));
+
+  // timer start
+  StopWatch watch;
+  if(timer)
+    watch.start();
+
   if(benchmark::atlas::options.gui) {
     // gui
     while(sim->visualizerLoop()) {
       sim->integrate();
-      numContact += sim->getContactProblem().size();
-      cnt++;
+      if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getContactProblem().size());
     }
   } else {
     // no gui
-    StopWatch watch;
-    watch.start();
     for(int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
       sim->integrate();
-      numContact += sim->getContactProblem().size();
-      cnt++;
+      if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getContactProblem().size());
     }
-
-    double time = watch.measure();
-
-    // print to screen
-    std::cout<<"time taken for "
-             << (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt)
-             << " steps "<< time <<"s \n";
-
-    if(benchmark::atlas::options.csv)
-      benchmark::atlas::printCSV(benchmark::atlas::getCSVpath(),
-                                 "RAI",
-                                 "RAI",
-                                 "RAI",
-                                 "RAI",
-                                 benchmark::atlas::options.numRow,
-                                 double(numContact) / cnt,
-                                 time);
   }
-  return double(numContact) / cnt;
+  double time = 0;
+  if(timer)
+    time = watch.measure();
+  return time;
 }
 
 int main(int argc, const char* argv[]) {
@@ -109,16 +100,35 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
-  double contact;
+  // trial1: get Error
   setupSimulation();
   resetWorld();
-  contact = simulationLoop();
+  simulationLoop(false, true);
+  double avgNumContacts = benchmark::atlas::data.computeAvgNumContact();
 
-  RAIINFO(
-      std::endl << "-----------------------" << std::endl
-                << "Contacts : " << contact << std::endl
-                << "=======================" << std::endl
-  )
+  // reset
+  delete sim;
+
+  // trial2: get CPU time
+  setupSimulation();
+  resetWorld();
+  double time = simulationLoop(true, false);
+
+  // print to screen
+  std::cout<<"time taken for "
+           << (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt)
+           << " steps "<< time <<"s \n";
+
+  if(benchmark::atlas::options.csv)
+    benchmark::atlas::printCSV(benchmark::atlas::getCSVpath(),
+                               "RAI",
+                               "RAI",
+                               "RAI",
+                               "RAI",
+                               benchmark::atlas::options.numRow,
+                               avgNumContacts,
+                               time);
+
 
   delete sim;
   return 0;
