@@ -13,13 +13,13 @@ po::options_description desc;
 
 void setupSimulation() {
   if(benchmark::atlas::options.gui)
-    sim = new rai_sim::World_RG(800, 600, 0.5, rai_sim::NO_BACKGROUND);
+    sim = new rai_sim::World_RG(800, 600, 0.1, rai_sim::NO_BACKGROUND);
   else
     sim = new rai_sim::World_RG();
 
   // time step
   sim->setTimeStep(benchmark::atlas::params.dt);
-//  sim->setContactSolverParam(1.0, 0.7, 1.0,
+//  si1m->setContactSolverParam(1.0, 0.7, 1.0,
 //                             50,
 //                             1e-7);
 }
@@ -65,16 +65,39 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
   if(timer)
     watch.start();
 
+  Eigen::VectorXd gc(robots[0]->getGeneralizedCoordinateDim());
+  Eigen::VectorXd gv(robots[0]->getDOF());
+  Eigen::VectorXd tau(robots[0]->getDOF());
+
   if(benchmark::atlas::options.gui) {
     // gui
     while(sim->visualizerLoop()) {
-      sim->integrate();
+      sim->integrate1();
+      for(int i = 0; i < robots.size(); i++) {
+        gc = robots[i]->getGeneralizedCoordinate();
+        gv = robots[i]->getGeneralizedVelocity();
+        tau.tail(30) =
+            -benchmark::atlas::params.kp.tail(30).cwiseProduct(gc.tail(30))
+                - benchmark::atlas::params.kd.cwiseProduct(gv).tail(30);
+        robots[i]->setGeneralizedForce(tau);
+      }
+      sim->integrate2();
       if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getContactProblem().size());
     }
   } else {
     // no gui
     for(int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
-      sim->integrate();
+      sim->integrate1();
+      for(int i = 0; i < robots.size(); i++) {
+        gc = robots[i]->getGeneralizedCoordinate();
+        gv = robots[i]->getGeneralizedVelocity();
+        tau.tail(30) =
+            -benchmark::atlas::params.kp.tail(30).cwiseProduct(gc.tail(30))
+                - benchmark::atlas::params.kd.cwiseProduct(gv).tail(30);
+        robots[i]->setGeneralizedForce(tau);
+      }
+      RAIINFO(sim->getContactProblem().size())
+      sim->integrate2();
       if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getContactProblem().size());
     }
   }
@@ -107,6 +130,7 @@ int main(int argc, const char* argv[]) {
   double avgNumContacts = benchmark::atlas::data.computeAvgNumContact();
 
   // reset
+  robots.clear();
   delete sim;
 
   // trial2: get CPU time

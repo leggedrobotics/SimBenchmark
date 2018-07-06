@@ -43,15 +43,18 @@ struct Parameter {
   double lightPosition[3] = {30.0, 0, 10.0};
 
   // constans
-  double H = 0.3;    // starting height
-  double dt = 0.005;  // timestep (sec)
-  double T = 250;      // simulation time (sec)
+  double H = 0.35;    // starting height
+  double dt = 0.0005;  // timestep (sec)
+  double T = 10;      // simulation time (sec)
   double g = -9.81;
 
   // base quaternion
   double baseQuat[4] = {
-      0.7071, 0.0, 0.7071, 0.0
+      0.7071, 0.0, -0.7071, 0.0
   };
+
+  Eigen::VectorXd kp;
+  Eigen::VectorXd kd;
 };
 Parameter params;
 
@@ -281,6 +284,13 @@ void getParamsFromYAML(const char *yamlfile, benchmark::Simulator simulator) {
   params.baseQuat[1] = constant["baseQuat"].as<std::vector<double >>()[1];
   params.baseQuat[2] = constant["baseQuat"].as<std::vector<double >>()[2];
   params.baseQuat[3] = constant["baseQuat"].as<std::vector<double >>()[3];
+
+  params.kp.resize(35);
+  params.kd.resize(35);
+  for(int i = 0; i < 35; i ++) {
+    params.kp[i] = constant["kp"].as<std::vector<double>>()[i];
+    params.kd[i] = constant["kd"].as<std::vector<double>>()[i];
+  }
 
   // solver parameters
   YAML::Node solver_params = yaml["solver_params"];

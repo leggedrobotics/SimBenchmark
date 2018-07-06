@@ -23,7 +23,7 @@ int main() {
   sim.setTimeStep(0.005);
 
   // add objects
-  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, 1, -1, rai_sim::GRID);
+  auto checkerboard = sim.addCheckerboard(2, 100, 100, 0.1, -1, rai_sim::GRID);
 
   Eigen::VectorXd jointNominalConfig(19);
   Eigen::VectorXd jointState(18), jointVel(18), jointForce(18);

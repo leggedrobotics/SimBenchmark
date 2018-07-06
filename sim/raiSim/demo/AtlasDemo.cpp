@@ -4,7 +4,7 @@
 #include <raiSim/World_RG.hpp>
 #include "raiSim/StopWatch.hpp"
 
-//#define GUI
+#define GUI
 
 int main() {
 
@@ -18,29 +18,46 @@ int main() {
 #else
   rai_sim::World_RG sim;
 #endif
+  sim.setERP(0);
 
   auto atlas = sim.addArticulatedSystem(urdfPath);
   auto checkerBoard = sim.addCheckerboard(2, 100, 100, 0.1, -1, rai_sim::GRID);
 
+  // states
   Eigen::VectorXd gc(atlas->getGeneralizedCoordinateDim());
-  Eigen::VectorXd gv(atlas->getDOF()), tau(atlas->getDOF());
+  Eigen::VectorXd gv(atlas->getDOF());
+  Eigen::VectorXd tau(atlas->getDOF());
+
+  // gains
+  Eigen::VectorXd kp(atlas->getDOF()), kd(atlas->getDOF());
+  tau.setZero(); kp.setZero(); kd.setZero();
+  kp<< 0,0,0,0,0,0,
+      10000,10000,10000,
+      20000,10000,1000,1000,1000, 100,.2,
+      20000,10000,1000,1000,1000, 100,.2,
+      20000,5000,5000,300,100,20000,
+      20000,5000,5000,300,100,20000;
+  kd<< 0,0,0,0,0,0,
+      50,   50,   50,
+      30,   10,   10,  5,   3,    0.5,.01,
+      30,   10,   10,  5,   3,    0.5,.01,
+      40,   40,  40,  5,  2,  10,
+      40,   40,  40,  5,  2,  10;
 
   std::cout<<"dof "<<atlas->getDOF()<<"\n";
-
   atlas->printOutBodyNamesInOrder();
 
+  // initial state
   gc.setZero();
-//  gc.segment<7>(0) << 0,0,3,1,0,0,0;
-  gc.segment<7>(0) << 0,0,0.3,0.7071,0,0.7071,0;
+  gc.segment<7>(0) << 0,0,1,1,0,0,0;
   gv.setZero();
   tau.setZero();
 
   atlas->setState(gc, gv);
 
-  const double dt = 0.005;
+  const double dt = 1.0 / 5000.0;
   int counter = 0;
   sim.setTimeStep(dt);
-//  sim.loop();
 
   StopWatch watch;
   watch.start();
@@ -53,7 +70,12 @@ int main() {
     for(int i=0; i<100000; i++)
 #endif
   {
-    sim.integrate();
+    sim.integrate1();
+    gc = atlas->getGeneralizedCoordinate();
+    gv = atlas->getGeneralizedVelocity();
+    tau.tail(30) = -kp.tail(30).cwiseProduct(gc.tail(30)) - kd.cwiseProduct(gv).tail(30);
+    atlas->setGeneralizedForce(tau);
+    sim.integrate2();
     counter += sim.getContactProblem().size();
   }
   std::cout<<"Number of steps in one second  "<<100.0/watch.measure()<<"k\n";

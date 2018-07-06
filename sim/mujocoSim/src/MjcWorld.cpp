@@ -278,10 +278,22 @@ void MjcWorld::setTimeStep(double timeStep) {
 }
 
 void MjcWorld::integrate() {
+  contactProblemList_.clear();
+  contactProblemList_.reserve(worldData_->ncon);
+  for(int i = 0; i < worldData_->ncon; i++) {
+    contactProblemList_.emplace_back(
+        worldData_->contact[i].pos[0], worldData_->contact[i].pos[1], worldData_->contact[i].pos[2]);
+  }
   mj_step(worldModel_, worldData_);
 }
 
 void MjcWorld::integrate1() {
+  contactProblemList_.clear();
+  contactProblemList_.reserve(worldData_->ncon);
+  for(int i = 0; i < worldData_->ncon; i++) {
+    contactProblemList_.emplace_back(
+        worldData_->contact[i].pos[0], worldData_->contact[i].pos[1], worldData_->contact[i].pos[2]);
+  }
   mj_step1(worldModel_, worldData_);
 }
 
@@ -326,6 +338,9 @@ void MjcWorld::forwardKinematics() {
 void MjcWorld::resetSimulation() {
   mj_resetData(worldModel_, worldData_);
   mj_forward(worldModel_, worldData_);
+}
+const std::vector<Single3DContactProblem> *MjcWorld::getCollisionProblem() const {
+  return &contactProblemList_;
 }
 
 } // mujoco_sim

@@ -32,6 +32,15 @@ enum IntegratorOption {
   INTEGRATOR_RK4
 };
 
+struct Single3DContactProblem {
+  Single3DContactProblem(const double x, const double y, const double z) {
+    point_ = {x, y, z};
+  };
+  Eigen::Vector3d point_;
+  Eigen::Vector3d normal_;
+  double force_;
+};
+
 class MjcWorld: public benchmark::WorldInterface {
 
   friend class MjcSim;
@@ -41,6 +50,13 @@ class MjcWorld: public benchmark::WorldInterface {
            SolverOption solver,
            IntegratorOption integrator);
   virtual ~MjcWorld();
+
+
+  /**
+   * Getter for collision problems.
+   * @return    std vector pointer contains collision problems.
+   */
+  const std::vector<Single3DContactProblem> *getCollisionProblem() const;
 
   /// note: use last two parameters as bodyId and geomId rather than collisionGroup and collisionMask
   object::MjcSphere *addSphere(double radius,
@@ -133,6 +149,9 @@ class MjcWorld: public benchmark::WorldInterface {
 
   // list
   std::vector<object::MjcSingleBodyObject*> objectList_;
+
+  // contact list
+  std::vector<Single3DContactProblem> contactProblemList_;
 
   // generalized coordinate
   benchmark::VecDyn generalizedCoordinate_;

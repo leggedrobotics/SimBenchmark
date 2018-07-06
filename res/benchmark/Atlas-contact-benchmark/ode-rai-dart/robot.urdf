@@ -401,18 +401,6 @@
         <mesh filename="l_lglut.stl"/>
       </geometry>
     </visual>
-    <collision>
-      <origin rpy="1.5707963267949 0 0" xyz="0.05 0.027488 -0.067"/>
-      <geometry>
-        <cylinder length="0.060306" radius="0.02009687"/>
-      </geometry>
-    </collision>
-    <collision>
-      <origin rpy="0 1.5707963267949 0" xyz="0.0115 0 0"/>
-      <geometry>
-        <cylinder length="0.144" radius="0.02"/>
-      </geometry>
-    </collision>
   </link>
   <link name="l_lleg">
     <inertial>
@@ -557,12 +545,6 @@
         <mesh filename="l_uglut.stl"/>
       </geometry>
     </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.080842" radius="0.019841"/>
-      </geometry>
-    </collision>
   </link>
   <link name="l_uleg">
     <inertial>
@@ -814,18 +796,6 @@
         <mesh filename="r_lglut.stl"/>
       </geometry>
     </visual>
-    <collision>
-      <origin rpy="1.5707963267949 0 0" xyz="0.05 -0.027488 -0.067"/>
-      <geometry>
-        <cylinder length="0.060306" radius="0.02009687"/>
-      </geometry>
-    </collision>
-    <collision>
-      <origin rpy="0 1.5707963267949 0" xyz="0.0105 0 0"/>
-      <geometry>
-        <cylinder length="0.142" radius="0.02"/>
-      </geometry>
-    </collision>
   </link>
   <link name="r_lleg">
     <inertial>
@@ -964,12 +934,6 @@
         <mesh filename="r_uglut.stl"/>
       </geometry>
     </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.080842" radius="0.019841"/>
-      </geometry>
-    </collision>
   </link>
   <link name="r_uleg">
     <inertial>

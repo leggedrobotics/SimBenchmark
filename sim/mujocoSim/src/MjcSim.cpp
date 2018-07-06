@@ -293,49 +293,6 @@ void mujoco_sim::MjcSim::updateFrame() {
   RAIFATAL_IF(!gui_, "use different constructor for visualization")
   const bool showAlternateGraphicsIfexists = gui_->getCustomToggleState(3);
 
-//  for (auto &as : asHandles_) {
-//    Vec<4> quat;
-//    Vec<3> pos, jointPos_W;
-//    Mat<3, 3> rot_WB, rotTemp;
-//
-//    if (showAlternateGraphicsIfexists) {
-//      /// update collision objects
-//      for (int i = 0; i < as->getVisColOb().size(); i++) {
-//        as.alternateVisual()[i]->setVisibility(true);
-//        int parentId = std::get<2>(as->getVisColOb()[i]);
-//        as->getBodyPose(parentId, rot_WB, jointPos_W);
-//        matvecmul(rot_WB, std::get<1>(as->getVisColOb()[i]), pos);
-//        as.alternateVisual()[i]->setPos(jointPos_W.v[0] + pos.v[0],
-//                                        jointPos_W.v[1] + pos.v[1],
-//                                        jointPos_W.v[2] + pos.v[2]);
-//        matmul(rot_WB, std::get<0>(as->getVisColOb()[i]), rotTemp);
-//        rotMatToQuat(rotTemp, quat);
-//        as.alternateVisual()[i]->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
-//        adjustTransparency(as.alternateVisual()[i], as.hidable);
-//      }
-//
-//      for (int i = 0; i < as->getVisOb().size(); i++)
-//        as.visual()[i]->setVisibility(false);
-//    } else {
-//      for (int i = 0; i < as->getVisOb().size(); i++) {
-//        as.visual()[i]->setVisibility(true);
-//        if (!as.visual()[i]->isVisible()) continue;
-//        int parentId = std::get<2>(as->getVisOb()[i]);
-//        as->getBodyPose(parentId, rot_WB, jointPos_W);
-//        matvecmul(rot_WB, std::get<1>(as->getVisOb()[i]), pos);
-//        as.visual()[i]->setPos(jointPos_W.v[0] + pos.v[0],
-//                               jointPos_W.v[1] + pos.v[1],
-//                               jointPos_W.v[2] + pos.v[2]);
-//        matmul(rot_WB, std::get<0>(as->getVisOb()[i]), rotTemp);
-//        rotMatToQuat(rotTemp, quat);
-//        as.visual()[i]->setOri(quat.v[0], quat.v[1], quat.v[2], quat.v[3]);
-//        adjustTransparency(as.visual()[i], as.hidable);
-//      }
-//      for (int i = 0; i < as->getVisColOb().size(); i++)
-//        as.alternateVisual()[i]->setVisibility(false);
-//    }
-//  }
-
   benchmark::Vec<3> bodyPosition;
   benchmark::Vec<4> quat;
 
@@ -386,16 +343,16 @@ void mujoco_sim::MjcSim::updateFrame() {
 //  }
 
   /// contact points
-//  if (gui_->getCustomToggleState(1)) {
-//    contactPointMarker_->mutexLock();
-//    contactPointMarker_->clearGhost();
-//    for (auto &pro: *world_.getCollisionProblem()) {
-//      Eigen::Vector3d pos = pro.point_;
-//      contactPointMarker_->addGhost(pos);
-//    }
-//    contactPointMarker_->mutexUnLock();
-//  } else
-//    contactPointMarker_->clearGhost();
+  if (gui_->getCustomToggleState(1)) {
+    contactPointMarker_->mutexLock();
+    contactPointMarker_->clearGhost();
+    for (auto &pro: *world_.getCollisionProblem()) {
+      Eigen::Vector3d pos = pro.point_;
+      contactPointMarker_->addGhost(pos);
+    }
+    contactPointMarker_->mutexUnLock();
+  } else
+    contactPointMarker_->clearGhost();
 
   /// contact forces
 //  if (gui_->getCustomToggleState(2)) {

@@ -76,10 +76,24 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
   if(timer)
     watch.start();
 
+  Eigen::VectorXd gc(sim->getStateDimension());
+  Eigen::VectorXd gv(sim->getDOF());
+  Eigen::VectorXd tau(sim->getDOF());
+  tau.setZero();
+
   if(benchmark::atlas::options.gui) {
     // gui
     while(sim->visualizerLoop(benchmark::atlas::params.dt)) {
-      sim->integrate();
+      sim->integrate1();
+      gc = sim->getGeneralizedCoordinate();
+      gv = sim->getGeneralizedVelocity();
+      for (int i = 0; i < benchmark::atlas::options.numRow * benchmark::atlas::options.numRow; i++) {
+        tau.segment(i * 35 + 6, 29) =
+            -benchmark::atlas::params.kp.tail(29).cwiseProduct(gc.segment(i * 36 + 7, 29))
+                - benchmark::atlas::params.kd.tail(29).cwiseProduct(gv.segment(i * 35 + 6, 29));
+      }
+      sim->setGeneralizedForce(tau);
+      sim->integrate2();
       if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
     }
   } else {
@@ -87,7 +101,16 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
     StopWatch watch;
     watch.start();
     for (int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
-      sim->integrate();
+      sim->integrate1();
+      gc = sim->getGeneralizedCoordinate();
+      gv = sim->getGeneralizedVelocity();
+      for (int i = 0; i < benchmark::atlas::options.numRow * benchmark::atlas::options.numRow; i++) {
+        tau.segment(i * 35 + 6, 29) =
+            -benchmark::atlas::params.kp.tail(29).cwiseProduct(gc.segment(i * 36 + 7, 29))
+                - benchmark::atlas::params.kd.tail(29).cwiseProduct(gv.segment(i * 35 + 6, 29));
+      }
+      sim->setGeneralizedForce(tau);
+      sim->integrate2();
       if (cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
     }
   }
@@ -113,6 +136,7 @@ int main(int argc, const char* argv[]) {
                 << "Simulator: MUJOCO" << std::endl
                 << "GUI      : " << benchmark::atlas::options.gui << std::endl
                 << "Row      : " << benchmark::atlas::options.numRow << std::endl
+                << "Solver   : " << benchmark::mujoco::options.solverName << std::endl
                 << "-----------------------"
   )
 

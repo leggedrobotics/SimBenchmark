@@ -3,7 +3,7 @@
 //
 #include <MjcSim.hpp>
 
-#define GUI
+//#define GUI
 
 int main() {
 
@@ -22,11 +22,11 @@ int main() {
                          urdfPath.c_str(),
                          keyPath.c_str(),
                          benchmark::NO_BACKGROUND,
-                         mujoco_sim::SOLVER_NEWTON);
+                         mujoco_sim::SOLVER_CG);
 #else
   mujoco_sim::MjcSim sim(urdfPath.c_str(),
                          keyPath.c_str(),
-                         mujoco_sim::SOLVER_NEWTON);
+                         mujoco_sim::SOLVER_CG);
 #endif
 
   Eigen::VectorXd gc(sim.getStateDimension());
@@ -42,7 +42,7 @@ int main() {
 
   sim.setState(gc, gv);
 
-  const double dt = 1.0 / 5000.0;
+  const double dt = 0.005;
   int counter = 0;
   sim.setTimeStep(dt);
 
