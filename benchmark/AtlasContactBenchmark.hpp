@@ -45,7 +45,7 @@ struct Parameter {
   // constans
   double H = 0.35;    // starting height
   double dt = 0.0005;  // timestep (sec)
-  double T = 10;      // simulation time (sec)
+  double T = 25;      // simulation time (sec)
   double g = -9.81;
 
   // base quaternion

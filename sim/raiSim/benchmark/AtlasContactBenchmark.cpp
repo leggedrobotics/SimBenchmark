@@ -19,6 +19,7 @@ void setupSimulation() {
 
   // time step
   sim->setTimeStep(benchmark::atlas::params.dt);
+//  sim->setERP(0.01);
 //  si1m->setContactSolverParam(1.0, 0.7, 1.0,
 //                             50,
 //                             1e-7);
@@ -38,6 +39,8 @@ void resetWorld() {
       Eigen::VectorXd gv(robot->getDOF());
       Eigen::VectorXd tau(robot->getDOF());
       gc.setZero();
+      gv.setZero();
+      tau.setZero();
       gc.segment<7>(0) << i * 2.5, j * 2.5, benchmark::atlas::params.H,
           benchmark::atlas::params.baseQuat[0],
           benchmark::atlas::params.baseQuat[1],
@@ -96,7 +99,6 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
                 - benchmark::atlas::params.kd.cwiseProduct(gv).tail(30);
         robots[i]->setGeneralizedForce(tau);
       }
-      RAIINFO(sim->getContactProblem().size())
       sim->integrate2();
       if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getContactProblem().size());
     }
