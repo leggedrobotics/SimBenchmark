@@ -12,6 +12,17 @@
         content: "[" counter(list) "] ";
         counter-increment: list;
     }
+
+    ol.pa {
+        counter-reset: list;
+    }
+    ol.pa > li {
+        list-style: none;
+    }
+    ol.pa > li:before {
+        content: counter(list) ") ";
+        counter-increment: list;
+    }
 </style>
 
 <head>

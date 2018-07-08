@@ -197,7 +197,7 @@ layout: default
 <p>
     The error of the contact simulation is mostly caused by
 
-<ol>
+<ol class="pa">
     <li>inaccurate impulse/force solution from contact solver</li>
     <li>inherited discretized error from numerical integration.</li>
 </ol>
@@ -209,7 +209,7 @@ In both case, there is speed-accuracy trade-off.
 <p>
     In order to evaluate the performance, we have to take into account whole speed-accuracy curve as proposed in <a href="#[2]">[2]</a>.
 
-    In the following example of speed-accuracy curve, the ideal engine is on the top-right corner, besides most of the engines are represented as the curves sloping downwards from left to right.
+    In the following example of speed-accuracy curve plot, the ideal engine is on the top-right corner, besides most of the engines are represented as the curves sloping downwards from left to right.
     The better engine's curve locates upper-right than others, thus the engine 1 represented by curve 1 is better than the engine 2 represented by curve 2.
 
     <figure>
@@ -219,11 +219,15 @@ In both case, there is speed-accuracy trade-off.
 </p>
 
 <p>
-    For accuracy metric, we use squared velocity error of simulation when an analytical solution of trajectory is applicable.
-    Besides, for complex systems that analytical solution of trajectory is not available, we investigate penetration error, momentum or energy.
+    Although our lack of knowledge on real physics, we use an analytical solution of object trajectory as a reference which is obtained from Newton's rigid body dynamics and Coulomb's friction cone model when it is applicable:
+    for systems with single rigid body with small number of contacts, we find analytical solution of the object trajectory and investigate numerical errors from simulation.
+    For complex systems, it may not be possible to find an analytical trajectory. In these cases, we investigate generic physical quantities such as total kinetic energy or linear momentum.
+    Finally, we also investigate position level drift by measuring penetration error.
 </p>
 
-More details of benchmark methodology is <a href="about/methodology.html">here</a>.
+<p>
+    More details of benchmark methodology is <a href="about/methodology.html">here</a>.
+</p>
 
 <hr>
 <h2>Test and Results</h2>
