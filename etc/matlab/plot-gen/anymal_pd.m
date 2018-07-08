@@ -3,7 +3,7 @@ formatSpec = '%C%C%C%C%d%f';
 
 % load csv
 T = readtable(...
-    '../../../data/anymal-stand/sample.csv', ...
+    '../../../data/anymal-stand/final.csv', ...
     'Delimiter', ',', ...
     'Format',formatSpec ...
     );
@@ -138,7 +138,7 @@ hold off
 % saveas(gcf,'anymal-pd-plots/speed-number.png')
 
 % log scale
-figure('Name', 'log', 'Position', [0, 0, 600, 500])
+h = figure('Name', 'log', 'Position', [0, 0, 600, 500])
 plot(RAI_numrows.^2, ...
     numIter ./ RAI_mins ./ 1000, ...
     plotspec.RAIRAIRAI{1}, ...
@@ -182,17 +182,25 @@ plot(ODE_numrows.^2, ...
     'DisplayName', plotspec.ODESTANDARDODE{2})
 % plot(DART_DAN_ODE_numrows.^2, DART_DAN_ODE_mins, '-m.') % redundant
 % plot(DART_PGS_ODE_numrows.^2, DART_PGS_ODE_mins, '-mo') % redundant
-xlabel('number of robots (log n)')
-ylabel(sprintf('timestep per second (log kHz) \n FAST →'))
+xlabel('the number of robots')
+ylabel(sprintf('timestep per second (kHz)'))
 legend('Location', 'northeast')
 hold off
-title('ANYmal PD control test (log scale)')
+title('ANYmal PD control test')
 ylim([0, 10^2.5])
 xlim([0, 10^2.5])
-set(gca, 'YScale', 'log', 'XScale', 'log')
-saveas(gcf,'anymal-pd-plots/anymal-plot-log.eps','epsc')
-saveas(gcf,'anymal-pd-plots/anymal-plot-log.fig','fig')
-saveas(gcf,'anymal-pd-plots/anymal-plot-log.png')
+set(gca, ...
+    'YScale', 'log', ...
+    'XScale', 'log', ...
+    'YMinorTick', 'off', ...
+    'XMinorTick', 'off', ...
+    'YMinorGrid', 'off', ...
+    'XMinorGrid', 'off')
+box on
+grid on
+% saveas(gcf,'anymal-pd-plots/anymal-plot-log.eps','epsc')
+% saveas(gcf,'anymal-pd-plots/anymal-plot-log.fig','fig')
+% saveas(gcf,'anymal-pd-plots/anymal-plot-log.png')
 
 % speed bar graph (1 anymal)
 c = categorical({...
@@ -233,7 +241,7 @@ bar(T2.sim(6), T2.speed(6), 'FaceColor', plotspec.DARTDANTZIGDART{3})
 bar(T2.sim(7), T2.speed(7), 'FaceColor', plotspec.DARTPGSDART{3})      
 bar(T2.sim(8), T2.speed(8), 'FaceColor', plotspec.ODESTANDARDODE{3})  
 hold off
-title('ANYmal PD control test (1 robot)')
+title('ANYmal PD control test')
 % numbers on bars
 text(1:length(T2.speed), ...
     T2.speed, ...
@@ -241,9 +249,9 @@ text(1:length(T2.speed), ...
     'vert', 'bottom', ...
     'horiz','center', ...
     'FontWeight','bold');
-ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-ylim([0, 110])
+ylabel(sprintf('timestep per second (kHz)'))
+ylim([0, 120])
 
-saveas(gcf,'anymal-pd-plots/anymal-speed-bar.eps','epsc')
-saveas(gcf,'anymal-pd-plots/anymal-speed-bar.fig','fig')
-saveas(gcf,'anymal-pd-plots/anymal-speed-bar.png')
+% saveas(gcf,'anymal-pd-plots/anymal-speed-bar.eps','epsc')
+% saveas(gcf,'anymal-pd-plots/anymal-speed-bar.fig','fig')
+% saveas(gcf,'anymal-pd-plots/anymal-speed-bar.png')

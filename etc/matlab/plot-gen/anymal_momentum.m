@@ -99,7 +99,7 @@ for i = 1:size(T2, 1)
         'FaceColor', spec{3})
 end
 hold off
-title(sprintf('ANYmal Momentum'))
+title(sprintf('ANYmal momentum test'))
 % numbers on bars
 text(1:length(speed), ...
     speed, ...
@@ -108,11 +108,11 @@ text(1:length(speed), ...
     'horiz','center', ...
     'FontWeight','bold', ...
     'FontSize', 8);
-ylabel(sprintf('timestep per second (kHz) \n FAST →'))
+ylabel(sprintf('timestep per second (kHz)'))
 ylim([0, 190])
-saveas(h, strcat('anymal-momentum-plots/anymal-momentum-speed-bar.png'))
-saveas(h, strcat('anymal-momentum-plots/anymal-momentum-speed-bar.eps'), 'epsc')
-saveas(h, strcat('anymal-momentum-plots/anymal-momentum-speed-bar.fig'), 'fig')
+% saveas(h, strcat('anymal-momentum-plots/anymal-momentum-speed-bar.png'))
+% saveas(h, strcat('anymal-momentum-plots/anymal-momentum-speed-bar.eps'), 'epsc')
+% saveas(h, strcat('anymal-momentum-plots/anymal-momentum-speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -181,14 +181,14 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title('ANYmal Momentum')
-xlabel(sprintf('real time factor \n FAST →'))
-ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
+title('ANYmal momentum test')
+xlabel(sprintf('real time factor'))
+ylabel(['squared error (N \cdot m/s)^2'])
 ylim([1e-30, 1e5])
 lgd = legend('Location', 'east');
 lgd.NumColumns = 2;
-saveas(h, strcat('anymal-momentum-plots/anymal-momentum-error-speed', fileName, '.png'))
-saveas(h, strcat('anymal-momentum-plots/anymal-momentum-error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('anymal-momentum-plots/anymal-momentum-error-speed', fileName, '.fig'), 'fig')
+% saveas(h, strcat('anymal-momentum-plots/anymal-momentum-error-speed', fileName, '.png'))
+% saveas(h, strcat('anymal-momentum-plots/anymal-momentum-error-speed', fileName, '.eps'), 'epsc')
+% saveas(h, strcat('anymal-momentum-plots/anymal-momentum-error-speed', fileName, '.fig'), 'fig')
 
 end

@@ -6,7 +6,7 @@ addpath(genpath('../lib/yamlmatlab'))
 
 % data path
 data_dir = '../../../data/666/';
-file_name = 'sample.csv';
+file_name = 'final.csv';
 
 % yaml path
 yaml_path = '../../../benchmark/yaml/666.yaml';
@@ -100,7 +100,7 @@ for i = 1:size(T2, 1)
         'FaceColor', spec{3})
 end
 hold off
-title(sprintf('666 test speed (timestep = %f)', dt))
+title(['666 test'])
 % numbers on bars
 text(1:length(speed), ...
     speed, ...
@@ -108,10 +108,10 @@ text(1:length(speed), ...
     'vert', 'bottom', ...
     'horiz','center', ...
     'FontWeight','bold');
-ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-saveas(h, strcat('666-plots/speedbar.png'))
-saveas(h, strcat('666-plots/speedbar.eps'), 'epsc')
-saveas(h, strcat('666-plots/speedbar.fig'), 'fig')
+ylabel(sprintf('timestep per second (kHz)'))
+% saveas(h, strcat('666-plots/speedbar.png'))
+% saveas(h, strcat('666-plots/speedbar.eps'), 'epsc')
+% saveas(h, strcat('666-plots/speedbar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -184,15 +184,15 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title(['Penetration Error ', plotTitle])
-xlabel(sprintf('real time factor \n FAST →'))
-ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
+title(['666 test'])
+xlabel('real time factor')
+ylabel('squared error (m^2)')
 xlim([10^-3 10^3])
 lgd = legend('Location', 'southwest');
 lgd.NumColumns = 2;
-saveas(h, strcat('666-plots/error-speed', fileName, '.png'))
-saveas(h, strcat('666-plots/error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('666-plots/error-speed', fileName, '.fig'), 'fig')
+% saveas(h, strcat('666-plots/error-speed', fileName, '.png'))
+% saveas(h, strcat('666-plots/error-speed', fileName, '.eps'), 'epsc')
+% saveas(h, strcat('666-plots/error-speed', fileName, '.fig'), 'fig')
 
 end
 

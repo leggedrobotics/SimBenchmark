@@ -26,12 +26,11 @@ layout: default
     }
 </style>
 
-<h1>ANYmal energy test</h1>
+<h1>ANYmal momentum test</h1>
 
-<img src="anymal-energy.gif" alt="anymal-energy-test">
+<img src="anymal-momentum.gif" alt="anymal-momentum-test">
 
 <p>
-    ANYmal free drop test is to test energy conservation.
 </p>
 
 <p>
@@ -39,14 +38,10 @@ The test focuses on:
 </p>
 
 <ol>
-    <li>Energy consesrvation</li>
+    <li>Momentum conservation</li>
 </ol>
 
 <h2>Test scenario</h2>
-
-<p>
-    A 18 DOF quadruped robot <a href="http://www.rsl.ethz.ch/">ANYmal</a> is lifted up to the sky and then free dropped.
-</p>
 
 <h2>Tested solver list</h2>
 
@@ -69,12 +64,9 @@ The test focuses on:
     </li>
     <li>MuJoCo
         <ul>
-            <li>PGS solver + Euler integrator</li>
-            <li>CG solver + Euler integrator</li>
-            <li>Newton solver + Euler integrator</li>
-            <li>PGS solver + RK4 integrator</li>
-            <li>CG solver + RK4 integrator</li>
-            <li>Newton solver + RK4 integrator</li>
+            <li>PGS</li>
+            <li>CG</li>
+            <li>Newton</li>
         </ul>
     </li>
     <li>Dart
@@ -85,13 +77,11 @@ The test focuses on:
     </li>
 </ul>
 
+
 <h2>Results</h2>
 
-<p>
-    The results of the test are as following figures.
-</p>
+<p>The results of the test are as following figures.</p>
 
-<p>
-    <img src="anymal-energy-error-speed.png" alt="anymal-energy-speed-plot">
-    <img src="anymal-energy-speed-bar.png" alt="anymal-energy-speed-bar-graph">
-</p>
+<img src="speed-accuracy.png">
+
+<img src="speed.png">

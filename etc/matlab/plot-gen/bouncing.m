@@ -79,7 +79,7 @@ erpYe08 = plotoption;
 disp('plotting error vs timestep...')
 plot_error_speed(T, const, plotSpec, false, 1.0, '-noerp-e=1.0', '(No Erp / e = 1.0)', erpNe1);
 % plot_error_speed(T, const, plotSpec, false, 0.8, '-noerp-e=0.8', '(No Erp / e = 0.8)', erpNe08);
-plot_error_speed(T, const, plotSpec, true, 1.0, '-erp-e=1.0', '(Erp / e = 1.0)', erpYe1);
+% plot_error_speed(T, const, plotSpec, true, 1.0, '-erp-e=1.0', '(Erp / e = 1.0)', erpYe1);
 % plot_error_speed(T, const, plotSpec, true, 0.8, '-erp-e=0.8', '(Erp / e = 0.8)', erpYe08);
 
 %% bar plot (for min dt)
@@ -115,7 +115,7 @@ for i = 1:size(T2, 1)
         'FaceColor', spec{3})
 end
 hold off
-title(sprintf('Rolling test speed'))
+title(['bouncing test'])
 % numbers on bars
 text(1:length(speed), ...
     speed, ...
@@ -123,11 +123,11 @@ text(1:length(speed), ...
     'vert', 'bottom', ...
     'horiz','center', ...
     'FontWeight','bold');
-ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-% ylim([0, 25])
-saveas(h, strcat('bouncing-plots/rollingbar.png'))
-saveas(h, strcat('bouncing-plots/rollingbar.eps'), 'epsc')
-saveas(h, strcat('bouncing-plots/rollingbar.fig'), 'fig')
+ylabel('timestep per second (kHz)')
+ylim([0, 100])
+% saveas(h, strcat('bouncing-plots/rollingbar.png'))
+% saveas(h, strcat('bouncing-plots/rollingbar.eps'), 'epsc')
+% saveas(h, strcat('bouncing-plots/rollingbar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -192,13 +192,13 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title(['Energy Error ', plotTitle])
-xlabel(sprintf('real time factor \n FAST →'))
-ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
+title(['bouncing test'])
+xlabel(sprintf('real time factor'))
+ylabel(sprintf('squared error (J^2)'))
 legend('Location', 'northeast')
-saveas(h, strcat('bouncing-plots/bounce-error-speed', fileName, '.png'))
-saveas(h, strcat('bouncing-plots/bounce-error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('bouncing-plots/bounce-error-speed', fileName, '.fig'), 'fig')
+% saveas(h, strcat('bouncing-plots/bounce-error-speed', fileName, '.png'))
+% saveas(h, strcat('bouncing-plots/bounce-error-speed', fileName, '.eps'), 'epsc')
+% saveas(h, strcat('bouncing-plots/bounce-error-speed', fileName, '.fig'), 'fig')
 
 end
 

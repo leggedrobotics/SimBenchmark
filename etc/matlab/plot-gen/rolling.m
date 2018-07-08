@@ -91,7 +91,7 @@ erpYdirXY = plotoption;
 % erpYdirXY.DARTPGS = false;      % DART is pyramid friction cone
 
 disp('plotting error vs real-time-factor...')
-plot_error_speed(T, const, plotSpec, false, false, '-noerp-y', '(Y force)', erpNdirY);
+% plot_error_speed(T, const, plotSpec, false, false, '-noerp-y', '(Y force)', erpNdirY);
 plot_error_speed(T, const, plotSpec, false, true, '-noerp-xy', '(XY force)', erpNdirXY);
 % plot_error_speed(T, const, plotSpec, true, false, '-erp-y', '(Y force)', erpYdirY);
 % plot_error_speed(T, const, plotSpec, true, true, '-erp-xy', '(XY force)', erpYdirXY);
@@ -132,9 +132,9 @@ text(1:length(speed), ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
 ylim([0, 25])
-saveas(h, strcat('rolling-plots/rolling-speed-bar.png'))
-saveas(h, strcat('rolling-plots/rolling-speed-bar.eps'), 'epsc')
-saveas(h, strcat('rolling-plots/rolling-speed-bar.fig'), 'fig')
+% saveas(h, strcat('rolling-plots/rolling-speed-bar.png'))
+% saveas(h, strcat('rolling-plots/rolling-speed-bar.eps'), 'epsc')
+% saveas(h, strcat('rolling-plots/rolling-speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -200,7 +200,8 @@ for i = 1:length(sims)
                 data.ERROR, ...
                 plotspec{1}, ...
                 'DisplayName', plotspec{2}, ...
-                'color', plotspec{3})
+                'color', plotspec{3}, ...
+                'linewidth', 1)
         end
         % end of integrator
     end
@@ -208,15 +209,15 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title(['Velocity Error ', plotTitle])
-xlabel(sprintf('real time factor \n FAST →'))
-ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
+title(['rolling test'])
+xlabel(sprintf('real time factor'))
+ylabel(sprintf('squared error (m/s)^2'))
 % ylim([1e-13, 1e2])
 lgd = legend('Location', 'northeast');
 lgd.NumColumns = 2;
-saveas(h, strcat('rolling-plots/rolling-error-speed', fileName, '.png'))
-saveas(h, strcat('rolling-plots/rolling-error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('rolling-plots/rolling-error-speed', fileName, '.fig'), 'fig')
+% saveas(h, strcat('rolling-plots/rolling-error-speed', fileName, '.png'))
+% saveas(h, strcat('rolling-plots/rolling-error-speed', fileName, '.eps'), 'epsc')
+% saveas(h, strcat('rolling-plots/rolling-error-speed', fileName, '.fig'), 'fig')
 
 end
 

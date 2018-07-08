@@ -20,15 +20,15 @@ layout: default
     }
 
     img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
 </style>
 
-<h1>666 test</h1>
+<h1>Elastic 666 test</h1>
 
-<img src="666.gif" alt="666-test">
+<img src="666-elastic.gif" alt="666-elastic-test">
 
 <h2>Test scenario</h2>
 
@@ -37,7 +37,7 @@ layout: default
     <li>Zero friction</li>
     <li>6 x 6 x 6 number of 10 kg spheres</li>
     <li>Small perturbation in position to collapse</li>
-    <li>Metric: pairwise penetration of objects</li>
+    <li>Metric: system energy</li>
 </ul>
 
 <h2>Tested solver list</h2>
@@ -50,7 +50,7 @@ layout: default
     </li>
     <li>Bullet
         <ul>
-            <li>Sequence Impulse</li>
+            <li>Sequence impulse</li>
         </ul>
     </li>
     <li>ODE
@@ -59,14 +59,14 @@ layout: default
             <li>LCP PGS</li>
         </ul>
     </li>
-    <li>MuJoCo
-        <ul>
+    <li><strike>MuJoCo</strike><sup><a href="#[1]">[1]</a></sup>
+        <strike><ul>
             <li>PGS</li>
             <li>CG</li>
             <li>Newton</li>
-        </ul>
+        </ul></strike>
     </li>
-    <li><strike>Dart</strike><sup><a href="#[1]">[1]</a></sup>
+    <li><strike>Dart</strike><sup><a href="#[2]">[2]</a></sup>
         <strike><ul>
             <li>Dantzig</li>
             <li>LCP PGS</li>
@@ -78,23 +78,16 @@ layout: default
 
 <ul>
     <li id="[1]">
-        [1] Dart simulation fails in this test. The solver terminates with segmentation fault error.
+        [1] Elastic collision cannot be simulated in MuJoCo. See <a href="../bouncing/bouncing.html">Bouncing test page</a> for more details.
+    </li>
+    <li id="[2]">
+        [2] Dart simulation fails in this test. The solver stopped with an error message and finally terminates with segmentation fault error.
     </li>
 </ul>
 
 
-
 <h2>Results</h2>
 
-<p>
-    The accuracy-speed plot and speed bar graph of 666 test are as follows:
+<img src="speed-accuracy.png">
 
-    <img src="666-error-speed.png" alt="666-error-speed-plot">
-    <img src="666-speed-bar.png" alt="666-speed-bar-graph">
-</p>
-
-<p>
-    MuJoCo cannot specify restitution coefficient. There's uncontrollable bouncy behavior as the following video.
-
-    <img src="666-mujoco-dt=0.01.gif" alt="666-test-mujoco">
-</p>
+<img src="speed.png">

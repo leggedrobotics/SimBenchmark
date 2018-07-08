@@ -99,7 +99,7 @@ for i = 1:size(T2, 1)
         'FaceColor', spec{3})
 end
 hold off
-title('ANYmal Energy')
+title('ANYmal energy test')
 % numbers on bars
 text(1:length(speed), ...
     speed, ...
@@ -108,11 +108,11 @@ text(1:length(speed), ...
     'horiz','center', ...
     'FontWeight','bold', ...
     'FontSize', 8);
-ylabel(sprintf('timestep per second (kHz) \n FAST →'))
+ylabel(sprintf('timestep per second (kHz)'))
 % ylim([0, 190])
-saveas(h, strcat('anymal-energy-plots/anymal-energy-speed-bar.png'))
-saveas(h, strcat('anymal-energy-plots/anymal-energy-speed-bar.eps'), 'epsc')
-saveas(h, strcat('anymal-energy-plots/anymal-energy-speed-bar.fig'), 'fig')
+% saveas(h, strcat('anymal-energy-plots/anymal-energy-speed-bar.png'))
+% saveas(h, strcat('anymal-energy-plots/anymal-energy-speed-bar.eps'), 'epsc')
+% saveas(h, strcat('anymal-energy-plots/anymal-energy-speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -181,16 +181,16 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title('ANYmal Energy')
-xlabel(sprintf('real time factor \n FAST →'))
-ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
+title('ANYmal energy test')
+xlabel(sprintf('real time factor'))
+ylabel(sprintf('squared error (J^2)'))
 % xlim([1e-1, 10^5.5])
 % ylim([1e-8, 1e6])
 lgd = legend('Location', 'northeast');
 lgd.NumColumns = 2;
-saveas(h, strcat('anymal-energy-plots/anymal-energy-error-speed', fileName, '.png'))
-saveas(h, strcat('anymal-energy-plots/anymal-energy-error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('anymal-energy-plots/anymal-energy-error-speed', fileName, '.fig'), 'fig')
+% saveas(h, strcat('anymal-energy-plots/anymal-energy-error-speed', fileName, '.png'))
+% saveas(h, strcat('anymal-energy-plots/anymal-energy-error-speed', fileName, '.eps'), 'epsc')
+% saveas(h, strcat('anymal-energy-plots/anymal-energy-error-speed', fileName, '.fig'), 'fig')
 
 
 end

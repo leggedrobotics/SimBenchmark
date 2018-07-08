@@ -3,7 +3,7 @@ formatSpec = '%C%C%C%C%d%f%f';
 
 % load csv
 T = readtable(...
-    '../../../data/atlas/sample.csv', ...
+    '../../../data/atlas/final.csv', ...
     'Delimiter', ',', ...
     'Format',formatSpec ...
     );
@@ -139,8 +139,8 @@ plot(MJC_NEWTON_numrows.^2, ...
 %     'DisplayName', plotspec.ODESTANDARDODE{2})
 % plot(DART_DAN_ODE_numrows.^2, DART_DAN_ODE_mins, '-m.') % redundant
 % plot(DART_PGS_ODE_numrows.^2, DART_PGS_ODE_mins, '-mo') % redundant
-xlabel('number of robots (n)')
-ylabel(sprintf('timestep per second (kHz) \n FAST →'))
+xlabel('the number of robots')
+ylabel(sprintf('timestep per second (kHz)'))
 legend('Location', 'eastoutside')
 title('Atlas PD control test')
 hold off
@@ -193,17 +193,25 @@ plot(MJC_NEWTON_numrows.^2, ...
 %     'DisplayName', plotspec.ODESTANDARDODE{2})
 % plot(DART_DAN_ODE_numrows.^2, DART_DAN_ODE_mins, '-m.') % redundant
 % plot(DART_PGS_ODE_numrows.^2, DART_PGS_ODE_mins, '-mo') % redundant
-xlabel('number of robots (log n)')
-ylabel(sprintf('timestep per second (log kHz) \n FAST →'))
+xlabel('the number of robots')
+ylabel(sprintf('timestep per second (kHz)'))
 legend('Location', 'northeast')
 hold off
-title('ANYmal PD control test (log scale)')
-ylim([0, 10^2.5])
-xlim([0, 10^2.5])
-set(gca, 'YScale', 'log', 'XScale', 'log')
-saveas(gcf,'anymal-pd-plots/anymal-plot-log.eps','epsc')
-saveas(gcf,'anymal-pd-plots/anymal-plot-log.fig','fig')
-saveas(gcf,'anymal-pd-plots/anymal-plot-log.png')
+title('Atlas PD control test')
+ylim([0, 10^1.5])
+xlim([0, 10^1.5])
+set(gca, ...
+    'YScale', 'log', ...
+    'XScale', 'log', ...
+    'YMinorTick', 'off', ...
+    'XMinorTick', 'off', ...
+    'YMinorGrid', 'off', ...
+    'XMinorGrid', 'off')
+box on
+grid on
+% saveas(gcf,'anymal-pd-plots/anymal-plot-log.eps','epsc')
+% saveas(gcf,'anymal-pd-plots/anymal-plot-log.fig','fig')
+% saveas(gcf,'anymal-pd-plots/anymal-plot-log.png')
 
 % speed bar graph (1 anymal)
 c = categorical({...
@@ -244,7 +252,7 @@ bar(T2.sim(6), T2.speed(6), 'FaceColor', plotspec.DARTDANTZIGDART{3})
 bar(T2.sim(7), T2.speed(7), 'FaceColor', plotspec.DARTPGSDART{3})      
 % bar(T2.sim(8), T2.speed(8), 'FaceColor', plotspec.ODESTANDARDODE{3})  
 hold off
-title('Atlas PD control test (1 robot)')
+title('Atlas PD control test')
 % numbers on bars
 text(1:length(T2.speed), ...
     T2.speed, ...
@@ -252,9 +260,9 @@ text(1:length(T2.speed), ...
     'vert', 'bottom', ...
     'horiz','center', ...
     'FontWeight','bold');
-ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-ylim([0, 35])
-
-saveas(gcf,'anymal-pd-plots/anymal-speed-bar.eps','epsc')
-saveas(gcf,'anymal-pd-plots/anymal-speed-bar.fig','fig')
-saveas(gcf,'anymal-pd-plots/anymal-speed-bar.png')
+ylabel(sprintf('timestep per second (kHz)'))
+ylim([0, 30])
+% 
+% saveas(gcf,'anymal-pd-plots/anymal-speed-bar.eps','epsc')
+% saveas(gcf,'anymal-pd-plots/anymal-speed-bar.fig','fig')
+% saveas(gcf,'anymal-pd-plots/anymal-speed-bar.png')

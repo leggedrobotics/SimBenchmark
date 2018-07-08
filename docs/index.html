@@ -70,7 +70,7 @@ layout: default
 <h2>List of Physics Engines</h2>
 
 <p>
-    We evaluated the most widely-used physics engines for robotics and machine learning applications.<sup><a href="#[1]">[1]</a></sup>
+    We evaluated the most widely-used physics engines for robotics and machine learning applications.<a href="#[1]">[1]</a>
     The list of the engines is as follows:
 <ul>
     <li>RaiSim (unreleased)
@@ -201,7 +201,7 @@ layout: default
 </p>
 
 <p>
-    In order to evaluate the performance, we have to take into account whole speed-accuracy curve as proposed in <a href="https://homes.cs.washington.edu/~todorov/papers/ErezICRA15.pdf">Tom Erez et al</a>..
+    In order to evaluate the performance, we have to take into account whole speed-accuracy curve as proposed in <a href="#[2]">[2]</a>.
 
     In the following example of speed-accuracy curve, the ideal engine is on the top-right corner, besides most of the engines are represented as the curves sloping downwards from left to right.
     The better engine's curve locates upper-right than others, thus the engine 1 represented by curve 1 is better than the engine 2 represented by curve 2.
@@ -226,15 +226,15 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
 
 <p>
 <ul>
-    <li><a href="rolling/rolling.html">Rolling test</a>: friction model test</li>
-    <li><a href="bouncing/bouncing.html">Bouncing test</a>: single-body elastic collision test</li>
-    <li><a href="666/666.html">666 balls test</a>: single-body hard contact test</li>
-    <li><a href="666/666-elastic.html">Elastic 666 balls test</a>: single-body energy test</li>
+    <li><a href="rolling/index.html">Rolling test</a>: friction model test</li>
+    <li><a href="bouncing/index.html">Bouncing test</a>: single-body elastic collision test</li>
+    <li><a href="666/index.html">666 balls test</a>: single-body hard contact test</li>
+    <li><a href="elastic666/index.html">Elastic 666 balls test</a>: single-body energy test</li>
     <!--<li><a href="kapla/kapla.html">Kapla test</a>: single-body stacking test</li>-->
-    <li><a href="anymal/anymal.html">ANYmal PD control test</a>: articulated-robot-system speed test for quadrupedal robot</li>
-    <li><a href="anymal/anymal.html">Atlas PD control test</a>: articulated-robot-system speed test for bipedal robot</li>
-    <li><a href="anymal-momentum/anymal-momentum.html">ANYmal momentum test</a>: articulated-robot-system momentum test</li>
-    <li><a href="anymal-energy/anymal-energy.html">ANYmal energy test</a>: articulated-robot-system energy test</li>
+    <li><a href="anymal/index.html">ANYmal PD control test</a>: articulated-robot-system speed test for quadrupedal robot</li>
+    <li><a href="atlas/index.html">Atlas PD control test</a>: articulated-robot-system speed test for bipedal robot</li>
+    <li><a href="anymal-momentum/index.html">ANYmal momentum test</a>: articulated-robot-system momentum test</li>
+    <li><a href="anymal-energy/index.html">ANYmal energy test</a>: articulated-robot-system energy test</li>
 </ul>
 </p>
 
@@ -243,80 +243,76 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
 <p>
 <table style="width:100%">
     <tr>
-        <th>Engine</th>
+        <th></th>
+        <th>RaiSim</th>
+        <th>Bullet</th>
+        <th>ODE</th>
+        <th>MuJoCo</th>
+        <th>DART</th>
+    </tr>
+    <tr>
         <th>Rolling</th>
+        <td>++</td>
+        <td>+++</td>
+        <td><font color="red">-</font></td>
+        <td>+</td>
+        <td><font color="red">-</font></td>
+    </tr>
+    <tr>
         <th>Bouncing</th>
+        <td>++++</td>
+        <td>++</td>
+        <td>+++</td>
+        <td><font color="red">-</font></td>
+        <td>+</td>
+    </tr>
+    <tr>
         <th>666</th>
+        <td>++++</td>
+        <td>+</td>
+        <td>+++</td>
+        <td>++</td>
+        <td><font color="red">x</font></td>
+    </tr>
+    <tr>
         <th>Elastic 666</th>
-        <!--<th>Building</th>-->
+        <td>+++</td>
+        <td>+</td>
+        <td>++</td>
+        <td><font color="red">-</font></td>
+        <td><font color="red">x</font></td>
+    </tr>
+    <tr>
         <th>ANYmal PD</th>
+        <td>+++++</td>
+        <td>+++</td>
+        <td>+</td>
+        <td>++++</td>
+        <td>++</td>
+    </tr>
+    <tr>
         <th>Atlas PD</th>
-        <th>ANYmal momentum</th>
-        <th>ANYmal energy</th>
-    </tr>
-    <tr>
-        <td>RaiSim</td>
-        <td>++</td>
-        <td><font color="green"><b>++++</b></font></td>
-        <td><font color="green"><b>++++</b></font></td>
-        <td><font color="green"><b>+++</b></font></td>
-        <!--<td></td>-->
-        <td><font color="green"><b>+++++</b></font></td>
-        <td><font color="green"><b>+++++</b></font></td>
+        <td>+++++</td>
         <td>+++</td>
+        <td>+</td>
         <td>++++</td>
-    </tr>
-    <tr>
-        <td>Bullet</td>
-        <td><font color="green"><b>+++</b></font></td>
-        <td>++</td>
-        <td>+</td>
-        <td>+</td>
-        <!--<td></td>-->
-        <td>+++</td>
-        <td>+++</td>
-        <td>++</td>
-        <td>+++</td>
-    </tr>
-    <tr>
-        <td>ODE</td>
-        <td><font color="red">-</font></td>
-        <td>+++</td>
-        <td>+++</td>
-        <td>++</td>
-        <!--<td></td>-->
-        <td>+</td>
-        <td></td>
-        <td><font color="green"><b>+++++</b></font></td>
         <td>++</td>
     </tr>
     <tr>
-        <td>MuJoCo</td>
+        <th>ANYmal<br>Momentum</th>
+        <td>+++++</td>
+        <td>+++</td>
         <td>+</td>
-        <td><font color="red">-</font></td>
-        <td>++</td>
-        <td><font color="red">-</font></td>
-        <!--<td></td>-->
         <td>++++</td>
-        <td>++++</td>
-        <td>++++ (RK4)<br>
-            ++ (Euler)
-        </td>
-        <td><font color="green"><b>+++++</b></font> (RK4)<br>
-            +++ (Euler)
-        </td>
+        <td>++</td>
     </tr>
     <tr>
-        <td>DART</td>
-        <td><font color="red">-</font></td>
+        <th>ANYmal<br>Energy</th>
+        <td>+++++</td>
+        <td>+++</td>
         <td>+</td>
-        <td><font color="red">x</font></td>
-        <td><font color="red">x</font></td>
-        <!--<td></td>-->
+        <td>++++</td>
         <td>++</td>
-        <td>++</td>
-        <td>+</td>
-        <td>+</td>
     </tr>
 </table>
 </p>
@@ -344,10 +340,15 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
 
 <h2>References</h2>
 
-<ol>
+<ol class="bib">
     <li id="[1]">
         <a href="https://arxiv.org/pdf/1402.7050.pdf">
-            S. Ivaldi, V. Padois, and F. Nori, "Tools for dynamics simulation of robots: a survey based on user feedback", 2014
+            S. Ivaldi et al., "Tools for dynamics simulation of robots: a survey based on user feedback", 2014
+        </a>
+    </li>
+    <li id="[2]">
+        <a href="https://arxiv.org/pdf/1402.7050.pdf">
+            Tom Erez et al., "Simulation Tools for Model-Based Robotics: Comparison of Bullet, Havok, MuJoCo, ODE and PhysX", 2015
         </a>
     </li>
 </ol>

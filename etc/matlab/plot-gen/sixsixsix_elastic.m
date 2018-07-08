@@ -6,7 +6,7 @@ addpath(genpath('../lib/yamlmatlab'))
 
 % data path
 data_dir = '../../../data/666-elastic/';
-file_name = 'sample.csv';
+file_name = 'final.csv';
 
 % yaml path
 yaml_path = '../../../benchmark/yaml/666.yaml';
@@ -29,7 +29,7 @@ const = yaml_data.constant;
 const.T = 10;       % TODO should be get from somewhere
 
 % csv format
-formatSpec = '%C%C%C%C%d%d%f%f%f';
+formatSpec = '%C%C%C%C%d%f%f%f';
 
 T = readtable(...
     strcat(data_dir, file_name), ...
@@ -43,7 +43,6 @@ entry = {...
     'DETECTOR', ...
     'INTEGRATOR', ...
     'ERP', ...
-    'ELASTIC', ...
     'TIMESTEP', ...
     'ENERGYERROR', ...
     'TIME' ...
@@ -89,7 +88,7 @@ numIter = simTime / dt;
 
 % filtering
 T2 = T2(T2.TIMESTEP == dt, :);
-T2 = sortrows(T2, 9);
+T2 = sortrows(T2, 8);
 
 speed = numIter ./ T2.TIME ./ 1000;
 
@@ -117,7 +116,7 @@ for i = 1:size(T2, 1)
         'FaceColor', spec{3})
 end
 hold off
-title(sprintf('Elastic 666 test speed (timestep = %f)', dt))
+title(['elastic 666 test'])
 % numbers on bars
 text(1:length(speed), ...
     speed, ...
@@ -125,10 +124,10 @@ text(1:length(speed), ...
     'vert', 'bottom', ...
     'horiz','center', ...
     'FontWeight','bold');
-ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-saveas(h, strcat('666-elastic-plots/elastic-speed-bar.png'))
-saveas(h, strcat('666-elastic-plots/elastic-speed-bar.eps'), 'epsc')
-saveas(h, strcat('666-elastic-plots/elastic-speed-bar.fig'), 'fig')
+ylabel(sprintf('timestep per second (kHz)'))
+% saveas(h, strcat('666-elastic-plots/elastic-speed-bar.png'))
+% saveas(h, strcat('666-elastic-plots/elastic-speed-bar.eps'), 'epsc')
+% saveas(h, strcat('666-elastic-plots/elastic-speed-bar.fig'), 'fig')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% functions
@@ -137,7 +136,7 @@ function plot_error_speed(dataTable, const, plotSpec, erpYN, fileName, plotTitle
 
 % filter
 dataTable = dataTable(...
-    dataTable.ERP == erpYN & dataTable.ELASTIC == true, :);
+    dataTable.ERP == erpYN, :);
 
 % ball + box
 sims = unique(dataTable.SIM);
@@ -182,7 +181,7 @@ for i = 1:length(sims)
             
             % data
             data = Tsimsol(Tsimsol.INTEGRATOR == categorical(integrator), :);
-            data = sortrows(data, 7);
+            data = sortrows(data, 6);
             
             % plot
             plotspec = getfield(plotSpec, char(name));
@@ -201,16 +200,16 @@ for i = 1:length(sims)
 end
 % end sims
 hold off
-title(['Energy Error ', plotTitle])
-xlabel(sprintf('real time factor \n FAST →'))
-ylabel(sprintf('squared error (log scale) \n ACCURATE →'))
+title(['elastic 666 test'])
+xlabel(sprintf('real time factor'))
+ylabel(sprintf('squared error (J^2)'))
 % xlim([10^-1.5 10^2.5])
 % ylim([10^-4 10^9])
 % legend('Location', 'eastoutside');
 legend('Location', 'northeast');
-saveas(h, strcat('666-elastic-plots/666-elastic-error-speed', fileName, '.png'))
-saveas(h, strcat('666-elastic-plots/666-elastic-error-speed', fileName, '.eps'), 'epsc')
-saveas(h, strcat('666-elastic-plots/666-elastic-error-speed', fileName, '.fig'), 'fig')
+% saveas(h, strcat('666-elastic-plots/666-elastic-error-speed', fileName, '.png'))
+% saveas(h, strcat('666-elastic-plots/666-elastic-error-speed', fileName, '.eps'), 'epsc')
+% saveas(h, strcat('666-elastic-plots/666-elastic-error-speed', fileName, '.fig'), 'fig')
 
 end
 

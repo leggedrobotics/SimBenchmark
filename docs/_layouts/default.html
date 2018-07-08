@@ -2,13 +2,13 @@
 <html lang="{{ site.lang | default: "en-US" }}">
 
 <style>
-    ol {
+    ol.bib {
         counter-reset: list;
     }
-    ol > li {
+    ol.bib > li {
         list-style: none;
     }
-    ol > li:before {
+    ol.bib > li:before {
         content: "[" counter(list) "] ";
         counter-increment: list;
     }

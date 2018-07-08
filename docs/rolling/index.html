@@ -30,13 +30,16 @@ layout: default
 
 <img src="rolling.gif" alt="rolling-test">
 
-<p>Rolling test is for testing frictional contact behaviors. The error is measured by comparing the simulation with the analytical solution. </p>
+<p>
+    Rolling test is for testing frictional contact behaviors.
+    We simulated simple system of primitive ball and box shaped objects.
+    The error is measured by comparing the simulation with the analytical solution.
+</p>
 
 <p>The test focuses on:
   <ol>
       <li>The quality of the friction cone (linear or elliptic)</li>
       <li>The accuracy of frictional contact simulation</li>
-      <li>The violation of hard-contact constraint (penetration)</li>
   </ol>
 </p>
 
@@ -100,7 +103,7 @@ The setup of the test is as follows:
 
 <h2>Results</h2>
 
-<img src="rolling-error-speed.png" alt="rolling-test-error-plot">
+<img src="speed-accuracy.png">
 <p>
   The accuracy of RaiSim is bound by the contact solver threshold. This hyperparameter was not tunned for this test.
 </p>
@@ -141,24 +144,5 @@ The setup of the test is as follows:
 
 <p>Bullet and Rai are stable, accurate and fast as the following figure.</p>
 
-<img src="rolling-speed-bar.png" alt="rolling-test-speed-bar">
+<!--<img src="rolling-speed-bar.png" alt="rolling-test-speed-bar">-->
 
-<!---
-#### With ERP
-
-![error-realtimefactor-image-noerp-xy](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/rolling/error-speed-noerp-xy.png)
-
-#### Without ERP
-
-![error-realtimefactor-image-noerp-xy](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/rolling/error-speed-noerp-xy.png)
-
-## Force along Y-direction
-
-#### With ERP
-
-![error-realtimefactor-image-noerp-xy](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/rolling/error-speed-noerp-y.png)
-
-#### Without ERP
-
-![error-realtimefactor-image-noerp-xy](https://raw.githubusercontent.com/EastskyKang/simbench/master/img/rolling/error-speed-erp-y.png)
---->
