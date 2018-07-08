@@ -20,46 +20,49 @@ layout: default
     }
 </style>
 
-<h1>Rigid Body Simulators and Contact Solvers</h1>
+<h1 id="RaiSim">RaiSim</h1>
 
-<h2>RaiSim</h2>
+<h2>What is RaiSim?</h2>
+
+<div class="row">
+    <div class="column">
+        <img src="anymal.gif">
+        <!--<figcaption>ANYmal PD control simulation (articulated robot system simulation)</figcaption>-->
+    </div>
+    <div class="column">
+        <img src="zerogravity.gif">
+        <!--<figcaption>Zero gravity demo (Single body objects collision simulation)</figcaption>-->
+    </div>
+</div>
 
 <p>
     RaiSim is a rigid body simulator developed by researchers at <a href="http://www.rsl.ethz.ch/">RSL, ETH Zurich</a> (Jemin Hwangbo and Dongho Kang).
-    RaiSim features efficient recursive algorithms for articulated systems as well as the new novel contact solver described in [1].
+    RaiSim features efficient recursive algorithms for articulated systems as well as the new novel contact solver described in <a href="#[1]">[1]</a>.
     The goal of RaiSim project is to provide simulation for data-driven robotics and animation research. Since the robotics community needs quality data that reflects the reality, RaiSim is designed for uncompromising accuracy. It is also designed to be nearly tuning-free to ease the pain of manual parameter tuning.
     All the systems presented here are simulated with the default setup.
     RaiSim is currently unreleased and only the researchers at RSL, ETH Zurich have an access.
 </p>
 
-<hr>
+<p>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/PLDokgtql5s?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</p>
 
-<ul>
-  <li>[1] Hwangbo, Jemin, Joonho Lee, and Marco Hutter. "Per-Contact Iteration Method for Solving Contact Dynamics." IEEE Robotics and Automation Letters (2018).
-</ul>
+<ol>
+  <li id="[1]">Hwangbo, Jemin, Joonho Lee, and Marco Hutter. "Per-Contact Iteration Method for Solving Contact Dynamics." IEEE Robotics and Automation Letters (2018).
+</ol>
 
 <hr>
 <h2>Bullet Physics</h2>
 
-Bullet Physics(Bullet) is physics engine developed by Erwin Coumans. It is one of the most commonly used simulator in computer games, computer graphics and robotics.
-Bullet is open-source subject to the terms of the zlib license. In the benchmark, we used version 2.87 of Bullet Physics that is the most recent stable version.
+<img src="bullet-physics-logo.png">
 
-<h3>Solvers</h3>
+<p>
+    Bullet Physics(Bullet) is an open-source physics engine developed by Erwin Coumans subject to the terms of the zlib license.
+    It is one of the most commonly used simulator in computer games, computer graphics and robotics: it is a back-end physics engine of Gazebo and V-REP.
+    In the benchmark, we used version 2.87 of Bullet Physics that is the most recent stable version.
+</p>
 
-<h4>Sequence Impulse</h4>
-<h4>NNCG</h4>
-<h4>MLCP Projected Gauss Seidel solver</h4>
-<h4>Multibody solver</h4>
-
-<h4>Others</h4>
-
-These solvers are obsolete or experimental that is not used:
-<ul>
-    <li>MLCP Dantzig solver</li>
-    <li>MLCP Lemke solver</li>
-</ul>
-
-<h3>Test setup</h3>
+<h3>Implementation details</h3>
 <ul>
     <li>ERP = 0</li>
     <li>CFM = 0</li>
@@ -71,116 +74,23 @@ These solvers are obsolete or experimental that is not used:
 <hr>
 <h2>ODE</h2>
 
-The Open Dynamics Engine (ODE) is a free library for simulating articulated rigid body dynamics. Proven applications include simulating ground vehicles, legged creatures, and moving objects in VR environments. It is fast, flexible and robust, and has built-in collision detection. ODE is being developed by Russell Smith with help from several contributors.
-
-<h3>Standard solver</h3>
-<h3>Quick solver</h3>
+The Open Dynamics Engine (ODE) is a free library for simulating articulated rigid body dynamics.
+Proven applications include simulating ground vehicles, legged creatures, and moving objects in VR environments.
+It is fast, flexible and robust, and has built-in collision detection. ODE is being developed by Russell Smith with help from several contributors.
 
 <hr>
 <h2>MuJoCo</h2>
 
-MuJoCo is a physics engine for robotics, biomechanics, graphics applications. It offers a unique combination of speed, accuracy and modeling power, yet it is not merely a better simulator. Instead it is the first full-featured simulator designed from the ground up for the purpose of model-based optimization, and in particular optimization through contacts. MuJoCo makes it possible to scale up computationally-intensive techniques such optimal control, physically-consistent state estimation, system identification and automated mechanism design, and apply them to complex dynamical systems in contact-rich behaviors. It also has more traditional applications such as testing and validation of control schemes before deployment on physical robots, interactive scientific visualization, virtual environments, animation and gaming.
+MuJoCo is a physics engine for robotics, biomechanics, graphics applications.
+It offers a unique combination of speed, accuracy and modeling power, yet it is not merely a better simulator.
+Instead it is the first full-featured simulator designed from the ground up for the purpose of model-based optimization, and in particular optimization through contacts. MuJoCo makes it possible to scale up computationally-intensive techniques such optimal control, physically-consistent state estimation, system identification and automated mechanism design, and apply them to complex dynamical systems in contact-rich behaviors. It also has more traditional applications such as testing and validation of control schemes before deployment on physical robots, interactive scientific visualization, virtual environments, animation and gaming.
 
 MuJoCo was developed by Emo Todorov for Roboti LLC. Initially it was used at the Movement Control Laboratory, University of Washington, and has more recently been adopted by the wider research community. Additional resources as well as support are available on the Forum. There is also extensive Documentation formatted as an online book.
-
-<h3>Projected Gauss Seidel(PGS) solver</h3>
-
-<p>This is the most common algorithm used in physics simulators, and used to be the default in MuJoCo, until we developed the Newton method which appears to be better in every way. PGS uses the dual formulation. Unlike gradient-based method which improve the solution along oblique directions, Gauss-Seidel works on one scalar component at a time, and sets it to its optimal value given the current values of all other components. One sweep of PGS has the computational complexity of one matrix-vector multiplication (although the constants are larger). It has first-order convergence but nevertheless makes rapid progress in a few iterations.(from MuJoCo)</p>
-
-<h3>Conjugated Gradient(CG) solver</h3>
-
-<p>This algorithm uses the non-linear conjugate gradient method with the Polak-Ribiere-Plus formula. Line-search is exact, using Newton's method in one dimension, with analytical second derivatives.(from MuJoCo)</p>
-
-<h3>Newton solver</h3>
-
-<p>This algorithm implements the exact Newton method, with analytical second-order derivatives and Cholesky factorization of the Hessian. The line-search is the same as in the CG method.</p>
 
 <hr>
 <h2>DART Sim</h2>
 
 DART (Dynamic Animation and Robotics Toolkit) is a collaborative, cross-platform, open source library created by the Graphics Lab and Humanoid Robotics Lab at Georgia Institute of Technology with ongoing contributions from the Personal Robotics Lab at University of Washington and Open Source Robotics Foundation. The library provides data structures and algorithms for kinematic and dynamic applications in robotics and computer animation. DART is distinguished by its accuracy and stability due to its use of generalized coordinates to represent articulated rigid body systems and Featherstone’s Articulated Body Algorithm to compute the dynamics of motion. For developers, in contrast to many popular physics engines which view the simulator as a black box, DART gives full access to internal kinematic and dynamic quantities, such as the mass matrix, Coriolis and centrifugal forces, transformation matrices and their derivatives. DART also provides an efficient computation of Jacobian matrices for arbitrary body points and coordinate frames. The frame semantics of DART allows users to define arbitrary reference frames (both inertial and non-inertial) and use those frames to specify or request data. For air-tight code safety, forward kinematics and dynamics values are updated automatically through lazy evaluation, making DART suitable for real-time controllers. In addition, DART provides flexibility to extend the API for embedding user-provided classes into DART data structures. Contacts and collisions are handled using an implicit time-stepping, velocity-based LCP (linear complementarity problem) to guarantee non-penetration, directional friction, and approximated Coulomb friction cone conditions. DART has applications in robotics and computer animation because it features a multibody dynamic simulator and various kinematic tools for control and motion planning. We used version 6.4 for the benchmark.
-
-<h3>LCP Dantzig solver</h3>
-<h3>LCP PGS solver</h3>
-
-<hr>
-
-<p>
-  <table style="width:100%">
-   <tr>
-     <td></td>
-     <td>RaiSim</td>
-     <td>Bullet</td>
-     <td>ODE</td>
-     <td>MuJoCo</td>
-     <td>DART</td>
-   </tr>
-   <tr>
-      <th>Initial <br> release</th>
-      <td>Unreleased</td>
-      <td>2006</td>
-      <td>2001</td>
-      <td>2015</td>
-      <td>2012</td>
-   </tr>
-   <tr>
-     <th>Author</th>
-     <td>J. Hwangbo<br>D. Kang</td>
-     <td>E. Coumans</td>
-     <td>R. Smith</td>
-     <td>E. Todorov</td>
-     <td>J. Lee et al</td>
-   </tr>
-   <tr>
-     <th>License</th>
-     <td>Proprietary</td>
-     <td>Zlib<br>(open-source)</td>
-     <td>GPL / BSD<br>(open-source)</td>
-     <td>Proprietary</td>
-     <td>BSD</td>
-   </tr>
-   <tr>
-     <th>Main<br>purpose</th>
-     <td>Robotics</td>
-     <td>Game, Graphics</td>
-     <td>Game, Graphics</td>
-     <td>Robotics</td>
-     <td>Robotics</td>
-   </tr>
-   <tr>
-     <th>API</th>
-     <td>C++</td>
-     <td>C++</td>
-     <td>C++</td>
-     <td>C</td>
-     <td>C++</td>
-   </tr>
-   <tr>
-     <th>Interface</th>
-     <td>C++</td>
-     <td>C++ / Python</td>
-     <td>C</td>
-     <td>C</td>
-     <td>C++ / Python</td>
-   </tr>
-   <tr>
-     <th>Solver</th>
-     <td>Bisection</td>
-     <td>LCP / MLCP</td>
-     <td>LCP</td>
-     <td>Newton / PGS / CG</td>
-     <td>LCP</td>
-   </tr>
-   <tr>
-     <th>Integrator</th>
-     <td>Semi-implicit Euler</td>
-     <td>Semi-implicit Euler</td>
-     <td>Semi-implicit Euler</td>
-     <td>Semi-implicit Euler / RK4</td>
-     <td>Semi-implicit Euler</td>
-   </tr>
-  </table>
-</p>
 
 
 <hr>

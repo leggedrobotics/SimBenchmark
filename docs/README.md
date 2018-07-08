@@ -1,5 +1,5 @@
-# Documentation 
+# SimBenchmark Website
 
-This directory contains documentations for SimBench. 
+This directory contains website sources for SimBenchmark. 
 
-The documentation is hosted by GitHub Pages: https://eastskykang.github.io/simbench
+The website is hosted by GitHub Pages: https://eastskykang.github.io/simbench

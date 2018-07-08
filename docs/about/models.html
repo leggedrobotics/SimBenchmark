@@ -1,0 +1,126 @@
+---
+layout: default
+---
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+
+<h1>Contact Models</h1>
+
+<p>
+    RaiSim uses Bisection method that find impulse solution which satisfies both Coulomb's friction cone constraint and zero normal velocity constraint by iterative scheme.
+    This noble contact solving method find accurate solution in very efficient manner.
+
+
+<h3>Projected Gauss Seidel(PGS) solver</h3>
+
+<p>This is the most common algorithm used in physics simulators, and used to be the default in MuJoCo, until we developed the Newton method which appears to be better in every way. PGS uses the dual formulation. Unlike gradient-based method which improve the solution along oblique directions, Gauss-Seidel works on one scalar component at a time, and sets it to its optimal value given the current values of all other components. One sweep of PGS has the computational complexity of one matrix-vector multiplication (although the constants are larger). It has first-order convergence but nevertheless makes rapid progress in a few iterations.(from MuJoCo)</p>
+
+<h3>Conjugated Gradient(CG) solver</h3>
+
+<p>This algorithm uses the non-linear conjugate gradient method with the Polak-Ribiere-Plus formula. Line-search is exact, using Newton's method in one dimension, with analytical second derivatives.(from MuJoCo)</p>
+
+<h3>Newton solver</h3>
+
+<p>This algorithm implements the exact Newton method, with analytical second-order derivatives and Cholesky factorization of the Hessian. The line-search is the same as in the CG method.</p>
+
+</p>
+
+<h1>Coordinate Representation</h1>
+
+
+<p>
+<table style="width:100%">
+    <tr>
+        <td></td>
+        <td>RaiSim</td>
+        <td>Bullet</td>
+        <td>ODE</td>
+        <td>MuJoCo</td>
+        <td>DART</td>
+    </tr>
+    <tr>
+        <th>Initial <br> release</th>
+        <td>Unreleased</td>
+        <td>2006</td>
+        <td>2001</td>
+        <td>2015</td>
+        <td>2012</td>
+    </tr>
+    <tr>
+        <th>Author</th>
+        <td>J. Hwangbo<br>D. Kang</td>
+        <td>E. Coumans</td>
+        <td>R. Smith</td>
+        <td>E. Todorov</td>
+        <td>J. Lee et al</td>
+    </tr>
+    <tr>
+        <th>License</th>
+        <td>Proprietary</td>
+        <td>Zlib<br>(open-source)</td>
+        <td>GPL / BSD<br>(open-source)</td>
+        <td>Proprietary</td>
+        <td>BSD</td>
+    </tr>
+    <tr>
+        <th>Main<br>purpose</th>
+        <td>Robotics</td>
+        <td>Game, Graphics</td>
+        <td>Game, Graphics</td>
+        <td>Robotics</td>
+        <td>Robotics</td>
+    </tr>
+    <tr>
+        <th>API</th>
+        <td>C++</td>
+        <td>C++</td>
+        <td>C++</td>
+        <td>C</td>
+        <td>C++</td>
+    </tr>
+    <tr>
+        <th>Interface</th>
+        <td>C++</td>
+        <td>C++ / Python</td>
+        <td>C</td>
+        <td>C</td>
+        <td>C++ / Python</td>
+    </tr>
+    <tr>
+        <th>Solver</th>
+        <td>Bisection</td>
+        <td>LCP / MLCP</td>
+        <td>LCP</td>
+        <td>Newton / PGS / CG</td>
+        <td>LCP</td>
+    </tr>
+    <tr>
+        <th>Integrator</th>
+        <td>Semi-implicit Euler</td>
+        <td>Semi-implicit Euler</td>
+        <td>Semi-implicit Euler</td>
+        <td>Semi-implicit Euler / RK4</td>
+        <td>Semi-implicit Euler</td>
+    </tr>
+</table>
+</p>
+
+
+<hr>
+<h2>References</h2>

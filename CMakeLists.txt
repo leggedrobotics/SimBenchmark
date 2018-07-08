@@ -17,7 +17,6 @@ endif()
 
 # options
 option(BENCHMARK_RAISIM "benchmark raiSim" ON)
-option(BENCHMARK_BULLET "benchmark Bullet" OFF)     # will be deprecated.
 option(BENCHMARK_BULLET_MULTIBODY "benchmark Bullet Multibody(bullet3 API)" ON)
 option(BENCHMARK_ODE "benchmark ODE" ON)
 option(BENCHMARK_MUJOCO "benchmark MUJOCO" ON)
@@ -40,15 +39,15 @@ find_package(Boost COMPONENTS system filesystem program_options REQUIRED )
 include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
-# yaml-cpp
-find_package(YAML-CPP REQUIRED)
-include_directories(${YAML_CPP_INCLUDE_DIR})
+## yaml-cpp
+#find_package(YAML-CPP REQUIRED)
+#include_directories(${YAML_CPP_INCLUDE_DIR})
 
 # local libs
 add_subdirectory(lib)
 include_directories(${BENCHMARK_LIB_DIR}/raiCommon/include)         # raiCommon
 include_directories(${BENCHMARK_LIB_DIR}/raiGraphics/include)       # raiGraphics
-#include_directories(${BENCHMARK_LIB_DIR}/yaml-cpp/include)          # yaml-cpp
+include_directories(${BENCHMARK_LIB_DIR}/yaml-cpp/include)          # yaml-cpp
 
 ## =========================== LINK ===========================
 set(BENCHMARK_LINK

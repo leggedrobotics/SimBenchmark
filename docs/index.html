@@ -34,7 +34,7 @@ layout: default
 <h1>SimBenchmark</h1>
 
 <p>
-    SimBenchmark is a project for benchmark of rigid body simulators with contacts.
+    SimBenchmark is a project for benchmark of physics engines with contacts.
 </p>
 
 <h2>Introduction</h2>
@@ -50,44 +50,161 @@ layout: default
     </figure>
 </p>
 <p>
-<!-- <div class="row"> -->
+    <!-- <div class="row"> -->
     <!-- <div class="column"> -->
-        <!-- <img src="./img/mujoco-humanoid.png"> -->
-        <!--<figcaption>ANYmal PD control simulation (articulated robot system simulation)</figcaption>-->
+    <!-- <img src="./img/mujoco-humanoid.png"> -->
+    <!--<figcaption>ANYmal PD control simulation (articulated robot system simulation)</figcaption>-->
     <!-- </div> -->
     <!-- <div class="column"> -->
-        <!-- <img src="./img/mujoco-humanoid2.png"> -->
-        <!--<figcaption>Zero gravity demo (Single body objects collision simulation)</figcaption>-->
+    <!-- <img src="./img/mujoco-humanoid2.png"> -->
+    <!--<figcaption>Zero gravity demo (Single body objects collision simulation)</figcaption>-->
     <!-- </div> -->
-<!-- </div> -->
+    <!-- </div> -->
 </p>
 <p>
-    In this benchmark, we provide evaluation of the most commonly-used rigid body simulators in various situations from single-bodies with a limited number of contacts to complex articulated robotic systems with PD control input.
-    We hope this benchmark results would help robotics researchers to find and select the best one for their purposes.
+    In this benchmark, we provide evaluation of the most commonly-used physics engines in various situations from single-bodies with a limited number of contacts to complex articulated robotic systems with PD control input.
+    The main goal of this project is helping robotics researchers to select the best physics engine for their purposes.
 </p>
 
-<h2>List of Simulators</h2>
+<hr>
+<h2>List of Physics Engines</h2>
 
 <p>
-    The list of the simulators is as follows:
+    We evaluated the most widely-used physics engines for robotics and machine learning applications.<sup><a href="#[1]">[1]</a></sup>
+    The list of the engines is as follows:
 <ul>
     <li>RaiSim (unreleased)
-        <ul><li><a href="about/raisim.html"><b>What is RaiSim?</b></a></li></ul>
+        <ul><li><a href="about/sims.html#RaiSim"><b>What is RaiSim?</b></a></li></ul>
     </li>
-    <li><a href="http://bulletphysics.org/">Bullet Physics</a></li>
+    <li><a href="http://bulletphysics.org/">Bullet Physics <i>(Bullet)</i></a></li>
     <li><a href="http://www.ode.org/">Open Dynamics Engine <i>(ODE)</i></a></li>
     <li><a href="http://mujoco.org/">Multi-Joint dynamics with Contact <i>(MuJoCo)</i></a></li>
-    <li><a href="https://dartsim.github.io/">Dynamic Animation and Robotics Toolkit <i>(DART Sim)</i></a></li>
+    <li><a href="https://dartsim.github.io/">Dynamic Animation and Robotics Toolkit <i>(DART)</i></a></li>
 </ul>
-Read <a href="about/sims.html">this page</a> for more details.
 </p>
 
-<h2>Methodology</h2>
+<p>
+    You can find more details about each engine and how they were used in our benchmark software <a href="about/sims.html">here</a>.
+</p>
 
 <p>
-    We measure accuracy and CPU time of simulation with different time step.
-    Since accuracy of numerical solution is usually better when the time step is smaller, we considered this speed-accuracy trade off as proposed in <a href="https://homes.cs.washington.edu/~todorov/papers/ErezICRA15.pdf">Tom Erez et al</a>.
-    In the following example of speed-accuracy curve, the engine 1 represented by curve 1 is better than the engine 2 represented by curve 2.
+<table style="width:100%">
+    <tr>
+        <td></td>
+        <th>RaiSim</th>
+        <th>Bullet</th>
+        <th>ODE</th>
+        <th>MuJoCo</th>
+        <th>DART</th>
+    </tr>
+    <tr>
+        <th>Initial <br> release</th>
+        <td>Unreleased</td>
+        <td>2006</td>
+        <td>2001</td>
+        <td>2015</td>
+        <td>2012</td>
+    </tr>
+    <tr>
+        <th>Author</th>
+        <td>J. Hwangbo<br>D. Kang</td>
+        <td>E. Coumans</td>
+        <td>R. Smith</td>
+        <td>E. Todorov</td>
+        <td>J. Lee et al</td>
+    </tr>
+    <tr>
+        <th>License</th>
+        <td>Proprietary</td>
+        <td>Zlib<br>(open-source)</td>
+        <td>GPL / BSD<br>(open-source)</td>
+        <td>Proprietary</td>
+        <td>BSD</td>
+    </tr>
+    <tr>
+        <th>Main<br>purpose</th>
+        <td>Robotics</td>
+        <td>Game, Graphics</td>
+        <td>Game, Graphics</td>
+        <td>Robotics</td>
+        <td>Robotics</td>
+    </tr>
+    <tr>
+        <th>API</th>
+        <td>C++</td>
+        <td>C++</td>
+        <td>C++</td>
+        <td>C</td>
+        <td>C++</td>
+    </tr>
+    <tr>
+        <th>Interface</th>
+        <td>C++</td>
+        <td>C++ / Python</td>
+        <td>C</td>
+        <td>C</td>
+        <td>C++ / Python</td>
+    </tr>
+    <tr>
+        <th>Contacts</th>
+        <td>Hard</td>
+        <td>Hard/Soft</td>
+        <td>Hard/Soft</td>
+        <td>Soft</td>
+        <td>Hard</td>
+    </tr>
+    <tr>
+        <th>Solver</th>
+        <td>Bisection</td>
+        <td>MLCP</td>
+        <td>LCP</td>
+        <td>Newton / PGS / CG</td>
+        <td>LCP</td>
+    </tr>
+    <tr>
+        <th>Integrator</th>
+        <td>Semi-implicit Euler</td>
+        <td>Semi-implicit Euler</td>
+        <td>Semi-implicit Euler</td>
+        <td>Semi-implicit Euler / RK4</td>
+        <td>Semi-implicit Euler</td>
+    </tr>
+    <tr>
+        <th>Coordinates</th>
+        <td>Minimal</td>
+        <td>Minimal</td>
+        <td>Maximal</td>
+        <td>Minimal</td>
+        <td>Minimal</td>
+    </tr>
+</table>
+</p>
+
+<!--<p>-->
+    <!--As solving contact dynamics is NP-hard problem due to its non-convexity and discontinuity, physics engines model contact problem as relaxed problem that enables using efficient solving methods.    In order to make the problem tractable,-->
+    <!--Each physics engine use different contact model and contact solvers thus has different characteristics. Please read <a href="about/models.html">this page</a> for more details-->
+<!--</p>-->
+
+<hr>
+<h2>Evaluation Metrics</h2>
+
+<p>
+    The error of the contact simulation is mostly caused by
+
+    <ol>
+    <li>inaccurate impulse/force solution from contact solver</li>
+    <li>inherited discretized error from numerical integration.</li>
+    </ol>
+
+    For iterative contact solvers, 1) can be reduced by increasing the number of iteration, and 2) can be reduced by decreasing timestep.
+    In both case, there is speed-accuracy trade-off.
+</p>
+
+<p>
+    In order to evaluate the performance, we have to take into account whole speed-accuracy curve as proposed in <a href="https://homes.cs.washington.edu/~todorov/papers/ErezICRA15.pdf">Tom Erez et al</a>..
+
+    In the following example of speed-accuracy curve, the ideal engine is on the top-right corner, besides most of the engines are represented as the curves sloping downwards from left to right.
+    The better engine's curve locates upper-right than others, thus the engine 1 represented by curve 1 is better than the engine 2 represented by curve 2.
 
     <figure>
         <img src="img/plot-format.png" alt="plot-format">
@@ -102,7 +219,10 @@ Read <a href="about/sims.html">this page</a> for more details.
 
 More details of benchmark methodology is <a href="about/methodology.html">here</a>.
 
-<h2>Test results</h2>
+<hr>
+<h2>Test and Results</h2>
+
+<h3>Tests</h3>
 
 <p>
 <ul>
@@ -110,23 +230,27 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
     <li><a href="bouncing/bouncing.html">Bouncing test</a>: single-body elastic collision test</li>
     <li><a href="666/666.html">666 balls test</a>: single-body hard contact test</li>
     <li><a href="666/666-elastic.html">Elastic 666 balls test</a>: single-body energy test</li>
-    <li><a href="kapla/kapla.html">Kapla test</a>: single-body stacking test</li>
-    <li><a href="anymal/anymal.html">ANYmal PD control test</a>: articulated-robot-system speed test</li>
+    <!--<li><a href="kapla/kapla.html">Kapla test</a>: single-body stacking test</li>-->
+    <li><a href="anymal/anymal.html">ANYmal PD control test</a>: articulated-robot-system speed test for quadrupedal robot</li>
+    <li><a href="anymal/anymal.html">Atlas PD control test</a>: articulated-robot-system speed test for bipedal robot</li>
     <li><a href="anymal-momentum/anymal-momentum.html">ANYmal momentum test</a>: articulated-robot-system momentum test</li>
     <li><a href="anymal-energy/anymal-energy.html">ANYmal energy test</a>: articulated-robot-system energy test</li>
 </ul>
 </p>
 
+<h3>Summary of Results</h3>
+
 <p>
 <table style="width:100%">
     <tr>
-        <th>Sim</th>
+        <th>Engine</th>
         <th>Rolling</th>
         <th>Bouncing</th>
         <th>666</th>
         <th>Elastic 666</th>
-        <th>Building</th>
+        <!--<th>Building</th>-->
         <th>ANYmal PD</th>
+        <th>Atlas PD</th>
         <th>ANYmal momentum</th>
         <th>ANYmal energy</th>
     </tr>
@@ -136,7 +260,8 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
         <td><font color="green"><b>++++</b></font></td>
         <td><font color="green"><b>++++</b></font></td>
         <td><font color="green"><b>+++</b></font></td>
-        <td></td>
+        <!--<td></td>-->
+        <td><font color="green"><b>+++++</b></font></td>
         <td><font color="green"><b>+++++</b></font></td>
         <td>+++</td>
         <td>++++</td>
@@ -147,7 +272,8 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
         <td>++</td>
         <td>+</td>
         <td>+</td>
-        <td></td>
+        <!--<td></td>-->
+        <td>+++</td>
         <td>+++</td>
         <td>++</td>
         <td>+++</td>
@@ -158,8 +284,9 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
         <td>+++</td>
         <td>+++</td>
         <td>++</td>
-        <td></td>
+        <!--<td></td>-->
         <td>+</td>
+        <td></td>
         <td><font color="green"><b>+++++</b></font></td>
         <td>++</td>
     </tr>
@@ -169,7 +296,8 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
         <td><font color="red">-</font></td>
         <td>++</td>
         <td><font color="red">-</font></td>
-        <td></td>
+        <!--<td></td>-->
+        <td>++++</td>
         <td>++++</td>
         <td>++++ (RK4)<br>
             ++ (Euler)
@@ -184,7 +312,8 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
         <td>+</td>
         <td><font color="red">x</font></td>
         <td><font color="red">x</font></td>
-        <td></td>
+        <!--<td></td>-->
+        <td>++</td>
         <td>++</td>
         <td>+</td>
         <td>+</td>
@@ -202,7 +331,6 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
 <hr>
 
 <!--<h2>Conclusion</h2>-->
-
 <h2>Commentary</h2>
 
 <p>
@@ -210,5 +338,16 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
 </p>
 
 <p>
-    Special thanks to
+    Special thanks to Erwin Coumans.
 </p>
+
+
+<h2>References</h2>
+
+<ol>
+    <li id="[1]">
+        <a href="https://arxiv.org/pdf/1402.7050.pdf">
+            S. Ivaldi, V. Padois, and F. Nori, "Tools for dynamics simulation of robots: a survey based on user feedback", 2014
+        </a>
+    </li>
+</ol>

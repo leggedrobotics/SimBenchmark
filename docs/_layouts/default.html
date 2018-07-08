@@ -1,5 +1,19 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: "en-US" }}">
+
+<style>
+    ol {
+        counter-reset: list;
+    }
+    ol > li {
+        list-style: none;
+    }
+    ol > li:before {
+        content: "[" counter(list) "] ";
+        counter-increment: list;
+    }
+</style>
+
 <head>
     <meta charset="UTF-8">
 

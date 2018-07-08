@@ -253,7 +253,7 @@ text(1:length(T2.speed), ...
     'horiz','center', ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz) \n FAST →'))
-ylim([0, 110])
+ylim([0, 35])
 
 saveas(gcf,'anymal-pd-plots/anymal-speed-bar.eps','epsc')
 saveas(gcf,'anymal-pd-plots/anymal-speed-bar.fig','fig')
