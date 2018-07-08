@@ -87,102 +87,108 @@ layout: default
     You can find more details about each engine and how they were used in our benchmark software <a href="about/sims.html">here</a>.
 </p>
 
-<p>
-<table style="width:100%">
-    <tr>
-        <td></td>
-        <th>RaiSim</th>
-        <th>Bullet</th>
-        <th>ODE</th>
-        <th>MuJoCo</th>
-        <th>DART</th>
-    </tr>
-    <tr>
-        <th>Initial <br> release</th>
-        <td>Unreleased</td>
-        <td>2006</td>
-        <td>2001</td>
-        <td>2015</td>
-        <td>2012</td>
-    </tr>
-    <tr>
-        <th>Author</th>
-        <td>J. Hwangbo<br>D. Kang</td>
-        <td>E. Coumans</td>
-        <td>R. Smith</td>
-        <td>E. Todorov</td>
-        <td>J. Lee et al</td>
-    </tr>
-    <tr>
-        <th>License</th>
-        <td>Proprietary</td>
-        <td>Zlib<br>(open-source)</td>
-        <td>GPL / BSD<br>(open-source)</td>
-        <td>Proprietary</td>
-        <td>BSD</td>
-    </tr>
-    <tr>
-        <th>Main<br>purpose</th>
-        <td>Robotics</td>
-        <td>Game, Graphics</td>
-        <td>Game, Graphics</td>
-        <td>Robotics</td>
-        <td>Robotics</td>
-    </tr>
-    <tr>
-        <th>API</th>
-        <td>C++</td>
-        <td>C++</td>
-        <td>C++</td>
-        <td>C</td>
-        <td>C++</td>
-    </tr>
-    <tr>
-        <th>Interface</th>
-        <td>C++</td>
-        <td>C++ / Python</td>
-        <td>C</td>
-        <td>C</td>
-        <td>C++ / Python</td>
-    </tr>
-    <tr>
-        <th>Contacts</th>
-        <td>Hard</td>
-        <td>Hard/Soft</td>
-        <td>Hard/Soft</td>
-        <td>Soft</td>
-        <td>Hard</td>
-    </tr>
-    <tr>
-        <th>Solver</th>
-        <td>Bisection</td>
-        <td>MLCP</td>
-        <td>LCP</td>
-        <td>Newton / PGS / CG</td>
-        <td>LCP</td>
-    </tr>
-    <tr>
-        <th>Integrator</th>
-        <td>Semi-implicit Euler</td>
-        <td>Semi-implicit Euler</td>
-        <td>Semi-implicit Euler</td>
-        <td>Semi-implicit Euler / RK4</td>
-        <td>Semi-implicit Euler</td>
-    </tr>
-    <tr>
-        <th>Coordinates</th>
-        <td>Minimal</td>
-        <td>Minimal</td>
-        <td>Maximal</td>
-        <td>Minimal</td>
-        <td>Minimal</td>
-    </tr>
-</table>
-</p>
+<div align="center">
+    <table style="width:100%">
+        <col width="15%">
+        <col width="17%">
+        <col width="17%">
+        <col width="17%">
+        <col width="17%">
+        <col width="17%">
+        <tr>
+            <td></td>
+            <th><small>RaiSim</small></th>
+            <th><small>Bullet</small></th>
+            <th><small>ODE</small></th>
+            <th><small>MuJoCo</small></th>
+            <th><small>DART</small></th>
+        </tr>
+        <tr>
+            <th><small>Initial <br> release</small></th>
+            <td><small>Unreleased</small></td>
+            <td><small>2006</small></td>
+            <td><small>2001</small></td>
+            <td><small>2015</small></td>
+            <td><small>2012</small></td>
+        </tr>
+        <tr>
+            <th><small>Author</small></th>
+            <td><small>J. Hwangbo<br>D. Kang</small></td>
+            <td><small>E. Coumans</small></td>
+            <td><small>R. Smith</small></td>
+            <td><small>E. Todorov</small></td>
+            <td><small>J. Lee et al</small></td>
+        </tr>
+        <tr>
+            <th><small>License</small></th>
+            <td><small>Proprietary</small></td>
+            <td><small>Zlib<br>(open-source)</small></td>
+            <td><small>GPL / BSD<br>(open-source)</small></td>
+            <td><small>Proprietary</small></td>
+            <td><small>BSD</small></td>
+        </tr>
+        <tr>
+            <th><small>Main<br>purpose</small></th>
+            <td><small>Robotics</small></td>
+            <td><small>Game, Graphics</small></td>
+            <td><small>Game, Graphics</small></td>
+            <td><small>Robotics</small></td>
+            <td><small>Robotics</small></td>
+        </tr>
+        <tr>
+            <th><small>Language</small></th>
+            <td><small>C++</small></td>
+            <td><small>C++</small></td>
+            <td><small>C++</small></td>
+            <td><small>C</small></td>
+            <td><small>C++</small></td>
+        </tr>
+        <tr>
+            <th><small>API</small></th>
+            <td><small>C++</small></td>
+            <td><small>C++ / Python</small></td>
+            <td><small>C</small></td>
+            <td><small>C</small></td>
+            <td><small>C++</small></td>
+        </tr>
+        <tr>
+            <th><small>Contacts</small></th>
+            <td><small>Hard</small></td>
+            <td><small>Hard/Soft</small></td>
+            <td><small>Hard/Soft</small></td>
+            <td><small>Soft</small></td>
+            <td><small>Hard</small></td>
+        </tr>
+        <tr>
+            <th><small>Solver</small></th>
+            <td><small>Bisection</small></td>
+            <td><small>MLCP</small></td>
+            <td><small>LCP</small></td>
+            <td><small>Newton / PGS / CG</small></td>
+            <td><small>LCP</small></td>
+        </tr>
+        <tr>
+            <th><small>Integrator</small></th>
+            <td><small>Semi-implicit Euler</small></td>
+            <td><small>Semi-implicit Euler</small></td>
+            <td><small>Semi-implicit Euler</small></td>
+            <td><small>Semi-implicit Euler / RK4</small></td>
+            <td><small>Semi-implicit Euler</small></td>
+        </tr>
+        <tr>
+            <th><small>Coordinates</small></th>
+            <td><small>Minimal</small></td>
+            <td><small>Minimal</small></td>
+            <td><small>Maximal</small></td>
+            <td><small>Minimal</small></td>
+            <td><small>Minimal</small></td>
+        </tr>
+    </table>
+</div>
 
 <!--<p>-->
-    <!--As solving contact dynamics is NP-hard problem due to its non-convexity and discontinuity, physics engines model contact problem as relaxed problem that enables using efficient solving methods.    In order to make the problem tractable,-->
-    <!--Each physics engine use different contact model and contact solvers thus has different characteristics. Please read <a href="about/models.html">this page</a> for more details-->
+<!--As solving contact dynamics is NP-hard problem due to its non-convexity and discontinuity, physics engines model contact problem as relaxed problem that enables using efficient solving methods.    In order to make the problem tractable,-->
+<!--Each physics engine use different contact model and contact solvers thus has different characteristics. Please read <a href="about/models.html">this page</a> for more details-->
 <!--</p>-->
 
 <hr>
@@ -191,13 +197,13 @@ layout: default
 <p>
     The error of the contact simulation is mostly caused by
 
-    <ol>
+<ol>
     <li>inaccurate impulse/force solution from contact solver</li>
     <li>inherited discretized error from numerical integration.</li>
-    </ol>
+</ol>
 
-    For iterative contact solvers, 1) can be reduced by increasing the number of iteration, and 2) can be reduced by decreasing timestep.
-    In both case, there is speed-accuracy trade-off.
+For iterative contact solvers, 1) can be reduced by increasing the number of iteration, and 2) can be reduced by decreasing timestep.
+In both case, there is speed-accuracy trade-off.
 </p>
 
 <p>
@@ -240,89 +246,103 @@ More details of benchmark methodology is <a href="about/methodology.html">here</
 
 <h3>Summary of Results</h3>
 
-<p>
-<table style="width:100%">
-    <tr>
-        <th></th>
-        <th>RaiSim</th>
-        <th>Bullet</th>
-        <th>ODE</th>
-        <th>MuJoCo</th>
-        <th>DART</th>
-    </tr>
-    <tr>
-        <th>Rolling</th>
-        <td>++</td>
-        <td>+++</td>
-        <td><font color="red">-</font></td>
-        <td>+</td>
-        <td><font color="red">-</font></td>
-    </tr>
-    <tr>
-        <th>Bouncing</th>
-        <td>++++</td>
-        <td>++</td>
-        <td>+++</td>
-        <td><font color="red">-</font></td>
-        <td>+</td>
-    </tr>
-    <tr>
-        <th>666</th>
-        <td>++++</td>
-        <td>+</td>
-        <td>+++</td>
-        <td>++</td>
-        <td><font color="red">x</font></td>
-    </tr>
-    <tr>
-        <th>Elastic 666</th>
-        <td>+++</td>
-        <td>+</td>
-        <td>++</td>
-        <td><font color="red">-</font></td>
-        <td><font color="red">x</font></td>
-    </tr>
-    <tr>
-        <th>ANYmal PD</th>
-        <td>+++++</td>
-        <td>+++</td>
-        <td>+</td>
-        <td>++++</td>
-        <td>++</td>
-    </tr>
-    <tr>
-        <th>Atlas PD</th>
-        <td>+++++</td>
-        <td>+++</td>
-        <td>+</td>
-        <td>++++</td>
-        <td>++</td>
-    </tr>
-    <tr>
-        <th>ANYmal<br>Momentum</th>
-        <td>+++++</td>
-        <td>+++</td>
-        <td>+</td>
-        <td>++++</td>
-        <td>++</td>
-    </tr>
-    <tr>
-        <th>ANYmal<br>Energy</th>
-        <td>+++++</td>
-        <td>+++</td>
-        <td>+</td>
-        <td>++++</td>
-        <td>++</td>
-    </tr>
-</table>
-</p>
+<div align="center">
+    <table style="width:100%">
+        <col width="20%">
+        <col width="16%">
+        <col width="16%">
+        <col width="16%">
+        <col width="16%">
+        <col width="16%">
+        <tr>
+            <th></th>
+            <th>RaiSim</th>
+            <th>Bullet</th>
+            <th>ODE</th>
+            <th>MuJoCo</th>
+            <th>DART</th>
+        </tr>
+        <tr>
+            <th>Rolling</th>
+            <td>++</td>
+            <td><font color="green">+++</font></td>
+            <td><font color="red">-</font></td>
+            <td>+</td>
+            <td><font color="red">-</font></td>
+        </tr>
+        <tr>
+            <th>Bouncing</th>
+            <td><font color="green">++++</font></td>
+            <td>++</td>
+            <td>+++</td>
+            <td><font color="red">-</font></td>
+            <td>+</td>
+        </tr>
+        <tr>
+            <th>666</th>
+            <td><font color="green">+++</font></td>
+            <td>+</td>
+            <td>++</td>
+            <td>+</td>
+            <td><font color="red">x</font></td>
+        </tr>
+        <tr>
+            <th>Elastic 666</th>
+            <td><font color="green">+++</font></td>
+            <td>+</td>
+            <td>++</td>
+            <td><font color="red">-</font></td>
+            <td><font color="red">x</font></td>
+        </tr>
+        <tr>
+            <th>ANYmal PD</th>
+            <td><font color="green">+++++</font></td>
+            <td>+++</td>
+            <td>+</td>
+            <td>++++</td>
+            <td>++</td>
+        </tr>
+        <tr>
+            <th>Atlas PD</th>
+            <td><font color="green">+++++</font></td>
+            <td>+++</td>
+            <td>+</td>
+            <td>++++</td>
+            <td>++</td>
+        </tr>
+        <tr>
+            <th rowspan="2">ANYmal<br>Momentum</th>
+            <td rowspan="2">+++</td>
+            <td rowspan="2">++</td>
+            <td rowspan="2"><font color="green">+++++</font></td>
+            <td>++++ <small>(RK4)</small></td>
+            <td rowspan="2">+</td>
+        </tr>
+        <tr>
+            <td>++ <small>(Euler)</small></td>
+        </tr>
+        <tr>
+            <th rowspan="2">ANYmal<br>Energy</th>
+            <td rowspan="2">++++</td>
+            <td rowspan="2">+++</td>
+            <td rowspan="2">++</td>
+            <td><font color="green">+++++</font> <small>(RK4)</small></td>
+            <td rowspan="2">+</td>
+        </tr>
+        <tr>
+            <td>+++ <small>(Euler)</small></td>
+        </tr>
+    </table>
+</div>
 
+<p>
 <ul>
     <li>more + is better
     <li><font color="green"><b>+</b></font>: best results
     <li><font color="red">-</font>: cannot simulate due to inaccurate model or software bug
     <li><font color="red">x</font>: simulation fails due to a software error
 </ul>
+</p>
 
 <hr>
 
