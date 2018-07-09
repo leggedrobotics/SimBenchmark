@@ -63,6 +63,9 @@ struct Option: benchmark::Option {
   // erp
   bool erpYN = false;
 
+  // default params
+  bool defaultParam = false;
+
   // time step
   double dt = 0.001;
 
@@ -326,6 +329,7 @@ void addDescToOption(po::options_description &desc) {
       ("force", po::value<std::string>(), "applied force direction (y / xy)")
       ("numiter", po::value<int>(), "the number of solver iteration or max number of iteration. (set default number if this option is not set)")
       ("tolerance", po::value<double>(), "solver tolerance value. (set default number if this option is not set)")
+      ("default", "test with default solver parameters")
       ;
 }
 
@@ -407,6 +411,11 @@ void getOptionsFromArg(int argc, const char *argv[], po::options_description &de
   // tolerance
   if(vm.count("tolerance")) {
     options.solverTol = vm["tolerance"].as<double>();
+  }
+
+  // tolerance
+  if(vm.count("default")) {
+    options.defaultParam = true;
   }
 }
 

@@ -32,7 +32,8 @@ void setupSimulation() {
 
 
   // solver iteration
-  sim->setSolverParameter(benchmark::rolling::options.numSolverIter);
+  if(!benchmark::rolling::options.defaultParam)
+    sim->setSolverParameter(benchmark::rolling::options.numSolverIter);
 
 }
 

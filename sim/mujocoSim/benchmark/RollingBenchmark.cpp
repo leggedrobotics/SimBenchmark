@@ -28,7 +28,8 @@ void setupSimulation() {
   sim->setTimeStep(benchmark::rolling::options.dt);
 
   // solver iteration
-  sim->setSolverParameter(1000,
+  if(!benchmark::rolling::options.defaultParam)
+    sim->setSolverParameter(1000,
                           benchmark::rolling::options.solverTol);
 
   /// no erp for mujoco

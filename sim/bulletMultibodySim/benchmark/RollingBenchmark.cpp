@@ -34,8 +34,9 @@ void setupSimulation() {
   sim->setTimeStep(benchmark::rolling::options.dt);
 
   // solver iteration
-  sim->setSolverParameter(1e-30,
-                          benchmark::rolling::options.numSolverIter);
+  if(!benchmark::rolling::options.defaultParam)
+    sim->setSolverParameter(1e-30,
+                            benchmark::rolling::options.numSolverIter);
 }
 
 void setupWorld() {

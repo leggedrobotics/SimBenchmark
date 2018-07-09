@@ -26,7 +26,8 @@ void setupSimulation() {
   // time step
   sim->setTimeStep(benchmark::rolling::options.dt);
 
-  sim->setContactSolverParam(1.0, 0.7, 1.0,
+  if(!benchmark::rolling::options.defaultParam)
+    sim->setContactSolverParam(1.0, 0.7, 1.0,
                              benchmark::rolling::options.numSolverIter,
                              1e-30);
 }
