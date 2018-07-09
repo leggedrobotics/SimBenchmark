@@ -1,35 +1,12 @@
 ---
 layout: default
 ---
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    .column {
-        float: left;
-        width: 50%;
-        padding: 5px;
-    }
-
-    /* Clearfix (clear floats) */
-    .row::after {
-        content: "";
-        clear: both;
-        display: table;
-    }
-
-    img {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-</style>
-
 
 <h1>Bouncing test</h1>
 
+<div align="center">
 <img src="bouncing-elastic.gif" alt="bouncing-elastic-test">
+</div>
 
 <h2>Test scenario</h2>
 
@@ -101,10 +78,15 @@ layout: default
 <h2>Results</h2>
 
 <p>
-    The following figure is accuracy-speed plot of elastic collision case. The energy of the system preserves in Rai and ODE.
-    Rai shows the best result among the simulators.
+    The following figure is accuracy-speed plot of elastic collision case. 
+</p>
 
+<div>
     <img src="speed-accuracy.png">
+</div>
+
+<p>
+    The elastic collision between rigid body objects preserves energy. However, the system energy slightly increased over time in the physics engines, that is caused by contact impulse error. There is clear inverse-relationship between speed-accuracy. 
 </p>
 
 <!--<p>-->
@@ -112,6 +94,10 @@ layout: default
 
     <!--<img src="bouncing-error-speed-e=0.8.png">-->
 <!--</p>-->
+
+<p>
+    Among the engines, RaiSim remarkably has good speed-accuracy curve than others. Its elastic collision simulation is not only accurate but also considerably faster than other engines:
+</p>
 
 <p>
     <img src="speed.png">
