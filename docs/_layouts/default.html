@@ -23,6 +23,30 @@
         content: counter(list) ") ";
         counter-increment: list;
     }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    figure figcaption {
+        /*border: 1px dotted blue;*/
+        text-align: center;
+    }
+
+    .centered-and-cropped { object-fit: cover }
 </style>
 
 <head>
