@@ -1,6 +1,8 @@
 # SimBenchmark
 
-The project is for benchmarking the state-of-the-art rigid body simulation engines for contact dynamics solving:
+SimBenchmark is a project providing the reliable benchmark results of state-of-the-art physics engines used for contact simulation for various robotic tasks.
+
+We evaluated the most widely-used physics engines for robotics and machine learning applications. The list of the engines is as follows:
 
 - RaiSim (Jemin Hwangbo, Dongho Kang et al.)
 - [Bullet Physics](http://bulletphysics.org/)
@@ -8,8 +10,9 @@ The project is for benchmarking the state-of-the-art rigid body simulation engin
 - [Multi-Joint dynamics with Contact (a.k.a. MuJoCo)](http://mujoco.org/)
 - [DART Sim](https://dartsim.github.io/)
 
-You can see the details and the result in [webpage](https://leggedrobotics.github.io/SimBenchmark/).
+You can see the details in [webpage](https://leggedrobotics.github.io/SimBenchmark/).
 
+![ANYmal PD Control Benchmark](https://leggedrobotics.github.io/SimBenchmark/about/anymal.gif)
 
 ## Overview
 
@@ -42,10 +45,26 @@ The project is consist of common part(interface) and libraries which corresponds
     - ```lib/mjpro150```
     - put ```mjkey.txt``` in ```lib/mjpro150/mjkey.txt```
 
-## Test scenario
+## Test and Results
 
-Go to benchmark directory for details
+We designed the following tests for the evaluation 
 
+- Rolling test: friction model test
+- Bouncing test: single-body elastic collision test
+- 666 balls test: single-body hard contact test
+- Elastic 666 balls test: single-body energy test
+- ANYmal PD control test: articulated-robot-system speed test for quadrupedal robot
+- Atlas PD control test: articulated-robot-system speed test for bipedal robot
+- ANYmal momentum test: articulated-robot-system momentum test
+- ANYmal energy test: articulated-robot-system energy test
+
+Please see [our webpage](https://leggedrobotics.github.io/SimBenchmark/) for more details. 
+
+<!-- ## Citation
+
+If you want to refer the benchmark result in an academic publication, please consider citing as 
+ -->
 ## Contact
 
-Please feel free to contact Dongho Kang(kangd@ethz.ch) if you have any concerns or suggestions.
+- Note that this benchmark is done by Dongho Kang and Jemin Hwangho who are the developers of RaiSim.
+- If you have any concern, please contact [Dongho Kang](mailto:kangd@ethz.ch)
