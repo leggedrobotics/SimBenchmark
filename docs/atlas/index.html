@@ -26,9 +26,9 @@ layout: default
     }
 </style>
 
-<h1>ANYmal PD control test</h1>
+<h1>Atlas PD control test</h1>
 
-<img src="anymal-test.png" alt="anymal-test">
+<img src="atlas.png" alt="atlas-test">
 
 <p>
     ANYmal test is to test computational efficiency in solving articulated dynamics. In this test, a 18 DOF quadruped robot <a href="http://www.rsl.ethz.ch/">ANYmal</a> is feedback-controlled to stand on a flat ground.
@@ -58,13 +58,14 @@ The test focuses on:
             <li>Sequential Impulse</li>
         </ul>
     </li>
-    <li>ODE
+    <li><strike>ODE<sup><a href="#[1]">[1]</a></sup>
         <ul>
             <li>Dantzig</li>
-            <li><strike>LCP PGS</strike> <sup><a href="#[1]">[1]</a></sup></li>
+            <li>LCP PGS</li>
         </ul>
+    </strike>
     </li>
-    <li>MuJoCo (no-slip enabled)<sup><a href="#[2]">[2]</a></sup>
+    <li>MuJoCo<sup><a href="#[2]">[2]</a></sup>
         <ul>
             <li>PGS</li>
             <li>CG</li>
