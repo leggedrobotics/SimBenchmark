@@ -16,13 +16,15 @@ layout: default
   <ol>
       <li>The quality of the friction cone (linear or elliptic)</li>
       <li>The accuracy of frictional contact simulation</li>
-      <li>The speed of many primitive shaped objects contact simulation</li>
+      <li>The speed of many primitive shaped objects simulation</li>
   </ol>
 </p>
 
 <h2>Test scenario</h2>
 
-<img src="rolling-scenario.png" alt="rolling-test-scenario">
+<div>
+    <img src="rolling-scenario.png" alt="rolling-test-scenario">
+</div>
 
 <p>
     The setup of the test is as follows:
@@ -80,12 +82,11 @@ layout: default
 
 <h2>Results</h2>
 
-<img src="speed-accuracy.png">
-<p>
-  The accuracy of RaiSim is bound by the contact solver threshold. This hyperparameter was not tunned for this test.
-</p>
+<p>The speed-accuracy curve plot is as follows:</p>
 
-<p>The pushing force resulted in no motion in ODE and Dart. However as the force is applied to y direction, the objects move. This is due to the pyramid shaped friction cone.</p>
+<img src="speed-accuracy.png">
+
+<p>The pushing force resulted in no motion in ODE and Dart due to pyramid shaped friction cone. However as the force is applied to y direction, the objects move.</p>
 
 <div class="row">
     <div class="column">
