@@ -22,8 +22,6 @@ layout: default
 
 <h1 id="RaiSim">RaiSim</h1>
 
-<h2>What is RaiSim?</h2>
-
 <div class="row">
     <div class="column">
         <img src="anymal.gif">
@@ -46,7 +44,7 @@ layout: default
 <h2>Video</h2>
 
 <div align="center">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/PLDokgtql5s?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <iframe width="640" height="480" src="https://www.youtube.com/embed/PLDokgtql5s?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 </div>
 
 <h2>Implementation Details</h2>
@@ -64,12 +62,18 @@ layout: default
 <hr>
 <h1>Bullet Physics</h1>
 
-<img src="bullet-physics-logo.png">
+<div align="center">
+    <img src="bullet-physics-logo.png">
+</div>
 
 <p>
     Bullet Physics(Bullet)[2] is an open-source physics engine developed by Erwin Coumans subject to the terms of the zlib license.
     It features collision detection, rigid and soft body dynamics, multibody dynamics in minimal coordinate representation, etc and has been one of the most commonly used simulator in computer games, computer graphics and robotics: it is a back-end physics engine of Gazebo and V-REP.
 </p>
+
+<div align="center">
+    <iframe width="640" height="480" src="https://www.youtube.com/embed/ps1I85VcVso" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
 
 <h2>Implementation Details</h2>
 
@@ -104,7 +108,9 @@ layout: default
 <hr>
 <h2>ODE</h2>
 
-<img src="ode-logo.jpg">
+<div align="center">
+    <img src="ode-logo.jpg">
+</div>
 
 <p>
     The Open Dynamics Engine (ODE) is a free library for simulating articulated rigid body dynamics.
@@ -134,6 +140,10 @@ layout: default
 
 <hr>
 <h1>DART Sim</h1>
+
+<div align="center">
+    <img src="dart-logo.jpg">
+</div>
 
 <p>
     DART (Dynamic Animation and Robotics Toolkit) is a collaborative, cross-platform, open source library created by the Graphics Lab and Humanoid Robotics Lab at Georgia Institute of Technology with ongoing contributions from the Personal Robotics Lab at University of Washington and Open Source Robotics Foundation. The library provides data structures and algorithms for kinematic and dynamic applications in robotics and computer animation. DART is distinguished by its accuracy and stability due to its use of generalized coordinates to represent articulated rigid body systems and Featherstone’s Articulated Body Algorithm to compute the dynamics of motion. For developers, in contrast to many popular physics engines which view the simulator as a black box, DART gives full access to internal kinematic and dynamic quantities, such as the mass matrix, Coriolis and centrifugal forces, transformation matrices and their derivatives. DART also provides an efficient computation of Jacobian matrices for arbitrary body points and coordinate frames. The frame semantics of DART allows users to define arbitrary reference frames (both inertial and non-inertial) and use those frames to specify or request data. For air-tight code safety, forward kinematics and dynamics values are updated automatically through lazy evaluation, making DART suitable for real-time controllers. In addition, DART provides flexibility to extend the API for embedding user-provided classes into DART data structures. Contacts and collisions are handled using an implicit time-stepping, velocity-based LCP (linear complementarity problem) to guarantee non-penetration, directional friction, and approximated Coulomb friction cone conditions. DART has applications in robotics and computer animation because it features a multibody dynamic simulator and various kinematic tools for control and motion planning. We used version 6.4 for the benchmark.
