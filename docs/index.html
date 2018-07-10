@@ -7,7 +7,30 @@ layout: default
     SimBenchmark is a project providing the reliable benchmark results of state-of-the-art physics engines used for contact simulation for various robotic tasks.
 </p>
 
-<h2>Introduction</h2>
+<h2>Table of Contents</h2>
+<small>
+    <ol>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#models">Contact and Multibody Dynamics of Physics Engines</a>
+            <ul>
+                <li><a href="about/models.html">Backgrounds</a></li>
+            </ul>
+        </li>
+        <li><a href="#list-of-engines">List of Physics Engines</a>
+            <ul>
+                <li><a href="about/sims.html">Physics engines and benchmark software implementation details</a></li>
+            </ul>
+        </li>
+        <li><a href="#evaluation-metrics">Evaluation Metrics</a>
+            <ul>
+                <li>Methodology details</li>
+            </ul>
+        </li>
+        <li><a href="#test-and-result">Test and Results</a></li>
+    </ol>
+</small>
+
+<h2 id="intro">Introduction</h2>
 
 <p>
     Accurate and fast simulation of contact dynamics is crucial for robotics applications since robots interact with environments by contact force.
@@ -44,13 +67,13 @@ layout: default
 </p>
 
 <hr>
-<h2>Contact and Multibody Dynamics of Physics Engines</h2>
+<h2 id="models">Contact and Multibody Dynamics of Physics Engines</h2>
 
 <p>
     Solving contact dynamics is NP-hard problem<a href="#[1]">[1]</a> due to its non-convexity and discontinuity.
     To make the problem tractable, physics engines approximate the contact problem as a relaxed problem that enables using efficient solving methods.
     Each method has different characteristics, but some of them significantly sacrifice the accuracy of the contact solution that leads to the poor reality of the contact simulation.
-</p> 
+</p>
 
 <p>
     Besides, another important feature of physics engines for robotics research is an efficient multibody dynamics implementation.
@@ -67,7 +90,7 @@ layout: default
 </p>
 
 <hr>
-<h2>List of Physics Engines</h2>
+<h2 id="list-of-engines">List of Physics Engines</h2>
 
 <p>
     We evaluated the most widely-used physics engines for robotics and machine learning applications.<a href="#[2]">[2]</a>
@@ -192,7 +215,7 @@ layout: default
 <!--</p>-->
 
 <hr>
-<h2>Evaluation Metrics</h2>
+<h2 id="evaluation-metrics">Evaluation Metrics</h2>
 
 <p>
     The error of the contact simulation is caused by
@@ -240,7 +263,7 @@ In both cases, there is a speed-accuracy trade-off.
 </p>
 
 <hr>
-<h2>Test and Results</h2>
+<h2 id="test-and-result">Test and Results</h2>
 
 <h3>Tests</h3>
 
