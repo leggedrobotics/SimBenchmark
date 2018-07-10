@@ -46,7 +46,20 @@ layout: default
 <h2>Contact and Multibody Dynamics</h2>
 
 <p>
-    Solving contact dynamics is NP-hard problem(reference) due to its non-convexity and discontinuity.  In order to make the problem tractable, physics engines model contact problem as relaxed problem that enables using efficient solving methods. Each method has different characteristics. Please read <a href="">this page</a> for more details about contact models and solving methods. 
+    Solving contact dynamics is NP-hard problem(reference) due to its non-convexity and discontinuity.  
+    In order to make the problem tractable, physics engines model contact problem as relaxed problem that enables using efficient solving methods. 
+    Each method has different characteristics but some of them significantly sacrifice the reality of contact simulation to make it fast. 
+</p> 
+
+<p>
+    Another important feature that affect to robot simulation is multibody dynamics implementation. 
+    For robotic articulated system that has multiple joints, solving dynamics is considerably expensive as DOF of system with n links has O(n^3) complexity. 
+    Most state-of-the-art simulation engines adopted Featherstone algorithm that solves the problem in $O(n)$ complexity which hugely accelerate the speed of robot simulation. 
+</p>
+
+<p>
+    We investigated different characteristics of contact models and multibody dynamics feature that each physics engine adopts.
+    Please read <a href="">this page</a> for more details. 
 </p>
 
 <hr>
