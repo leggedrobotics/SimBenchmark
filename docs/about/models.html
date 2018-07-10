@@ -1,25 +1,60 @@
 ---
 layout: default
 ---
-<h1>Contact Models</h1>
+<h1>Contact Models and Multibody Dynamics</h1>
+
+<h2>Contact Models</h2>
 
 <p>
-    RaiSim uses Bisection method that find impulse solution which satisfies both Coulomb's friction cone constraint and zero normal velocity constraint by iterative scheme.
-    This noble contact solving method find accurate solution in very efficient manner.
+    Solving contact dynamics is NP-hard problem<a href="#[1]">[1]</a> due to its non-convexity and discontinuity.
+    To make the problem tractable, physics engines approximate the contact problem as a relaxed problem that enables using efficient solving methods.
 </p>
 
-<h3>Projected Gauss Seidel(PGS) solver</h3>
-
-<p>This is the most common algorithm used in physics simulators, and used to be the default in MuJoCo, until we developed the Newton method which appears to be better in every way. PGS uses the dual formulation. Unlike gradient-based method which improve the solution along oblique directions, Gauss-Seidel works on one scalar component at a time, and sets it to its optimal value given the current values of all other components. One sweep of PGS has the computational complexity of one matrix-vector multiplication (although the constants are larger). It has first-order convergence but nevertheless makes rapid progress in a few iterations.(from MuJoCo)</p>
-
-<h3>Conjugated Gradient(CG) solver</h3>
-
-<p>This algorithm uses the non-linear conjugate gradient method with the Polak-Ribiere-Plus formula. Line-search is exact, using Newton's method in one dimension, with analytical second derivatives.(from MuJoCo)</p>
-
-<h3>Newton solver</h3>
-
-<p>This algorithm implements the exact Newton method, with analytical second-order derivatives and Cholesky factorization of the Hessian. The line-search is the same as in the CG method.</p>
-
+<p>
+    One common method is polytope approximation that relaxes Coulomb's friction cone constraint as pyramid shape. This approximation transforms Non-linear Complementarity Problem (NCP) to Linear Complementarity Problem, which has the efficient solving methods such as Lemke<a href="#[2]">[2]</a>, Dantzig<a href="#[3]">[3]</a> and Projected Gauss-Seidel.
+    This approach is mathematically clear but sacrifices reality of simulation significantly, especially when the simulation has many slipping contacts.
 </p>
 
-<h1>Coordinate Representation</h1>
+<p>
+    ODE and DART apply this approach for contact simulation. They provide LCP Dantzig and LCP Projected Gauss-Seidel (PGS) solver that can be selected by a user.
+    While Dantzig solver finds an exact solution of LCP, PGS solver finds an approximated solution iteratively. Note that DART's Dantzig solver is cloned from ODE Dantzig solver.
+</p>
+
+<p>
+    Bullet approximates the problem into Mixed Linear Complementary Problem and uses Sequential Impulse solver to find the solution that also approximates the friction cone into polytope.
+    However it post-processes the solution to satisfy round shape friction cone constraint.<a href="#[4]">[4]</a>
+</p>
+
+<p>
+    RaiSim uses the Bisection method<a href="#[5]">[5]</a> that iteratively finds impulse solution which satisfies both Coulomb's friction cone constraint and zero normal velocity constraint.
+    It uses a geometrical interpretation of the NCP problem to find the feasible solution in a remarkably efficient manner.
+</p>
+
+<p>
+    While the above engines hold strict complementarity in velocity level, MuJoCo is based on the complementarity-free method that approximately enforces the complementarity condition.<a href="#[6]">[6]</a>
+    It relaxes complementary constraint and makes the hard contact problem into convex. With this relaxation, the penetration between object happens, but the solution can be obtained efficiently.
+</p>
+
+<h2>Multibody Dynamics</h2>
+
+<p>
+    Solving dynamics of a robotic articulated system with $n$ links has $O(n^3)$ complexity which is very expensive.
+    Most state-of-the-art physics engines, thus, adopted the Featherstone algorithm that solves the dynamics for open kinematic chain structure in $O(n)$ complexity.<a href="#[7]">[7]</a>
+    It uses minimal (or reduced) coordinate formulation that represents $n$ link robot's configuration with $n$ or $n+6$ variables for fixed based and floating based robot respectively.
+</p>
+
+<p>
+    RaiSim, Bullet, MuJoCo and DART uses minimal coordinate representation and the Featherstone algorithm for the multibody dynamics. ODE does not use minimal coordinate, instead use the maximal coordinate representation with $6n$ variables.
+</p>
+
+<h2>References</h2>
+
+<ol class="bib">
+    <li id="[1]">D. Kaufman et al., “Staggered projections for frictional contact in multibody systems,” 2008.</li>
+    <li id="[2]"></li>
+    <li id="[3]"></li>
+    <li id="[4]"><a href="http://box2d.org/files/GDC2014/ErwinCoumans_ExploringMLCPSolversAndFeatherstone.pdf">E. Coumans, "Exploring MLCP solvers and Featherstone," GDC (2014)</a></li>
+    <li id="[5]">J. Hwangbo, J. Lee, and M. Hutter, "Per-Contact Iteration Method for Solving Contact Dynamics," IEEE Robotics and Automation Letters (2018).</li>
+    <li id="[6]">E. Todorov, "Convex and analytically-invertible dynamics with contacts and constraints: Theory and implementation in MuJoCo," ICRA (2014).</li>
+    <li id="[7]">R. Featherstone, "Rigid Body Dynamics Algorithms," Springer Verlag (2008)</li>
+</ol>

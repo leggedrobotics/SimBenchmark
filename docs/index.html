@@ -47,7 +47,7 @@ layout: default
 <h2>Contact and Multibody Dynamics of Physics Engines</h2>
 
 <p>
-    Solving contact dynamics is NP-hard problem(reference) due to its non-convexity and discontinuity.
+    Solving contact dynamics is NP-hard problem<a href="#[1]">[1]</a> due to its non-convexity and discontinuity.
     To make the problem tractable, physics engines approximate the contact problem as a relaxed problem that enables using efficient solving methods.
     Each method has different characteristics, but some of them significantly sacrifice the accuracy of the contact solution that leads to the poor reality of the contact simulation.
 </p> 
@@ -63,14 +63,14 @@ layout: default
 </p>
 
 <p>
-    Please read <a href="">this page</a> for more backgrounds.
+    Please read <a href="about/models.html">this page</a> for more backgrounds.
 </p>
 
 <hr>
 <h2>List of Physics Engines</h2>
 
 <p>
-    We evaluated the most widely-used physics engines for robotics and machine learning applications.<a href="#[1]">[1]</a>
+    We evaluated the most widely-used physics engines for robotics and machine learning applications.<a href="#[2]">[2]</a>
     The list of the engines is as follows:
 <ul>
     <li>RaiSim (unreleased)
@@ -207,7 +207,7 @@ In both cases, there is a speed-accuracy trade-off.
 </p>
 
 <p>
-    To evaluate the performance in a fair manner, we have to take into account the whole speed-accuracy curve as proposed in <a href="#[2]">[2]</a>.
+    To evaluate the performance in a fair manner, we have to take into account the whole speed-accuracy curve as proposed in <a href="#[3]">[3]</a>.
 
     In the following example of speed-accuracy curve plot, the ideal engine is on the top-right corner, while most of the engines are represented as the curves sloping downwards from left to right.
     The better engine's curve locates upper-right than others;
@@ -379,13 +379,16 @@ In both cases, there is a speed-accuracy trade-off.
 
 <ol class="bib">
     <li id="[1]">
-        <a href="https://arxiv.org/pdf/1402.7050.pdf">
-            S. Ivaldi et al., "Tools for dynamics simulation of robots: a survey based on user feedback", 2014
-        </a>
+        D. Kaufman et al., “Staggered projections for frictional contact in multibody systems,” 2008.
     </li>
     <li id="[2]">
         <a href="https://arxiv.org/pdf/1402.7050.pdf">
-            Tom Erez et al., "Simulation Tools for Model-Based Robotics: Comparison of Bullet, Havok, MuJoCo, ODE and PhysX", 2015
+            S. Ivaldi et al., "Tools for dynamics simulation of robots: a survey based on user feedback," 2014
+        </a>
+    </li>
+    <li id="[3]">
+        <a href="https://arxiv.org/pdf/1402.7050.pdf">
+            Tom Erez et al., "Simulation Tools for Model-Based Robotics: Comparison of Bullet, Havok, MuJoCo, ODE and PhysX," 2015
         </a>
     </li>
 </ol>
