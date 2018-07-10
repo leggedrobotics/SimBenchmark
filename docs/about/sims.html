@@ -49,18 +49,50 @@ layout: default
     <iframe width="560" height="315" src="https://www.youtube.com/embed/PLDokgtql5s?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 </div>
 
+<h2>Implementation Details</h2>
+
+<p>
+    RaiSim is designed to be nearly tuning-free. In the benchmark tests, we used default solver parameters for most cases except the tests which investigate the behavior of deferent solver parameters. Also, Error Reduction Parameter(ERP) is set to zero for all tests.
+</p>
+<p>
+    The primitive shape objects in the simulations were created by C++ user API while articulated systems were loaded from URDF(The Unified Robot Description Format).
+</p>
+<p>
+    RaiSim has build-in actuator model, but we used direct torque input for PD control simulations.
+</p>
+
 <hr>
 <h1>Bullet Physics</h1>
 
 <img src="bullet-physics-logo.png">
 
 <p>
-    Bullet Physics(Bullet) is an open-source physics engine developed by Erwin Coumans subject to the terms of the zlib license.
-    It is one of the most commonly used simulator in computer games, computer graphics and robotics: it is a back-end physics engine of Gazebo and V-REP.
-    In the benchmark, we used version 2.87 of Bullet Physics that is the most recent stable version.
+    Bullet Physics(Bullet)[2] is an open-source physics engine developed by Erwin Coumans subject to the terms of the zlib license.
+    It features collision detection, rigid and soft body dynamics, multibody dynamics in minimal coordinate representation, etc and has been one of the most commonly used simulator in computer games, computer graphics and robotics: it is a back-end physics engine of Gazebo and V-REP.
 </p>
 
-<h2>Implementation details</h2>
+<h2>Implementation Details</h2>
+
+<p>
+    We used the latest Bullet 2.88 for our benchmark software framework.
+    The recent version of Bullet uses Bullet3 C API as a low-level and supports both python[3] and C++ Bullet3 Robotics API as a user level API while the old version was fully written in C++.
+    We used C++ Bullet3 Robotics API since it performs well in the most situation and is actively maintained.
+</p>
+
+<p>
+    The latest Bullet only provides Sequential Impulse solver (or Multibody solver) while the old one had many experimental MLCP solvers.
+    We only report result from Sequential Impulse solver in this project.
+</p>
+
+<p>
+    The simulation scenes were loaded from URDF files for both primitive and multibody objects.
+    Although Bullet can simulate a built-in actuator model, we used direct torque input for PD control simulations.
+</p>
+
+<p>
+    The parameters and options used for general test cases are as follows:
+</p>
+
 <ul>
     <li>ERP = 0</li>
     <li>CFM = 0</li>
@@ -80,6 +112,9 @@ layout: default
     It is fast, flexible and robust, and has built-in collision detection. ODE is being developed by Russell Smith with help from several contributors.
 </p>
 
+<h2>Implementation Details</h2>
+
+
 <hr>
 
 <h1>MuJoCo</h1>
@@ -94,6 +129,9 @@ layout: default
     MuJoCo was developed by Emo Todorov for Roboti LLC. Initially it was used at the Movement Control Laboratory, University of Washington, and has more recently been adopted by the wider research community. Additional resources as well as support are available on the Forum. There is also extensive Documentation formatted as an online book.
 </p>
 
+<h2>Implementation Details</h2>
+
+
 <hr>
 <h1>DART Sim</h1>
 
@@ -101,12 +139,14 @@ layout: default
     DART (Dynamic Animation and Robotics Toolkit) is a collaborative, cross-platform, open source library created by the Graphics Lab and Humanoid Robotics Lab at Georgia Institute of Technology with ongoing contributions from the Personal Robotics Lab at University of Washington and Open Source Robotics Foundation. The library provides data structures and algorithms for kinematic and dynamic applications in robotics and computer animation. DART is distinguished by its accuracy and stability due to its use of generalized coordinates to represent articulated rigid body systems and Featherstone’s Articulated Body Algorithm to compute the dynamics of motion. For developers, in contrast to many popular physics engines which view the simulator as a black box, DART gives full access to internal kinematic and dynamic quantities, such as the mass matrix, Coriolis and centrifugal forces, transformation matrices and their derivatives. DART also provides an efficient computation of Jacobian matrices for arbitrary body points and coordinate frames. The frame semantics of DART allows users to define arbitrary reference frames (both inertial and non-inertial) and use those frames to specify or request data. For air-tight code safety, forward kinematics and dynamics values are updated automatically through lazy evaluation, making DART suitable for real-time controllers. In addition, DART provides flexibility to extend the API for embedding user-provided classes into DART data structures. Contacts and collisions are handled using an implicit time-stepping, velocity-based LCP (linear complementarity problem) to guarantee non-penetration, directional friction, and approximated Coulomb friction cone conditions. DART has applications in robotics and computer animation because it features a multibody dynamic simulator and various kinematic tools for control and motion planning. We used version 6.4 for the benchmark.
 </p>
 
+<h2>Implementation Details</h2>
+
+
 
 <hr>
 <h1>References</h1>
 
 <ol class="bib">
     <li id="[1]">Hwangbo, Jemin, Joonho Lee, and Marco Hutter. "Per-Contact Iteration Method for Solving Contact Dynamics." IEEE Robotics and Automation Letters (2018).
-    <li>http://mujoco.org/</li>
-    <li>https://dartsim.github.io/</li>
+    <li></li>
 </ol>
