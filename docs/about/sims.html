@@ -67,7 +67,7 @@ layout: default
 </div>
 
 <p>
-    Bullet Physics(Bullet)[2] is an open-source physics engine developed by Erwin Coumans subject to the terms of the zlib license.
+    Bullet Physics(Bullet)<a href="#[2]">[2]</a> is an open-source physics engine developed by Erwin Coumans subject to the terms of the zlib license.
     It features collision detection, rigid and soft body dynamics, multibody dynamics in minimal coordinate representation, inverse kinematics and dynamics so on. and has been one of the most commonly used simulator in computer games, computer graphics and robotics: it is a back-end physics engine of Gazebo and V-REP.
 </p>
 
@@ -81,7 +81,7 @@ layout: default
 
 <p>
     We used the latest Bullet 2.88 for our benchmark software framework.
-    The recent version of Bullet uses Bullet3 C API as a low-level and supports both python[3] and C++ Bullet3 Robotics API as a user level API while the old version was fully written in C++.
+    The recent version of Bullet uses Bullet3 C API as a low-level and supports both python<a href="#[3]">[3]</a> and C++ Bullet3 Robotics API as a user level API while the old version was fully written in C++.
     We used C++ Bullet3 Robotics API since it performs well in the most situation and is actively maintained.
 </p>
 
@@ -120,7 +120,7 @@ layout: default
 </div>
 
 <p>
-    Open Dynamics Engine(ODE) is an open-source physics engine that is a default back-end physics engine of Gazebo simulator.
+    Open Dynamics Engine(ODE)<a href="#[4]">[4]</a> is an open-source physics engine that is a default back-end physics engine of Gazebo simulator.
     It has collision detection, rigid and soft body dynamics features. While its low-level API is supported in C++, user-level API is in C.
 </p>
 
@@ -156,25 +156,33 @@ layout: default
 <h1>MuJoCo</h1>
 
 <p>
-    MuJoCo stands for  Multi-Joint dynamics with Contact.
-    It is a physics engine for robotics, biomechanics, graphics applications.
-    It offers a unique combination of speed, accuracy and modeling power, yet it is not merely a better simulator.
-    Instead it is the first full-featured simulator designed from the ground up for the purpose of model-based optimization, and in particular optimization through contacts. MuJoCo makes it possible to scale up computationally-intensive techniques such optimal control, physically-consistent state estimation, system identification and automated mechanism design, and apply them to complex dynamical systems in contact-rich behaviors. It also has more traditional applications such as testing and validation of control schemes before deployment on physical robots, interactive scientific visualization, virtual environments, animation and gaming.
+    MuJoCo stands for Multi-Joint dynamics with Contact.<a href="#[5]">[5]</a>
+    It is the main simulator for continuous control tasks of OpenAI gym.
+    The main features of MuJoCo are collision detection, soft contact dynamics, inverse kinematics/dynamics etc.
+    Notably, it has a stable and efficient multibody system dynamics implementation that enables effective end-to-end training of learning based robot control.
 </p>
 
-<p>
-    MuJoCo was developed by Emo Todorov for Roboti LLC. Initially it was used at the Movement Control Laboratory, University of Washington, and has more recently been adopted by the wider research community. Additional resources as well as support are available on the Forum. There is also extensive Documentation formatted as an online book.
-</p>
 
 <div align="center">
     <figure>
         <iframe width="640" height="480" src="https://www.youtube.com/embed/g59nSURxYgk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        <figcaption>Reinforcement Learning of multibody system locomotion using MuJoCo simulator. <br>The video from Google DeepMind.</figcaption>
+        <figcaption>Training of multibody system locomotion using MuJoCo. <br>The video from Google DeepMind.</figcaption>
     </figure>
 </div>
 
-<h2>Implementation Details</h2>
+<h2>Implementation details</h2>
 
+<p>
+    We used the latest 1.5.0 version MuJoCo in our software framework.
+    It does not support runtime object creation, rather loads whole simulation scene specified in one URDF or MJCF file at initialization step.
+    We implemented simulation related features by using C API functions or direct access to <b><i>mjData</i></b>, <b><i>mjOption</i></b> and <b><i>mjModel</i></b> that contain simulation data and variables.
+</p>
+<p>
+    MuJoCo uses the soft contact model that optimize to enforce complementarity.
+    Namely, the reality of the simulation is sensitive to solver or contact related parameters.
+    We mostly used default solver parameters, but for the specific tasks where the performance metric is highly related to the parameters, we tuned them;
+    for instance, we set the no-slip parameter to a non-zero value for ANYmal PD control test since the feet of the robot steadily slipped without the parameter lead to more number of contacts.
+</p>
 
 <hr>
 <h1>DART Sim</h1>
@@ -184,7 +192,7 @@ layout: default
 </div>
 
 <p>
-    DART is an open-source physics engine.
+    DART<a href="#[6]">[6]</a> is an open-source physics engine.
     It's written in modern C++ and provides data structures and algorithms for kinematic and dynamic applications which are useful for robotics applications including minimal coordinate representation, Featherstone algorithm and full acceess full access to the mass matrix, Coriolis and centrifugal forces, Jacobian matrices for arbitrary body points so on.
 </p>
 
@@ -206,6 +214,10 @@ layout: default
 <h1>References</h1>
 
 <ol class="bib">
-    <li id="[1]">Hwangbo, Jemin, Joonho Lee, and Marco Hutter. "Per-Contact Iteration Method for Solving Contact Dynamics." IEEE Robotics and Automation Letters (2018).
-    <li></li>
+    <li id="[1]">J. Hwangbo, J. Lee, and M. Hutter, "Per-Contact Iteration Method for Solving Contact Dynamics," IEEE Robotics and Automation Letters (2018).
+    <li id="[2]">E. Coumans, "Bullet physics library," Open source: bulletphysics.org (2013).</li>
+    <li id="[3]">E. Coumans, and Y. Bai, "PyBullet, a Python module for physics simulation for games, robotics and machine learning," Open source: pybllet.org (2013).</li>
+    <li id="[4]">www.ode.org</li>
+    <li id="[5]">www.mujoco.org</li>
+    <li id="[6]">Lee et al., "DART: Dynamic Animation and Robotics Toolkit," Journal of Open Source Software (2018).</li>
 </ol>
