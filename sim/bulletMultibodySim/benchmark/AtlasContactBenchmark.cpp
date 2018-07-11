@@ -61,18 +61,19 @@ void resetWorld() {
     sim->cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
 }
 
-double simulationLoop(bool timer = true, bool cntNumContact = true) {
+double simulationLoop(bool timer, bool cntNumContact) {
   // resever error vector
   benchmark::atlas::data.setN(unsigned(benchmark::atlas::params.T / benchmark::atlas::params.dt));
+
+  // state variables
+  Eigen::VectorXd gc(robots[0]->getStateDimension());
+  Eigen::VectorXd gv(robots[0]->getDOF());
+  Eigen::VectorXd tau(robots[0]->getDOF());
 
   // timer start
   StopWatch watch;
   if(timer)
     watch.start();
-
-  Eigen::VectorXd gc(robots[0]->getStateDimension());
-  Eigen::VectorXd gv(robots[0]->getDOF());
-  Eigen::VectorXd tau(robots[0]->getDOF());
 
   if(benchmark::atlas::options.gui) {
     // gui
@@ -91,6 +92,9 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
   } else {
     // no gui
     for(int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
+      StopWatch watch2;
+      if(!timer)
+        watch2.start();
       for(int i = 0; i < robots.size(); i++) {
         gc = robots[i]->getGeneralizedCoordinate();
         gv = robots[i]->getGeneralizedVelocity();
@@ -99,8 +103,13 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
                 - benchmark::atlas::params.kd.cwiseProduct(gv).tail(30);
         robots[i]->setGeneralizedForce(tau);
       }
+      RAIINFO(t)
       sim->integrate();
-      if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
+
+      if(cntNumContact) {
+        benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
+        benchmark::atlas::data.timeList.push_back(watch2.measure() * 1000.0);
+      }
     }
   }
   double time = 0;
@@ -128,8 +137,7 @@ int main(int argc, const char* argv[]) {
   // trial1: get Error
   setupSimulation();
   resetWorld();
-  simulationLoop(false, true);
-  double avgNumContacts = benchmark::atlas::data.computeAvgNumContact();
+  double time =  simulationLoop(true, false);
 
   // reset
   robots.clear();
@@ -138,7 +146,10 @@ int main(int argc, const char* argv[]) {
   // trial2: get CPU time
   setupSimulation();
   resetWorld();
-  double time = simulationLoop(true, false);
+  simulationLoop(false, true);
+  double avgNumContacts = benchmark::atlas::data.computeAvgNumContact();
+  double avgStepTime = benchmark::atlas::data.averageStepTime();
+
 
   // print to screen
   std::cout<<"time taken for "

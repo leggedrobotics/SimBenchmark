@@ -63,6 +63,7 @@ struct Data {
   void setN(int n) {
     Data::n = n;
     numContactList.reserve(n);
+    timeList.reserve(n);
   }
 
   double computeAvgNumContact() {
@@ -89,14 +90,45 @@ struct Data {
     RAIINFO(
         std::endl << "-----------------------" << std::endl
                   << "Contacts : " << numcontact.mean() << std::endl
-                  << "=======================" << std::endl
+                  << "-----------------------" << std::endl
     )
 
     return numcontact.mean();
   }
 
+  double averageStepTime() {
+    Eigen::MatrixXd stepTime(n, 1);
+
+    for(int i = 0; i < n; i++) {
+      stepTime(i, 0) = timeList[i];
+    }
+
+    if(options.plot) {
+      Eigen::MatrixXd tdata(n, 1);        // time
+
+      for(int i = 0; i < n; i++) {
+        tdata(i, 0) = i * params.dt;
+      }
+
+      rai::Utils::Graph::FigProp2D figure1properties("time", "CPU time/step", "CPU time/step");
+      rai::Utils::graph->figure(2, figure1properties);
+      rai::Utils::graph->appendData(2, tdata.data(), stepTime.data(), n, "msec");
+      rai::Utils::graph->drawFigure(2);
+      rai::Utils::graph->waitForEnter();
+    }
+
+    RAIINFO(
+        std::endl << "-----------------------" << std::endl
+                  << "StepTime : " << stepTime.mean() << std::endl
+                  << "-----------------------" << std::endl
+    )
+
+    return stepTime.mean();
+  }
+
   // data list
   std::vector<int> numContactList;
+  std::vector<double> timeList;
 
   // num data
   int n = 0;
