@@ -3,25 +3,21 @@ layout: default
 ---
 <h1>Methodology</h1>
 
-<h2>Tests and Metric</h2>
-
 <p>
-  In this benchmark we measures the accuracy of the contact solvers and integrators in terms of realistic simulation.
-  Assuming there is no modeling error, it is plausible to compare the numerical solution of simulation with analytical solution when the analytical solution is applicable.
-  For an example, it is realatively easy to find an analytical solution of velocity and position of each object in <a href="../rolling/rolling.html">Rolling test</a> by solving simple dynamics equation.
-  By doing this, we can investigate how the numerical solution of the simulator is close to dynamics model.
+We designed 8 benchmark tests to evaluate accuracy and speed of contact simulation. 
+Although our lack of knowledge on real physics, we use an analytical solution from Newton's rigid body dynamics and Coulomb's friction cone model as a reference when it is applicable. For systems with single rigid body with small number of contacts, we find analytical solution of the object trajectory and investigate numerical errors from simulation. For complex systems, it may be challenging to find an analytical trajectory. In these cases, we investigated if the system preserves total kinetic energy or linear momentum that is crucial to realistic and stable simulation. Finally, we investigated position level drift by measuring penetration error which should be zero for hard-contact.  
 </p>
 
 <p>
-  However, it may be challenging to find analytical solution of position or velocity for complex systems.
-  In these cases, we investigates if the numerical solution violates constraints or physics in quantitative manner.
-  One candidate is measuring penetration error which should be zero in hard-contacts or checking the system preserves total energy or linear momentum that is crucial to realistic and stable simulation.
+The error of the contact simulation is mostly caused by 1) inaccurate impulse/force solution from contact solver 2) inherited discretized error from numerical integration. For iterative contact solvers, 1) can be reduced by increasing the number of iteration, and 2) can be reduced by decreasing timestep. In both case, there is speed-accuracy trade-off: more iteration leads to more accurate and slower simulation, smaller timestep leads to more accurate and slower simulation. In order to evaluate the performance, we have to take into account whole speed-accuracy curve that described in Figure \ref{plotformat}\cite{erez2015simulation}. In this format, the ideal engine is on the top-right corner, besides most of the engines are represented as the curves sloping downwards from left to right. The better engine's curve locates upper-right than others. 
 </p>
 
 <p>
-  In general, the numerical solution of physical quantity is rely on time-step and the number of iterations of iterative contact solvers.
-  As the time-step decreases, the accuracy is improved and the speed of simulation is declined and as the number of the iteration is increased for iterative solvers For the iterative solvers, accuracy is improved and the simulation becomes slower.
-  Therefore we considered speed-accuracy trade-off as it is proposed in <a href="#[1]">[1]</a>. In the format below, the better curve locates upper-right side than others:
+We created software framework using engine API that enables to make uniform test environments. It features simulation related interface, graphics user interface and data logging; detail of engine specific implementation are described in Appendix. Each test simulation instance were developed based on the framework to simulates specific system and measures simulation speed-accuracy. We characterized speed of the simulation by real time factor(RF) that is simulation time divided by CPU time.
+</p>
+
+<p>
+For representation of body collision shapes, we only used primitive collision shapes (sphere, cylinder, box, capsule) since collision detection of mesh object is considerably expensive. Additionally we set all parameter that may causes unrealistic and unpredictable physical interaction into zero; they are ERP(Error Reduction Parameter), CFM(Constraint Force Mixing) and damping parameters.  
 </p>
 
 <hr>
@@ -36,8 +32,9 @@ layout: default
 
 <hr>
 <h2>References</h2>
-
+<!-- 
 <ul>
   <li><a href="" id="[1]">[1]</a></li>.
   <li><a href="" id="[2]">[2] http://bulletphysics.org/mediawiki-1.5.8/index.php/Definitions</a></li>
 </ul>
+ -->
