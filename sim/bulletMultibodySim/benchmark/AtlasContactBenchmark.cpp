@@ -49,7 +49,7 @@ void resetWorld() {
           benchmark::atlas::params.baseQuat[2],
           benchmark::atlas::params.baseQuat[3];
 
-      robot->setState(gc, gv);
+      robot->setGeneralizedCoordinate(gc);
       robot->setGeneralizedForce(Eigen::VectorXd::Zero(robot->getDOF()));
       robots.push_back(robot);
     }
@@ -61,48 +61,36 @@ void resetWorld() {
     sim->cameraFollowObject(checkerboard, {1.0, 1.0, 1.0});
 }
 
-double simulationLoop(bool timer = true, bool cntNumContact = true) {
+double simulationLoop(bool timer, bool cntNumContact) {
   // resever error vector
-  benchmark::atlas::data.setN(unsigned(benchmark::atlas::params.T / benchmark::atlas::params.dt));
+  if(cntNumContact)
+    benchmark::atlas::data.setN(int(benchmark::atlas::params.T / benchmark::atlas::params.dt));
 
   // timer start
   StopWatch watch;
   if(timer)
     watch.start();
 
-  Eigen::VectorXd gc(robots[0]->getStateDimension());
-  Eigen::VectorXd gv(robots[0]->getDOF());
-  Eigen::VectorXd tau(robots[0]->getDOF());
+  for(int t = 0; t < int(benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
+    if(benchmark::atlas::options.gui && !sim->visualizerLoop(benchmark::atlas::params.dt))
+      break;
 
-  if(benchmark::atlas::options.gui) {
-    // gui
-    while(sim->visualizerLoop(benchmark::atlas::params.dt)) {
-      for(int i = 0; i < robots.size(); i++) {
-        gc = robots[i]->getGeneralizedCoordinate();
-        gv = robots[i]->getGeneralizedVelocity();
-        tau.tail(30) =
-            -benchmark::atlas::params.kp.tail(30).cwiseProduct(gc.tail(30))
-                - benchmark::atlas::params.kd.cwiseProduct(gv).tail(30);
-        robots[i]->setGeneralizedForce(tau);
-      }
-      sim->integrate();
-      if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
+    for(int i = 0; i < robots.size(); i++) {
+      Eigen::VectorXd gc(robots[i]->getStateDimension());
+      Eigen::VectorXd gv(robots[i]->getDOF());
+      Eigen::VectorXd tau(robots[i]->getDOF());
+      gc = robots[i]->getGeneralizedCoordinate();
+      gv = robots[i]->getGeneralizedVelocity();
+      tau.setZero();
+      tau.tail(30) =
+          -benchmark::atlas::params.kp.tail(30).cwiseProduct(gc.tail(30))
+              - benchmark::atlas::params.kd.cwiseProduct(gv).tail(30);
+      robots[i]->setGeneralizedForce(tau);
     }
-  } else {
-    // no gui
-    for(int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
-      for(int i = 0; i < robots.size(); i++) {
-        gc = robots[i]->getGeneralizedCoordinate();
-        gv = robots[i]->getGeneralizedVelocity();
-        tau.tail(30) =
-            -benchmark::atlas::params.kp.tail(30).cwiseProduct(gc.tail(30))
-                - benchmark::atlas::params.kd.cwiseProduct(gv).tail(30);
-        robots[i]->setGeneralizedForce(tau);
-      }
-      sim->integrate();
-      if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
-    }
+    sim->integrate();
+    if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
   }
+
   double time = 0;
   if(timer)
     time = watch.measure();
@@ -112,7 +100,10 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
 int main(int argc, const char* argv[]) {
 
   benchmark::atlas::addDescToOption(desc);
+  benchmark::bulletmultibody::addDescToOption(desc);
+
   benchmark::atlas::getOptionsFromArg(argc, argv, desc);
+  benchmark::bulletmultibody::getOptionsFromArg(argc, argv, desc);
 
   benchmark::atlas::getParamsFromYAML(benchmark::atlas::getYamlpath().c_str(),
                                       benchmark::BULLET);

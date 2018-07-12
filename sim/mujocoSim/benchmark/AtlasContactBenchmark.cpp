@@ -76,44 +76,28 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
   if(timer)
     watch.start();
 
-  Eigen::VectorXd gc(sim->getStateDimension());
-  Eigen::VectorXd gv(sim->getDOF());
-  Eigen::VectorXd tau(sim->getDOF());
-  tau.setZero();
+  // no gui
+  for (int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
+    if(benchmark::atlas::options.gui && !sim->visualizerLoop(benchmark::atlas::params.dt))
+      break;
 
-  if(benchmark::atlas::options.gui) {
-    // gui
-    while(sim->visualizerLoop(benchmark::atlas::params.dt)) {
-      sim->integrate1();
-      gc = sim->getGeneralizedCoordinate();
-      gv = sim->getGeneralizedVelocity();
-      for (int i = 0; i < benchmark::atlas::options.numRow * benchmark::atlas::options.numRow; i++) {
-        tau.segment(i * 35 + 6, 29) =
-            -benchmark::atlas::params.kp.tail(29).cwiseProduct(gc.segment(i * 36 + 7, 29))
-                - benchmark::atlas::params.kd.tail(29).cwiseProduct(gv.segment(i * 35 + 6, 29));
-      }
-      sim->setGeneralizedForce(tau);
-      sim->integrate2();
-      if(cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
+    sim->integrate1();
+    Eigen::VectorXd gc(sim->getStateDimension());
+    Eigen::VectorXd gv(sim->getDOF());
+    Eigen::VectorXd tau(sim->getDOF());
+    tau.setZero();
+    gc = sim->getGeneralizedCoordinate();
+    gv = sim->getGeneralizedVelocity();
+    for (int i = 0; i < benchmark::atlas::options.numRow * benchmark::atlas::options.numRow; i++) {
+      tau.segment(i * 35 + 6, 29) =
+          -benchmark::atlas::params.kp.tail(29).cwiseProduct(gc.segment(i * 36 + 7, 29))
+              - benchmark::atlas::params.kd.tail(29).cwiseProduct(gv.segment(i * 35 + 6, 29));
     }
-  } else {
-    // no gui
-    StopWatch watch;
-    watch.start();
-    for (int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
-      sim->integrate1();
-      gc = sim->getGeneralizedCoordinate();
-      gv = sim->getGeneralizedVelocity();
-      for (int i = 0; i < benchmark::atlas::options.numRow * benchmark::atlas::options.numRow; i++) {
-        tau.segment(i * 35 + 6, 29) =
-            -benchmark::atlas::params.kp.tail(29).cwiseProduct(gc.segment(i * 36 + 7, 29))
-                - benchmark::atlas::params.kd.tail(29).cwiseProduct(gv.segment(i * 35 + 6, 29));
-      }
-      sim->setGeneralizedForce(tau);
-      sim->integrate2();
-      if (cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
-    }
+    sim->setGeneralizedForce(tau);
+    sim->integrate2();
+    if (cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
   }
+
   double time = 0;
   if(timer)
     time = watch.measure();
