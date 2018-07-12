@@ -40,6 +40,7 @@ layout: default
         </ul>
     </li>
     <li>ERP = 0 and CFM = 0</li>
+    <li>dt = 0.001</li>
     <li>Metric: error obtained by comparing velocity of objects in simulation and analytical solution</li>
 </ul>
 </p>
@@ -82,11 +83,13 @@ layout: default
 
 <h2>Results</h2>
 
-<p>The speed-accuracy curve plot is as follows:</p>
+<p>
+    We investigated the speed-accuracy curve of each engines: how the accuracy of the fricitional contact simulation changes over the number of solver iteration.
+</p>
 
 <img src="speed-accuracy.png">
 
-<p>The pushing force resulted in no motion in ODE and Dart due to pyramid shaped friction cone. However as the force is applied to y direction, the objects move.</p>
+<p>As expected, the pushing force resulted in no motion in ODE and Dart that is due to their pyramid shaped friction cone. As the same size force is applied to y direction, the objects move.</p>
 
 <div class="row">
     <div class="column">
@@ -101,7 +104,14 @@ layout: default
 
 <img src="rolling-mujoco-dt=0.04.gif" alt="rolling-test-mujoco">
 
-<p>Bullet and Rai are stable, accurate and fast as the following figure.</p>
+<p>
+    Although RaiSim's accuracy is saturated by a numerical error of the solver, the error is negligible.
+    Remarkably, Bullet performed exceptionally in terms of the accuracy of the solver.
+</p>
+
+<p>
+    Besides, RaiSim is notably fast than other for the simulation. Note that the following plot describes the speed of the simulation with default solver parameters.
+</p>
 
 <img src="speed.png">
 
