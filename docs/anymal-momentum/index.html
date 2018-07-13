@@ -31,17 +31,26 @@ layout: default
 <img src="anymal-momentum.gif" alt="anymal-momentum-test">
 
 <p>
+    The linear momentum of the system is preserved in frictionless collision between rigid body objects.
+    While the preservability is apparent for single-body objects but it is not clear for multibody systems with minimal coordinate representation.
 </p>
 
 <p>
-The test focuses on:
+    The test focuses on:
 </p>
 
 <ol>
-    <li>Momentum conservation</li>
+    <li>Momentum preservability of the multibody system simulation with contacts</li>
 </ol>
 
 <h2>Test scenario</h2>
+
+<ul>
+    <li>zero gravity and zero external force/torque</li>
+    <li>ANYmal with no joint limit/damping</li>
+    <li>10kg ball with initial velocity</li>
+    <li>inelastic collision between ball and the robot</li>
+</ul>
 
 <h2>Tested solver list</h2>
 
@@ -85,3 +94,16 @@ The test focuses on:
 <img src="speed-accuracy.png">
 
 <img src="speed.png">
+
+<p>
+    While it is very expensive to simulate articulated system in ODE, it has superiority in accuracy due to its maximal coordinate representation;
+    as it can clearly simulate action-reaction force in exact manner, the momentum of the system preserves.
+</p>
+
+<p>
+    MuJoCo's Runge-Kutta 4th order integration also has good momentum preservability although it cannot fully applied for discontinuity caused by contacts.
+</p>
+
+<p>
+    In the meanwhile, RaiSim is incomparably faster for this test thanks to its efficient multibody dynamics implementation.
+</p>
