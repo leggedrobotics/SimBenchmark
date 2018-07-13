@@ -33,7 +33,7 @@ layout: default
 <h2>Test scenario</h2>
 
 <ul>
-    <li>Perfectly inelastic collision (restitutional coefficient = 0)</li>
+    <li>Perfectly elastic collision (restitutional coefficient = 1)</li>
     <li>Zero friction</li>
     <li>6 x 6 x 6 number of 10 kg spheres</li>
     <li>Small perturbation in position to collapse</li>
@@ -88,6 +88,15 @@ layout: default
 
 <h2>Results</h2>
 
-<img src="speed-accuracy.png">
+<p>
+    With the same test setup with 666 test, but for elastic collision, we investigated the energy of the system. The result is as follows:
+</p>
 
-<img src="speed.png">
+<div>
+    <img src="speed-accuracy.png">
+    <img src="speed.png">
+</div>
+
+<p>
+    The RaiSim has good energy preservability and also fast contact simulation for the elastic collision of primitive shape objects.
+</p>
