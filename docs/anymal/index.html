@@ -45,6 +45,14 @@ The test focuses on:
 
 <h2>Test scenario</h2>
 
+<ol>
+    <li>direct joint torque control based on PD position control scheme</li>
+    <li>flat ground</li>
+    <li>quadruped robot ANYmal</li>
+    <li>maintain one contact per feet: controlled by ERP and parameter tuning</li>
+    <li>tested with 1 x 1, 2 x 2, 3 x 3, 4 x 4, 5 x 5, 7 x 7, 10 x 10 and 15 x 15 number of ANYmals for scalability check</li>
+</ol>
+
 <h2>Tested solver list</h2>
 
 <ul>
@@ -117,7 +125,7 @@ The test focuses on:
 
 <h2>Results</h2>
 
-<p>The results of the test are as following figures.</p>
+<p>The results of the test are as following figures:</p>
 
 <div class="row">
     <div class="column">
@@ -127,3 +135,16 @@ The test focuses on:
         <img src="scale.png">
     </div>
 </div>
+
+<p>
+    The plot above indicates RaiSim is remarkably fast for articulated system simulation with contacts by virtue of its efficient multibody dynamics implementation.
+</p>
+<p>
+    MuJoCo relatively performs well for articulated system simulation compared to Bullet, Dart, and ODE. However, as we mentioned above, it has consistent slip without no-slip iteration.
+</p>
+<p>
+    ODE is significantly slower than other engines for this simulation since it uses the maximal coordinate representation for multibody systems which is considerably expensive.
+</p>
+<p>
+    Note that we failed to test more than 5 x 5 robots on Bullet since the PD controller failed to make the robot stands on the plane due to inaccurate contact impulse solution.
+</p>
