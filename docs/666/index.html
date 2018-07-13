@@ -36,7 +36,7 @@ layout: default
     <li>Perfectly inelastic collision (restitutional coefficient = 0)</li>
     <li>Zero friction</li>
     <li>6 x 6 x 6 number of 10 kg spheres</li>
-    <li>Small perturbation in position to collapse</li>
+    <li>Small perturbation in position to make the cube collapses</li>
     <li>Metric: pairwise penetration of objects</li>
 </ul>
 
@@ -87,14 +87,41 @@ layout: default
 <h2>Results</h2>
 
 <p>
-    The accuracy-speed plot and speed bar graph of 666 test are as follows:
-
-    <img src="speed-accuracy.png">
-    <img src="speed.png">
+    Assuming complete rigidness, the contact of two objects has complete-complementarity: there's neither deformation nor penetration.
+    However, the constraint relaxation for tractable contact dynamics inevitably has position level drift in the discretized world which leads to unrealistic penetration between objects on their contacts.
+    This penetration effect is observed for RaiSim, Bullet, ODE, and Dart which are based on the hard contact model.
 </p>
 
 <p>
-    MuJoCo cannot specify restitution coefficient. There's uncontrollable bouncy behavior as the following video.
+    Besides, MuJoCo adopts complementarity-free contact model(soft contact model), which does not hold strict complementarity rather relaxes the constraint to make the contact problem convex.
+    The position level drift also inherently exists apparently.
+</p>
+
+<p>
+    By measuring the pairwise penetration between objects, we can quantize the severity of position level drift.
+    We observed the error over the timestep size. The results are as follows:
+</p>
+
+<div>
+    <img src="speed-accuracy.png">
+</div>
+
+<p>
+    Clearly, RaiSim has faster and more accurate speed-accuracy curve than other by means of the novel bisection solver.
+    Bullet perform poorly in this test that has severe penetration problem for general situation.
+    This can be attenuated by ERP, but remark that ERP is not based on real physics but a post process to make plausible result.
+</p>
+
+<div>
+    <img src="speed.png">
+</div>
+
+<p>
+    Also RaiSim remarkably faster than other engines: it is even six times faster than Bullet which is the fastest among others.
+</p>
+
+<p>
+    Note that MuJoCo cannot specify restitution coefficient.  There's uncontrollable bouncy behavior as the following video.
 
     <img src="666-mujoco-dt=0.01.gif" alt="666-test-mujoco">
 </p>
