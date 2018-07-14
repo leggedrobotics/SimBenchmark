@@ -31,7 +31,7 @@ layout: default
 <img src="anymal-energy.gif" alt="anymal-energy-test">
 
 <p>
-    ANYmal free drop test is to test energy conservation.
+    In this test, we disabled contact, joint limit, damping, and actuation to observe energy preservability of the articulated system simulation on the physics engines.
 </p>
 
 <p>
@@ -39,13 +39,14 @@ The test focuses on:
 </p>
 
 <ol>
-    <li>Energy consesrvation</li>
+    <li>Energy preservability</li>
 </ol>
 
 <h2>Test scenario</h2>
 
 <p>
-    A 18 DOF quadruped robot <a href="http://www.rsl.ethz.ch/">ANYmal</a> is lifted up to the sky and then free dropped.
+    A 18 DOF quadruped robot <a href="http://www.rsl.ethz.ch/">ANYmal</a> is lifted up to the air and free dropped.
+    The system energy was measured during the drop.
 </p>
 
 <h2>Tested solver list</h2>
@@ -69,12 +70,9 @@ The test focuses on:
     </li>
     <li>MuJoCo
         <ul>
-            <li>PGS solver + Euler integrator</li>
-            <li>CG solver + Euler integrator</li>
-            <li>Newton solver + Euler integrator</li>
-            <li>PGS solver + RK4 integrator</li>
-            <li>CG solver + RK4 integrator</li>
-            <li>Newton solver + RK4 integrator</li>
+            <li>PGS solver</li>
+            <li>CG solver</li>
+            <li>Newton solver</li>
         </ul>
     </li>
     <li>Dart
@@ -94,4 +92,13 @@ The test focuses on:
 <p>
     <img src="speed-accuracy.png">
     <img src="speed.png">
+</p>
+
+<p>
+    Since the discontinuity of the simulation gone, Runge-Kutta 4th order(RK4) integration has a huge benefit on the accuracy of the simulation.
+    Apparently, the accuracy of the MuJoCo's RK4 integration is not comparable to Euler integration as the speed-accuracy curve describes.
+</p>
+<p>
+    Notably, RaiSim's mid-point Euler integration scheme shows the best energy preservability among Euler engines.
+    In terms of speed, it is approximately 5~7 times faster than MuJoCo Euler, Bullet and Dart and 10 times faster than MuJoCo RK4.
 </p>
