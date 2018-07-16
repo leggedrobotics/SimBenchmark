@@ -78,12 +78,12 @@ layout: default
 
 <p>
     Also, efficient multibody dynamics implementation is required for physics engine to be used for robotics applications.
-    For robotic articulated systems that have multiple joints and links, solving dynamics is considerably expensive as $n$ links have $O(n^3)$ complexity.
+    For robotic articulated systems that have multiple joints and links, solving the multibody dynamics is considerably expensive as $n$ links have $O(n^3)$ complexity.
     Most state-of-the-art simulation engines, therefore, adopt noble algorithms that solve the problem in an efficient manner.
 </p>
 
 <p>
-    In the benchmark tests, we investigated different characteristics of different contact models and multibody dynamics algorithms that each physics engine adopts.
+    In the benchmark tests, we investigated different characteristics of the contact model and multibody dynamics algorithms that each physics engine applies.
 </p>
 
 <p>
@@ -222,12 +222,12 @@ layout: default
     The error of the contact simulation is caused by
 
 <ol class="pa">
-    <li>inaccurate impulse/force solution from contact solver</li>
+    <li>inaccurate impulse/force solution from a contact solver</li>
     <li>inherited discretized error from numerical integration.</li>
 </ol>
 
-For iterative contact solvers, 1) can be reduced by increasing the number of iteration, and 2) can be reduced by decreasing timestep.
-In both cases, there is a speed-accuracy trade-off.
+For iterative contact solvers, 1) can be reduced by increasing the number of iteration, and 2) can be reduced by decreasing timestep $dt$.
+In both cases, there is a speed-accuracy trade-off: accurate simulation requires more CPU time.
 </p>
 
 <p>
