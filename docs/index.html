@@ -73,13 +73,13 @@ layout: default
 <p>
     Solving contact dynamics is NP-hard problem<a href="#[1]">[1]</a> due to its non-convexity and discontinuity.
     To make the problem tractable, physics engines approximate the contact problem as a relaxed problem that enables using efficient solving methods.
-    Each method has different characteristics, but some of them significantly sacrifice the accuracy of the contact solution that leads to the poor reality of the contact simulation.
+    Each method has different characteristics, but some of them significantly sacrifice the accuracy of the contact solution that leads to the poor reality of the simulation.
 </p>
 
 <p>
-    Another important feature required for robotics research is an efficient multibody dynamics implementation.
+    Also, efficient multibody dynamics implementation is required for physics engine to be used for robotics applications.
     For robotic articulated systems that have multiple joints and links, solving dynamics is considerably expensive as $n$ links have $O(n^3)$ complexity.
-    Most state-of-the-art simulation engines, therefore, adopted noble algorithms that solve the problem in an efficient manner.
+    Most state-of-the-art simulation engines, therefore, adopt noble algorithms that solve the problem in an efficient manner.
 </p>
 
 <p>
