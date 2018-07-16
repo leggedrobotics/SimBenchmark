@@ -346,7 +346,7 @@ The following table describes the benchmark results assessed by the speed-accura
             <th>Atlas PD</th>
             <td><font color="green">+++++</font></td>
             <td>+++</td>
-            <td>+</td>
+            <td><font color="red">-</font></td>
             <td>++++</td>
             <td>++</td>
         </tr>
@@ -379,9 +379,31 @@ The following table describes the benchmark results assessed by the speed-accura
 <ul>
     <li>more + is better
     <li><font color="green"><b>+</b></font>: best results
-    <li><font color="red">-</font>: cannot simulate due to inaccurate model or software bug
+    <li><font color="red">-</font>: cannot simulate due to inaccurate model or excepted
     <li><font color="red">x</font>: simulation fails due to a software error
 </ul>
+</p>
+
+<p>
+    ODE generally performs well with single-body primitive shaped objects while MuJoCo and DART have benefits on multibody simulations.
+    The multibody system simulation on ODE is very expensive but notably, it outperformed in ANYmal momentum test:
+    although it is significantly inefficient, the maximal coordinate representation has good momentum preservability.
+    Bullet can simulates slip of the object with frictional contacts very accurately and also efficiently.
+</p>
+<p>
+    But, these engines also reveled their limitations:
+<ul>
+    <li>the LCP contact model of ODE and DART failed to simulate slip of the object in certain conditions.</li>
+    <li>DART's simulation pipeline is not suitable for simulation scenes with many objects.</li>
+    <li>Bullet has severe position level drift without the post-solver error correcting method.</li>
+    <li>MuJoCo's soft contact model cannot control elasticity of contact.</li>
+    <li>MuJoCo has consistent slip which requires additional post-process for legged robot simulation.</li>
+</ul>
+</p>
+
+<p>
+    RaiSim generally has good performance for both single-body and multibody tasks by the virtue of its distinctive contact solving method and efficient multibody dynamics algorithm implementation.
+    We expect RaiSim to be an good alternative of the current state-of-the-art engines for contact simulation of robotics applications.
 </p>
 
 <hr>
