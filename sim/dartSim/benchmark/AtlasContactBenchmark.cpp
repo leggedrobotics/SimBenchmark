@@ -71,7 +71,7 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
 
   // no gui
   for(int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
-    if(benchmark::atlas::options.gui && !sim->visualizerLoop(benchmark::atlas::params.dt))
+    if(benchmark::atlas::options.gui && !sim->visualizerLoop())
       break;
 
     for(int i = 0; i < robots.size(); i++) {

@@ -70,7 +70,7 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
 
   // no gui
   for(int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
-    if(benchmark::atlas::options.gui && !sim->visualizerLoop(benchmark::atlas::params.dt))
+    if(benchmark::atlas::options.gui && !sim->visualizerLoop())
       break;
     sim->integrate1();
     for(int i = 0; i < robots.size(); i++) {
@@ -111,7 +111,7 @@ int main(int argc, const char* argv[]) {
                 << "-----------------------"
   )
 
-  // trial1: get Error
+  // trial1: get cpu time
   setupSimulation();
   resetWorld();
   double time = simulationLoop(true, false);
@@ -120,7 +120,7 @@ int main(int argc, const char* argv[]) {
   robots.clear();
   delete sim;
 
-  // trial2: get CPU time
+  // trial2: get contact
   setupSimulation();
   resetWorld();
   simulationLoop(false, true);

@@ -182,15 +182,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="l_hand_0">
         <inertial>
@@ -595,15 +596,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="r_hand_0">
         <inertial>
@@ -1445,15 +1447,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="l_hand_1">
         <inertial>
@@ -1858,15 +1861,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="r_hand_1">
         <inertial>
@@ -2708,15 +2712,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="l_hand_2">
         <inertial>
@@ -3121,15 +3126,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="r_hand_2">
         <inertial>
@@ -3971,15 +3977,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="l_hand_3">
         <inertial>
@@ -4384,15 +4391,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="r_hand_3">
         <inertial>
@@ -5234,15 +5242,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="l_hand_4">
         <inertial>
@@ -5647,15 +5656,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="r_hand_4">
         <inertial>
@@ -6497,15 +6507,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="l_hand_5">
         <inertial>
@@ -6910,15 +6921,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="r_hand_5">
         <inertial>
@@ -7760,15 +7772,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="l_hand_6">
         <inertial>
@@ -8173,15 +8186,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="r_hand_6">
         <inertial>
@@ -9023,15 +9037,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="l_hand_7">
         <inertial>
@@ -9436,15 +9451,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="r_hand_7">
         <inertial>
@@ -10286,15 +10302,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="l_hand_8">
         <inertial>
@@ -10699,15 +10716,16 @@
         <collision>
             <origin rpy="0 0 0" xyz="0.023 0 -0.049119"/>
             <geometry>
-                <box size="0.227 0.133887 0.05"/>
+                <!--<box size="0.227 0.133887 0.05"/>-->
+                <box size="0.5 0.2 0.05"/>
             </geometry>
         </collision>
-        <collision>
-            <origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>
-            <geometry>
-                <box size="0.1 0.08 0.02"/>
-            </geometry>
-        </collision>
+        <!--<collision>-->
+            <!--<origin rpy="0 0 0" xyz="0.1225 0 -0.0641"/>-->
+            <!--<geometry>-->
+                <!--<box size="0.1 0.08 0.02"/>-->
+            <!--</geometry>-->
+        <!--</collision>-->
     </link>
     <link name="r_hand_8">
         <inertial>
