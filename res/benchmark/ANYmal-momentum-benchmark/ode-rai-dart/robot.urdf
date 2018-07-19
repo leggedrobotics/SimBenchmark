@@ -108,12 +108,12 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="LF_HAA" type="revolute">
+    <joint name="LF_HAA" type="continuous">
         <parent link="base"/>
         <child link="LF_HIP"/>
         <origin xyz="0.2629 0.115 0.0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -139,12 +139,12 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="LF_HFE" type="revolute">
+    <joint name="LF_HFE" type="continuous">
         <parent link="LF_HIP"/>
         <child link="LF_THIGH"/>
         <origin xyz="0.0585 0.0315 0.0"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -170,12 +170,12 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="LF_KFE" type="revolute">
+    <joint name="LF_KFE" type="continuous">
         <parent link="LF_THIGH"/>
         <child link="LF_SHANK"/>
         <origin xyz="0.0 0.111 -0.25"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->
@@ -237,12 +237,12 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="RF_HAA" type="revolute">
+    <joint name="RF_HAA" type="continuous">
         <parent link="base"/>
         <child link="RF_HIP"/>
         <origin xyz="0.2629 -0.115 0.0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -268,12 +268,12 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="RF_HFE" type="revolute">
+    <joint name="RF_HFE" type="continuous">
         <parent link="RF_HIP"/>
         <child link="RF_THIGH"/>
         <origin xyz="0.0585                    -0.0315                    0.0"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -299,12 +299,12 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="RF_KFE" type="revolute">
+    <joint name="RF_KFE" type="continuous">
         <parent link="RF_THIGH"/>
         <child link="RF_SHANK"/>
         <origin xyz="0.0 -0.111 -0.25"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->
@@ -366,12 +366,12 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="LH_HAA" type="revolute">
+    <joint name="LH_HAA" type="continuous">
         <parent link="base"/>
         <child link="LH_HIP"/>
         <origin xyz="-0.2629 0.115 0.0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -397,12 +397,12 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="LH_HFE" type="revolute">
+    <joint name="LH_HFE" type="continuous">
         <parent link="LH_HIP"/>
         <child link="LH_THIGH"/>
         <origin xyz="-0.0585                    0.0315                    0.0"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -428,12 +428,12 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="LH_KFE" type="revolute">
+    <joint name="LH_KFE" type="continuous">
         <parent link="LH_THIGH"/>
         <child link="LH_SHANK"/>
         <origin xyz="-0.0 0.111 -0.25"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->
@@ -495,12 +495,12 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="RH_HAA" type="revolute">
+    <joint name="RH_HAA" type="continuous">
         <parent link="base"/>
         <child link="RH_HIP"/>
         <origin xyz="-0.2629 -0.115 0.0"/>
         <axis xyz="1 0 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -526,12 +526,12 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="RH_HFE" type="revolute">
+    <joint name="RH_HFE" type="continuous">
         <parent link="RH_HIP"/>
         <child link="RH_THIGH"/>
         <origin xyz="-0.0585                    -0.0315                    0.0"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Xacro:Properties -->
@@ -557,12 +557,12 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="RH_KFE" type="revolute">
+    <joint name="RH_KFE" type="continuous">
         <parent link="RH_THIGH"/>
         <child link="RH_SHANK"/>
         <origin xyz="-0.0 -0.111 -0.25"/>
         <axis xyz="0 1 0"/>
-        <limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>
+        <!--<limit effort="80" lower="-6.28" upper="6.28" velocity="15"/>-->
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <!-- Foot mount link -->

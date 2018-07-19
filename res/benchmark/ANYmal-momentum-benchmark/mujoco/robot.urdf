@@ -91,7 +91,7 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="LF_HAA_0" type="revolute">
+    <joint name="LF_HAA_0" type="continuous">
         <parent link="base_0"/>
         <child link="LF_HIP_0"/>
         <origin xyz="0.2629 0.115 0.0"/>
@@ -114,7 +114,7 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="LF_HFE_0" type="revolute">
+    <joint name="LF_HFE_0" type="continuous">
         <parent link="LF_HIP_0"/>
         <child link="LF_THIGH_0"/>
         <origin xyz="0.0585                    0.0315                    0.0"/>
@@ -134,7 +134,7 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="LF_KFE_0" type="revolute">
+    <joint name="LF_KFE_0" type="continuous">
         <parent link="LF_THIGH_0"/>
         <child link="LF_SHANK_0"/>
         <origin xyz="0.0 0.111 -0.25"/>
@@ -190,7 +190,7 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="RF_HAA_0" type="revolute">
+    <joint name="RF_HAA_0" type="continuous">
         <parent link="base_0"/>
         <child link="RF_HIP_0"/>
         <origin xyz="0.2629 -0.115 0.0"/>
@@ -213,7 +213,7 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="RF_HFE_0" type="revolute">
+    <joint name="RF_HFE_0" type="continuous">
         <parent link="RF_HIP_0"/>
         <child link="RF_THIGH_0"/>
         <origin xyz="0.0585                    -0.0315                    0.0"/>
@@ -233,7 +233,7 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="RF_KFE_0" type="revolute">
+    <joint name="RF_KFE_0" type="continuous">
         <parent link="RF_THIGH_0"/>
         <child link="RF_SHANK_0"/>
         <origin xyz="0.0 -0.111 -0.25"/>
@@ -289,7 +289,7 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="LH_HAA_0" type="revolute">
+    <joint name="LH_HAA_0" type="continuous">
         <parent link="base_0"/>
         <child link="LH_HIP_0"/>
         <origin xyz="-0.2629 0.115 0.0"/>
@@ -309,7 +309,7 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="LH_HFE_0" type="revolute">
+    <joint name="LH_HFE_0" type="continuous">
         <parent link="LH_HIP_0"/>
         <child link="LH_THIGH_0"/>
         <origin xyz="-0.0585                    0.0315                    0.0"/>
@@ -332,7 +332,7 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="LH_KFE_0" type="revolute">
+    <joint name="LH_KFE_0" type="continuous">
         <parent link="LH_THIGH_0"/>
         <child link="LH_SHANK_0"/>
         <origin xyz="-0.0 0.111 -0.25"/>
@@ -388,7 +388,7 @@
         </inertial>
     </link>
     <!-- Hip joint -->
-    <joint name="RH_HAA_0" type="revolute">
+    <joint name="RH_HAA_0" type="continuous">
         <parent link="base_0"/>
         <child link="RH_HIP_0"/>
         <origin xyz="-0.2629 -0.115 0.0"/>
@@ -408,7 +408,7 @@
         </inertial>
     </link>
     <!-- Thigh joint -->
-    <joint name="RH_HFE_0" type="revolute">
+    <joint name="RH_HFE_0" type="continuous">
         <parent link="RH_HIP_0"/>
         <child link="RH_THIGH_0"/>
         <origin xyz="-0.0585                    -0.0315                    0.0"/>
@@ -428,7 +428,7 @@
         </inertial>
     </link>
     <!-- Shank joint -->
-    <joint name="RH_KFE_0" type="revolute">
+    <joint name="RH_KFE_0" type="continuous">
         <parent link="RH_THIGH_0"/>
         <child link="RH_SHANK_0"/>
         <origin xyz="-0.0 -0.111 -0.25"/>
