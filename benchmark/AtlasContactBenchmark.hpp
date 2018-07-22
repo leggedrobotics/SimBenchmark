@@ -67,9 +67,11 @@ struct Data {
 
   double computeAvgNumContact() {
     Eigen::MatrixXd numcontact(n, 1);
+    Eigen::MatrixXd steptime(n, 1);
 
     for(int i = 0; i < n; i++) {
       numcontact(i, 0) = numContactList[i];
+      steptime(i, 0) = stepTimeList[i] * 1000;
     }
 
     if(options.plot) {
@@ -83,6 +85,11 @@ struct Data {
       rai::Utils::graph->figure(1, figure1properties);
       rai::Utils::graph->appendData(1, tdata.data(), numcontact.data(), n, "number");
       rai::Utils::graph->drawFigure(1);
+
+      rai::Utils::Graph::FigProp2D figure2properties("time", "step time", "step time");
+      rai::Utils::graph->figure(2, figure2properties);
+      rai::Utils::graph->appendData(2, tdata.data(), steptime.data(), n, "msec");
+      rai::Utils::graph->drawFigure(2);
       rai::Utils::graph->waitForEnter();
     }
 
@@ -97,6 +104,7 @@ struct Data {
 
   // data list
   std::vector<int> numContactList;
+  std::vector<double> stepTimeList;
 
   // num data
   int n = 0;

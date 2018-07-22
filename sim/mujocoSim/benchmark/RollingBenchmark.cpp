@@ -29,8 +29,8 @@ void setupSimulation() {
 
   // solver iteration
   if(!benchmark::rolling::options.defaultParam)
-    sim->setSolverParameter(1000,
-                          benchmark::rolling::options.solverTol);
+    sim->setSolverParameter(benchmark::rolling::options.numSolverIter,
+                            benchmark::rolling::options.solverTol);
 
   /// no erp for mujoco
   if(benchmark::rolling::options.erpYN)

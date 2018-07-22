@@ -28,8 +28,8 @@ void setupSimulation() {
 
   if(!benchmark::rolling::options.defaultParam)
     sim->setContactSolverParam(1.0, 0.7, 1.0,
-                             benchmark::rolling::options.numSolverIter,
-                             1e-30);
+                               benchmark::rolling::options.numSolverIter,
+                               benchmark::rolling::options.solverTol);
 }
 
 void setupWorld() {

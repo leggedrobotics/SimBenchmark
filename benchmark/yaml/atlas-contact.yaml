@@ -16,10 +16,10 @@ sim_properties:
 
 # simulation constants
 constant:
-#  H: 0.35
   H: 1.0
   dt: 0.0005
   T: 25
+#  T: 5
   g: -9.81
 #  baseQuat: [0.7071, 0, -0.7071, 0]
   baseQuat: [1, 0, 0, 0]

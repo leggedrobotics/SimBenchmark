@@ -77,10 +77,12 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
     watch.start();
 
   // no gui
+  StopWatch watch2;
   for (int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
     if(benchmark::atlas::options.gui && !sim->visualizerLoop(benchmark::atlas::params.dt))
       break;
 
+    if (cntNumContact) watch2.start();
     sim->integrate1();
     Eigen::VectorXd gc(sim->getStateDimension());
     Eigen::VectorXd gv(sim->getDOF());
@@ -95,7 +97,10 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
     }
     sim->setGeneralizedForce(tau);
     sim->integrate2();
-    if (cntNumContact) benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
+    if (cntNumContact) {
+      benchmark::atlas::data.numContactList.push_back(sim->getWorldNumContacts());
+      benchmark::atlas::data.stepTimeList.push_back(watch2.measure());
+    }
   }
 
   double time = 0;

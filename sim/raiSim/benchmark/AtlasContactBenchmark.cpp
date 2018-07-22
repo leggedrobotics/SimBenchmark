@@ -68,21 +68,24 @@ double simulationLoop(bool timer = true, bool cntNumContact = true) {
   if(timer)
     watch.start();
 
+  Eigen::VectorXd gc(robots[0]->getGeneralizedCoordinateDim());
+  Eigen::VectorXd gv(robots[0]->getDOF());
+  Eigen::VectorXd tau(robots[0]->getDOF());
+  gc.setZero();
+  gv.setZero();
+
   // no gui
   for(int t = 0; t < (int) (benchmark::atlas::params.T / benchmark::atlas::params.dt); t++) {
     if(benchmark::atlas::options.gui && !sim->visualizerLoop())
       break;
     sim->integrate1();
     for(int i = 0; i < robots.size(); i++) {
-      Eigen::VectorXd gc(robots[i]->getGeneralizedCoordinateDim());
-      Eigen::VectorXd gv(robots[i]->getDOF());
-      Eigen::VectorXd tau(robots[i]->getDOF());
       gc = robots[i]->getGeneralizedCoordinate();
       gv = robots[i]->getGeneralizedVelocity();
       tau.setZero();
-      tau.tail(30) =
-          -benchmark::atlas::params.kp.tail(30).cwiseProduct(gc.tail(30))
-              - benchmark::atlas::params.kd.cwiseProduct(gv).tail(30);
+      tau.tail(29) =
+          -benchmark::atlas::params.kp.tail(29).cwiseProduct(gc.tail(29))
+              - benchmark::atlas::params.kd.cwiseProduct(gv).tail(29);
       robots[i]->setGeneralizedForce(tau);
     }
     sim->integrate2();

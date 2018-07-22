@@ -35,7 +35,7 @@ void setupSimulation() {
 
   // solver iteration
   if(!benchmark::rolling::options.defaultParam)
-    sim->setSolverParameter(1e-30,
+    sim->setSolverParameter(benchmark::rolling::options.solverTol,
                             benchmark::rolling::options.numSolverIter);
 }
 
