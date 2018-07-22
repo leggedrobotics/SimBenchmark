@@ -471,6 +471,13 @@ void mujoco_sim::MjcSim::setWorldContactFlag(bool flagYN) {
     world_.simOption_->disableflags |= mjDSBL_CONTACT;
 }
 
+void mujoco_sim::MjcSim::setWarmStartFlag(bool flagYN) {
+  if (flagYN == true)
+    world_.simOption_->disableflags &= ~mjDSBL_WARMSTART;
+  else
+    world_.simOption_->disableflags |= mjDSBL_WARMSTART;
+}
+
 void mujoco_sim::MjcSim::setSolverParameter(int solverMaxIteration, double solverTolerance) {
   world_.simOption_->iterations = solverMaxIteration;
   world_.simOption_->tolerance = solverTolerance;

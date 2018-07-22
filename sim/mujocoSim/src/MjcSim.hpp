@@ -69,6 +69,12 @@ class MjcSim: public benchmark::WorldRG {
   void setWorldContactFlag(bool flagYN);
 
   /**
+  * Set flagYN = false to disable warmstart
+  * @param flagYN
+  */
+  void setWarmStartFlag(bool flagYN);
+
+  /**
    * Set solver parameters.
    * @param solverMaxIteration  default value is 100
    * @param solverTolerance     default value is 1e-8
