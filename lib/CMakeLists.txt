@@ -25,12 +25,15 @@ set(RAI_GRAPHICS_OPENGL_LINK
         PARENT_SCOPE)
 
 # yaml-cpp
-find_library(YAML-CPP
-        NAMES yaml-cpp
-        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/yaml-cpp)
-set(YAML_CPP_LIBRARIES
-        ${YAML-CPP}
-        PARENT_SCOPE)
+find_package(yaml-cpp REQUIRED)
+
+#find_library(YAML-CPP
+#        NAMES yaml-cpp
+#        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/libyaml-cpp.a REQUIRED)
+#set(YAML_CPP_LIBRARIES
+#        ${YAML-CPP}
+#        PARENT_SCOPE)
+message("${YAML_CPP_LIBRARIES}")
 
 # bullet: sim/bulletMultibodySim
 # ode: sim/odeSim

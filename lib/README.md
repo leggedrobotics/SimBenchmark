@@ -1,5 +1,8 @@
 # Libraries
 
+add the graphics environmental variable as
+echo 'export RAI_GRAPHICS_OPENGL_ROOT='$PWD/raiGraphics'' >> ~/.bashrc
+
 This directory is for external libraries: 
 
 - yaml-cpp 0.6.2

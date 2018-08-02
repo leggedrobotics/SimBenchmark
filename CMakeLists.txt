@@ -17,10 +17,10 @@ endif()
 
 # options
 option(BENCHMARK_RAISIM "benchmark raiSim" ON)
-option(BENCHMARK_BULLET_MULTIBODY "benchmark Bullet Multibody(bullet3 API)" ON)
-option(BENCHMARK_ODE "benchmark ODE" ON)
-option(BENCHMARK_MUJOCO "benchmark MUJOCO" ON)
-option(BENCHMARK_DART "benchmark DART" ON)
+option(BENCHMARK_BULLET_MULTIBODY "benchmark Bullet Multibody(bullet3 API)" OFF)
+option(BENCHMARK_ODE "benchmark ODE" OFF)
+option(BENCHMARK_MUJOCO "benchmark MUJOCO" OFF)
+option(BENCHMARK_DART "benchmark DART" OFF)
 option(BUILD_DEMO "build demos" OFF)
 option(BUILD_TEST "build tests" OFF)
 option(BUILD_BENCHMARK "build benchmark tests" ON)
@@ -40,8 +40,8 @@ include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
 ## yaml-cpp
-#find_package(YAML-CPP REQUIRED)
-#include_directories(${YAML_CPP_INCLUDE_DIR})
+find_package(YAML-CPP REQUIRED)
+include_directories(${YAML_CPP_INCLUDE_DIR})
 
 # local libs
 add_subdirectory(lib)
