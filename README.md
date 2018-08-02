@@ -19,8 +19,9 @@ You can see the details in [webpage](https://leggedrobotics.github.io/SimBenchma
 The project is consist of common part(interface) and libraries which corresponds each simulation engine.
 
 ## Installation
-
+ 
 - Ubuntu 16.04 LTS only.
+- To use visualization, add environmental variable "RAI_GRAPHICS_OPENGL_ROOT" that points to lib/raiGraphics
 - Matlab R2018a is required for plotting
 - MuJoCo is proprietary. You need a license for testing MuJoCo.
 - RaiSim is proprietary, and currently unreleased.
