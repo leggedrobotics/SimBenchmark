@@ -15,11 +15,8 @@ set(RAI_COMMON_LINK
         PARENT_SCOPE)
 
 # raiGraphics
-find_library(raiGraphicsOpengl
-        NAMES raiGraphicsOpenglLib
-        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/raiGraphics)
 set(RAI_GRAPHICS_OPENGL_LINK
-        ${raiGraphicsOpengl}
+        ${CMAKE_CURRENT_SOURCE_DIR}/raiGraphics/libraiGraphicsOpenglLib.so
         GL GLEW SDL2 SDL2_ttf assimp SOIL pthread
         ${RAI_COMMON_LINK}
         PARENT_SCOPE)

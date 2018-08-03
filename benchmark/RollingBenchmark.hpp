@@ -58,7 +58,7 @@ Eigen::Vector3d computeAnalyticalSol(double t, bool isBall);
  */
 struct Option: benchmark::Option {
   // force-direction Y/XY
-  ForceDirection forceDirection = FORCE_Y;
+  ForceDirection forceDirection = FORCE_XY;
 
   // erp
   bool erpYN = false;
