@@ -69,13 +69,13 @@ echo "==========================================================================
 echo "Install build tools..."
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt update
-sudo apt install g++-7 -y
+sudo apt install -y -qq g++-7
 
 # install dependencies
 echo "Install dependencies..."
 #sudo rm -rf $ROOT_DIR/lib/mjpro150
-sudo apt install libeigen3-dev libboost-all-dev libglew-dev libglm-dev libsdl2-dev \
-libassimp-dev libsoil-dev libsdl2-ttf-dev
+sudo apt install -y -qq libeigen3-dev libboost-all-dev libglew-dev libglm-dev libsdl2-dev \
+libassimp-dev libsoil-dev libsdl2-ttf-dev liburdfdom-dev
 
 # check if git is installed
 echo "Check if git is installed."
