@@ -2,7 +2,8 @@
 
 SimBenchmark is a project providing the reliable benchmark results of state-of-the-art physics engines used for contact simulation for various robotic tasks.
 
-We evaluated the most widely-used physics engines for robotics and machine learning applications. The list of the engines is as follows:
+We evaluated the most widely-used physics engines for robotics and machine learning applications. 
+The list of the engines is as follows:
 
 - RaiSim (Jemin Hwangbo, Dongho Kang et al.)
 - [Bullet Physics](http://bulletphysics.org/)
@@ -14,34 +15,23 @@ You can see the details in [webpage](https://leggedrobotics.github.io/SimBenchma
 
 ![ANYmal PD Control Benchmark](https://leggedrobotics.github.io/SimBenchmark/about/anymal.gif)
 
-## Overview
-
-The project is consist of common part(interface) and libraries which corresponds each simulation engine.
-
 ## Installation
- 
-- Ubuntu 16.04 LTS only.
-- To use visualization, add environmental variable "RAI_GRAPHICS_OPENGL_ROOT" that points to lib/raiGraphics
-- Matlab R2018a is required for plotting
-- MuJoCo is proprietary. You need a license for testing MuJoCo.
-- RaiSim is proprietary, and currently unreleased.
 
-### Install with bash script
+SimBenchmark runs on Ubuntu 16.04 + g++7
+
+Notes:
+- RaiSim and MuJoCo is proprietary. 
+- Matlab R2018a is reuiqred for plotting (optional). 
+
+### via Docker (recommended)
+
+See [docker/README.md]()
+
+### via bash script 
 
 - Run install.sh script by ```./install.sh ```
 - The dependencies are downloaded in ```lib``` directory.
-
-### Install manually
-
-- install Bullet Physics
-    - turn on double precision and shared library option
-    - Build and install library into local
-- install ODE
-    - Build and install library into local
-- install raiGraphics
-    - Build install library into local
-- install raiCommons
-    - Build install library into local
+- To use visualization, add environmental variable "RAI_GRAPHICS_OPENGL_ROOT" that points to lib/raiGraphics
 - download MuJoCo v.1.5 in lib directory
     - ```lib/mjpro150```
     - put ```mjkey.txt``` in ```lib/mjpro150/mjkey.txt```
