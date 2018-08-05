@@ -6,6 +6,7 @@ We evaluated the most widely-used physics engines for robotics and machine learn
 The list of the engines is as follows:
 
 - RaiSim (Jemin Hwangbo, Dongho Kang et al.)
+	- [What is RaiSim?](https://leggedrobotics.github.io/SimBenchmark/about/sims.html#RaiSim)
 - [Bullet Physics](http://bulletphysics.org/)
 - [Open Dynamics Engine](http://www.ode.org/)
 - [Multi-Joint dynamics with Contact (a.k.a. MuJoCo)](http://mujoco.org/)
@@ -21,7 +22,7 @@ SimBenchmark runs on Ubuntu 16.04 LTS.
 
 Notes:
 - RaiSim and MuJoCo is proprietary. 
-- Matlab R2018a is reuiqred for plotting (optional). 
+- Matlab R2018a is required for plotting (optional). 
 
 ### via Docker (recommended)
 
@@ -39,7 +40,6 @@ See [docker/README.md](https://github.com/leggedrobotics/SimBenchmark/blob/maste
 ## Test and Results
 
 We designed the following tests for the evaluation 
-
 - Rolling test: friction model test
 - Bouncing test: single-body elastic collision test
 - 666 balls test: single-body hard contact test
