@@ -21,8 +21,9 @@ You can either build a docker image from Dockerfile or pull the image from docke
 - You may need the super user privilege for run docker commands. 
 - If you don't want to use sudo, see [this page](https://docs.docker.com/install/linux/linux-postinstall/) 
 - You can use the following command to mount a host directory and forward X for using GUI  
-	```sh
-	$ docker run -it --rm -v /home/kangd:/home/kangd -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY --device /dev/dri raisim:latest
-	```
-	- ```v```: mount diretory 
-	- ```-v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY --device /dev/dri```: forward X. Read [this](http://somatorio.org/en/post/running-gui-apps-with-docker/)  
+	- ```xhost local:root``` on the host machine.
+	- run docker with following options  
+		```sh
+		$ docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY --device /dev/dri donghokang/simbenchmark:latest
+		```
+		- ```-v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY --device /dev/dri```: forward X. Read [this](http://somatorio.org/en/post/running-gui-apps-with-docker/)  
