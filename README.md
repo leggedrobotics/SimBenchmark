@@ -17,7 +17,7 @@ You can see the details in [webpage](https://leggedrobotics.github.io/SimBenchma
 
 ## Installation
 
-SimBenchmark runs on Ubuntu 16.04 + g++7
+SimBenchmark runs on Ubuntu 16.04 LTS.  
 
 Notes:
 - RaiSim and MuJoCo is proprietary. 
@@ -25,7 +25,7 @@ Notes:
 
 ### via Docker (recommended)
 
-See [docker/README.md]()
+See [docker/README.md](https://github.com/leggedrobotics/SimBenchmark/blob/master/docker/README.md)
 
 ### via bash script 
 
