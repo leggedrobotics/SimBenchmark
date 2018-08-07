@@ -83,7 +83,7 @@ do
             for solver in dantzig pgs
             do
                 # note dart has no erp
-                ../sim/dartSim/benchmark/Dart666Benchmark \
+                ../sim/dartSim/benchmark/DartElastic666Benchmark \
                 --nogui --dt=$dt --solver=$solver --csv=$csv_file
             done
         else
