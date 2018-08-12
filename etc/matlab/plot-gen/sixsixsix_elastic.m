@@ -54,8 +54,8 @@ plotSpec = plotspec;
 %% error plot
 % plot option
 erpN = plotoption;
-erpN.DARTDANTZIGDART = false;
-erpN.DARTPGSDART = false;
+erpN.DARTDANTZIGDART = true;
+erpN.DARTPGSDART = true;
 erpN.MUJOCOCGEULER = false;
 erpN.MUJOCONEWTONEULER = false;
 erpN.MUJOCOPGSEULER = false;
@@ -93,8 +93,8 @@ T2 = sortrows(T2, 8);
 speed = numIter ./ T2.TIME ./ 1000;
 
 barOption = plotoption;
-barOption.DARTDANTZIGDART = false;
-barOption.DARTPGSDART = false;
+barOption.DARTDANTZIGDART = true;
+barOption.DARTPGSDART = true;
 
 disp('plotting bar graph')
 h = figure('Name', 'speed', 'Position', [0, 0, 600, 500]);

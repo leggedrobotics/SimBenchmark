@@ -55,14 +55,14 @@ plotSpec = plotspec;
 %% error plot
 % plot option
 erpN = plotoption;
-erpN.DARTDANTZIGDART = false;
+erpN.DARTDANTZIGDART = true;
 erpN.DARTPGSDART = false;
 % erpN.MUJOCOCGRK4 = false;
 % erpN.MUJOCONEWTONRK4 = false;
 % erpN.MUJOCOPGSRK4 = false;
 
 erpY = plotoption;
-erpY.DARTDANTZIGDART = false;
+erpY.DARTDANTZIGDART = true;
 erpY.DARTPGSDART = false;
 erpY.MUJOCOCGRK4 = false;
 erpY.MUJOCONEWTONRK4 = false;
@@ -109,6 +109,7 @@ text(1:length(speed), ...
     'horiz','center', ...
     'FontWeight','bold');
 ylabel(sprintf('timestep per second (kHz)'))
+ylim([0, 9])
 % saveas(h, strcat('666-plots/speedbar.png'))
 % saveas(h, strcat('666-plots/speedbar.eps'), 'epsc')
 % saveas(h, strcat('666-plots/speedbar.fig'), 'fig')
@@ -187,7 +188,7 @@ hold off
 title(['666 test'])
 xlabel('real time factor')
 ylabel('squared error (m^2)')
-xlim([10^-3 10^3])
+xlim([10^-4 10^3])
 lgd = legend('Location', 'southwest');
 lgd.NumColumns = 2;
 % saveas(h, strcat('666-plots/error-speed', fileName, '.png'))
