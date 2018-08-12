@@ -66,11 +66,11 @@ layout: default
             <li>Newton</li>
         </ul></strike>
     </li>
-    <li><strike>Dart</strike><sup><a href="#[2]">[2]</a></sup>
-        <strike><ul>
+    <li>Dart
+        <ul>
             <li>Dantzig</li>
-            <li>LCP PGS</li>
-        </ul></strike>
+            <li>LCP PGS<sup><a href="#[2]">[2]</a></sup></li>
+        </ul>
     </li>
 </ul>
 
@@ -81,7 +81,7 @@ layout: default
         [1] Elastic collision cannot be simulated in MuJoCo. See <a href="../bouncing/bouncing.html">Bouncing test page</a> for more details.
     </li>
     <li id="[2]">
-        [2] Dart simulation fails in this test. The solver stopped with an error message and finally terminates with segmentation fault error.
+        [2] Dart LCP PGS fails with timestep > 0.01: the simulation is blown up. We only report the results with timestep < 0.01 for LCP PGS.
     </li>
 </ul>
 
