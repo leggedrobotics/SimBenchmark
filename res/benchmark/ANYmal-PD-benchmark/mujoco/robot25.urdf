@@ -62,9 +62,9 @@
     </link>
     <link name="ground">
     	<collision>
-                <origin rpy="0,0,0" xyz="0 0 -0.05"/>
+                <origin rpy="0,0,0" xyz="0 0 -5"/>
                 <geometry>
-                    <box size="100 100 0.1"/>
+                    <box size="100 100 10"/>
                 </geometry>
     	</collision>
     </link>
