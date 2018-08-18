@@ -93,6 +93,10 @@ void mujoco_sim::MjcSim::initFromModel() {
           RAIFATAL("not supported geometry type");
         }
       }
+
+      model->geom_friction[3 * geomIndex] = 0.8;
+      model->geom_friction[3 * geomIndex + 1] = 0;
+      model->geom_friction[3 * geomIndex + 2] = 0;
     }
   }
 }
