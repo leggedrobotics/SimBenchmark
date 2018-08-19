@@ -1,0 +1,13 @@
+<mujoco model="bouncing">
+    <compiler angle="degree"/>
+
+    <option jacobian="sparse" cone="elliptic" tolerance="1e-10"/>
+
+    <default>
+        <geom solimp=".9 .9 .01"/>
+    </default>
+
+    <worldbody>
+        <light directional="true" diffuse=".8 .8 .8" pos="0 0 10" dir="0 0 -10"/>
+
+        <geom pos="0 0 0" type="plane" size="200 200 5" friction="0 0 0"/>

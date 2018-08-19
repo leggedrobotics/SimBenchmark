@@ -1,0 +1,3 @@
+
+    </worldbody>
+</mujoco>

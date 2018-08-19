@@ -1,0 +1,8 @@
+<mujoco model="tower">
+    <compiler angle="degree"/>
+
+    <size njmax="9000" nconmax="3000" nstack="1000000000"/>
+
+    <default>
+        <geom solimp=".9 .9 .01"/>        
+
