@@ -1,17 +1,3 @@
-<mujoco model="Humanoid and 100 objects">
-    <compiler angle="degree"/>
-
-    <option timestep="0.01" iterations="50" solver="PGS" jacobian="sparse" cone="elliptic" tolerance="1e-10"/>
-
-    <size njmax="5000" nconmax="2000" nstack="1000000000"/>
-
-    <default>
-        <geom solimp=".9 .9 .01"/>        
-
-        <default class="object5">
-			<geom type="sphere" material="geom" rgba=".9 .1 .1 1" size="0.500000"/>
-        </default>
-    </default>
 
     <asset>
         <texture type="skybox" builtin="gradient" width="128" height="128" rgb1=".4 .6 .8" rgb2="0 0 0"/>  
@@ -34,7 +20,3 @@
         <light directional="true" diffuse=".8 .8 .8" pos="0 0 10" dir="0 0 -10"/>
 
         <geom pos="0 0 0" type="plane" size="3 3 .5" rgba=".7 .7 .7 1" material="MatPlane"/>
-		<body pos="1.100815 1.100906 6.100127" quat="0.654066 0.209426 -0.636794 -0.350473"> <freejoint/> <geom class="object5"/> </body> 
-
-    </worldbody>
-</mujoco>

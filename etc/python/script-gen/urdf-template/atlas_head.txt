@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<robot name="drc_skeleton">
+    <!-- Head Link Simple Collision Meshes -->
+    <mujoco>
+        <size njmax="5000" nconmax="2000" nstack="1000000000"/>
+    </mujoco>
+    <link name="world">
+    </link>
+    <link name="ground">
+    	<collision>
+                <origin rpy="0,0,0" xyz="0 0 -0.05"/>
+                <geometry>
+                    <box size="100 100 0.1"/>
+                </geometry>
+    	</collision>
+    </link>
