@@ -221,13 +221,21 @@ layout: default
     This prevents position-level drift: as ERP set to non-zero value, the penetration error is significantly reduced as the following figure.
 </p>
 
-<div>
-    [figure]
+<div class="row">
+    <figure>
+        <div class="column">
+            <img src="bullet-erp.png">
+        </div>
+        <div class="column">
+            <img src="bullet-noerp.png">
+        </div>
+        <figcaption>Box stacking simulation on Bullet Physics. ERP(left) vs no ERP(right)</figcaption>
+    </figure>
 </div>
 
 <p>
     However, we set the ERP to zero for most cases since the error correction algorithms are not based on physics and may lead to unrealistic simulation result.
-    Also, as we focused on the numerical solution from the constraint solver itself, not post-process, there is no mean of using it in the benchmark tests.
+    Also, as we focused on the numerical solution from the constraint solver itself, not post-process, thus there is no mean of using it in the benchmark tests.
     Finally, the ERP forces to hold constraints by adding artificial force, the system does not preserve energy or momentum which leads to undesirable simulation result.
 </p>
 
