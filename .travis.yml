@@ -10,9 +10,12 @@ services:
 
 before_install:
   - docker pull donghokang/simbenchmark:latest
-  - docker run -it -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR donghokang/simbenchmark:latest
+  - docker run -itd -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR --name simbenchmark-docker donghokang/simbenchmark:latest
+
+install: true
 
 script:
+  - docker exec simbenchmark-docker /bin/bash
   - cd $TRAVIS_BUILD_DIR
   - mkdir build && cd build
   - cmake -DCMAKE_BUILD_TYPE=Release ../
