@@ -1,0 +1,19 @@
+language: c++
+
+sudo: required
+
+os:
+  - linux
+
+services:
+  - docker
+
+before_install:
+  - docker pull donghokang/simbenchmark:latest
+  - docker run -it -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR donghokang/simbenchmark:latest
+
+script:
+  - cd $TRAVIS_BUILD_DIR
+  - mkdir build && cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release ../
+  - make
