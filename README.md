@@ -1,5 +1,7 @@
 # SimBenchmark
 
+[![Build Status](https://travis-ci.org/eastskykang/SimBenchmark.svg?branch=master)](https://travis-ci.org/eastskykang/SimBenchmark)
+
 SimBenchmark is a project providing the reliable benchmark results of state-of-the-art physics engines used for contact simulation for various robotic tasks.
 
 We evaluated the most widely-used physics engines for robotics and machine learning applications. 
