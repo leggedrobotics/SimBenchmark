@@ -42,12 +42,6 @@ add_executable(BtMbElastic666Benchmark
         ${CMAKE_SOURCE_DIR}/benchmark/BtMbBenchmark.hpp)
 target_link_libraries(BtMbElastic666Benchmark ${BtMbSimLink})
 
-add_executable(BtMbKaplaBenchmark
-        KaplaBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/KaplaBenchmark.hpp
-        ${CMAKE_SOURCE_DIR}/benchmark/BtMbBenchmark.hpp)
-target_link_libraries(BtMbKaplaBenchmark ${BtMbSimLink})
-
 add_executable(BtMbAtlasContactBenchmark
         AtlasContactBenchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/AtlasContactBenchmark.hpp

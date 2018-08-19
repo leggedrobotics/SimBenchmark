@@ -26,11 +26,6 @@ add_executable(DartRollingBenchmark
         ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)
 target_link_libraries(DartRollingBenchmark ${DartSimLink})
 
-add_executable(DartKaplaBenchmark
-        KaplaBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/KaplaBenchmark.hpp)
-target_link_libraries(DartKaplaBenchmark ${DartSimLink})
-
 add_executable(Dart666Benchmark
         666Benchmark.cpp
         ${CMAKE_SOURCE_DIR}/benchmark/666Benchmark.hpp)
