@@ -28,5 +28,7 @@ RUN apt-get install -y -qq liburdfdom-dev
 
 # dart dependencies
 RUN apt-get remove -y libdart*
-RUN apt-get install -y libassimp-dev libccd-dev libfcl-dev
-RUN apt-get install -y libopenscenegraph-dev
+RUN apt-get install -y -qq libassimp-dev libccd-dev libfcl-dev
+RUN apt-get install -y -qq libopenscenegraph-dev
+RUN apt-get install -y -qq libbullet-dev
+RUN apt-get install -y -qq libode-dev
