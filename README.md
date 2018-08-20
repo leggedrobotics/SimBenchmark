@@ -28,7 +28,7 @@ Notes:
 
 ### via Docker (recommended)
 
-See [docker/README.md](https://github.com/leggedrobotics/SimBenchmark/blob/master/docker/README.md)
+See [docker/README.md](https://github.com/leggedrobotics/SimBenchmark/blob/master/.ci/docker/README.md)
 
 ### via bash script 
 
