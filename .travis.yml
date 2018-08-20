@@ -8,7 +8,7 @@ os:
 services:
   - docker
 
-before_install:
+install:
   - docker pull donghokang/simbenchmark:latest
   - docker run -itd -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR --name simbenchmark-docker donghokang/simbenchmark:latest
 
