@@ -13,7 +13,7 @@ install:
   - docker run -itd -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR --name simbenchmark-docker donghokang/simbenchmark:latest
 
 script:
-  - docker exec simbenchmark-docker /bin/bash "echo test"
+  - docker exec simbenchmark-docker /bin/bash -c "echo test"
 
 notifications:
   slack: rai-dev:ShAnMsZnkPDcPxybvasdrUYj
