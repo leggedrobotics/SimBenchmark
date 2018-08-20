@@ -15,5 +15,9 @@ install:
 script:
   - docker exec simbenchmark-docker /bin/bash -c "cd $TRAVIS_BUILD_DIR && ./.ci/build.sh"
 
+branches:
+  except:
+  - docs
+
 notifications:
   slack: rai-dev:ShAnMsZnkPDcPxybvasdrUYj
