@@ -1,2 +1,2 @@
-add_executable(OdeMathTest MathTest.cpp)
-target_link_libraries(OdeMathTest ${OdeSimLink})
+add_executable(odeSimTestMath MathTest.cpp)
+target_link_libraries(odeSimTestMath ode)

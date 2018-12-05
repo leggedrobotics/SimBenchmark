@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.9)
-project(benchmark)
+cmake_minimum_required(VERSION 3.5)
+project(simbenchmark)
 
 ## =========================== COMPILER ===========================
 set(CMAKE_C_COMPILER "/usr/bin/gcc-7")
@@ -16,14 +16,15 @@ else ()
 endif()
 
 # options
-option(BENCHMARK_RAISIM "benchmark raiSim" OFF)
-option(BENCHMARK_BULLET_MULTIBODY "benchmark Bullet Multibody(bullet3 API)" ON)
-option(BENCHMARK_ODE "benchmark ODE" ON)
-option(BENCHMARK_MUJOCO "benchmark MUJOCO" OFF)
-option(BENCHMARK_DART "benchmark DART" ON)
-option(BUILD_DEMO "build demos" OFF)
-option(BUILD_TEST "build tests" OFF)
-option(BUILD_BENCHMARK "build benchmark tests" ON)
+option(RAISIM "benchmark raiSim" OFF)
+option(BULLET "benchmark Bullet Multibody(bullet3 API)" OFF)
+option(ODE "benchmark ODE" ON)
+option(MUJOCO "benchmark MUJOCO" OFF)
+option(DART "benchmark DART" OFF)
+
+option(BUILD_DEMO "build demos" ON)
+option(BUILD_TEST "build tests" ON)
+option(BUILD_BENCHMARK "build benchmark tests" OFF)
 #option(BUILD_UTIL "build utils" ON)
 
 ## =========================== DEPENDENCIES ===========================

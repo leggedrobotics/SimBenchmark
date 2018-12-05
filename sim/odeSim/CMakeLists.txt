@@ -1,3 +1,12 @@
+########################################################################################################################
+# dependencies
+find_package(ode REQUIRED)
+find_package(raigraphics REQUIRED)
+
+
+
+########################################################################################################################
+# flags
 #set(CMAKE_CXX_FLAGS_DEBUG
 #        "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -Wl,--no-as-needed -O0 -mtune=native -march=native")
 
@@ -10,14 +19,13 @@ set(CMAKE_CXX_FLAGS_RELEASE
 # ode double precision
 add_definitions(-DODE_DOUBLE_PRECISION)
 
-include_directories(${BENCHMARK_LIB_DIR}/ode/include)
-link_directories(${BENCHMARK_LIB_DIR}/ode)
+#include_directories(${BENCHMARK_LIB_DIR}/ode/include)
+#link_directories(${BENCHMARK_LIB_DIR}/ode)
 #include_directories(${BENCHMARK_LIB_DIR}/ode/include)
 #link_directories(${BENCHMARK_LIB_DIR}/ode)
 
+########################################################################################################################
 # source
-include_directories(src)
-
 set(ODESim_SRCS
         src/OdeWorld.hpp
         src/OdeWorld.cpp
@@ -42,19 +50,24 @@ set(ODESim_SRCS
         src/object/ArticulatedSystem/OdeArticulatedSystem.hpp
         src/object/ArticulatedSystem/OdeLinkJoint.hpp)
 
+########################################################################################################################
 # library
-add_library(OdeSimLib ${ODESim_SRCS})
-target_link_libraries(OdeSimLib
+message(STATUS "  Build odeSim")
+
+add_library(odeSim ${ODESim_SRCS})
+target_include_directories(odeSim
+        PUBLIC
+        src
+        ${raigraphics_INCLUDE_DIRS}
+        )
+target_link_libraries(odeSim
         ode
+        commonSim
         urdfdom_model
+        ${raigraphics_LINK}
         )
 
-# link
-set(OdeSimLink
-        OdeSimLib
-        ${BENCHMARK_LINK}
-        )
-
+########################################################################################################################
 # sub-directories
 if(BUILD_BENCHMARK)
     add_subdirectory(benchmark)

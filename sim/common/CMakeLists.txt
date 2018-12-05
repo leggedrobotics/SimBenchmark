@@ -1,3 +1,7 @@
+########################################################################################################################
+# dependencies
+find_package(raigraphics REQUIRED)
+
 set(CommonSrc
         UserHandle.hpp
         WorldRG.hpp
@@ -10,4 +14,12 @@ set(CommonSrc
         interface/SingleBodyObjectInterface.hpp
         )
 
-add_library(CommonLib ${CommonSrc})
+add_library(commonSim ${CommonSrc})
+
+target_include_directories(commonSim
+        PUBLIC
+        ${raigraphics_INCLUDE_DIRS})
+
+target_link_libraries(commonSim
+        ${raigraphics_LINK}
+        )

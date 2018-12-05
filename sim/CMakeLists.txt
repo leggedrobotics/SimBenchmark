@@ -1,5 +1,4 @@
 add_subdirectory(common)
-message(STATUS "Simulation Engines:")
 
 if(BENCHMARK_RAISIM)
     message(STATUS "Benchmark raiSim")
@@ -13,13 +12,13 @@ endif(BENCHMARK_BULLET)
 
 if(BENCHMARK_BULLET_MULTIBODY)
     message(STATUS "Benchmark Bullet Multibody")
-    add_subdirectory(bulletMultibodySim)
+    add_subdirectory(bulletSim)
 endif(BENCHMARK_BULLET_MULTIBODY)
 
-if(BENCHMARK_ODE)
+if(ODE)
     message(STATUS "Benchmark ODE")
     add_subdirectory(odeSim)
-endif(BENCHMARK_ODE)
+endif(ODE)
 
 if(BENCHMARK_MUJOCO)
     message(STATUS "Benchmark MUJOCO")
