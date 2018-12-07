@@ -1,3 +1,11 @@
+########################################################################################################################
+# dependencies
+find_package(Bullet CONFIG REQUIRED)
+find_package(raigraphics CONFIG REQUIRED)
+
+
+########################################################################################################################
+# flags
 set(CMAKE_CXX_FLAGS_DEBUG
         "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -Wl,--no-as-needed -O0 -mtune=native -march=native")
 
@@ -7,17 +15,10 @@ set(CMAKE_CXX_FLAGS_RELEASE
 # bullet double precision
 add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
 
-# bullet package
-include_directories(${BENCHMARK_LIB_DIR})
-link_directories(${BENCHMARK_LIB_DIR}/bullet)
-#find_package(Bullet CONFIG REQUIRED)
-#include_directories(${BULLET_ROOT_DIR}/${BULLET_INCLUDE_DIR})
-#link_directories(${BULLET_ROOT_DIR}/${BULLET_LIBRARY_DIRS})
 
+########################################################################################################################
 # source
-include_directories(src)
-
-set(BtMbSimSrc
+set(bulletSimSrc
         src/BtMbWorld.hpp
         src/BtMbWorld.cpp
         src/BtMbSim.cpp
@@ -36,9 +37,20 @@ set(BtMbSimSrc
         src/object/BtMbBox.cpp
         src/object/BtMbBox.hpp)
 
+
+########################################################################################################################
 # library
-add_library(BtMbSimLib ${BtMbSimSrc})
-target_link_libraries(BtMbSimLib
+message(STATUS "  Build bulletSim")
+
+add_library(bulletSim
+        STATIC
+        ${bulletSimSrc})
+target_include_directories(bulletSim
+        PUBLIC
+        src
+        ${raigraphics_INCLUDE_DIRS}
+)
+target_link_libraries(bulletSim
         BulletRobotics
         BulletFileLoader
         BulletWorldImporter
@@ -49,14 +61,12 @@ target_link_libraries(BtMbSimLib
         BulletInverseDynamics
         LinearMath
         Bullet3Common
-        )
+        commonSim
+        ${CMAKE_DL_LIBS}
+)
 
-# link
-set(BtMbSimLink
-        BtMbSimLib
-        ${BENCHMARK_LINK}
-        )
-
+########################################################################################################################
+# sub-directories
 if(BUILD_TEST)
     add_subdirectory(test)
 endif(BUILD_TEST)

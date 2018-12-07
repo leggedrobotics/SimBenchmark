@@ -4,7 +4,7 @@
 
 
 #include <raiCommon/utils/StopWatch.hpp>
-#include "api/b3RobotSimulatorClientAPI_NoGUI.h"
+#include "bullet/b3RobotSimulatorClientAPI_NoGUI.h"
 
 b3RobotSimulatorClientAPI_NoGUI* sim;
 
@@ -107,10 +107,10 @@ int main(int argc, char* argv[])
 
   // parameter
   b3RobotSimulatorSetPhysicsEngineParameters params;
-  params.m_erp = 0.05;
-  params.m_contactERP = 0.01;
-  params.m_frictionERP = 0.1;
-  params.m_fixedTimeStep = 0.005;
+  params.m_defaultContactERP = 0.0;
+  params.m_defaultNonContactERP = 0.0;
+  params.m_frictionERP = 0.0;
+  params.m_deltaTime = 0.0005;
   params.m_solverResidualThreshold = 1e-2;
   sim->setPhysicsEngineParameter(params);
 

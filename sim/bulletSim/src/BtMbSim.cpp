@@ -157,8 +157,8 @@ benchmark::SingleBodyHandle BtMbSim::addBox(double xLength,
 
 void BtMbSim::setERP(double nonContactErp, double contactErp, double frictionErp) {
   b3RobotSimulatorSetPhysicsEngineParameters parameters;
-  parameters.m_erp = nonContactErp;
-  parameters.m_contactERP = contactErp;
+  parameters.m_defaultNonContactERP = nonContactErp;
+  parameters.m_defaultContactERP = contactErp;
   parameters.m_frictionERP = frictionErp;
   world_.api_->setPhysicsEngineParameter(parameters);
 }
@@ -380,7 +380,7 @@ void BtMbSim::setSolverParameter(double solverResidualThreshold, int solverItera
   b3RobotSimulatorSetPhysicsEngineParameters arg;
   arg.m_solverResidualThreshold = solverResidualThreshold;
   arg.m_numSolverIterations = solverIteration;
-  arg.m_numSubSteps = numSubStep;
+  arg.m_numSimulationSubSteps = numSubStep;
   world_.api_->setPhysicsEngineParameter(arg);
 }
 

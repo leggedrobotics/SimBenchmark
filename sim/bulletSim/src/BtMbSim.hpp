@@ -156,7 +156,7 @@ class BtMbSim: public benchmark::WorldRG {
    */
   void setTimeStep(double dt);
 
-  void setSolverParameter(double solverResidualThreshold, int solverIteration, int numSubStep = 0);
+  void setSolverParameter(double solverResidualThreshold, int solverIteration, int numSubStep = -1);
 
   /// Simulation methods
   /**

@@ -17,7 +17,7 @@ endif()
 
 # options
 option(RAISIM "benchmark raiSim" OFF)
-option(BULLET "benchmark Bullet Multibody(bullet3 API)" OFF)
+option(BULLET "benchmark Bullet Multibody(bullet3 API)" ON)
 option(ODE "benchmark ODE" ON)
 option(MUJOCO "benchmark MUJOCO" OFF)
 option(DART "benchmark DART" OFF)

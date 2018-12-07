@@ -1,5 +1,5 @@
-add_executable(BtMbMultibodyTest MultiBodyTest.cpp)
-target_link_libraries(BtMbMultibodyTest ${BtMbSimLink})
+add_executable(bulletSinglebodyTest SingleBodyTest.cpp)
+target_link_libraries(bulletSinglebodyTest bulletSim)
 
-add_executable(BtMbSinglebodyTest SingleBodyTest.cpp)
-target_link_libraries(BtMbSinglebodyTest ${BtMbSimLink})
+add_executable(bulletMultibodyTest MultiBodyTest.cpp)
+target_link_libraries(bulletMultibodyTest bulletSim)

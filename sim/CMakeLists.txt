@@ -5,15 +5,10 @@ if(BENCHMARK_RAISIM)
     add_subdirectory(raiSim)
 endif(BENCHMARK_RAISIM)
 
-if(BENCHMARK_BULLET)
+if(BULLET)
     message(STATUS "Benchmark Bullet")
     add_subdirectory(bulletSim)
-endif(BENCHMARK_BULLET)
-
-if(BENCHMARK_BULLET_MULTIBODY)
-    message(STATUS "Benchmark Bullet Multibody")
-    add_subdirectory(bulletSim)
-endif(BENCHMARK_BULLET_MULTIBODY)
+endif(BULLET)
 
 if(ODE)
     message(STATUS "Benchmark ODE")

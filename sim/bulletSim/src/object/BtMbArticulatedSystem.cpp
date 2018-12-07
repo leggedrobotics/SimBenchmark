@@ -945,7 +945,7 @@ void object::BtMbArticulatedSystem::getBodyPose(int linkId,
   else {
     // link
     b3LinkState linkState;
-    RAIFATAL_IF(!api_->getLinkState(objectId_, linkId, &linkState), "getBasePositionAndOrientation failed");
+    RAIFATAL_IF(!api_->getLinkState(objectId_, linkId, 1, 1, &linkState), "getBasePositionAndOrientation failed");
 
     benchmark::Vec<4> quat = {
         linkState.m_worldLinkFrameOrientation[3], // w
@@ -1001,7 +1001,7 @@ void object::BtMbArticulatedSystem::getComVelocity_W(int linkId, benchmark::Vec<
   else {
 
     b3LinkState state;
-    api_->getLinkState(objectId_, linkId, &state);
+    api_->getLinkState(objectId_, linkId, 1, 0, &state);
 
     linVel_w = {
         state.m_worldLinearVelocity[0],
@@ -1047,7 +1047,7 @@ void object::BtMbArticulatedSystem::getComPose_W(int linkId, benchmark::Vec<3> &
   else {
     // link
     b3LinkState linkState;
-    RAIFATAL_IF(!api_->getLinkState(objectId_, linkId, &linkState), "getBasePositionAndOrientation failed");
+    RAIFATAL_IF(!api_->getLinkState(objectId_, linkId, 1, 1, &linkState), "getBasePositionAndOrientation failed");
 
     inertialPosition_w = {
         linkState.m_worldPosition[0],

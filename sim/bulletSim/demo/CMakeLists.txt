@@ -1,17 +1,17 @@
-add_executable(BtMbAnymalDemo AnymalDemo.cpp)
-target_link_libraries(BtMbAnymalDemo ${BtMbSimLink})
+add_executable(bulletAnymalDemo AnymalDemo.cpp)
+target_link_libraries(bulletAnymalDemo bulletSim)
 
-add_executable(BtMbAnymalMomentumDemo AnymalMomentumDemo.cpp)
-target_link_libraries(BtMbAnymalMomentumDemo ${BtMbSimLink})
+add_executable(bulletAnymalMomentumDemo AnymalMomentumDemo.cpp)
+target_link_libraries(bulletAnymalMomentumDemo bulletSim)
 
-add_executable(BtMbBallMomentumDemo BallMomentumDemo.cpp)
-target_link_libraries(BtMbBallMomentumDemo ${BtMbSimLink})
+add_executable(bulletBallMomentumDemo BallMomentumDemo.cpp)
+target_link_libraries(bulletBallMomentumDemo bulletSim)
 
-add_executable(BtMbAnymalEnergyDemo AnymalEnergyDemo.cpp)
-target_link_libraries(BtMbAnymalEnergyDemo ${BtMbSimLink})
+add_executable(bulletAnymalEnergyDemo AnymalEnergyDemo.cpp)
+target_link_libraries(bulletAnymalEnergyDemo bulletSim)
 
-add_executable(BtMbBallEnergyDemo BallEnergyDemo.cpp)
-target_link_libraries(BtMbBallEnergyDemo ${BtMbSimLink})
+add_executable(bulletBallEnergyDemo BallEnergyDemo.cpp)
+target_link_libraries(bulletBallEnergyDemo bulletSim)
 
-add_executable(BtMbURDFDemo URDFDemo.cpp)
-target_link_libraries(BtMbURDFDemo ${BtMbSimLink})
+add_executable(bulletURDFDemo URDFDemo.cpp)
+target_link_libraries(bulletURDFDemo bulletSim)
