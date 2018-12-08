@@ -1,33 +1,43 @@
-# raiCommons
-find_library(raiCommonGraph
-        NAMES rai_common_graph
-        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/raiCommon)
-find_library(raiCommonLogger
-        NAMES rai_common_logger
-        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/raiCommon)
-find_library(raiCommonTimer
-        NAMES rai_common_timer
-        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/raiCommon)
-set(RAI_COMMON_LINK
-        ${raiCommonGraph}
-        ${raiCommonLogger}
-        ${raiCommonTimer}
-        PARENT_SCOPE)
+# This CMakeLists.txt is for installing dependencies
+include(ExternalProject)
 
-# raiGraphics
-set(RAI_GRAPHICS_OPENGL_LINK
-        ${CMAKE_CURRENT_SOURCE_DIR}/raiGraphics/libraiGraphicsOpenglLib.so
-        GL GLEW SDL2 SDL2_ttf assimp SOIL pthread
-        ${RAI_COMMON_LINK}
-        PARENT_SCOPE)
+# raigraphics
+externalproject_add(ex_raigraphics
+        GIT_REPOSITORY      "https://github.com/eastskykang/raigraphics.git"
+        GIT_TAG             "master"
+        CMAKE_ARGS
+        "-DINSTALL_LIBS=ON"
+        "-DBUILD_DEMOS=OFF"
+        INSTALL_COMMAND     ""
+        )
 
-# yaml-cpp
-#find_package(yaml-cpp REQUIRED)
+# ode
+externalproject_add(ex_ode
+        GIT_REPOSITORY      "https://github.com/eastskykang/ode.git"
+        GIT_TAG             "release/0.15.2"
+        CMAKE_ARGS
+        "-DBUILD_SHARED_LIBS=OFF"
+        "-DODE_DOUBLE_PRECISION=ON"
+        "-DODE_WITH_DEMOS=OFF"
+        "-DODE_WITH_TESTS=OFF"
+#        "-DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>"
+        INSTALL_COMMAND     ""
+        )
 
-set(YAML_CPP_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/yaml-cpp/libyaml-cpp.a
-        PARENT_SCOPE)
-message("${YAML_CPP_LIBRARIES}")
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/yaml-cpp/include)
+# bullet
+externalproject_add(ex_bullet
+        GIT_REPOSITORY      "https://github.com/eastskykang/bullet3.git"
+        GIT_TAG             "release/2.87"
+        CMAKE_ARGS
+        "-DUSE_DOUBLE_PRECISION=ON"
+        "-DBUILD_SHARED_LIBS=OFF"
+        "-DBULLET2_MULTITHREADING=OFF"
+        "-DBUILD_BULLET3=ON"
+        "-DBUILD_PYBULLET=OFF"
+        "-DBUILD_BULLET2_DEMOS=OFF"
+        "-DBUILD_EXTRAS=ON"
+        "-DBUILD_UNIT_TESTS=OFF"
+        INSTALL_COMMAND     ""
+        )
 
-# bullet: sim/bulletMultibodySim
-# ode: sim/odeSim
+# dart

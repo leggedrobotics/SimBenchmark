@@ -53,11 +53,19 @@ message(STATUS "  Build odeSim")
 add_library(odeSim
         STATIC
         ${odeSimSrc})
+
+#add_dependencies(odeSim
+#        ex_ode
+#        ex_raigraphics
+#        commonSim
+#        )
+
 target_include_directories(odeSim
         PUBLIC
         src
         ${raigraphics_INCLUDE_DIRS}
 )
+
 target_link_libraries(odeSim
         ode
         commonSim

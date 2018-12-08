@@ -16,6 +16,10 @@ set(CommonSrc
 
 add_library(commonSim ${CommonSrc})
 
+#add_dependencies(commonSim
+#        ex_raigraphics
+#        )
+
 target_include_directories(commonSim
         PUBLIC
         ${raigraphics_INCLUDE_DIRS})

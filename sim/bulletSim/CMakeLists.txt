@@ -45,11 +45,19 @@ message(STATUS "  Build bulletSim")
 add_library(bulletSim
         STATIC
         ${bulletSimSrc})
+
+#add_dependencies(bulletSim
+#        ex_bullet
+#        ex_raigraphics
+#        commonSim
+#)
+
 target_include_directories(bulletSim
         PUBLIC
         src
         ${raigraphics_INCLUDE_DIRS}
 )
+
 target_link_libraries(bulletSim
         BulletRobotics
         BulletFileLoader

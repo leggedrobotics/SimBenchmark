@@ -2,10 +2,6 @@
 
 This directory is for external libraries: 
 
-- RaiCommons 
-	- common features including plot, log etc.
-- RaiGraphics
-	- graphic user interface for benchmark test instances
 - ~~RaiSim~~ 
 - yaml-cpp 0.6.2
 	- for loading test parameters from yaml files. 

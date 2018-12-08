@@ -47,10 +47,9 @@ link_directories(${Boost_LIBRARY_DIRS})
 #find_package(YAML-CPP REQUIRED)
 #include_directories(${YAML_CPP_INCLUDE_DIR})
 
-# local libs
-add_subdirectory(lib)
-include_directories(${BENCHMARK_LIB_DIR}/raiCommon/include)         # raiCommon
-include_directories(${BENCHMARK_LIB_DIR}/yaml-cpp/include)          # yaml-cpp
+# external projects
+# TODO
+#add_subdirectory(lib)
 
 ########################################################################################################################
 # macro variable
