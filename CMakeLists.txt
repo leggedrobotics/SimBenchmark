@@ -18,7 +18,7 @@ endif()
 
 # options
 option(RAISIM "benchmark raiSim" OFF)
-option(BULLET "benchmark Bullet Multibody(bullet3 API)" ON)
+option(BULLET "benchmark Bullet Multibody(bullet3 API)" OFF)
 option(ODE "benchmark ODE" ON)
 option(MUJOCO "benchmark MUJOCO" OFF)
 option(DART "benchmark DART" OFF)
@@ -49,7 +49,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 
 # external projects
 # TODO
-#add_subdirectory(lib)
+add_subdirectory(lib)
 
 ########################################################################################################################
 # macro variable

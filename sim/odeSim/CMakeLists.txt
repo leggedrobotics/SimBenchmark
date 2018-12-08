@@ -1,6 +1,11 @@
 ########################################################################################################################
 # dependencies
-find_package(ode CONFIG REQUIRED)
+find_package(ode
+        CONFIG
+        REQUIRED
+        NO_DEFAULT_PATH
+        PATHS "/home/donghok/git/simbenchmark/cmake-build-debug/lib/ex_ode-prefix"
+        )
 find_package(raigraphics CONFIG REQUIRED)
 
 
@@ -54,11 +59,11 @@ add_library(odeSim
         STATIC
         ${odeSimSrc})
 
-#add_dependencies(odeSim
-#        ex_ode
-#        ex_raigraphics
-#        commonSim
-#        )
+add_dependencies(odeSim
+        ex_ode
+        ex_raigraphics
+        commonSim
+        )
 
 target_include_directories(odeSim
         PUBLIC

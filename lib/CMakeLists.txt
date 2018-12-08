@@ -8,7 +8,7 @@ externalproject_add(ex_raigraphics
         CMAKE_ARGS
         "-DINSTALL_LIBS=ON"
         "-DBUILD_DEMOS=OFF"
-        INSTALL_COMMAND     ""
+        "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
         )
 
 # ode
@@ -20,8 +20,7 @@ externalproject_add(ex_ode
         "-DODE_DOUBLE_PRECISION=ON"
         "-DODE_WITH_DEMOS=OFF"
         "-DODE_WITH_TESTS=OFF"
-#        "-DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>"
-        INSTALL_COMMAND     ""
+        "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
         )
 
 # bullet
@@ -37,7 +36,7 @@ externalproject_add(ex_bullet
         "-DBUILD_BULLET2_DEMOS=OFF"
         "-DBUILD_EXTRAS=ON"
         "-DBUILD_UNIT_TESTS=OFF"
-        INSTALL_COMMAND     ""
+        "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
         )
 
 # dart
