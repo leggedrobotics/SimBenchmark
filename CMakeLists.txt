@@ -9,6 +9,7 @@ add_definitions(-std=c++17)
 
 ## =========================== CMAKE MODE ===========================
 # raiCommons debug
+
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DRAIDEBUG)
 else ()
@@ -27,7 +28,9 @@ option(BUILD_TEST "build tests" ON)
 option(BUILD_BENCHMARK "build benchmark tests" OFF)
 #option(BUILD_UTIL "build utils" ON)
 
-## =========================== DEPENDENCIES ===========================
+########################################################################################################################
+# dependencies
+
 set(BENCHMARK_LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
 
 # global libs
@@ -47,8 +50,12 @@ link_directories(${Boost_LIBRARY_DIRS})
 # local libs
 add_subdirectory(lib)
 include_directories(${BENCHMARK_LIB_DIR}/raiCommon/include)         # raiCommon
-include_directories(${BENCHMARK_LIB_DIR}/raiGraphics/include)       # raiGraphics
 include_directories(${BENCHMARK_LIB_DIR}/yaml-cpp/include)          # yaml-cpp
+
+########################################################################################################################
+# macro variable
+
+add_definitions(-DROOTPATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
 ## =========================== LINK ===========================
 set(BENCHMARK_LINK
@@ -59,7 +66,9 @@ set(BENCHMARK_LINK
         ${RAI_GRAPHICS_OPENGL_LINK}
         )
 
-## =========================== SIMS ===========================
+########################################################################################################################
+# sims
+
 include_directories(sim)
 add_subdirectory(sim)
 

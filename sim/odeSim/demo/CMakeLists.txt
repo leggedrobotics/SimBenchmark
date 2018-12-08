@@ -16,9 +16,6 @@ target_link_libraries(odeMultiBodyDemo odeSim)
 add_executable(odeRobotArmDemo RobotArmDemo.cpp)
 target_link_libraries(odeRobotArmDemo odeSim)
 
-add_executable(odeCaplerDemo CaplerDemo.cpp)
-target_link_libraries(odeCaplerDemo odeSim)
-
 add_executable(odeBuildingDemo BuildingDemo.cpp)
 target_link_libraries(odeBuildingDemo odeSim)
 
