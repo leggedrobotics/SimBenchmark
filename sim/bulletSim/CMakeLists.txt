@@ -47,7 +47,17 @@ find_library(Bullet3Common
         NAMES       Bullet3Common
         PATHS       ${bullet_lib_dir})
 
-if(NOT BulletRobotics)
+
+if(NOT BulletRobotics
+        OR NOT BulletFileLoader
+        OR NOT BulletWorldImporter
+        OR NOT BulletSoftBody
+        OR NOT BulletDynamics
+        OR NOT BulletCollision
+        OR NOT BulletInverseDynamicsUtils
+        OR NOT BulletInverseDynamics
+        OR NOT LinearMath
+        OR NOT Bullet3Common)
     message(WARNING "Cannot find bullet libs. Stop build bulletSim")
     return()
 endif()
@@ -68,7 +78,7 @@ set(CMAKE_CXX_FLAGS_DEBUG
         "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -Wl,--no-as-needed -O0 -mtune=native -march=native")
 
 set(CMAKE_CXX_FLAGS_RELEASE
-        "-Wl,--no-as-needed -O3 -mtune=native -march=native")
+        "${CMAKE_CXX_FLAGS_RELEASE} -Wl,--no-as-needed -O3 -mtune=native -march=native")
 
 # bullet double precision
 add_definitions(-DBT_USE_DOUBLE_PRECISION=ON)
@@ -117,7 +127,6 @@ target_include_directories(bulletSim
         "${raigraphics_INCLUDE_DIRS}"
         )
 
-message(${BulletRobotics})
 
 target_link_libraries(bulletSim
         ${BulletRobotics}

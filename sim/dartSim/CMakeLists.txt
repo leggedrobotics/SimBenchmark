@@ -2,6 +2,8 @@ message(STATUS "Build dartSim")
 
 ########################################################################################################################
 # dependencies
+
+# dart
 externalproject_get_property(ex_dart INSTALL_DIR)
 find_package(DART
         CONFIG
@@ -11,13 +13,6 @@ find_package(DART
         utils-urdf
         collision-bullet
         collision-ode
-        )
-
-externalproject_get_property(ex_raigraphics INSTALL_DIR)
-find_package(raigraphics
-        CONFIG
-        NO_DEFAULT_PATH
-        PATHS           "${INSTALL_DIR}"
         )
 
 
@@ -65,18 +60,18 @@ add_library(dartSim
 
 add_dependencies(dartSim
         ex_dart
-        ex_raigraphics
         commonSim
         )
 
 target_include_directories(dartSim
         PUBLIC
-        src
-        ${DART_INCLUDE_DIRS}
+        "src"
+        "${DART_INCLUDE_DIRS}"
         )
 
 target_link_libraries(dartSim
-        ${DART_LIBRARIES}
+        "${DART_LIBRARIES}"
+        "commonSim"
         )
 
 

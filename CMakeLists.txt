@@ -41,7 +41,7 @@ option(RAISIM "benchmark raiSim" OFF)
 option(BULLET "benchmark Bullet Multibody(bullet3 API)" ON)
 option(ODE "benchmark ODE" ON)
 option(MUJOCO "benchmark MUJOCO" ON)
-option(DART "benchmark DART" OFF)
+option(DART "benchmark DART" ON)
 
 option(BUILD_DEMO "build demos" ON)
 option(BUILD_TEST "build tests" ON)

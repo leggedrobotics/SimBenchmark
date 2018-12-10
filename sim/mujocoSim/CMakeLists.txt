@@ -92,7 +92,6 @@ add_library(mujocoSim
 
 add_dependencies(mujocoSim
         ex_mujoco
-        ex_raigraphics
         commonSim
         )
 
@@ -100,18 +99,11 @@ target_include_directories(mujocoSim
         PUBLIC
         src
         ${mujoco_include_dir}
-        ${raigraphics_INCLUDE_DIRS}
         )
 
 target_link_libraries(mujocoSim
         ${mujoco200nogl}
         commonSim
-        #        ${glew}
-        #        ${glfw}
-        #        ${mujoco150}
-        #        GL
-        #        GLU
-        #        glut
         )
 
 

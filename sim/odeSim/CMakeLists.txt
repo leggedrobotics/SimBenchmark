@@ -18,15 +18,6 @@ if(NOT ode)
     return()
 endif()
 
-# raigraphics
-externalproject_get_property(ex_raigraphics INSTALL_DIR)
-#find_package(raigraphics
-#        CONFIG
-#        REQUIRED
-#        NO_DEFAULT_PATH
-#        PATHS           "${INSTALL_DIR}"
-#        )
-
 
 ########################################################################################################################
 # flags
@@ -80,7 +71,6 @@ add_library(odeSim
 
 add_dependencies(odeSim
         ex_ode
-        ex_raigraphics
         commonSim
         )
 
@@ -88,7 +78,6 @@ target_include_directories(odeSim
         PUBLIC
         "src"
         "${ode_include_dir}"
-        "${raigraphics_INCLUDE_DIRS}"
         )
 
 target_link_libraries(odeSim
