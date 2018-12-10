@@ -15,6 +15,9 @@ message("/____/___/_/  /_/_____/_____/_/ |_/\\____/_/ /_/_/  /_/_/  |_/_/ |_/_/ 
 message("                                                                           ")
 message("===========================================================================")
 message("")
+message("This project is maintaied by Dongho Kang")
+message("Contact kangd@ethz.ch for bug report")
+message("")
 
 
 ########################################################################################################################
@@ -37,7 +40,7 @@ endif()
 option(RAISIM "benchmark raiSim" OFF)
 option(BULLET "benchmark Bullet Multibody(bullet3 API)" ON)
 option(ODE "benchmark ODE" ON)
-option(MUJOCO "benchmark MUJOCO" OFF)
+option(MUJOCO "benchmark MUJOCO" ON)
 option(DART "benchmark DART" OFF)
 
 option(BUILD_DEMO "build demos" ON)

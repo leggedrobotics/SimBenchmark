@@ -1,3 +1,5 @@
+message(STATUS "Build odeSim")
+
 ########################################################################################################################
 # dependencies
 externalproject_get_property(ex_ode INSTALL_DIR)
@@ -61,8 +63,6 @@ set(odeSimSrc
 
 ########################################################################################################################
 # library
-message(STATUS "  Build odeSim")
-
 add_library(odeSim
         STATIC
         ${odeSimSrc}

@@ -1,8 +1,8 @@
-add_executable(MjcSimulationTest SpeedTest.cpp)
-target_link_libraries(MjcSimulationTest ${MjcSimLink})
+add_executable(mujocoSimulationTest SpeedTest.cpp)
+target_link_libraries(mujocoSimulationTest ${MjcSimLink})
 
-add_executable(MjcMassTest MassTest.cpp)
-target_link_libraries(MjcMassTest ${MjcSimLink})
+add_executable(mujocoMassTest MassTest.cpp)
+target_link_libraries(mujocoMassTest ${MjcSimLink})
 
-add_executable(MjcForceTest ForceTest.cpp)
-target_link_libraries(MjcForceTest ${MjcSimLink})
+add_executable(mujocoForceTest ForceTest.cpp)
+target_link_libraries(mujocoForceTest ${MjcSimLink})

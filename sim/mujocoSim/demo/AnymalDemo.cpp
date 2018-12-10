@@ -19,10 +19,7 @@ int main(int argc, const char* argv[]) {
     urdfPath.erase(urdfPath.size() - 1, 1);
   urdfPath += "../../../res/mujoco/ANYmal/robot1.urdf";
 
-  std::string keyPath(__FILE__);
-  while (keyPath.back() != '/')
-    keyPath.erase(keyPath.size() - 1, 1);
-  keyPath += "../../../lib/mjpro150/mjkey.txt";
+  std::string keyPath("../mjkey.txt");
 
   mujoco_sim::MjcSim
       sim(800, 600, 0.5, urdfPath.c_str(), keyPath.c_str(), benchmark::NO_BACKGROUND);

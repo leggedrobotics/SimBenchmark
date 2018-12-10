@@ -1,3 +1,5 @@
+message(STATUS "Build dartSim")
+
 ########################################################################################################################
 # dependencies
 externalproject_get_property(ex_dart INSTALL_DIR)
@@ -56,8 +58,6 @@ set(DartSim_SRCS
 
 ########################################################################################################################
 # library
-message(STATUS "  Build dartSim")
-
 add_library(dartSim
         STATIC
         ${DartSim_SRCS}

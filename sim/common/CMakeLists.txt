@@ -1,3 +1,5 @@
+message(STATUS "Build commonSim")
+
 ########################################################################################################################
 # dependencies
 externalproject_get_property(ex_raigraphics INSTALL_DIR)
@@ -24,8 +26,6 @@ set(CommonSrc
 
 ########################################################################################################################
 # library
-message(STATUS "  Build commonSim")
-
 add_library(commonSim ${CommonSrc})
 
 add_dependencies(commonSim

@@ -54,7 +54,7 @@ externalproject_add(ex_bullet
         "-DBULLET2_MULTITHREADING=OFF"
         "-DBUILD_BULLET3=ON"
         "-DBUILD_PYBULLET=OFF"
-        "-DBUILD_BULLET2_DEMOS=ON"
+        "-DBUILD_BULLET2_DEMOS=OFF"
         "-DBUILD_EXTRAS=ON"
         "-DBUILD_UNIT_TESTS=OFF"
         "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
@@ -66,6 +66,14 @@ externalproject_add(ex_dart
         GIT_TAG             "release/6.6.2"
         CMAKE_ARGS
         "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+        )
+
+# mujoco
+externalproject_add(ex_mujoco
+        URL                 "https://www.roboti.us/download/mujoco200_linux.zip"
+        CONFIGURE_COMMAND   ""
+        BUILD_COMMAND       ""
+        INSTALL_COMMAND     ""
         )
 
 
@@ -92,9 +100,10 @@ if(ODE)
     list(APPEND ex_projects ex_ode)
 endif(ODE)
 
-if(BENCHMARK_MUJOCO)
-    message(STATUS "Benchmark MUJOCO")
-endif(BENCHMARK_MUJOCO)
+if(MUJOCO)
+    message(STATUS "  ex_mujoco")
+    list(APPEND ex_projects ex_mujoco)
+endif(MUJOCO)
 
 if(DART)
     message(STATUS "  ex_dart")

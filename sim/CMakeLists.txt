@@ -12,9 +12,9 @@ if(ODE)
     add_subdirectory(odeSim)
 endif(ODE)
 
-if(BENCHMARK_MUJOCO)
+if(MUJOCO)
     add_subdirectory(mujocoSim)
-endif(BENCHMARK_MUJOCO)
+endif(MUJOCO)
 
 if(DART)
     add_subdirectory(dartSim)

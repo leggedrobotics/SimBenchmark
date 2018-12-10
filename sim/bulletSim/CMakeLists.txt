@@ -51,7 +51,7 @@ set(bulletSimSrc
 
 ########################################################################################################################
 # library
-message(STATUS "  Build bulletSim")
+message(STATUS "Build bulletSim")
 
 add_library(bulletSim
         STATIC

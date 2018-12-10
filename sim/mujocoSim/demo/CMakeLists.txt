@@ -1,17 +1,17 @@
-add_executable(MjcSimDemo MjcSimDemo.cpp)
-target_link_libraries(MjcSimDemo ${MjcSimLink})
+add_executable(mujocoSimDemo MjcSimDemo.cpp)
+target_link_libraries(mujocoSimDemo mujocoSim)
 
-add_executable(MjcAnymalDemo AnymalDemo.cpp)
-target_link_libraries(MjcAnymalDemo ${MjcSimLink})
+add_executable(mujocoAnymalDemo AnymalDemo.cpp)
+target_link_libraries(mujocoAnymalDemo mujocoSim)
 
-add_executable(MjcAnymalEnergyDemo AnymalEnergyDemo.cpp)
-target_link_libraries(MjcAnymalEnergyDemo ${MjcSimLink})
+add_executable(mujocoAnymalEnergyDemo AnymalEnergyDemo.cpp)
+target_link_libraries(mujocoAnymalEnergyDemo mujocoSim)
 
-add_executable(MjcAtlasDemo AtlasDemo.cpp)
-target_link_libraries(MjcAtlasDemo ${MjcSimLink})
+add_executable(mujocoAtlasDemo AtlasDemo.cpp)
+target_link_libraries(mujocoAtlasDemo mujocoSim)
 
-add_executable(MjcBuildingDemo BuildingDemo.cpp)
-target_link_libraries(MjcBuildingDemo ${MjcSimLink})
+add_executable(mujocoBuildingDemo BuildingDemo.cpp)
+target_link_libraries(mujocoBuildingDemo mujocoSim)
 
-add_executable(MjcHumanoidDemo HumanoidDemo.cpp)
-target_link_libraries(MjcHumanoidDemo ${MjcSimLink})
+add_executable(mujocoHumanoidDemo HumanoidDemo.cpp)
+target_link_libraries(mujocoHumanoidDemo mujocoSim)
