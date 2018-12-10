@@ -2,6 +2,8 @@
 
 This directory contains resource files (incl. URDF, mujoco XML script etc.) for simulation. 
 
++ mjkey.txt file (put your mjkey.txt file in ./mujoco directory)
+
 ## Note 
 
 - MuJoCo uses URDF or MJCF(XML) file format to load a simulation world. All object is defined in one file. 

@@ -8,6 +8,3 @@ cmake-build-release
 
 # data directory
 data/
-
-# mujoco license
-res/mujoco/mjkey.txt
