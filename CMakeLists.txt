@@ -17,7 +17,8 @@ message("=======================================================================
 message("")
 
 
-## =========================== COMPILER ===========================
+########################################################################################################################
+## compiler
 set(CMAKE_C_COMPILER "/usr/bin/gcc-7")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 #set(CMAKE_CXX_STANDARD 17)
@@ -43,6 +44,28 @@ option(BUILD_DEMO "build demos" ON)
 option(BUILD_TEST "build tests" ON)
 option(BUILD_BENCHMARK "build benchmark tests" OFF)
 #option(BUILD_UTIL "build utils" ON)
+
+message(STATUS "Benchmark the following physics engines:")
+if(RAISIM)
+    message(STATUS "  raiSim")
+endif(RAISIM)
+
+if(BULLET)
+    message(STATUS "  Bullet")
+endif(BULLET)
+
+if(ODE)
+    message(STATUS "  ODE")
+endif(ODE)
+
+if(MUJOCO)
+    message(STATUS "  MUJOCO")
+endif(MUJOCO)
+
+if(DART)
+    message(STATUS "  DART")
+endif(DART)
+
 
 ########################################################################################################################
 # dependencies

@@ -3,7 +3,6 @@
 externalproject_get_property(ex_dart INSTALL_DIR)
 find_package(DART
         CONFIG
-        REQUIRED
         NO_DEFAULT_PATH
         PATHS           "${INSTALL_DIR}"
         COMPONENTS
@@ -15,7 +14,6 @@ find_package(DART
 externalproject_get_property(ex_raigraphics INSTALL_DIR)
 find_package(raigraphics
         CONFIG
-        REQUIRED
         NO_DEFAULT_PATH
         PATHS           "${INSTALL_DIR}"
         )
@@ -77,7 +75,7 @@ target_include_directories(dartSim
         ${DART_INCLUDE_DIRS}
         )
 
-target_link_libraries(DartSimLib
+target_link_libraries(dartSim
         ${DART_LIBRARIES}
         )
 

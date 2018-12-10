@@ -64,13 +64,15 @@ externalproject_add(ex_bullet
 externalproject_add(ex_dart
         GIT_REPOSITORY      "https://github.com/eastskykang/dart.git"
         GIT_TAG             "release/6.6.2"
+        CMAKE_ARGS
+        "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
         )
 
 
 ########################################################################################################################
 # add ex_all as build target
-message(STATUS "The project depends on the following external libraries.")
-message(STATUS "Build ex_all and cmake again if this is first build.")
+message(STATUS "The project depends on the following external libraries")
+message(STATUS "Build ex_all and cmake again if this is first build:")
 message(STATUS "  ex_raigraphics")
 
 list(APPEND ex_projects ex_raigraphics)
