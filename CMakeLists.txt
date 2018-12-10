@@ -1,6 +1,22 @@
 cmake_minimum_required(VERSION 3.5)
 project(simbenchmark)
 
+
+########################################################################################################################
+# ascii logo
+
+message("")
+message("===========================================================================")
+message("   _____ ______  _______  _______   __________  ____  ______    ____  __ __")
+message("  / ___//  _/  |/  / __ )/ ____/ | / / ____/ / / /  |/  /   |  / __ \\/ //_/")
+message("  \\__ \\ / // /|_/ / __  / __/ /  |/ / /   / /_/ / /|_/ / /| | / /_/ / ,<   ")
+message(" ___/ // // /  / / /_/ / /___/ /|  / /___/ __  / /  / / ___ |/ _, _/ /| |  ")
+message("/____/___/_/  /_/_____/_____/_/ |_/\\____/_/ /_/_/  /_/_/  |_/_/ |_/_/ |_|  ")
+message("                                                                           ")
+message("===========================================================================")
+message("")
+
+
 ## =========================== COMPILER ===========================
 set(CMAKE_C_COMPILER "/usr/bin/gcc-7")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
@@ -18,7 +34,7 @@ endif()
 
 # options
 option(RAISIM "benchmark raiSim" OFF)
-option(BULLET "benchmark Bullet Multibody(bullet3 API)" OFF)
+option(BULLET "benchmark Bullet Multibody(bullet3 API)" ON)
 option(ODE "benchmark ODE" ON)
 option(MUJOCO "benchmark MUJOCO" OFF)
 option(DART "benchmark DART" OFF)
@@ -48,7 +64,6 @@ link_directories(${Boost_LIBRARY_DIRS})
 #include_directories(${YAML_CPP_INCLUDE_DIR})
 
 # external projects
-# TODO
 add_subdirectory(lib)
 
 ########################################################################################################################

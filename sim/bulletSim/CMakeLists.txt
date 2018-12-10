@@ -1,7 +1,18 @@
 ########################################################################################################################
 # dependencies
-find_package(Bullet CONFIG REQUIRED)
-find_package(raigraphics CONFIG REQUIRED)
+externalproject_get_property(ex_bullet INSTALL_DIR)
+find_package(Bullet
+        CONFIG
+        NO_DEFAULT_PATH
+        PATHS           "${INSTALL_DIR}"
+        )
+
+externalproject_get_property(ex_raigraphics INSTALL_DIR)
+find_package(raigraphics
+        CONFIG
+        NO_DEFAULT_PATH
+        PATHS           "${INSTALL_DIR}"
+        )
 
 
 ########################################################################################################################
@@ -46,17 +57,17 @@ add_library(bulletSim
         STATIC
         ${bulletSimSrc})
 
-#add_dependencies(bulletSim
-#        ex_bullet
-#        ex_raigraphics
-#        commonSim
-#)
+add_dependencies(bulletSim
+        ex_bullet
+        ex_raigraphics
+        commonSim
+        )
 
 target_include_directories(bulletSim
         PUBLIC
         src
         ${raigraphics_INCLUDE_DIRS}
-)
+        )
 
 target_link_libraries(bulletSim
         BulletRobotics
@@ -71,7 +82,7 @@ target_link_libraries(bulletSim
         Bullet3Common
         commonSim
         ${CMAKE_DL_LIBS}
-)
+        )
 
 ########################################################################################################################
 # sub-directories

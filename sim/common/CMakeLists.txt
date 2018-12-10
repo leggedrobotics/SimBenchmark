@@ -1,7 +1,15 @@
 ########################################################################################################################
 # dependencies
-find_package(raigraphics REQUIRED)
+externalproject_get_property(ex_raigraphics INSTALL_DIR)
+find_package(raigraphics
+        CONFIG
+        NO_DEFAULT_PATH
+        PATHS           "${INSTALL_DIR}"
+        )
 
+
+########################################################################################################################
+# source
 set(CommonSrc
         UserHandle.hpp
         WorldRG.hpp
@@ -14,11 +22,15 @@ set(CommonSrc
         interface/SingleBodyObjectInterface.hpp
         )
 
+########################################################################################################################
+# library
+message(STATUS "  Build commonSim")
+
 add_library(commonSim ${CommonSrc})
 
-#add_dependencies(commonSim
-#        ex_raigraphics
-#        )
+add_dependencies(commonSim
+        ex_raigraphics
+        )
 
 target_include_directories(commonSim
         PUBLIC

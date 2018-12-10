@@ -1,21 +1,37 @@
+########################################################################################################################
+# dependencies
+externalproject_get_property(ex_dart INSTALL_DIR)
+find_package(DART
+        CONFIG
+        REQUIRED
+        NO_DEFAULT_PATH
+        PATHS           "${INSTALL_DIR}"
+        COMPONENTS
+        utils-urdf
+        collision-bullet
+        collision-ode
+        )
+
+externalproject_get_property(ex_raigraphics INSTALL_DIR)
+find_package(raigraphics
+        CONFIG
+        REQUIRED
+        NO_DEFAULT_PATH
+        PATHS           "${INSTALL_DIR}"
+        )
+
+
+########################################################################################################################
+# flags
 set(CMAKE_CXX_FLAGS_DEBUG
         "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -Wl,--no-as-needed -O0 -mtune=native")
 
 set(CMAKE_CXX_FLAGS_RELEASE
         "${CMAKE_CXX_FLAGS_RELEASE} -Wl,--no-as-needed -O3 -mtune=native")
 
-# dart (optional)
-find_package(DART
-        CONFIG REQUIRED COMPONENTS
-        utils-urdf
-        collision-bullet
-        collision-ode
-        )
-include_directories(${DART_INCLUDE_DIRS})
 
+########################################################################################################################
 # source
-include_directories(src)
-
 set(DartSim_SRCS
         src/DartWorld.cpp
         src/DartWorld.hpp
@@ -39,18 +55,34 @@ set(DartSim_SRCS
         src/object/DartArticulatedSystem.cpp
         src/object/DartArticulatedSystem.hpp)
 
+
+########################################################################################################################
 # library
-add_library(DartSimLib ${DartSim_SRCS})
+message(STATUS "  Build dartSim")
+
+add_library(dartSim
+        STATIC
+        ${DartSim_SRCS}
+        )
+
+add_dependencies(dartSim
+        ex_dart
+        ex_raigraphics
+        commonSim
+        )
+
+target_include_directories(dartSim
+        PUBLIC
+        src
+        ${DART_INCLUDE_DIRS}
+        )
+
 target_link_libraries(DartSimLib
         ${DART_LIBRARIES}
         )
 
-# link
-set(DartSimLink
-        DartSimLib
-        ${BENCHMARK_LINK}
-        )
 
+########################################################################################################################
 # sub-directories
 if(BUILD_BENCHMARK)
     add_subdirectory(benchmark)

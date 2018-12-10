@@ -1,4 +1,25 @@
-# This CMakeLists.txt is for installing dependencies
+#[[
+
+This CMakeLists.txt is for installing dependencies.
+
+"externalproject_add" will download each dependency into build directory, build and install.
+The path convention is
+
+<CMAKE BUILD DIR>/lib/<PROJECT-NAME>-prefix/
+<CMAKE BUILD DIR>/lib/<PROJECT-NAME>-prefix/src
+<CMAKE BUILD DIR>/lib/<PROJECT-NAME>-prefix/include
+<CMAKE BUILD DIR>/lib/<PROJECT-NAME>-prefix/lib
+<CMAKE BUILD DIR>/lib/<PROJECT-NAME>-prefix/bin
+...
+
+
+If this is first build, build "ex_all" first to download all dependencies, build and install.
+Then cmake will find each dependencies from the <CMAKE BUILD DIR>.
+
+]]#
+
+
+# cmake externalproject
 include(ExternalProject)
 
 # raigraphics
@@ -33,10 +54,52 @@ externalproject_add(ex_bullet
         "-DBULLET2_MULTITHREADING=OFF"
         "-DBUILD_BULLET3=ON"
         "-DBUILD_PYBULLET=OFF"
-        "-DBUILD_BULLET2_DEMOS=OFF"
+        "-DBUILD_BULLET2_DEMOS=ON"
         "-DBUILD_EXTRAS=ON"
         "-DBUILD_UNIT_TESTS=OFF"
         "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
         )
 
 # dart
+externalproject_add(ex_dart
+        GIT_REPOSITORY      "https://github.com/eastskykang/dart.git"
+        GIT_TAG             "release/6.6.2"
+        )
+
+
+########################################################################################################################
+# add ex_all as build target
+message(STATUS "The project depends on the following external libraries.")
+message(STATUS "Build ex_all and cmake again if this is first build.")
+message(STATUS "  ex_raigraphics")
+
+list(APPEND ex_projects ex_raigraphics)
+
+if(RAISIM)
+    message(STATUS "  ex_raiSim")
+    list(APPEND ex_projects ex_raisim)
+endif(RAISIM)
+
+if(BULLET)
+    message(STATUS "  ex_bullet")
+    list(APPEND ex_projects ex_bullet)
+endif(BULLET)
+
+if(ODE)
+    message(STATUS "  ex_ode")
+    list(APPEND ex_projects ex_ode)
+endif(ODE)
+
+if(BENCHMARK_MUJOCO)
+    message(STATUS "Benchmark MUJOCO")
+endif(BENCHMARK_MUJOCO)
+
+if(DART)
+    message(STATUS "  ex_dart")
+    list(APPEND ex_projects ex_dart)
+endif(DART)
+
+add_custom_target(ex_all
+        DEPENDS
+        ${ex_projects}
+        )

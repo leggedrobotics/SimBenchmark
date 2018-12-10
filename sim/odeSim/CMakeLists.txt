@@ -1,12 +1,19 @@
 ########################################################################################################################
 # dependencies
+externalproject_get_property(ex_ode INSTALL_DIR)
 find_package(ode
         CONFIG
-        REQUIRED
         NO_DEFAULT_PATH
-        PATHS "/home/donghok/git/simbenchmark/cmake-build-debug/lib/ex_ode-prefix"
+        PATHS           "${INSTALL_DIR}"
         )
-find_package(raigraphics CONFIG REQUIRED)
+
+externalproject_get_property(ex_raigraphics INSTALL_DIR)
+#find_package(raigraphics
+#        CONFIG
+#        REQUIRED
+#        NO_DEFAULT_PATH
+#        PATHS           "${INSTALL_DIR}"
+#        )
 
 
 ########################################################################################################################
@@ -48,7 +55,8 @@ set(odeSimSrc
         src/object/OdeObject.cpp
         src/object/ArticulatedSystem/OdeArticulatedSystem.cpp
         src/object/ArticulatedSystem/OdeArticulatedSystem.hpp
-        src/object/ArticulatedSystem/OdeLinkJoint.hpp)
+        src/object/ArticulatedSystem/OdeLinkJoint.hpp
+        )
 
 
 ########################################################################################################################
@@ -57,7 +65,8 @@ message(STATUS "  Build odeSim")
 
 add_library(odeSim
         STATIC
-        ${odeSimSrc})
+        ${odeSimSrc}
+        )
 
 add_dependencies(odeSim
         ex_ode
@@ -69,13 +78,13 @@ target_include_directories(odeSim
         PUBLIC
         src
         ${raigraphics_INCLUDE_DIRS}
-)
+        )
 
 target_link_libraries(odeSim
         ode
         commonSim
         urdfdom_model
-)
+        )
 
 
 ########################################################################################################################
