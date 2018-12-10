@@ -2,13 +2,23 @@ message(STATUS "Build odeSim")
 
 ########################################################################################################################
 # dependencies
-externalproject_get_property(ex_ode INSTALL_DIR)
-find_package(ode
-        CONFIG
-        NO_DEFAULT_PATH
-        PATHS           "${INSTALL_DIR}"
-        )
 
+# ode
+externalproject_get_property(ex_ode INSTALL_DIR)
+set(ode_include_dir "${INSTALL_DIR}/include")
+set(ode_lib_dir "${INSTALL_DIR}/lib")
+
+find_library(ode
+        NO_DEFAULT_PATH
+        NAMES       ode
+        PATHS       ${ode_lib_dir})
+
+if(NOT ode)
+    message(WARNING "Cannot find ode libs. Stop build odeSim")
+    return()
+endif()
+
+# raigraphics
 externalproject_get_property(ex_raigraphics INSTALL_DIR)
 #find_package(raigraphics
 #        CONFIG
@@ -76,12 +86,13 @@ add_dependencies(odeSim
 
 target_include_directories(odeSim
         PUBLIC
-        src
-        ${raigraphics_INCLUDE_DIRS}
+        "src"
+        "${ode_include_dir}"
+        "${raigraphics_INCLUDE_DIRS}"
         )
 
 target_link_libraries(odeSim
-        ode
+        ${ode}
         commonSim
         urdfdom_model
         )

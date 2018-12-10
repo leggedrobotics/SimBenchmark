@@ -1,12 +1,59 @@
 ########################################################################################################################
 # dependencies
-externalproject_get_property(ex_bullet INSTALL_DIR)
-find_package(Bullet
-        CONFIG
-        NO_DEFAULT_PATH
-        PATHS           "${INSTALL_DIR}"
-        )
 
+# bullet
+externalproject_get_property(ex_bullet INSTALL_DIR)
+set(bullet_include_dir "${INSTALL_DIR}/include")
+set(bullet_lib_dir "${INSTALL_DIR}/lib")
+
+find_library(BulletRobotics
+        NO_DEFAULT_PATH
+        NAMES       BulletRobotics
+        PATHS       ${bullet_lib_dir})
+find_library(BulletFileLoader
+        NO_DEFAULT_PATH
+        NAMES       BulletFileLoader
+        PATHS       ${bullet_lib_dir})
+find_library(BulletWorldImporter
+        NO_DEFAULT_PATH
+        NAMES       BulletWorldImporter
+        PATHS       ${bullet_lib_dir})
+find_library(BulletSoftBody
+        NO_DEFAULT_PATH
+        NAMES       BulletSoftBody
+        PATHS       ${bullet_lib_dir})
+find_library(BulletDynamics
+        NO_DEFAULT_PATH
+        NAMES       BulletDynamics
+        PATHS       ${bullet_lib_dir})
+find_library(BulletCollision
+        NO_DEFAULT_PATH
+        NAMES       BulletCollision
+        PATHS       ${bullet_lib_dir})
+find_library(BulletInverseDynamicsUtils
+        NO_DEFAULT_PATH
+        NAMES       BulletInverseDynamicsUtils
+        PATHS       ${bullet_lib_dir})
+find_library(BulletInverseDynamics
+        NO_DEFAULT_PATH
+        NAMES       BulletInverseDynamics
+        PATHS       ${bullet_lib_dir})
+find_library(LinearMath
+        NO_DEFAULT_PATH
+        NAMES       LinearMath
+        PATHS       ${bullet_lib_dir})
+find_library(Bullet3Common
+        NO_DEFAULT_PATH
+        NAMES       Bullet3Common
+        PATHS       ${bullet_lib_dir})
+
+if(NOT BulletRobotics)
+    message(WARNING "Cannot find bullet libs. Stop build bulletSim")
+    return()
+endif()
+
+
+# raigraphics
 externalproject_get_property(ex_raigraphics INSTALL_DIR)
 find_package(raigraphics
         CONFIG
@@ -65,21 +112,24 @@ add_dependencies(bulletSim
 
 target_include_directories(bulletSim
         PUBLIC
-        src
-        ${raigraphics_INCLUDE_DIRS}
+        "src"
+        "${bullet_include_dir}"
+        "${raigraphics_INCLUDE_DIRS}"
         )
 
+message(${BulletRobotics})
+
 target_link_libraries(bulletSim
-        BulletRobotics
-        BulletFileLoader
-        BulletWorldImporter
-        BulletSoftBody
-        BulletDynamics
-        BulletCollision
-        BulletInverseDynamicsUtils
-        BulletInverseDynamics
-        LinearMath
-        Bullet3Common
+        ${BulletRobotics}
+        ${BulletFileLoader}
+        ${BulletWorldImporter}
+        ${BulletSoftBody}
+        ${BulletDynamics}
+        ${BulletCollision}
+        ${BulletInverseDynamicsUtils}
+        ${BulletInverseDynamics}
+        ${LinearMath}
+        ${Bullet3Common}
         commonSim
         ${CMAKE_DL_LIBS}
         )

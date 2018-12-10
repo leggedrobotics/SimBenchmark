@@ -6,18 +6,29 @@ externalproject_get_property(ex_mujoco SOURCE_DIR)
 set(mujoco_include_dir "${SOURCE_DIR}/include/")
 set(mujoco_bin_dir "${SOURCE_DIR}/bin/")
 
-find_library(glew NAMES glew
-        PATHS ${mujoco_bin_dir})
-find_library(glewegl NAMES glewegl
-        PATHS ${mujoco_bin_dir})
-find_library(glewosmesa NAMES glewosmesa
-        PATHS ${mujoco_bin_dir})
-find_library(glfw NAMES glfw libglfw.so.3
-        PATHS ${mujoco_bin_dir})
-find_library(mujoco200 NAMES mujoco200
-        PATHS ${mujoco_bin_dir})
-find_library(mujoco200nogl NAMES mujoco200nogl
-        PATHS ${mujoco_bin_dir})
+find_library(glew
+        NAMES       glew
+        PATHS       ${mujoco_bin_dir})
+find_library(glewegl
+        NAMES       glewegl
+        PATHS       ${mujoco_bin_dir})
+find_library(glewosmesa
+        NAMES       glewosmesa
+        PATHS       ${mujoco_bin_dir})
+find_library(glfw
+        NAMES       glfw libglfw.so.3
+        PATHS       ${mujoco_bin_dir})
+find_library(mujoco200
+        NAMES       mujoco200
+        PATHS       ${mujoco_bin_dir})
+find_library(mujoco200nogl
+        NAMES       mujoco200nogl
+        PATHS       ${mujoco_bin_dir})
+
+if(NOT mujoco200nogl)
+    message(WARNING "Cannot find mujoco libs. Stop build mujocoSim")
+    return()
+endif()
 
 
 ########################################################################################################################
@@ -27,10 +38,6 @@ set(CMAKE_CXX_FLAGS_DEBUG
 
 set(CMAKE_CXX_FLAGS_RELEASE
         "-Wl,--no-as-needed -O3 -mtune=native -march=native")
-
-set(MUJOCO_LIB_DIR ${CMAKE_SOURCE_DIR}/lib/mjpro150)
-
-include_directories(${MUJOCO_LIB_DIR}/include)
 
 
 ########################################################################################################################

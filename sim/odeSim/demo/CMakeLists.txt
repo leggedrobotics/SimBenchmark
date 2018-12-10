@@ -22,7 +22,3 @@ target_link_libraries(odeBuildingDemo odeSim)
 add_executable(odeURDFDemo URDFDemo.cpp)
 target_link_libraries(odeURDFDemo odeSim)
 
-
-# friction
-#add_executable(frictionODESim frictionODESim.cpp)
-#target_link_libraries(frictionODESim ${ODESimLink})
