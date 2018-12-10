@@ -1,4 +1,4 @@
-message(STATUS "Build dartSim")
+message(STATUS "  dartSim for DART")
 
 ########################################################################################################################
 # dependencies
@@ -80,7 +80,3 @@ target_link_libraries(dartSim
 if(BUILD_BENCHMARK)
     add_subdirectory(benchmark)
 endif(BUILD_BENCHMARK)
-
-if(BUILD_DEMO)
-    add_subdirectory(demo)
-endif(BUILD_DEMO)

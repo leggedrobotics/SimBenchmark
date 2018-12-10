@@ -1,3 +1,12 @@
+message(STATUS "  mujocoSim Demos")
+
+set(CMAKE_CXX_FLAGS_DEBUG
+        "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -Wl,--no-as-needed -O0 -mtune=native -march=native")
+
+set(CMAKE_CXX_FLAGS_RELEASE
+        "-Wl,--no-as-needed -O3 -mtune=native -march=native")
+
+
 add_executable(mujocoSimDemo MjcSimDemo.cpp)
 target_link_libraries(mujocoSimDemo mujocoSim)
 

@@ -1,4 +1,4 @@
-message(STATUS "Build odeSim")
+message(STATUS "  odeSim for ODE")
 
 ########################################################################################################################
 # dependencies
@@ -92,10 +92,6 @@ target_link_libraries(odeSim
 if(BUILD_BENCHMARK)
     add_subdirectory(benchmark)
 endif(BUILD_BENCHMARK)
-
-if(BUILD_DEMO)
-    add_subdirectory(demo)
-endif(BUILD_DEMO)
 
 if(BUILD_TEST)
     add_subdirectory(test)

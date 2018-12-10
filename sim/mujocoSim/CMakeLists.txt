@@ -1,4 +1,4 @@
-message(STATUS "Build mujocoSim")
+message(STATUS "  mujocoSim for MuJoCo")
 
 ########################################################################################################################
 # dependencies
@@ -113,10 +113,6 @@ if(BUILD_BENCHMARK)
     add_subdirectory(benchmark)
 endif(BUILD_BENCHMARK)
 
-
-if(BUILD_DEMO)
-    add_subdirectory(demo)
-endif(BUILD_DEMO)
 
 if(BUILD_TEST)
     add_subdirectory(test)

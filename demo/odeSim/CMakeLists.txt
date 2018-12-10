@@ -1,3 +1,15 @@
+message(STATUS "  odeSim Demos")
+
+
+set(CMAKE_CXX_FLAGS_DEBUG
+        "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -Wl,--no-as-needed -O0 -mtune=native -DODESIM_DEBUG")
+
+set(CMAKE_CXX_FLAGS_RELEASE
+        "-Wl,--no-as-needed -O3 -mtune=native -march=native")
+
+# ode double precision
+add_definitions(-DODE_DOUBLE_PRECISION)
+
 add_executable(odeDemoStack StackDemo.cpp)
 target_link_libraries(odeDemoStack odeSim)
 

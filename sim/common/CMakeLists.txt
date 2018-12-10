@@ -1,4 +1,4 @@
-message(STATUS "Build commonSim")
+message(STATUS "  commonSim for common parts")
 
 ########################################################################################################################
 # dependencies
@@ -34,7 +34,8 @@ add_dependencies(commonSim
 
 target_include_directories(commonSim
         PUBLIC
-        ${raigraphics_INCLUDE_DIRS})
+        ${raigraphics_INCLUDE_DIRS}
+        )
 
 target_link_libraries(commonSim
         ${raigraphics_LINK}

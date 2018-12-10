@@ -108,7 +108,7 @@ set(bulletSimSrc
 
 ########################################################################################################################
 # library
-message(STATUS "Build bulletSim")
+message(STATUS "  bulletSim for Bullet Physics")
 
 add_library(bulletSim
         STATIC
@@ -148,10 +148,6 @@ target_link_libraries(bulletSim
 if(BUILD_TEST)
     add_subdirectory(test)
 endif(BUILD_TEST)
-
-if(BUILD_DEMO)
-    add_subdirectory(demo)
-endif(BUILD_DEMO)
 
 if(BUILD_BENCHMARK)
     add_subdirectory(benchmark)

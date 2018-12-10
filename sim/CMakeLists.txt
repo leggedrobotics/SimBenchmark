@@ -1,3 +1,5 @@
+message(STATUS "Build Sim libraries for the following engines:")
+
 add_subdirectory(common)
 
 if(BENCHMARK_RAISIM)

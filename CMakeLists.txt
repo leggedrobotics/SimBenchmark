@@ -112,6 +112,10 @@ set(BENCHMARK_LINK
 include_directories(sim)
 add_subdirectory(sim)
 
+if(BUILD_DEMO)
+add_subdirectory(demo)
+endif(BUILD_DEMO)
+
 if(BUILD_BENCHMARK)
     add_subdirectory(benchmark)
 endif(BUILD_BENCHMARK)
