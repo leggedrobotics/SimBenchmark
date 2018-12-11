@@ -25,8 +25,8 @@ find_library(mujoco200nogl
         NAMES       mujoco200nogl
         PATHS       ${mujoco_bin_dir})
 
-if(NOT mujoco200nogl)
-    message(WARNING "Cannot find mujoco libs. Stop build mujocoSim")
+if(NOT mujoco200nogl OR NOT TARGET commonSim)
+    message(WARNING "Cannot find dependency. Stop build mujocoSim")
     return()
 endif()
 
@@ -109,15 +109,7 @@ target_link_libraries(mujocoSim
 
 ########################################################################################################################
 # subdirectory
-if(BUILD_BENCHMARK)
-    add_subdirectory(benchmark)
-endif(BUILD_BENCHMARK)
-
-
 if(BUILD_TEST)
     add_subdirectory(test)
 endif(BUILD_TEST)
 
-#if(BUILD_UTIL)
-#    add_subdirectory(test)
-#endif(BUILD_TEST)

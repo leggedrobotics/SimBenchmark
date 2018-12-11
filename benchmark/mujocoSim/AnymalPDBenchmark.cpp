@@ -6,7 +6,7 @@
 
 #include "AnymalPDBenchmark.hpp"
 #include "MjcBenchmark.hpp"
-#include "raiCommon/utils/StopWatch.hpp"
+#include "utils/StopWatch.hpp"
 
 mujoco_sim::MjcSim *sim;
 po::options_description desc;

@@ -9,11 +9,12 @@ set(ode_include_dir "${INSTALL_DIR}/include")
 set(ode_lib_dir "${INSTALL_DIR}/lib")
 
 find_library(ode
-        NO_DEFAULT_PATH
         NAMES       ode
-        PATHS       ${ode_lib_dir})
+        PATHS       ${ode_lib_dir}
+        NO_DEFAULT_PATH
+        )
 
-if(NOT ode)
+if(NOT ode OR NOT TARGET commonSim)
     message(WARNING "Cannot find ode libs. Stop build odeSim")
     return()
 endif()
@@ -89,10 +90,6 @@ target_link_libraries(odeSim
 
 ########################################################################################################################
 # sub-directories
-if(BUILD_BENCHMARK)
-    add_subdirectory(benchmark)
-endif(BUILD_BENCHMARK)
-
 if(BUILD_TEST)
     add_subdirectory(test)
 endif(BUILD_TEST)

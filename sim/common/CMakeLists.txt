@@ -5,9 +5,15 @@ message(STATUS "  commonSim for common parts")
 externalproject_get_property(ex_raigraphics INSTALL_DIR)
 find_package(raigraphics
         CONFIG
-        NO_DEFAULT_PATH
+        QUIET
         PATHS           "${INSTALL_DIR}"
+        NO_DEFAULT_PATH
         )
+
+if(NOT raigraphics_FOUND)
+    message(WARNING "Cannot find raigraphics libs. Stop build commonSim")
+    return()
+endif()
 
 
 ########################################################################################################################

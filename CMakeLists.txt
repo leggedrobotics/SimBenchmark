@@ -45,8 +45,7 @@ option(DART "benchmark DART" ON)
 
 option(BUILD_DEMO "build demos" ON)
 option(BUILD_TEST "build tests" ON)
-option(BUILD_BENCHMARK "build benchmark tests" OFF)
-#option(BUILD_UTIL "build utils" ON)
+option(BUILD_BENCHMARK "build benchmark tests" ON)
 
 message(STATUS "Benchmark the following physics engines:")
 if(RAISIM)
@@ -73,29 +72,25 @@ endif(DART)
 ########################################################################################################################
 # dependencies
 
-set(BENCHMARK_LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
-
 # global libs
 # eigen
 find_package(Eigen3 REQUIRED)
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
 # boost
-find_package(Boost COMPONENTS system filesystem program_options REQUIRED )
+find_package(Boost COMPONENTS system filesystem program_options REQUIRED)
 include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
-## yaml-cpp
-#find_package(YAML-CPP REQUIRED)
-#include_directories(${YAML_CPP_INCLUDE_DIR})
-
 # external projects
+# this libraries will be installed in the build directory
 add_subdirectory(lib)
 
 ########################################################################################################################
 # macro variable
 
 add_definitions(-DROOTPATH="${CMAKE_CURRENT_SOURCE_DIR}")
+add_definitions(-DRESOURCEPATH="${CMAKE_CURRENT_SOURCE_DIR}/res")
 
 ## =========================== LINK ===========================
 set(BENCHMARK_LINK
@@ -113,7 +108,7 @@ include_directories(sim)
 add_subdirectory(sim)
 
 if(BUILD_DEMO)
-add_subdirectory(demo)
+    add_subdirectory(demo)
 endif(BUILD_DEMO)
 
 if(BUILD_BENCHMARK)

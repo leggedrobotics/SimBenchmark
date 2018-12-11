@@ -7,13 +7,19 @@ message(STATUS "  dartSim for DART")
 externalproject_get_property(ex_dart INSTALL_DIR)
 find_package(DART
         CONFIG
-        NO_DEFAULT_PATH
+        QUIET
         PATHS           "${INSTALL_DIR}"
         COMPONENTS
         utils-urdf
         collision-bullet
         collision-ode
+        NO_DEFAULT_PATH
         )
+
+if(NOT DART_FOUND OR NOT TARGET commonSim)
+    message(WARNING "Cannot find dependency. Stop build dartSim")
+    return()
+endif()
 
 
 ########################################################################################################################
@@ -77,6 +83,3 @@ target_link_libraries(dartSim
 
 ########################################################################################################################
 # sub-directories
-if(BUILD_BENCHMARK)
-    add_subdirectory(benchmark)
-endif(BUILD_BENCHMARK)

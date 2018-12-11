@@ -22,6 +22,25 @@ Then cmake will find each dependencies from the <CMAKE BUILD DIR>.
 # cmake externalproject
 include(ExternalProject)
 
+# yaml-cpp
+externalproject_add(ex_yamlcpp
+        GIT_REPOSITORY      "https://github.com/jbeder/yaml-cpp.git"
+        GIT_TAG             "yaml-cpp-0.6.2"
+        CMAKE_ARGS
+        "-DBUILD_SHARED_LIBS=OFF"
+        "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+        )
+
+
+# raicommon
+externalproject_add(ex_raicommon
+        GIT_REPOSITORY      "https://github.com/eastskykang/raicommon.git"
+        GIT_TAG             "master"
+        CMAKE_ARGS
+        "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+        )
+
+
 # raigraphics
 externalproject_add(ex_raigraphics
         GIT_REPOSITORY      "https://github.com/eastskykang/raigraphics.git"
@@ -83,6 +102,9 @@ message(STATUS "The project depends on the following external libraries")
 message(STATUS "Build ex_all and cmake again if this is first build:")
 message(STATUS "  ex_raigraphics")
 
+# common libs
+list(APPEND ex_projects ex_yamlcpp)
+list(APPEND ex_projects ex_raicommon)
 list(APPEND ex_projects ex_raigraphics)
 
 if(RAISIM)

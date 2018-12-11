@@ -57,8 +57,10 @@ if(NOT BulletRobotics
         OR NOT BulletInverseDynamicsUtils
         OR NOT BulletInverseDynamics
         OR NOT LinearMath
-        OR NOT Bullet3Common)
-    message(WARNING "Cannot find bullet libs. Stop build bulletSim")
+        OR NOT Bullet3Common
+        OR NOT TARGET commonSim
+        )
+    message(WARNING "Cannot find dependency. Stop build bulletSim")
     return()
 endif()
 
@@ -116,7 +118,6 @@ add_library(bulletSim
 
 add_dependencies(bulletSim
         ex_bullet
-        ex_raigraphics
         commonSim
         )
 
@@ -148,7 +149,3 @@ target_link_libraries(bulletSim
 if(BUILD_TEST)
     add_subdirectory(test)
 endif(BUILD_TEST)
-
-if(BUILD_BENCHMARK)
-    add_subdirectory(benchmark)
-endif(BUILD_BENCHMARK)
