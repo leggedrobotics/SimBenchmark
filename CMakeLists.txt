@@ -27,8 +27,9 @@ set(CMAKE_CXX_COMPILER "/usr/bin/g++-7")
 #set(CMAKE_CXX_STANDARD 17)
 add_definitions(-std=c++17)
 
-## =========================== CMAKE MODE ===========================
-# raiCommons debug
+
+########################################################################################################################
+# cmake mode
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DRAIDEBUG)
@@ -36,8 +37,10 @@ else ()
     remove_definitions(-DRAIDEBUG)
 endif()
 
+
+########################################################################################################################
 # options
-option(RAISIM "benchmark raiSim" ON)
+option(RAISIM "benchmark raiSim" OFF)
 option(BULLET "benchmark Bullet Multibody(bullet3 API)" ON)
 option(ODE "benchmark ODE" ON)
 option(MUJOCO "benchmark MUJOCO" ON)
@@ -46,6 +49,9 @@ option(DART "benchmark DART" ON)
 option(BUILD_DEMO "build demos" ON)
 option(BUILD_TEST "build tests" ON)
 option(BUILD_BENCHMARK "build benchmark tests" ON)
+
+
+########################################################################################################################
 
 message(STATUS "Benchmark the following physics engines:")
 if(RAISIM)
@@ -92,14 +98,6 @@ add_subdirectory(lib)
 add_definitions(-DROOTPATH="${CMAKE_CURRENT_SOURCE_DIR}")
 add_definitions(-DRESOURCEPATH="${CMAKE_CURRENT_SOURCE_DIR}/res")
 
-## =========================== LINK ===========================
-set(BENCHMARK_LINK
-        CommonLib
-        ${Boost_LIBRARIES}
-        ${YAML_CPP_LIBRARIES}
-        ${RAI_COMMON_LINK}
-        ${RAI_GRAPHICS_OPENGL_LINK}
-        )
 
 ########################################################################################################################
 # sims
