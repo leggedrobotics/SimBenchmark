@@ -95,6 +95,14 @@ externalproject_add(ex_mujoco
         INSTALL_COMMAND     ""
         )
 
+# raisim
+add_subdirectory(${CMAKE_SOURCE_DIR}/res/raiSim)
+externalproject_add(ex_raisim
+        GIT_REPOSITORY      "https://${BITBUCKET_USERNAME}@${RAISIM_REPOSITORY}"
+        GIT_TAG             "master"
+        CMAKE_ARGS
+        "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+        )
 
 ########################################################################################################################
 # add ex_all as build target
