@@ -8,6 +8,25 @@ echo "==========================================================================
 echo "Install dependencies..."
 echo ""
 
+# install apt packages
+echo "Install apt packages..."
+
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt update
+
+sudo apt install -y -qq g++-7
+sudo apt install -y -qq \
+libeigen3-dev \
+libboost-all-dev \
+libglew-dev \
+libglm-dev \
+libsdl2-dev \
+libassimp-dev \
+libsoil-dev \
+libsdl2-ttf-dev \
+liburdfdom-dev \
+libgtest-dev
+
 # create build directory
 echo "Creating build directory..."
 rm -rf build

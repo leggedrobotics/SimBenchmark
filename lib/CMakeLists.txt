@@ -95,14 +95,30 @@ externalproject_add(ex_mujoco
         INSTALL_COMMAND     ""
         )
 
-# raisim
-add_subdirectory(${CMAKE_SOURCE_DIR}/res/raiSim)
-externalproject_add(ex_raisim
-        GIT_REPOSITORY      "https://${BITBUCKET_USERNAME}@${RAISIM_REPOSITORY}"
-        GIT_TAG             "master"
-        CMAKE_ARGS
-        "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+# raisim (if user has proper authentication)
+find_file(raiSim_authentication
+        CMakeLists.txt
+        PATH                "${CMAKE_SOURCE_DIR}/res/raiSim"
         )
+
+if(RAISIM)
+    if(EXISTS ${raiSim_authentication})
+        message(STATUS "Found raiSim Git Repo authentication.")
+        include(${raiSim_authentication})
+
+        externalproject_add(ex_raisim
+                GIT_REPOSITORY      "https://${BITBUCKET_USERNAME}@${RAISIM_REPOSITORY}"
+                GIT_TAG             "master"
+                CMAKE_ARGS
+                "-DBUILD_TEST=OFF"
+                "-DBUILD_DEMO=OFF"
+                "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+                )
+    else()
+        message(WARNING "Cannot find raiSim authentication.")
+    endif()
+endif()
+
 
 ########################################################################################################################
 # add ex_all as build target

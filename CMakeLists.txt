@@ -37,7 +37,7 @@ else ()
 endif()
 
 # options
-option(RAISIM "benchmark raiSim" OFF)
+option(RAISIM "benchmark raiSim" ON)
 option(BULLET "benchmark Bullet Multibody(bullet3 API)" ON)
 option(ODE "benchmark ODE" ON)
 option(MUJOCO "benchmark MUJOCO" ON)
