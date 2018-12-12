@@ -25,7 +25,10 @@ libassimp-dev \
 libsoil-dev \
 libsdl2-ttf-dev \
 liburdfdom-dev \
-libgtest-dev
+libgtest-dev \
+google-perftools \
+libgoogle-perftools-dev \
+libpng-dev
 
 # create build directory
 echo "Creating build directory..."

@@ -50,6 +50,8 @@ externalproject_add(ex_raigraphics
         "-DBUILD_DEMOS=OFF"
         "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
         )
+externalproject_get_property(ex_raigraphics INSTALL_DIR)
+set(raigraphics_install_dir ${INSTALL_DIR})
 
 # ode
 externalproject_add(ex_ode
@@ -106,12 +108,38 @@ if(RAISIM)
         message(STATUS "Found raiSim Git Repo authentication.")
         include(${raiSim_authentication})
 
+        externalproject_add(ex_gtest
+                GIT_REPOSITORY      "https://github.com/abseil/googletest.git"
+                GIT_TAG             "release-1.8.1"
+                CMAKE_ARGS
+                "-DINSTALL_GTEST=ON"
+                "-DBUILD_GMOCK=OFF"
+                "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+                )
+        externalproject_get_property(ex_gtest INSTALL_DIR)
+        set(gtest_install_dir ${INSTALL_DIR})
+
+        externalproject_add(ex_raigraphics_for_raisim
+                GIT_REPOSITORY      "https://donghokang@bitbucket.org/jhwangbo/raigraphics_opengl.git"
+                GIT_TAG             "master"
+                CMAKE_ARGS
+                "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+                )
+        externalproject_get_property(ex_raigraphics_for_raisim INSTALL_DIR)
+        set(raigraphics_for_raisim_install_dir ${INSTALL_DIR})
+
+        LIST(APPEND raisim_find_path
+                "${raigraphics_for_raisim_install_dir}"
+                "${gtest_install_dir}"
+                )
+
         externalproject_add(ex_raisim
                 GIT_REPOSITORY      "https://${BITBUCKET_USERNAME}@${RAISIM_REPOSITORY}"
-                GIT_TAG             "master"
+                GIT_TAG             "simbenchmark"
                 CMAKE_ARGS
                 "-DBUILD_TEST=OFF"
                 "-DBUILD_DEMO=OFF"
+                "-DCMAKE_FIND_ROOT_PATH=${raisim_find_path}"
                 "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
                 )
     else()
@@ -133,6 +161,7 @@ list(APPEND ex_projects ex_raigraphics)
 
 if(RAISIM)
     message(STATUS "  ex_raiSim")
+    list(APPEND ex_projects ex_gtest)
     list(APPEND ex_projects ex_raisim)
 endif(RAISIM)
 
