@@ -117,35 +117,51 @@ if(RAISIM)
                 "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
                 )
         externalproject_get_property(ex_gtest INSTALL_DIR)
-        set(gtest_install_dir ${INSTALL_DIR})
+        set(gtest_install_dir "${INSTALL_DIR}")
 
-        externalproject_add(ex_raigraphics_for_raisim
-                GIT_REPOSITORY      "https://donghokang@bitbucket.org/jhwangbo/raigraphics_opengl.git"
+        externalproject_add(ex_raicommon_for_raisim
+                GIT_REPOSITORY      "https://donghokang@bitbucket.org/jhwangbo/raicommon.git"
                 GIT_TAG             "master"
                 CMAKE_ARGS
+                "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+                )
+        externalproject_get_property(ex_raicommon_for_raisim INSTALL_DIR)
+        set(raicommon_for_raisim_install_dir ${INSTALL_DIR})
+
+        externalproject_add(ex_raigraphics_for_raisim
+                GIT_REPOSITORY      "https://bitbucket.org/jhwangbo/raigraphics_opengl.git"
+                GIT_TAG             "feature/staticlib"
+                CMAKE_ARGS
+                "-DBUILD_SHARED_LIBS=OFF"
                 "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
                 )
         externalproject_get_property(ex_raigraphics_for_raisim INSTALL_DIR)
         set(raigraphics_for_raisim_install_dir ${INSTALL_DIR})
 
         LIST(APPEND raisim_find_path
-                "${raigraphics_for_raisim_install_dir}"
                 "${gtest_install_dir}"
+                "${raigraphics_for_raisim_install_dir}"
                 )
 
         externalproject_add(ex_raisim
                 GIT_REPOSITORY      "https://${BITBUCKET_USERNAME}@${RAISIM_REPOSITORY}"
                 GIT_TAG             "simbenchmark"
                 CMAKE_ARGS
+                "-DCOLLISION_BACKEND=ODE"
                 "-DBUILD_TEST=OFF"
                 "-DBUILD_DEMO=OFF"
                 "-DCMAKE_FIND_ROOT_PATH=${raisim_find_path}"
                 "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
+                DEPENDS
+                "ex_raicommon_for_raisim"
+                "ex_raigraphics_for_raisim"
+                "ex_gtest"
                 )
     else()
         message(WARNING "Cannot find raiSim authentication.")
     endif()
 endif()
+
 
 
 ########################################################################################################################

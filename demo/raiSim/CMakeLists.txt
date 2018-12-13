@@ -1,26 +1,44 @@
-add_executable(RaiStackDemo StackDemo.cpp)
-target_link_libraries(RaiStackDemo ${RAI_SIM_LINK})
+message(STATUS "  raiSim Demos")
 
-add_executable(RaiAnymalDemo AnymalDemo.cpp)
-target_link_libraries(RaiAnymalDemo ${RAI_SIM_LINK})
 
-add_executable(RaiAnymalEnergyDemo AnymalEnergyDemo.cpp)
-target_link_libraries(RaiAnymalEnergyDemo ${RAI_SIM_LINK})
+set(CMAKE_CXX_FLAGS_DEBUG
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wl,--no-as-needed -O0 -mtune=native -march=native -g")
 
-add_executable(RaiAtlasDemo AtlasDemo.cpp)
-target_link_libraries(RaiAtlasDemo ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+set(CMAKE_CXX_FLAGS_RELEASE
+        "-Wl,--no-as-needed -O3 -mtune=native -march=native -fPIC")
 
-add_executable(RaiMultiBodyDemo MultiBodyDemo.cpp)
-target_link_libraries(RaiMultiBodyDemo ${RAI_SIM_LINK})
 
-add_executable(RaiRobotArmDemo RobotArmDemo.cpp)
-target_link_libraries(RaiRobotArmDemo ${RAI_SIM_LINK})
+########################################################################################################################
+# collision backend
+add_definitions(-DCOLLISION_BACKEND=ODE)
 
-add_executable(RaiBuildingDemo BuildingDemo.cpp)
-target_link_libraries(RaiBuildingDemo ${RAI_SIM_LINK})
 
-add_executable(RaiElasticCollisionDemo ElasticCollisionDemo.cpp)
-target_link_libraries(RaiElasticCollisionDemo ${RAI_SIM_LINK})
+########################################################################################################################
+# executable
 
-add_executable(RaiURDFDemo URDFDemo.cpp)
-target_link_libraries(RaiURDFDemo ${RAI_SIM_LINK})
+add_executable(raiStackDemo StackDemo.cpp)
+target_link_libraries(raiStackDemo raiSim)
+
+add_executable(raiAnymalDemo AnymalDemo.cpp)
+target_link_libraries(raiAnymalDemo raiSim)
+
+add_executable(raiAnymalEnergyDemo AnymalEnergyDemo.cpp)
+target_link_libraries(raiAnymalEnergyDemo raiSim)
+
+add_executable(raiAtlasDemo AtlasDemo.cpp)
+target_link_libraries(raiAtlasDemo raiSim)
+
+add_executable(raiMultiBodyDemo MultiBodyDemo.cpp)
+target_link_libraries(raiMultiBodyDemo raiSim)
+
+add_executable(raiRobotArmDemo RobotArmDemo.cpp)
+target_link_libraries(raiRobotArmDemo raiSim)
+
+add_executable(raiBuildingDemo BuildingDemo.cpp)
+target_link_libraries(raiBuildingDemo raiSim)
+
+add_executable(raiElasticCollisionDemo ElasticCollisionDemo.cpp)
+target_link_libraries(raiElasticCollisionDemo raiSim)
+
+add_executable(raiURDFDemo URDFDemo.cpp)
+target_link_libraries(raiURDFDemo raiSim)

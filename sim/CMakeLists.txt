@@ -2,9 +2,9 @@ message(STATUS "Build Sim libraries for the following engines:")
 
 add_subdirectory(common)
 
-if(BENCHMARK_RAISIM)
+if(RAISIM)
     add_subdirectory(raiSim)
-endif(BENCHMARK_RAISIM)
+endif(RAISIM)
 
 if(BULLET)
     add_subdirectory(bulletSim)

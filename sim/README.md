@@ -1,10 +1,17 @@
 # Sim
 
-This directory contains the implementation of each simulation engines.
+This directory contains the implementation of simulator wrapper for each engines.
 
-## Libraries 
+- bulletSim for Bullet Physics 
+- odeSim for ODE(Open Dynamics Engine)
+- mujocoSim for MuJoCo(Multi-Joint dynamics with Contact) 
+- dartSim for DART Sim 
+- raiSim 
 
-- BULLET_SIM_LIB
-- MUJOCO_SIM_LIB
-- ODE_SIM_LIB
+## Build Targets 
+
+- commonSim: common parts and interface of every sims 
+- bulletSim
+- odeSim
+- mujocoSim
 - DART_SIM_LIB 
