@@ -151,14 +151,11 @@ namespace benchmark::anymal {
  */
     std::string getCSVpath(bool feedback) {
 
-      std::string logPath(__FILE__);
-      while (logPath.back() != '/')
-        logPath.erase(logPath.size() - 1, 1);
-
+      std::string logPath(DATAPATH);
       if(feedback)
-        logPath += "../data/anymal-stand/" + options.csvName;
+        logPath += "/anymal-stand/" + options.csvName;
       else
-        logPath += "../data/anymal-grounded/" + options.csvName;
+        logPath += "/anymal-grounded/" + options.csvName;
 
       return logPath;
     }

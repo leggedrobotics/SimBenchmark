@@ -154,11 +154,8 @@ namespace benchmark::elasticsixsixsix {
  * @return log directory path in string
  */
     std::string getCSVpath() {
-      std::string logPath(__FILE__);
-      while (logPath.back() != '/')
-        logPath.erase(logPath.size() - 1, 1);
-
-      logPath += "../data/666-elastic/" + options.csvName;
+      std::string logPath(DATAPATH);
+      logPath += "/666-elastic/" + options.csvName;
       return logPath;
     }
 

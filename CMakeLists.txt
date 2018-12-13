@@ -100,6 +100,7 @@ add_subdirectory(lib)
 
 add_definitions(-DROOTPATH="${CMAKE_CURRENT_SOURCE_DIR}")
 add_definitions(-DRESOURCEPATH="${CMAKE_CURRENT_SOURCE_DIR}/res")
+add_definitions(-DDATAPATH="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
 
 ########################################################################################################################

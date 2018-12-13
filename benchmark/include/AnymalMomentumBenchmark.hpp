@@ -178,21 +178,15 @@ namespace benchmark::anymal::zerogravity {
  */
     std::string getLogFilepath(bool feedback) {
 
-      std::string logPath(__FILE__);
-      while (logPath.back() != '/')
-        logPath.erase(logPath.size() - 1, 1);
-
-      logPath += "../data/anymal-momentum/log.csv";
+      std::string logPath(DATAPATH);
+      logPath += "/anymal-momentum/log.csv";
       return logPath;
     }
 
     std::string getCSVpath() {
 
-      std::string csvPath(__FILE__);
-      while (csvPath.back() != '/')
-        csvPath.erase(csvPath.size() - 1, 1);
-
-      csvPath += "../data/anymal-momentum/" + options.csvName;
+      std::string csvPath(DATAPATH);
+      csvPath += "/anymal-momentum/" + options.csvName;
 
       return csvPath;
     }

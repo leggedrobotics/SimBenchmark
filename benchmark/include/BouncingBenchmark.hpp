@@ -198,11 +198,8 @@ namespace benchmark::bouncing {
                               std::string solver,
                               double dt) {
 
-      std::string dirPath(__FILE__);
-      while (dirPath.back() != '/')
-        dirPath.erase(dirPath.size() - 1, 1);
-
-      dirPath += "../data/bouncing/erp=" + std::to_string(erpYN)
+      std::string dirPath(DATAPATH);
+      dirPath += "/bouncing/erp=" + std::to_string(erpYN)
                  + "-res=" + std::to_string(restCoeff)
                  + "/" + simulation
                  + "/" + solver

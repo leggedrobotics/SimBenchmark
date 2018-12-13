@@ -187,11 +187,8 @@ namespace benchmark::atlas {
  */
     std::string getCSVpath() {
 
-      std::string logPath(__FILE__);
-      while (logPath.back() != '/')
-        logPath.erase(logPath.size() - 1, 1);
-
-      logPath += "../data/atlas/" + options.csvName;
+      std::string logPath(DATAPATH);
+      logPath += "/atlas/" + options.csvName;
 
       return logPath;
     }

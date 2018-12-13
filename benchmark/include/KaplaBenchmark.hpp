@@ -169,11 +169,8 @@ namespace benchmark::building {
 
     std::string getCSVpath() {
 
-      std::string csvPath(__FILE__);
-      while (csvPath.back() != '/')
-        csvPath.erase(csvPath.size() - 1, 1);
-
-      csvPath += "../data/kapla/" + options.csvName;
+      std::string csvPath(DATAPATH);
+      csvPath += "/kapla/" + options.csvName;
 
       return csvPath;
     }
@@ -189,11 +186,8 @@ namespace benchmark::building {
                               std::string solver,
                               double dt) {
 
-      std::string dirPath(__FILE__);
-      while (dirPath.back() != '/')
-        dirPath.erase(dirPath.size() - 1, 1);
-
-      dirPath += "../data/building/erp=" + std::to_string(erpYN)
+      std::string dirPath(DATAPATH);
+      dirPath += "/building/erp=" + std::to_string(erpYN)
                  + "/" + simulation
                  + "/" + solver
                  + "/" + std::to_string(dt);

@@ -279,11 +279,9 @@ std::string getLogDirpath(bool erpYN,
                           std::string integrator,
                           double dt) {
 
-  std::string dirPath(__FILE__);
-  while (dirPath.back() != '/')
-    dirPath.erase(dirPath.size() - 1, 1);
+  std::string dirPath(DATAPATH);
 
-  dirPath += "../data/rolling-benchmark/erp=" + std::to_string(erpYN)
+  dirPath += "/rolling-benchmark/erp=" + std::to_string(erpYN)
       + "-dir=" + std::to_string(forceDirection)
       + "/" + simulation
       + "/" + solver
@@ -296,11 +294,8 @@ std::string getLogDirpath(bool erpYN,
 
 std::string getCSVpath() {
 
-  std::string csvPath(__FILE__);
-  while (csvPath.back() != '/')
-    csvPath.erase(csvPath.size() - 1, 1);
-
-  csvPath += "../data/rolling/" + options.csvName;
+  std::string csvPath(DATAPATH);
+  csvPath += "/rolling/" + options.csvName;
 
   return csvPath;
 }

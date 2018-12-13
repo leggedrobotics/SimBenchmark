@@ -183,22 +183,15 @@ namespace benchmark::anymal::freedrop {
  */
     std::string getLogDirpath(bool feedback) {
 
-      std::string logPath(__FILE__);
-      while (logPath.back() != '/')
-        logPath.erase(logPath.size() - 1, 1);
-
-      logPath += "../data/anymal-feedrop/";
+      std::string logPath(DATAPATH);
+      logPath += "/anymal-feedrop/";
       return logPath;
     }
 
     std::string getCSVpath() {
 
-      std::string csvPath(__FILE__);
-      while (csvPath.back() != '/')
-        csvPath.erase(csvPath.size() - 1, 1);
-
-      csvPath += "../data/anymal-energy/" + options.csvName;
-
+      std::string csvPath(DATAPATH);
+      csvPath += "/anymal-energy/" + options.csvName;
       return csvPath;
     }
 
