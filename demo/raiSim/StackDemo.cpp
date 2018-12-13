@@ -3,9 +3,6 @@
 //
 
 #include <raiSim/World_RG.hpp>
-#include "raiSim/configure.hpp"
-
-CollisionSet a;
 
 enum Object {
     BOX,
@@ -65,12 +62,15 @@ int main() {
     // timestep
     double dt = 0.01;
 
+    // set time step
+    sim.setTimeStep(dt);
+
     // camera relative position
     sim.cameraFollowObject(checkerboard, {10, 0, 5});
 
     // simulation loop
     // press 'q' key to quit
-    sim.loop(dt, 1.0);
+    sim.loop();
 
     return 0;
 }

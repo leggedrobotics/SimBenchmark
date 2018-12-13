@@ -10,35 +10,35 @@ set(CMAKE_CXX_FLAGS_RELEASE
 
 ########################################################################################################################
 # collision backend
-add_definitions(-DCOLLISION_BACKEND=ODE)
+add_definitions(-DCOLLISION_BACKEND_ODE)
 
 
 ########################################################################################################################
 # executable
 
 add_executable(raiStackDemo StackDemo.cpp)
-target_link_libraries(raiStackDemo raiSim)
+target_link_libraries(raiStackDemo raiSim raiSimODE)
 
 add_executable(raiAnymalDemo AnymalDemo.cpp)
-target_link_libraries(raiAnymalDemo raiSim)
+target_link_libraries(raiAnymalDemo raiSim raiSimODE)
 
 add_executable(raiAnymalEnergyDemo AnymalEnergyDemo.cpp)
-target_link_libraries(raiAnymalEnergyDemo raiSim)
+target_link_libraries(raiAnymalEnergyDemo raiSim raiSimODE)
 
 add_executable(raiAtlasDemo AtlasDemo.cpp)
-target_link_libraries(raiAtlasDemo raiSim)
+target_link_libraries(raiAtlasDemo raiSim raiSimODE)
 
 add_executable(raiMultiBodyDemo MultiBodyDemo.cpp)
-target_link_libraries(raiMultiBodyDemo raiSim)
+target_link_libraries(raiMultiBodyDemo raiSim raiSimODE)
 
 add_executable(raiRobotArmDemo RobotArmDemo.cpp)
-target_link_libraries(raiRobotArmDemo raiSim)
+target_link_libraries(raiRobotArmDemo raiSim raiSimODE)
 
 add_executable(raiBuildingDemo BuildingDemo.cpp)
-target_link_libraries(raiBuildingDemo raiSim)
+target_link_libraries(raiBuildingDemo raiSim raiSimODE)
 
 add_executable(raiElasticCollisionDemo ElasticCollisionDemo.cpp)
-target_link_libraries(raiElasticCollisionDemo raiSim)
+target_link_libraries(raiElasticCollisionDemo raiSim raiSimODE)
 
 add_executable(raiURDFDemo URDFDemo.cpp)
-target_link_libraries(raiURDFDemo raiSim)
+target_link_libraries(raiURDFDemo raiSim raiSimODE)
