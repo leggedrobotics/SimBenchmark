@@ -119,3 +119,11 @@ endif(BUILD_BENCHMARK)
 if(BUILD_TEST)
     add_subdirectory(test)
 endif(BUILD_TEST)
+
+
+########################################################################################################################
+# custom targets
+
+add_custom_target(clean_all
+        COMMAND rm -rf *
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
