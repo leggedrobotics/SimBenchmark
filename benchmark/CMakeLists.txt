@@ -123,6 +123,12 @@ else()
     message(STATUS "  Cannot find dartSim. Stop build dartSim benchmark tests")
 endif()
 
+if(TARGET dartSim)
+    add_subdirectory(raiSim)
+else()
+    message(STATUS "  Cannot find raiSim. Stop build raiSim benchmark tests")
+endif()
+
 ### --------------------------- export files ---------------------------
 #configure_file(shell/rolling-benchmark.sh.in ${CMAKE_CURRENT_BINARY_DIR}/rolling-benchmark.sh @ONLY)
 #configure_file(shell/bounce.sh.in ${CMAKE_CURRENT_BINARY_DIR}/bounce.sh @ONLY)

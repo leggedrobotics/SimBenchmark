@@ -1,46 +1,43 @@
-include_directories(${CMAKE_SOURCE_DIR}/benchmark)
+########################################################################################################################
+# flags
+set(CMAKE_CXX_FLAGS_DEBUG
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wl,--no-as-needed -O0 -mtune=native -march=native -g")
 
-add_executable(RaiAnymalPDBenchmark
-        AnymalPDBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/AnymalPDBenchmark.hpp)
-target_link_libraries(RaiAnymalPDBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+set(CMAKE_CXX_FLAGS_RELEASE
+        "-Wl,--no-as-needed -O3 -mtune=native -march=native -fPIC")
 
-add_executable(RaiAnymalMomentumBenchmark
-        AnymalMomentumBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/AnymalMomentumBenchmark.hpp)
-target_link_libraries(RaiAnymalMomentumBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
 
-add_executable(RaiAnymalEnergyBenchmark
-        AnymalEnergyBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/AnymalEnergyBenchmark.hpp)
-target_link_libraries(RaiAnymalEnergyBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+########################################################################################################################
+# collision backend
+add_definitions(-DCOLLISION_BACKEND_ODE)
 
-add_executable(RaiRollingBenchmark
-        RollingBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/RollingBenchmark.hpp)
-target_link_libraries(RaiRollingBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
 
-add_executable(RaiKaplaBenchmark
-        KaplaBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/KaplaBenchmark.hpp)
-target_link_libraries(RaiKaplaBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+########################################################################################################################
+# executable
 
-add_executable(Rai666Benchmark
-        666Benchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/666Benchmark.hpp)
-target_link_libraries(Rai666Benchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+add_executable(raiAnymalPDBenchmark AnymalPDBenchmark.cpp)
+target_link_libraries(raiAnymalPDBenchmark raiSim raiSimODE benchmark)
 
-add_executable(RaiElastic666Benchmark
-        Elastic666Benchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/Elastic666Benchmark.hpp)
-target_link_libraries(RaiElastic666Benchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+add_executable(raiAnymalMomentumBenchmark AnymalMomentumBenchmark.cpp)
+target_link_libraries(raiAnymalMomentumBenchmark raiSim raiSimODE benchmark)
 
-add_executable(RaiBouncingBenchmark
-        BouncingBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/BouncingBenchmark.hpp)
-target_link_libraries(RaiBouncingBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+add_executable(raiAnymalEnergyBenchmark AnymalEnergyBenchmark.cpp)
+target_link_libraries(raiAnymalEnergyBenchmark raiSim raiSimODE benchmark)
 
-add_executable(RaiAtlasContactBenchmark
-        AtlasContactBenchmark.cpp
-        ${CMAKE_SOURCE_DIR}/benchmark/AtlasContactBenchmark.hpp)
-target_link_libraries(RaiAtlasContactBenchmark ${RAI_SIM_LINK} ${BENCHMARK_LINK})
+add_executable(raiRollingBenchmark RollingBenchmark.cpp)
+target_link_libraries(raiRollingBenchmark raiSim raiSimODE benchmark)
+
+add_executable(raiKaplaBenchmark KaplaBenchmark.cpp)
+target_link_libraries(raiKaplaBenchmark raiSim raiSimODE benchmark)
+
+add_executable(rai666Benchmark 666Benchmark.cpp)
+target_link_libraries(rai666Benchmark raiSim raiSimODE benchmark)
+
+add_executable(raiElastic666Benchmark Elastic666Benchmark.cpp)
+target_link_libraries(raiElastic666Benchmark raiSim raiSimODE benchmark)
+
+add_executable(raiBouncingBenchmark BouncingBenchmark.cpp)
+target_link_libraries(raiBouncingBenchmark raiSim raiSimODE benchmark)
+
+add_executable(raiAtlasContactBenchmark AtlasContactBenchmark.cpp)
+target_link_libraries(raiAtlasContactBenchmark raiSim raiSimODE benchmark)
