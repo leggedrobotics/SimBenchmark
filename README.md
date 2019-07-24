@@ -1,12 +1,11 @@
 # SimBenchmark
 
-SimBenchmark is a project providing the reliable benchmark results of state-of-the-art physics engines used for contact simulation for various robotic tasks.
+SimBenchmark is a benchmark suite for state-of-the-art physics engines.
 
-We evaluated the most widely-used physics engines for robotics and machine learning applications. 
+We evaluated a few widely used physics engines for robotics and machine learning applications. 
 The list of the engines is as follows:
 
-- RaiSim (Jemin Hwangbo, Dongho Kang et al.)
-	- [What is RaiSim?](https://leggedrobotics.github.io/SimBenchmark/about/sims.html#RaiSim)
+- [RAISIM](https://github.com/leggedrobotics/raisimLib)
 - [Bullet Physics](http://bulletphysics.org/)
 - [Open Dynamics Engine](http://www.ode.org/)
 - [Multi-Joint dynamics with Contact (a.k.a. MuJoCo)](http://mujoco.org/)
@@ -21,7 +20,8 @@ You can see the details in [webpage](https://leggedrobotics.github.io/SimBenchma
 SimBenchmark runs on Ubuntu 16.04 LTS.  
 
 Notes:
-- RaiSim and MuJoCo is proprietary. 
+- RAISIM is released as a free closed-source library valid until August 2019.
+- MuJoCo is under a proprietary license. 
 - Matlab R2018a is required for plotting (optional). 
 
 ### via Docker (recommended)
