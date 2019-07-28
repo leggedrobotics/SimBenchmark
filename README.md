@@ -20,7 +20,7 @@ You can see the details in [webpage](https://leggedrobotics.github.io/SimBenchma
 SimBenchmark runs on Ubuntu 16.04 LTS.  
 
 Notes:
-- RAISIM is released as a free closed-source library valid until August 2019.
+- RAISIM is released as a free-of-charge closed-source library.
 - MuJoCo is under a proprietary license. 
 - Matlab R2018a is required for plotting (optional). 
 
