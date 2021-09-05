@@ -5,17 +5,17 @@ You can either build a docker image from Dockerfile or pull the image from docke
 1. Get docker image
 	- option 1: Pull from repository (recommended)
 		```sh 
-		$ docker pull donghokang/simbenchmark 
+		$ docker pull donghokang/simbenchmark:16.04
 		```
 	- option 2: Build from Dockerfile
 		- 1. build docker file
 		```sh 
-		$ docker build -f ./Dockerfile -t donghokang/simbenchmark:latest .
+		$ docker build -f ./Dockerfile -t donghokang/simbenchmark:16.04 .
 		```
 		- 2. install dart 6.4.0 from source file 
 2. Run docker container from the image   
 	```sh
-	$ docker run -it --rm -v <SimBenchmark root dir>:/home/simbench donghokang/simbenchmark:latest
+	$ docker run -it --rm -v <SimBenchmark root dir>:/home/simbench donghokang/simbenchmark:16.04
 	```
 
 ## Note 
@@ -26,6 +26,6 @@ You can either build a docker image from Dockerfile or pull the image from docke
 	- run ```xhost local:root``` on the host machine.
 	- run docker with the following options  
 		```sh
-		$ docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY --device /dev/dri donghokang/simbenchmark:latest
+		$ docker run -it --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY --device /dev/dri donghokang/simbenchmark:16.04
 		```
 		- ```-v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY --device /dev/dri```: Read [this](http://somatorio.org/en/post/running-gui-apps-with-docker/)  
